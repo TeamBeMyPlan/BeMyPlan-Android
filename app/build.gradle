@@ -4,6 +4,10 @@ plugins {
     id 'kotlin-kapt'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def kakao_map_app_key = properties.get('kakao_map_app_key')
+
 android {
     compileSdk 32
 
@@ -15,6 +19,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // KakaoMap AppKey
+        manifestPlaceholders = [KAKAO_MAP_APP_KEY: kakao_map_app_key]
     }
 
     buildTypes {
@@ -58,4 +65,8 @@ dependencies {
     // NavigationComponent
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+
+    // KakaoMap
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/libDaumMapAndroid.jar')
 }

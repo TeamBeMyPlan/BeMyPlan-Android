@@ -24,10 +24,10 @@ class MainActivity : AppCompatActivity() {
         viewPagerAdapter = MainViewPagerAdapter(this)
         viewPagerAdapter.fragments.addAll(
             listOf(
-                FirstFragment(),
-                SecondFragment(),
-                ThirdFragment(),
-                FourthFragment()
+                HomeFragment(),
+                LocationFragment(),
+                ScrapFragment(),
+                MyPageFragment()
             )
         )
         binding.vp.adapter = viewPagerAdapter

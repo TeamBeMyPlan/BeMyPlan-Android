@@ -16,6 +16,9 @@
         android:theme="@style/Theme.BeMyPlan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.purchase.after.AfterPurchaseActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -24,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="${KAKAO_MAP_APP_KEY}" />

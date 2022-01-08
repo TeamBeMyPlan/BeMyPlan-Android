@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="co.kr.bemyplan.data.MainViewModel" />
+            type="co.kr.bemyplan.ui.main.viewmodel.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

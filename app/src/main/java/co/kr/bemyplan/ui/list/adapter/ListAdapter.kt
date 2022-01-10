@@ -15,6 +15,8 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
         fun bind(contentModel: ContentModel) {
             binding.model = contentModel
             binding.ivPhoto.clipToOutline = true
+            binding.ivScrap.isSelected = contentModel.isScrap
+            binding.ivFree.isSelected = contentModel.isFree
             binding.executePendingBindings()
 
             clickScrap()

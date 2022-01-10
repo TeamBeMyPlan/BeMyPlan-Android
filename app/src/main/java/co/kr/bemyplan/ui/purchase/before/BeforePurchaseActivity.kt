@@ -3,19 +3,17 @@ package co.kr.bemyplan.ui.purchase.before
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.graphics.Rect
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.purchase.before.SummaryModel
 import co.kr.bemyplan.data.purchase.before.ContentModel
+import co.kr.bemyplan.data.purchase.before.SummaryModel
 import co.kr.bemyplan.databinding.ActivityBeforePurchaseBinding
-import co.kr.bemyplan.ui.purchase.before.adapter.SummaryAdapter
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
+import co.kr.bemyplan.ui.purchase.before.adapter.SummaryAdapter
 
 class BeforePurchaseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBeforePurchaseBinding
@@ -59,13 +57,11 @@ class BeforePurchaseActivity : AppCompatActivity() {
         // Overview
         summaryAdapter = SummaryAdapter()
         summaryAdapter.itemList = summaryItemList
-        binding.rvSummary.layoutManager = GridLayoutManager(this, 4)
         binding.rvSummary.adapter = summaryAdapter
 
         // Preview
         contentAdapter = ContentAdapter()
         contentAdapter.itemList = contentItemList
-        binding.rvContent.layoutManager = LinearLayoutManager(this)
         binding.rvContent.adapter = contentAdapter
     }
 

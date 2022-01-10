@@ -22,6 +22,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
         setMap()
 
         setContentView(binding.root)
+
+        // 액션바 숨기기
+        var actionBar = supportActionBar
+        actionBar!!.hide()
     }
 
     private fun setMap() {

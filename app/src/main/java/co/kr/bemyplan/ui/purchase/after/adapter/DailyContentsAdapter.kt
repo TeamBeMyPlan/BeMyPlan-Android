@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.data.DailyContents
+import co.kr.bemyplan.data.Spot
 import co.kr.bemyplan.databinding.DailyContentsListBinding
 
 class DailyContentsAdapter: RecyclerView.Adapter<DailyContentsAdapter.DailyContentsViewHolder>() {
 
     private val dailyContentsList = mutableListOf<DailyContents>()
+    private val spotList = mutableListOf<Spot>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyContentsViewHolder {
         val binding = DailyContentsListBinding.inflate(
@@ -28,9 +30,9 @@ class DailyContentsAdapter: RecyclerView.Adapter<DailyContentsAdapter.DailyConte
     class DailyContentsViewHolder(private val binding: DailyContentsListBinding)
         : RecyclerView.ViewHolder(binding.root) {
             fun onBind(data: DailyContents) {
-                binding.tvPlace.text = data.placeName
-                binding.tvContext.text = data.context
-                //TODO: 이미지 넣어야 함
+                binding.tvPlace.text = spot.placeName
+                binding.tvContext.text = spot.context
+                binding.tvAddress.text = spot.address
             }
         }
 }

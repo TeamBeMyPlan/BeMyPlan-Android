@@ -15,7 +15,7 @@
         tools:context=".ui.purchase.after.AfterPurchaseActivity">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar_home"
+            android:id="@+id/al_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -24,13 +24,13 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar_home"
+                android:id="@+id/tb_home"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/white">
 
                 <ImageView
-                    android:id="@+id/img_back"
+                    android:id="@+id/iv_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_icon_arrow" />
@@ -58,7 +58,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appbar_home">
+            app:layout_constraintTop_toBottomOf="@id/al_home">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -76,6 +76,16 @@
                     app:text="@{post.writer}"
                     app:layout_constraintStart_toStartOf="@id/map_view"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_to_writer_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/ic_icn_arrow_forward"
+                    app:layout_constraintStart_toEndOf="@id/tv_writer"
+                    app:layout_constraintTop_toTopOf="@id/tv_writer"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_writer"/>
 
                 <TextView
                     android:id="@+id/tv_title"

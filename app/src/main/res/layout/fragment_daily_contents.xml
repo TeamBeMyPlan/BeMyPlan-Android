@@ -7,6 +7,7 @@
     tools:context=".ui.purchase.after.DailyContentsFragment" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_route"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
@@ -101,9 +102,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_daily_contents"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/daily_contents_list" />
+        tools:listitem="@layout/daily_contents_list"
+        app:layout_constraintTop_toBottomOf="@id/cl_route"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

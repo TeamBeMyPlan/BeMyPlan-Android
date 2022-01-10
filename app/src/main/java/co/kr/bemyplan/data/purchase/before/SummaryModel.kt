@@ -1,6 +1,6 @@
 package co.kr.bemyplan.data.purchase.before
 
-data class OverviewModel(
+data class SummaryModel(
     val icon: Int,
     val text: String
 )

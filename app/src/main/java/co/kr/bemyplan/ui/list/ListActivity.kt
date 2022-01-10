@@ -24,10 +24,10 @@ class ListActivity : AppCompatActivity() {
 
     private fun initList() {
         listItem = listOf(
-            ContentModel(R.drawable.rectangle_5715, "한승현", "한승현은 퇴근하고싶다", true, true),
-            ContentModel(R.drawable.prof, "한승현", "한승현은 퇴근하고싶다", true, false),
-            ContentModel(R.drawable.prof, "한승현", "한승현은 퇴근하고싶다", false, true),
-            ContentModel(R.drawable.prof, "한승현", "한승현은 퇴근하고싶다", false, false),
+            ContentModel(R.drawable.rectangle_5715, "비마플", "한승현은 퇴근하고싶다", true, true),
+            ContentModel(R.drawable.rectangle_5715, "비마플", "한승현은 퇴근하고싶다", true, false),
+            ContentModel(R.drawable.rectangle_5715, "한승현", "한승현은 퇴근하고싶다", false, true),
+            ContentModel(R.drawable.rectangle_5715, "한승현", "한승현은 퇴근하고싶다", false, false),
         )
     }
 

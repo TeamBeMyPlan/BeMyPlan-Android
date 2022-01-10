@@ -48,10 +48,10 @@ class BeforePurchaseActivity : AppCompatActivity() {
         )
 
         contentItemList = listOf(
-            ContentModel(R.drawable.prof, "안녕하세요 한승현입니다."),
-            ContentModel(R.drawable.prof, "안녕하세요 한승현입니다."),
-            ContentModel(R.drawable.prof, "안녕하세요 한승현입니다."),
-            ContentModel(R.drawable.prof, "안녕하세요 한승현입니다."),
+            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
+            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
+            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
+            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
         )
     }
 

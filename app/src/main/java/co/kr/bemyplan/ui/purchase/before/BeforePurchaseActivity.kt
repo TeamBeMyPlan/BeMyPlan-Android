@@ -31,6 +31,8 @@ class BeforePurchaseActivity : AppCompatActivity() {
         initList()
         initRecyclerView()
         initNestedScrollView()
+        clickBack()
+        clickScrap()
     }
 
     private fun initList() {
@@ -131,6 +133,20 @@ class BeforePurchaseActivity : AppCompatActivity() {
         } else {
             // view가 안 보이는 경우
             binding.tvTopTitle.visibility = View.VISIBLE
+        }
+    }
+
+    private fun clickBack() {
+        binding.layoutBack.setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun clickScrap() {
+        binding.layoutScrap.setOnClickListener {
+            binding.ivScrap.apply {
+                isSelected = !isSelected
+            }
         }
     }
 }

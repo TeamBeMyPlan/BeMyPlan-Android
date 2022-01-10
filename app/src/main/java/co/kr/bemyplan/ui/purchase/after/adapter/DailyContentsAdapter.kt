@@ -30,9 +30,9 @@ class DailyContentsAdapter: RecyclerView.Adapter<DailyContentsAdapter.DailyConte
     class DailyContentsViewHolder(private val binding: DailyContentsListBinding)
         : RecyclerView.ViewHolder(binding.root) {
             fun onBind(data: DailyContents) {
-                binding.tvPlace.text = spot.placeName
-                binding.tvContext.text = spot.context
-                binding.tvAddress.text = spot.address
+                binding.tvPlace.text = data.placeName[0]
+                binding.tvContext.text = data.context[0]
+                binding.tvAddress.text = data.address[0]
             }
         }
 }

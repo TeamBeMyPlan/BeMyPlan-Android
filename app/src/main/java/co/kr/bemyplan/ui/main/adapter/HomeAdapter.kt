@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.main.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
     class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
         fun onBind(data:TempHomeData){
+            Log.d("bindtest", data.text)
             binding.tvHomeCommon.text = data.text
             Glide.with(binding.ivHomeCommon.context).load(data.img).into(binding.ivHomeCommon)
         }

@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.main.HomeFragment">
 
     <ScrollView
+        android:id="@+id/sv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_top_bar">
@@ -30,17 +33,22 @@
                     android:id="@+id/tv_suggest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="30dp"
                     android:fontFamily="@font/paybooc_otf_bold"
                     android:text="@string/home_introduce"
-                    android:textSize="20sp"
                     android:textColor="@color/grey_313740"
+                    android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vp_popular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_suggest" />
@@ -68,11 +76,12 @@
                     android:id="@+id/tv_recent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/home_recent_title"
-                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                    android:textSize="16sp"
-                    android:textColor="@color/grey_5d687a"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="43dp"
+                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                    android:text="@string/home_recent_title"
+                    android:textColor="@color/grey_5d687a"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,13 +89,16 @@
                     android:id="@+id/rv_recent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="10dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_recent"
                     tools:itemCount="5"
-                    tools:listitem="@layout/item_home_plan"/>
+                    tools:listitem="@layout/item_home_plan" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,11 +123,12 @@
                     android:id="@+id/tv_editor_suggest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/home_editor_suggest_title"
-                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                    android:textSize="16sp"
-                    android:textColor="@color/grey_5d687a"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="43dp"
+                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                    android:text="@string/home_editor_suggest_title"
+                    android:textColor="@color/grey_5d687a"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -124,7 +137,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     android:orientation="horizontal"
+                    android:paddingStart="24dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -139,6 +155,8 @@
         android:id="@+id/layout_top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="5dp"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
-            android:src="@drawable/selector_scrap"
+            android:src="@drawable/selector_bookmark"
             app:layout_constraintEnd_toEndOf="@id/iv_photo"
             app:layout_constraintTop_toTopOf="@id/iv_photo" />
 
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
-            android:src="@drawable/icn_free"
+            android:src="@drawable/selector_free"
             app:layout_constraintBottom_toBottomOf="@id/iv_scrap"
             app:layout_constraintEnd_toStartOf="@id/iv_scrap"
             app:layout_constraintTop_toTopOf="@id/iv_scrap" />

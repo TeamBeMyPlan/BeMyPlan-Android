@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data
+package co.kr.bemyplan.ui.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 

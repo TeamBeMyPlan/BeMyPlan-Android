@@ -7,12 +7,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.purchase.before.SummaryModel
-import co.kr.bemyplan.databinding.ItemSummaryBinding
+import co.kr.bemyplan.databinding.ItemBeforePurchaseSummaryBinding
 
 class SummaryAdapter : RecyclerView.Adapter<SummaryAdapter.SummaryViewHolder>() {
     var itemList: List<SummaryModel> = listOf()
 
-    class SummaryViewHolder(private val binding: ItemSummaryBinding) :
+    class SummaryViewHolder(private val binding: ItemBeforePurchaseSummaryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(overviewModel: SummaryModel) {
             binding.model = overviewModel
@@ -25,9 +25,9 @@ class SummaryAdapter : RecyclerView.Adapter<SummaryAdapter.SummaryViewHolder>() 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SummaryViewHolder {
-        val binding = DataBindingUtil.inflate<ItemSummaryBinding>(
+        val binding = DataBindingUtil.inflate<ItemBeforePurchaseSummaryBinding>(
             LayoutInflater.from(parent.context),
-            R.layout.item_summary,
+            R.layout.item_before_purchase_summary,
             parent,
             false
         )

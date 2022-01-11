@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data
+package co.kr.bemyplan.data.home
 
 data class TempHomeData(
     val img : Int,

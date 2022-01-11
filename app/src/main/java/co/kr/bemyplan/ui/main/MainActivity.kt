@@ -7,6 +7,8 @@ import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityMainBinding
 import co.kr.bemyplan.ui.main.adapter.MainViewPagerAdapter
+import co.kr.bemyplan.ui.main.home.HomeFragment
+import co.kr.bemyplan.ui.main.location.LocationFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

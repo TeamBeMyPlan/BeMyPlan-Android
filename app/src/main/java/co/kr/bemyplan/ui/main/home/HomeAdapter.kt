@@ -1,10 +1,10 @@
-package co.kr.bemyplan.ui.main.adapter
+package co.kr.bemyplan.ui.main.home
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.TempHomeData
+import co.kr.bemyplan.data.home.TempHomeData
 import co.kr.bemyplan.databinding.ItemHomePlanBinding
 import com.bumptech.glide.Glide
 
@@ -12,8 +12,7 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
     val planList = mutableListOf<TempHomeData>()
 
     class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data:TempHomeData){
-            Log.d("bindtest", data.text)
+        fun onBind(data: TempHomeData){
             binding.tvHomeCommon.text = data.text
             Glide.with(binding.ivHomeCommon.context).load(data.img).into(binding.ivHomeCommon)
         }

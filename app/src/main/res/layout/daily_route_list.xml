@@ -42,7 +42,7 @@
             android:background="@drawable/blue_dotted_line_vertical"
             android:layerType="software"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_totopOf="@id/iv_blue_circle"
+            app:layout_constraintBottom_toTopOf="@id/iv_blue_circle"
             app:layout_constraintEnd_toEndOf="@id/iv_blue_circle"
             app:layout_constraintStart_toStartOf="@id/iv_blue_circle" />
 
@@ -62,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
             android:src="@drawable/ic_icn_walk"
-            app:src="@{spot.photo}"
             app:layout_constraintTop_toTopOf="@id/iv_blue_circle"
             app:layout_constraintBottom_toBottomOf="@id/iv_blue_circle"
             app:layout_constraintEnd_toStartOf="@id/iv_blue_circle" />

@@ -1,16 +1,17 @@
 package co.kr.bemyplan.ui.main
 
-import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.TempHomeData
 import co.kr.bemyplan.databinding.FragmentHomeBinding
+import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.main.adapter.HomeAdapter
 import co.kr.bemyplan.ui.main.adapter.HomeViewPagerAdapter
 import co.kr.bemyplan.util.ZoomOutPageTransformer
@@ -30,11 +31,15 @@ class HomeFragment : Fragment() {
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
+        clickMore()
 
         return binding.root
     }
 
-
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 
     private fun initAdapterRecent(){
         homeAdapter = HomeAdapter()
@@ -96,5 +101,15 @@ class HomeFragment : Fragment() {
             )
         )
         homeViewPagerAdapter.notifyDataSetChanged()
+    }
+
+    private fun clickMore() {
+        val intent = Intent(requireContext(), ListActivity::class.java)
+        binding.ivRecentMore.setOnClickListener {
+            startActivity(intent)
+        }
+        binding.ivEditorMore.setOnClickListener {
+            startActivity(intent)
+        }
     }
 }

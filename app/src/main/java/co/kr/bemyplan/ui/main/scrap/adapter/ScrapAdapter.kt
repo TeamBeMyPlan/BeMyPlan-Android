@@ -1,6 +1,5 @@
 package co.kr.bemyplan.ui.main.scrap.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -9,16 +8,20 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.main.scrap.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapContentBinding
 
-class ScrapAdapter : RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder>() {
+class ScrapAdapter(val itemClick: (ContentModel) -> Unit) :
+    RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 
-    class ScrapViewHolder(val binding: ItemScrapContentBinding) :
+    inner class ScrapViewHolder(val binding: ItemScrapContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
             binding.model = contentModel
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
 
+            binding.root.setOnClickListener {
+                itemClick(contentModel)
+            }
 //            clickScrap()
         }
     }

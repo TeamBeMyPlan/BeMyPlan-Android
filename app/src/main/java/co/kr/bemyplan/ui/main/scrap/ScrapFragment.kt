@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.main.scrap
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.main.scrap.ContentModel
 import co.kr.bemyplan.databinding.FragmentScrapBinding
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
+import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 
 class ScrapFragment : Fragment() {
@@ -48,7 +50,10 @@ class ScrapFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        scrapAdapter = ScrapAdapter()
+        scrapAdapter = ScrapAdapter {
+            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            startActivity(intent)
+        }
         scrapAdapter.itemList = listItem
         binding.rvContent.adapter = scrapAdapter
     }

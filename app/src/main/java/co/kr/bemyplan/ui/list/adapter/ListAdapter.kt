@@ -8,14 +8,20 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.list.ContentModel
 import co.kr.bemyplan.databinding.ItemListContentBinding
 
-class ListAdapter: RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+class ListAdapter(val itemClick: (ContentModel) -> Unit) :
+    RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 
-    class ListViewHolder(private val binding: ItemListContentBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ListViewHolder(private val binding: ItemListContentBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
             binding.model = contentModel
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
+
+            binding.root.setOnClickListener {
+                itemClick(contentModel)
+            }
 
 //            clickScrap()
         }

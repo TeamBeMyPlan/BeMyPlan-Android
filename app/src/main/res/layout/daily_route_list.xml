@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
+        <import type="android.view.View" />
+
         <variable
             name="spot"
             type="co.kr.bemyplan.data.Spot" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -26,7 +28,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="96dp"
-            android:layout_marginVertical="18dp"
             android:text="산방산"
             android:textColor="@color/grey_313740"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
@@ -38,9 +39,10 @@
         <View
             android:id="@+id/v_top_blue_dotted_line"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="8dp"
             android:background="@drawable/blue_dotted_line_vertical"
             android:layerType="software"
+            android:visibility="@{spot.isFirst ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/iv_blue_circle"
             app:layout_constraintEnd_toEndOf="@id/iv_blue_circle"
@@ -49,9 +51,10 @@
         <View
             android:id="@+id/v_bottom_blue_dotted_line"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="40dp"
             android:background="@drawable/blue_dotted_line_vertical"
             android:layerType="software"
+            android:visibility="@{spot.isLast ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/iv_blue_circle"
             app:layout_constraintStart_toStartOf="@id/iv_blue_circle"
             app:layout_constraintEnd_toEndOf="@id/iv_blue_circle" />
@@ -61,9 +64,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
+            android:layout_marginTop="8dp"
             android:src="@drawable/ic_icn_walk"
-            app:layout_constraintTop_toTopOf="@id/iv_blue_circle"
-            app:layout_constraintBottom_toBottomOf="@id/iv_blue_circle"
+            android:visibility="@{spot.isLast ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="@id/v_bottom_blue_dotted_line"
+            app:layout_constraintBottom_toBottomOf="@id/v_bottom_blue_dotted_line"
             app:layout_constraintEnd_toStartOf="@id/iv_blue_circle" />
 
         <TextView
@@ -75,10 +80,11 @@
             android:textColor="@color/grey_919bab"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:textSize="12sp"
+            android:visibility="@{spot.isLast ? View.GONE : View.VISIBLE}"
             app:text="@{spot.duration + `분`}"
             app:layout_constraintStart_toEndOf="@id/iv_transportation"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/iv_transportation"
+            app:layout_constraintBottom_toBottomOf="@id/iv_transportation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

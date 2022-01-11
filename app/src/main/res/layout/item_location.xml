@@ -16,17 +16,28 @@
         app:srcCompat="@drawable/img_gangneung"
         tools:srcCompat="@drawable/img_gangneung" />
 
+    <ImageView
+        android:id="@+id/iv_lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_img_layer" />
+
     <TextView
         android:id="@+id/tv_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="강릉"
         android:fontFamily="@font/spoqa_han_sans_neo_bold"
-        android:textSize="18sp"
+        android:text="강릉"
         android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_location"
         app:layout_constraintEnd_toEndOf="@+id/iv_location"
         app:layout_constraintStart_toStartOf="@+id/iv_location"
         app:layout_constraintTop_toTopOf="@+id/iv_location"
-        tools:text="강릉"/>
+        tools:text="강릉" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.list
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import co.kr.bemyplan.data.list.ContentModel
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
+import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
 
 class ListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListBinding
@@ -36,7 +38,10 @@ class ListActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        listAdapter = ListAdapter()
+        listAdapter = ListAdapter {
+            val intent = Intent(this, BeforePurchaseActivity::class.java)
+            startActivity(intent)
+        }
         listAdapter.itemList = listItem
         binding.rvLinearContent.adapter = listAdapter
     }

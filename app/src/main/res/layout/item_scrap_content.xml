@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="co.kr.bemyplan.data.main.scrap.ContentModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="6dp">
+
+        <ImageView
+            android:id="@+id/iv_photo"
+            setImage="@{model.photo}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/rectangle_radius_5"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_scrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@{model.isScrap ? @drawable/icn_scrap_white : @drawable/icn_not_scrap_white}"
+            app:layout_constraintEnd_toEndOf="@id/iv_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_photo" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:gravity="top"
+            android:lineHeight="20sp"
+            android:maxLines="2"
+            android:text="@{model.title}"
+            android:textColor="@color/black_1a1e23"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/iv_photo" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

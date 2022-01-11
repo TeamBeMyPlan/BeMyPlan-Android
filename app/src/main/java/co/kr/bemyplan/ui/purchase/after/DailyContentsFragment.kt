@@ -2,6 +2,7 @@ package co.kr.bemyplan.ui.purchase.after
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -28,9 +29,8 @@ class DailyContentsFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun initAdapter() {
         dailyContentsAdapter = DailyContentsAdapter()
-        binding.rvDailyContents.adapter = dailyContentsAdapter
 
-        dailyContentsAdapter.spotList.addAll(
+        dailyContentsAdapter.setItems(
             listOf(
                 Spot("산방산","제주특별자치도 제주시 애월읍 유수암리 산138", "https://picsum.photos/300/400/?random", "가볍게 오를만한 산이에요. 제가 갔을 때 산방산은 입산이 금지되어 있어서 산방굴사 까지만 오를 수 있었습니다 . 산을 좋아하고 자연을 느끼고 싶은 분들한테 추천드려요 \uD83C\uDF33\n" +
                         "        \\n\\n용머리해안 코스 / 산방굴사 코스가 나뉘어져 있으니 미리 검색해보고 가시면 좋아요. 각각 용머리해안이 보이는 경치 코스와 산방굴사가 있는 코스인데 유료입장이에요. 근데 날씨 영향을 많이 받아서 아쉬워요\uD83D\uDE2D 저희가 갔을때는 날이 흐려서 산방산에서 용머리 해안 경치가 잘 안보여서 산방굴사 코스를 선택할 수 밖에 없었어요 ,, 그리고 산방산 구경 후 용머리해안에 가보고 싶었는데 날씨 문제로 입장이 제한됐어요 .\n" +
@@ -54,8 +54,8 @@ class DailyContentsFragment : Fragment() {
                     null, null, null, false, true)
             )
         )
+        binding.rvDailyContents.adapter = dailyContentsAdapter
 
-        dailyContentsAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroyView() {

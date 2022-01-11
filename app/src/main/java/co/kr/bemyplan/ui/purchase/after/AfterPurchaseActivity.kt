@@ -18,14 +18,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // data 객체 생성
         binding.post = Post("감성을 느낄 수 있는 힐링여행", "thisisuzzwon", 4)
 
-        // Kakao Map 세팅
-        setMap()
-
         setContentView(binding.root)
 
+        // Kakao Map 세팅
+        //setMap()
+
         // 액션바 숨기기
-        var actionBar = supportActionBar
-        actionBar!!.hide()
+        supportActionBar?.hide()
     }
 
     private fun setMap() {

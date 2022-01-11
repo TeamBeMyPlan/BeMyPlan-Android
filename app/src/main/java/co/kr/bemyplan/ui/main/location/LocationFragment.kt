@@ -32,11 +32,10 @@ class LocationFragment : Fragment() {
     }
 
     private fun initAdapter(){
-        //val itemDecoration = LocationAdapter.SpaceItemDecoration(12, 6)
         locationAdapter = LocationAdapter()
         binding.rvLocation.adapter=locationAdapter
-        binding.rvLocation.addItemDecoration(VerticalItemDecorator(12))
-        binding.rvLocation.addItemDecoration(HorizontalItemDecorator(6))
+        binding.rvLocation.addItemDecoration(VerticalItemDecorator(resources.getDimensionPixelOffset(R.dimen.margin_12)))
+        binding.rvLocation.addItemDecoration(HorizontalItemDecorator(resources.getDimensionPixelOffset(R.dimen.margin_6)))
         locationAdapter.locationList.addAll(
             listOf(
                 LocationData("부산", R.drawable.img_busan, false),

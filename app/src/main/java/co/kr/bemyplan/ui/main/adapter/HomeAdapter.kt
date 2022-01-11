@@ -8,14 +8,18 @@ import co.kr.bemyplan.data.TempHomeData
 import co.kr.bemyplan.databinding.ItemHomePlanBinding
 import com.bumptech.glide.Glide
 
-class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+class HomeAdapter(val itemClick: (TempHomeData) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
     val planList = mutableListOf<TempHomeData>()
 
-    class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
+    inner class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
         fun onBind(data:TempHomeData){
             Log.d("bindtest", data.text)
             binding.tvHomeCommon.text = data.text
             Glide.with(binding.ivHomeCommon.context).load(data.img).into(binding.ivHomeCommon)
+
+            binding.root.setOnClickListener {
+                itemClick(data)
+            }
         }
     }
 

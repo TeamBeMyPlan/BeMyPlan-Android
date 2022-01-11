@@ -14,6 +14,7 @@ import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.main.adapter.HomeAdapter
 import co.kr.bemyplan.ui.main.adapter.HomeViewPagerAdapter
+import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
 import co.kr.bemyplan.util.ZoomOutPageTransformer
 
 class HomeFragment : Fragment() {
@@ -42,7 +43,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun initAdapterRecent(){
-        homeAdapter = HomeAdapter()
+        homeAdapter = HomeAdapter {
+            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            startActivity(intent)
+        }
         binding.rvRecent.adapter=homeAdapter
         homeAdapter.planList.addAll(
             listOf(
@@ -57,7 +61,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun initAdapterEditor(){
-        homeAdapter = HomeAdapter()
+        homeAdapter = HomeAdapter {
+            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            startActivity(intent)
+        }
         binding.rvEditorSuggest.adapter=homeAdapter
         homeAdapter.planList.addAll(
             listOf(
@@ -72,7 +79,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun initAdapterPopular(){
-        homeViewPagerAdapter = HomeViewPagerAdapter()
+        homeViewPagerAdapter = HomeViewPagerAdapter {
+            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            startActivity(intent)
+        }
 
         with(binding.vpPopular){
             adapter=homeViewPagerAdapter

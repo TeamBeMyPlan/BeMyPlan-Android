@@ -1,70 +1,62 @@
 package co.kr.bemyplan.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityMainBinding
-import co.kr.bemyplan.ui.main.adapter.MainViewPagerAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewPagerAdapter: MainViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.vp.isUserInputEnabled=false
-        initViewPagerAdapter()
         initBottomNavigation()
     }
 
-    private fun initViewPagerAdapter() {
-        viewPagerAdapter = MainViewPagerAdapter(this)
-        viewPagerAdapter.fragments.addAll(
-            listOf(
-                HomeFragment(),
-                LocationFragment(),
-                ScrapFragment(),
-                MyPageFragment()
-            )
-        )
-        binding.vp.adapter = viewPagerAdapter
-    }
-
     private fun initBottomNavigation() {
-        binding.vp.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                binding.bnv.menu.getItem(position).isChecked = true
-            }
-        })
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fcv_main, HomeFragment())
+            .commit()
         binding.bnv.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.menu_first -> {
-                    binding.vp.currentItem = FIRST_FRAGMENT
+                R.id.menu_home -> {
+                    replaceFragment(HOME_FRAGMENT)
                     return@setOnItemSelectedListener true
                 }
-                R.id.menu_second -> {
-                    binding.vp.currentItem = SECOND_FRAGMENT
+                R.id.menu_location -> {
+                    replaceFragment(LOCATION_FRAGMENT)
                     return@setOnItemSelectedListener true
                 }
-                R.id.menu_third -> {
-                    binding.vp.currentItem = THIRD_FRAGMENT
+                R.id.menu_scrap -> {
+                    replaceFragment(SCRAP_FRAGMENT)
                     return@setOnItemSelectedListener true
                 }
-                else -> {
-                    binding.vp.currentItem = FOURTH_FRAGMENT
+                R.id.menu_my_page -> {
+                    replaceFragment(MY_PLAN_FRAGMENT)
                     return@setOnItemSelectedListener true
                 }
+                else -> return@setOnItemSelectedListener false
             }
         }
     }
 
+    private fun replaceFragment(fragmentType: Int) {
+        val transaction = supportFragmentManager.beginTransaction()
+        when (fragmentType) {
+            HOME_FRAGMENT -> transaction.replace(R.id.fcv_main, HomeFragment())
+            LOCATION_FRAGMENT -> transaction.replace(R.id.fcv_main, LocationFragment())
+            SCRAP_FRAGMENT -> transaction.replace(R.id.fcv_main, ScrapFragment())
+            MY_PLAN_FRAGMENT -> transaction.replace(R.id.fcv_main, MyPageFragment())
+        }
+        transaction.commit()
+    }
+
     companion object {
-        const val FIRST_FRAGMENT = 0
-        const val SECOND_FRAGMENT = 1
-        const val THIRD_FRAGMENT = 2
-        const val FOURTH_FRAGMENT = 3
+        const val HOME_FRAGMENT = 0
+        const val LOCATION_FRAGMENT = 1
+        const val SCRAP_FRAGMENT = 2
+        const val MY_PLAN_FRAGMENT = 3
     }
 }

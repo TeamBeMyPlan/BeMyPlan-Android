@@ -34,10 +34,8 @@
             android:name=".ui.purchase.before.BeforePurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.purchase.after.AfterPurchaseActivity"
-            android:exported="true">
-
-        </activity>
+            android:name=".ui.main.MainActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

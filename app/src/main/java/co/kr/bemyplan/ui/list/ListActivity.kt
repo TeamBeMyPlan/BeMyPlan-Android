@@ -25,7 +25,6 @@ class ListActivity : AppCompatActivity() {
         initList()
         initRecyclerView()
         clickBack()
-        openBottomSheetDialog()
     }
 
     private fun initList() {
@@ -49,17 +48,6 @@ class ListActivity : AppCompatActivity() {
     private fun clickBack() {
         binding.ivBack.setOnClickListener {
             finish()
-        }
-    }
-
-    // 임시코드, 추후 서버와 논의 후 ViewModel을 통한 데이터 전달로 바꿀 예정
-    private fun openBottomSheetDialog() {
-        binding.ivOrder.setOnClickListener {
-            val bottomSheetDialogFragment = SortFragment {
-                orderBy = it
-                Log.d("mlog: orderBy", orderBy.toString())
-            }
-            bottomSheetDialogFragment.show(supportFragmentManager, bottomSheetDialogFragment.tag)
         }
     }
 }

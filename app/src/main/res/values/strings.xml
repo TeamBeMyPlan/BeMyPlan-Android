@@ -15,4 +15,6 @@
     <string name="menu_title_location">여행지</string>
     <string name="menu_title_scrap">스크랩</string>
     <string name="menu_title_myplan">마이플랜</string>
+    <string name="text_scrap_empty">아직 스크랩한 여행 일정이 없어요</string>
+    <string name="text_recommend">이런 여행 일정은 어떠세요?</string>
 </resources>

@@ -17,9 +17,11 @@ class HomeAdapter(val itemClick: (TempHomeData) -> Unit) : RecyclerView.Adapter<
             binding.tvHomeCommon.text = data.text
             Glide.with(binding.ivHomeCommon.context).load(data.img).into(binding.ivHomeCommon)
 
-            binding.root.setOnClickListener {
-                itemClick(data)
-            }
+            clickItem(data)
+        }
+
+        private fun clickItem(data: TempHomeData) {
+            itemClick(data)
         }
     }
 

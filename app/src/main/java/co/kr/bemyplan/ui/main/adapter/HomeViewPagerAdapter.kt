@@ -17,10 +17,10 @@ class HomeViewPagerAdapter(val itemClick: (TempHomeData) -> Unit) :
             binding.tvPopular1.text = data.text
             binding.tvPopular2.text = data.text2
             Glide.with(binding.ivPopular.context).load(data.img).into(binding.ivPopular)
+        }
 
-            binding.root.setOnClickListener {
-                itemClick(data)
-            }
+        private fun clickItem(data: TempHomeData) {
+            itemClick(data)
         }
     }
 

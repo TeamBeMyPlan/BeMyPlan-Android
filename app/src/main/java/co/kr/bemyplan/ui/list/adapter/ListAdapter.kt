@@ -19,11 +19,12 @@ class ListAdapter(val itemClick: (ContentModel) -> Unit) :
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
 
-            binding.root.setOnClickListener {
-                itemClick(contentModel)
-            }
-
+            clickItem(contentModel)
 //            clickScrap()
+        }
+
+        private fun clickItem(contentModel: ContentModel) {
+            itemClick(contentModel)
         }
     }
 

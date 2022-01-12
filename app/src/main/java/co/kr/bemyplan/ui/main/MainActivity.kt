@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityMainBinding
 import co.kr.bemyplan.ui.main.scrap.ScrapFragment
-import co.kr.bemyplan.ui.main.adapter.MainViewPagerAdapter
 import co.kr.bemyplan.ui.main.home.HomeFragment
 import co.kr.bemyplan.ui.main.location.LocationFragment
 

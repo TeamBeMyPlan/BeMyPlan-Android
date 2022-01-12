@@ -23,11 +23,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        // Kakao Map 세팅
-        //setMap()
-
-        // 액션바 숨기기
-        supportActionBar?.hide()
+        // TODO: Kakao Map 세팅 (안먹힘)
+        setMap()
     }
 
     private fun setMap() {

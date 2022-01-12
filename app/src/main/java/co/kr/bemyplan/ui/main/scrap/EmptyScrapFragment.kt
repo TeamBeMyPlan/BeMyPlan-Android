@@ -37,9 +37,9 @@ class EmptyScrapFragment : Fragment() {
     private fun initList() {
         listItem = listOf(
             ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을 위한 찐먹킷리스트 투어", true, true),
-            ContentModel(R.drawable.img, null, "부모님과 함께하는", true, false),
+            ContentModel(R.drawable.img_charge, null, "부모님과 함께하는", true, false),
             ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을", false, true),
-            ContentModel(R.drawable.img, null, "3박 4일 제주 여행", false, false),
+            ContentModel(R.drawable.img_charge, null, "3박 4일 제주 여행", false, false),
             ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을 위한 찐먹킷리스트 투어", true, false),
         )
     }

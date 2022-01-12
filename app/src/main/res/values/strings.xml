@@ -8,6 +8,13 @@
     <string name="home_editor_suggest_title">에디터 추천 여행 일정</string>
 
     <string name="location_title">어디로 떠나세요?</string>
+    <string name="charging_title">결제</string>
+    <string name="charging_cost_title">결제 금액</string>
+    <string name="charging_charging_way">결제 수단</string>
+    <string name="charging_kakaopay">카카오페이</string>
+    <string name="charging_toss">토스</string>
+    <string name="charging_naverpay">네이버페이</string>
+    <string name="charging_charge">결제하기</string>
 
     <string name="title_purchase_benefit">콘텐츠를 구매하시면 이런 내용을 볼 수 있어요!</string>
     <string name="body_purchase_benefit">✔️ 장소를 핀한 지도\n✔️ 정류장 형식 일정\n✔️ 솔직 후기\n✔️ 가본 사람만 알 수 있는 꿀팁\n✔️ 다음 장소로 이동할 때의 교통편</string>

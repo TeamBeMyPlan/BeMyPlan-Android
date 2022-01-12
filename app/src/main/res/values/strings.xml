@@ -17,4 +17,7 @@
     <string name="menu_title_myplan">마이플랜</string>
     <string name="text_scrap_empty">아직 스크랩한 여행 일정이 없어요</string>
     <string name="text_recommend">이런 여행 일정은 어떠세요?</string>
+    <string name="text_guest_mode"><u>둘러보기</u></string>
+    <string name="text_google_login">Google 계정으로 로그인</string>
+    <string name="text_kakao_login">카카오 로그인</string>
 </resources>

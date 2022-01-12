@@ -21,7 +21,9 @@ class HomeAdapter(val itemClick: (TempHomeData) -> Unit) : RecyclerView.Adapter<
         }
 
         private fun clickItem(data: TempHomeData) {
-            itemClick(data)
+            binding.root.setOnClickListener {
+                itemClick(data)
+            }
         }
     }
 

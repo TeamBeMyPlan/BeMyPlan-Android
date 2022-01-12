@@ -20,7 +20,9 @@ class HomeViewPagerAdapter(val itemClick: (TempHomeData) -> Unit) :
         }
 
         private fun clickItem(data: TempHomeData) {
-            itemClick(data)
+            binding.root.setOnClickListener {
+                itemClick(data)
+            }
         }
     }
 

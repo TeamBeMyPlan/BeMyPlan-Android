@@ -24,7 +24,9 @@ class ScrapAdapter(val itemClick: (ContentModel) -> Unit) :
         }
 
         private fun clickItem(contentModel: ContentModel) {
-            itemClick(contentModel)
+            binding.root.setOnClickListener {
+                itemClick(contentModel)
+            }
         }
     }
 

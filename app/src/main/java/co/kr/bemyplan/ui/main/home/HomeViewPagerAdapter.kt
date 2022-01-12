@@ -1,9 +1,9 @@
-package co.kr.bemyplan.ui.main.adapter
+package co.kr.bemyplan.ui.main.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.TempHomeData
+import co.kr.bemyplan.data.home.TempHomeData
 import co.kr.bemyplan.databinding.ItemPopularBinding
 import com.bumptech.glide.Glide
 

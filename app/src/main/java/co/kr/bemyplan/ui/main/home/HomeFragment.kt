@@ -1,4 +1,4 @@
-package co.kr.bemyplan.ui.main
+package co.kr.bemyplan.ui.main.home
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,17 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.TempHomeData
+import co.kr.bemyplan.data.home.TempHomeData
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
-import co.kr.bemyplan.ui.main.adapter.HomeAdapter
-import co.kr.bemyplan.ui.main.adapter.HomeViewPagerAdapter
+import co.kr.bemyplan.ui.main.home.HomeAdapter
+import co.kr.bemyplan.ui.main.home.HomeViewPagerAdapter
 import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
 import co.kr.bemyplan.util.ZoomOutPageTransformer
 
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewPagerAdapter:HomeViewPagerAdapter
+    private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
     private lateinit var homeAdapter: HomeAdapter
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
@@ -88,16 +88,16 @@ class HomeFragment : Fragment() {
             adapter=homeViewPagerAdapter
 
             val pageMargin = resources.getDimensionPixelOffset(R.dimen.padding_24)
-            val pageMarginHalf = resources.getDimensionPixelOffset(R.dimen.half_padding_12)
+            val innerMargin = resources.getDimensionPixelOffset(R.dimen.padding_20)
 
             getChildAt(0).overScrollMode=RecyclerView.OVER_SCROLL_NEVER //맨 위에서 더 이상 위로 스크롤할 영역이 없을 때 위로 땡겨지지 않도록
             offscreenPageLimit=1 //리사이클러뷰에서 현재 보고있는 아이템의 양쪽으로 지정한 숫자만큼의 아이템을 유지한다. 그 밖의 아이템들은 필요할 때 어댑터에서 만든다.
             // Set the number of pages that should be retained to either side of the currently visible page(s). Pages beyond this limit will be recreated from the adapter when needed
 
-            setPadding(pageMargin, 0, pageMarginHalf, 0) //패딩 값 코드단에서 주기
+            setPadding(pageMargin, 0, pageMargin, 0) //패딩 값 코드단에서 주기
             setPageTransformer(CompositePageTransformer().apply{
                 addTransformer(ZoomOutPageTransformer())
-                addTransformer{page, position-> page.translationX = position*-(pageMargin + pageMarginHalf) / 2 }
+                addTransformer{page, position-> page.translationX = position*-(innerMargin / 2) }
             })
         }
 

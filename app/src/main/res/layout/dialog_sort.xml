@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/layout_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:behavior_draggable="false"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp">
+
+            <LinearLayout
+                android:id="@+id/layout_linear1"
+                android:layout_width="36dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/grey_e8eaed"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19dp"
+                android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                android:text="@string/text_bottom_sheet_dialog_sort"
+                android:textColor="@color/grey_5d687a"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_linear1" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_linear2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="19dp"
+            android:background="@color/grey_e8eaed"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/layout_top" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_latest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="23dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_linear2">
+
+            <TextView
+                android:id="@+id/tv_latest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:text="최신순"
+                android:textColor="@color/blue_0077b0"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_latest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_check"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_linear3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_e8eaed"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/layout_latest" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_best_seller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="23dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_linear3">
+
+            <TextView
+                android:id="@+id/tv_best_seller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:text="구매 많은 순"
+                android:textColor="@color/grey_5d687a"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_best_seller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_check"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_linear4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_e8eaed"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/layout_best_seller" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_best_scrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="23dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_linear4">
+
+            <TextView
+                android:id="@+id/tv_best_scrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:text="스크랩 많은 순"
+                android:textColor="@color/grey_5d687a"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_best_scrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_check"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_linear5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="65dp"
+            android:background="@color/grey_e8eaed"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_best_scrapper" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

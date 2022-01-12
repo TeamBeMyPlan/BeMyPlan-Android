@@ -18,18 +18,28 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // data 객체 생성
         binding.post = Post("감성을 느낄 수 있는 힐링여행", "thisisuzzwon", 4)
 
-        // Kakao Map 세팅
-        setMap()
+        // fragment 보이기
+        initFragment()
 
         setContentView(binding.root)
 
+        // Kakao Map 세팅
+        //setMap()
+
         // 액션바 숨기기
-        var actionBar = supportActionBar
-        actionBar!!.hide()
+        supportActionBar?.hide()
     }
 
     private fun setMap() {
         val mapView = MapView(this)
         binding.mapView.addView(mapView)
+    }
+
+    private fun initFragment() {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val fragment = DailyContentsFragment()
+        fragmentTransaction.add(R.id.fcv_daily_context, fragment)
+        fragmentTransaction.commit()
     }
 }

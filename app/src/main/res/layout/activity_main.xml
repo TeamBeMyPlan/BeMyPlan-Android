@@ -15,8 +15,8 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.MainActivity">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/bnv"
@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:itemRippleColor="@color/white"
+            app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/menu_bnv" />
 

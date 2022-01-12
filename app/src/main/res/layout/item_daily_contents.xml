@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="spot"
+            type="co.kr.bemyplan.data.Spot" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp" >
+
+        <TextView
+            android:id="@+id/tv_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="산방산"
+            android:textColor="@color/grey_313740"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:textSize="20sp"
+            app:text="@{spot.placeName}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="제주특별자치도 제주시 애월읍 유수암리 산138"
+            android:textColor="@color/grey_919bab"
+            android:fontFamily="@font/spoqa_han_sans_neo_regular"
+            android:textSize="14sp"
+            app:text="@{spot.address}"
+            app:layout_constraintTop_toBottomOf="@id/tv_place"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/ic_icn_copy"
+            app:layout_constraintTop_toTopOf="@+id/tv_address"
+            app:layout_constraintBottom_toBottomOf="@id/tv_address"
+            app:layout_constraintStart_toEndOf="@id/tv_address" />
+
+        <ImageView
+            android:id="@+id/iv_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_address"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_context"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_313740"
+            android:fontFamily="@font/spoqa_han_sans_neo_regular"
+            android:textSize="14sp"
+            android:text="가볍게 오를만한 산이에요. 제가 갔을 때 산방산은 입산이 금지되어 있어서 산방굴사 까지만 오를 수 있었습니다 . 산을 좋아하고 자연을 느끼고 싶은 분들한테 추천드려요 \n
+\n용머리해안 코스 산방굴사 코스가 나뉘어져 있으니 미리 검색해보고 가시면 좋아요. 각각 용머리해안이 보이는 경치 코스와 산방굴사가 있는 코스인데 유료입장이에요. 근데 날씨 영향을 많이 받아서 아쉬워요 저희가 갔을때는 날이 흐려서 산방산에서 용머리 해안 경치가 잘 안보여서 산방굴사 코스를 선택할 수 밖에 없었어요 ,, 그리고 산방산 구경 후 용머리해안에 가보고 싶었는데 날씨 문제로 입장이 제한됐어요 .
+\n\n그래서 산방산에 가고싶은 분들은 여행일정 중 맑은날에 가시는걸 추천드려요 ! 마음처럼 되지는 않겠지만 오늘 날씨 진짜 좋은데 ? 싶으면 다음날 일정이랑 체인지를 해서라도 맑은날에 방문하시는게 베스트 일듯 해요"
+            app:text="@{spot.context}"
+            app:layout_constraintTop_toBottomOf="@id/iv_photo"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_next_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/grey_empty_box"
+            android:paddingVertical="10dp"
+            android:visibility="@{spot.isLast ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/tv_context"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_place_route"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="산방산 → 난드르바당"
+                    android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                    android:textColor="@color/blue_0077b0"
+                    android:textSize="12sp"
+                    app:text="@{spot.placeName + `→` + spot.placeNext + ` `}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_moving_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="도보 3분"
+                    android:textColor="@color/blue_0077b0"
+                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                    android:textSize="12sp"
+                    app:text="@{spot.transportation + spot.duration + `분`}"
+                    app:layout_constraintStart_toEndOf="@id/tv_place_route"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

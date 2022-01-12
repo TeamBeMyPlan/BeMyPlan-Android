@@ -7,16 +7,22 @@ import co.kr.bemyplan.data.home.TempHomeData
 import co.kr.bemyplan.databinding.ItemPopularBinding
 import com.bumptech.glide.Glide
 
-class HomeViewPagerAdapter :
+class HomeViewPagerAdapter(val itemClick: (TempHomeData) -> Unit) :
     RecyclerView.Adapter<HomeViewPagerAdapter.PagerViewHolder>() {
 
     val planList = mutableListOf<TempHomeData>()
 
-    class PagerViewHolder(private val binding:ItemPopularBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data: TempHomeData){
+    inner class PagerViewHolder(private val binding:ItemPopularBinding):RecyclerView.ViewHolder(binding.root){
+        fun onBind(data:TempHomeData){
             binding.tvPopular1.text = data.text
             binding.tvPopular2.text = data.text2
             Glide.with(binding.ivPopular.context).load(data.img).into(binding.ivPopular)
+        }
+
+        private fun clickItem(data: TempHomeData) {
+            binding.root.setOnClickListener {
+                itemClick(data)
+            }
         }
     }
 

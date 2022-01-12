@@ -16,8 +16,11 @@
         android:theme="@style/Theme.BeMyPlan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.purchase.after.AfterPurchaseActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ui.list.ListActivity"
             android:exported="false" />

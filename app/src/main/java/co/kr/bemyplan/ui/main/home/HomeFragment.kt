@@ -12,8 +12,6 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.home.TempHomeData
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
-import co.kr.bemyplan.ui.main.home.HomeAdapter
-import co.kr.bemyplan.ui.main.home.HomeViewPagerAdapter
 import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
 import co.kr.bemyplan.util.ZoomOutPageTransformer
 
@@ -32,6 +30,9 @@ class HomeFragment : Fragment() {
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
+
+
+
         clickMore()
 
         return binding.root
@@ -87,17 +88,22 @@ class HomeFragment : Fragment() {
         with(binding.vpPopular){
             adapter=homeViewPagerAdapter
 
-            val pageMargin = resources.getDimensionPixelOffset(R.dimen.padding_24)
-            val innerMargin = resources.getDimensionPixelOffset(R.dimen.padding_20)
+            val display = activity?.applicationContext?.resources?.displayMetrics
+            val deviceWidth = display?.widthPixels
+
+            val ratio : Double = 312/360.0
+            val pageWidth = ratio * deviceWidth!!
+            val pagePadding = ((deviceWidth-pageWidth)/2).toInt()
+            val innerPadding = (pagePadding/2).toInt()
 
             getChildAt(0).overScrollMode=RecyclerView.OVER_SCROLL_NEVER //맨 위에서 더 이상 위로 스크롤할 영역이 없을 때 위로 땡겨지지 않도록
             offscreenPageLimit=1 //리사이클러뷰에서 현재 보고있는 아이템의 양쪽으로 지정한 숫자만큼의 아이템을 유지한다. 그 밖의 아이템들은 필요할 때 어댑터에서 만든다.
             // Set the number of pages that should be retained to either side of the currently visible page(s). Pages beyond this limit will be recreated from the adapter when needed
 
-            setPadding(pageMargin, 0, pageMargin, 0) //패딩 값 코드단에서 주기
+            setPadding(pagePadding, 0, pagePadding, 0) //패딩 값 코드단에서 주기
             setPageTransformer(CompositePageTransformer().apply{
                 addTransformer(ZoomOutPageTransformer())
-                addTransformer{page, position-> page.translationX = position*-(innerMargin / 2) }
+                addTransformer{page, position-> page.translationX = position*-(innerPadding) }
             })
         }
 

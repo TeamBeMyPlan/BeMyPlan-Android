@@ -108,80 +108,24 @@
                     android:layout_marginTop="20dp"
                     app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-                <HorizontalScrollView
-                    android:id="@+id/sv_days"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_day_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginHorizontal="24dp"
                     android:paddingTop="20dp"
-                    android:scrollbars="none"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/map_view"
-                    tools:layout_editor_absoluteX="70dp">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/btn1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/btn_daily"
-                            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                            android:text="1일차"
-                            android:textColor="@drawable/btn_daily_text_color"
-                            android:textSize="14sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/btn2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@drawable/btn_daily"
-                            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                            android:text="2일차"
-                            android:textColor="@drawable/btn_daily_text_color"
-                            android:textSize="14sp"
-                            app:layout_constraintStart_toEndOf="@+id/btn1"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/btn3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@drawable/btn_daily"
-                            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                            android:text="3일차"
-                            android:textColor="@drawable/btn_daily_text_color"
-                            android:textSize="14sp"
-                            app:layout_constraintStart_toEndOf="@+id/btn2"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/btn4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@drawable/btn_daily"
-                            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                            android:text="4일차"
-                            android:textColor="@drawable/btn_daily_text_color"
-                            android:textSize="14sp"
-                            app:layout_constraintStart_toEndOf="@+id/btn3"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </HorizontalScrollView>
+                    tools:listitem="@layout/item_day_button" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/fcv_daily_context"
                     tools:layout="@layout/fragment_daily_contents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/sv_days" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_day_button" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

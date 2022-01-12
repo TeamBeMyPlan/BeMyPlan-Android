@@ -4,12 +4,14 @@
         <shape android:shape="rectangle" android:thickness="0dp">
             <corners android:radius="5dp"/>
             <solid android:color="@color/grey_f4f5f7"/>
+            <size android:width="63dp" android:height="37dp"/>
         </shape>
     </item>
     <item android:state_selected="true">
         <shape android:shape="rectangle" android:thickness="0dp">
             <corners android:radius="5dp"/>
             <solid android:color="@color/blue_0077b0"/>
+            size android:width="63dp" android:height="37dp"/>
         </shape>
     </item>
 </selector>

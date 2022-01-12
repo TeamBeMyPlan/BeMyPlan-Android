@@ -1,4 +1,4 @@
-package co.kr.bemyplan.ui.main
+package co.kr.bemyplan.ui.main.myplan
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

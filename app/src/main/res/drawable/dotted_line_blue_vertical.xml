@@ -2,4 +2,4 @@
 <rotate xmlns:android="http://schemas.android.com/apk/res/android"
     android:fromDegrees="90"
     android:toDegrees="90"
-    android:drawable="@drawable/blue_dotted_line_horizontal" />
+    android:drawable="@drawable/dotted_line_blue_horizontal" />

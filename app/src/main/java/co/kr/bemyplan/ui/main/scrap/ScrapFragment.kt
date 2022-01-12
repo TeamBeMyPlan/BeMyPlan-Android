@@ -18,18 +18,13 @@ import co.kr.bemyplan.ui.sort.SortFragment
 class ScrapFragment : Fragment() {
     private var _binding: FragmentScrapBinding? = null
     private val binding get() = _binding!!
-    private lateinit var scrapAdapter: ScrapAdapter
-    private var listItem = listOf<ContentModel>()
-    private var orderBy: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_scrap, container, false)
-        initList()
-        initRecyclerView()
-        openBottomSheetDialog()
+        initFragmentContainerView()
         return binding.root
     }
 
@@ -38,33 +33,15 @@ class ScrapFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun initList() {
-        listItem = listOf(
-            ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을 위한 찐먹킷리스트 투어", true, true),
-            ContentModel(R.drawable.img, null, "부모님과 함께하는", true, false),
-            ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을", false, true),
-            ContentModel(R.drawable.img, null, "3박 4일 제주 여행", false, false),
-            ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을 위한 찐먹킷리스트 투어", true, false),
-            ContentModel(R.drawable.img, null, "부모님과 함께하는 3박 4일 제주 여행", false, true),
-        )
-    }
+    private fun initFragmentContainerView() {
+        // 스크랩한 글이 있을 때
+//        val transaction = childFragmentManager.beginTransaction()
+//        transaction.add(R.id.fcv_scrap, NotEmptyScrapFragment())
+//            .commit()
 
-    private fun initRecyclerView() {
-        scrapAdapter = ScrapAdapter {
-            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
-            startActivity(intent)
-        }
-        scrapAdapter.itemList = listItem
-        binding.rvContent.adapter = scrapAdapter
-    }
-
-    private fun openBottomSheetDialog() {
-        binding.ivOrder.setOnClickListener {
-            val bottomSheetDialogFragment = SortFragment {
-                orderBy = it
-                Log.d("mlog: orderBy", orderBy.toString())
-            }
-            bottomSheetDialogFragment.show(childFragmentManager, bottomSheetDialogFragment.tag)
-        }
+        // 스크랩한 글이 없을 때
+        val transaction = childFragmentManager.beginTransaction()
+        transaction.add(R.id.fcv_scrap, EmptyScrapFragment())
+            .commit()
     }
 }

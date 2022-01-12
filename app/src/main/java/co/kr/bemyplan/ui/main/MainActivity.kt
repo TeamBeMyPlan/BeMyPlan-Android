@@ -1,7 +1,9 @@
 package co.kr.bemyplan.ui.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityMainBinding
@@ -39,6 +41,13 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 else -> return@setOnItemSelectedListener false
+            }
+        }
+        // LongClick 시 ToolTip 안 뜨게 하는 코드입니다.
+        binding.bnv.menu.forEach {
+            val view = binding.bnv.findViewById<View>(it.itemId)
+            view.setOnLongClickListener {
+                true
             }
         }
     }

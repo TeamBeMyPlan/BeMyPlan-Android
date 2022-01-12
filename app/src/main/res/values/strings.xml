@@ -9,10 +9,12 @@
 
     <string name="title_purchase_benefit">콘텐츠를 구매하시면 이런 내용을 볼 수 있어요!</string>
     <string name="body_purchase_benefit">✔️ 장소를 핀한 지도\n✔️ 정류장 형식 일정\n✔️ 솔직 후기\n✔️ 가본 사람만 알 수 있는 꿀팁\n✔️ 다음 장소로 이동할 때의 교통편</string>
-    <string name="tv_purchase">구매하기</string>
+    <string name="text_purchase">구매하기</string>
     <string name="text_bottom_sheet_dialog_sort">정렬</string>
     <string name="menu_title_home">홈</string>
     <string name="menu_title_location">여행지</string>
     <string name="menu_title_scrap">스크랩</string>
     <string name="menu_title_myplan">마이플랜</string>
+    <string name="text_scrap_empty">아직 스크랩한 여행 일정이 없어요</string>
+    <string name="text_recommend">이런 여행 일정은 어떠세요?</string>
 </resources>

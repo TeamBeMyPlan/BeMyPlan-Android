@@ -1,46 +1,42 @@
 package co.kr.bemyplan.ui.main.scrap.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.main.scrap.ContentModel
-import co.kr.bemyplan.databinding.ItemScrapContentBinding
+import co.kr.bemyplan.databinding.ItemScrapEmptyContentBinding
 
-class ScrapAdapter(val itemClick: (ContentModel) -> Unit) :
-    RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder>() {
+class ScrapRecommendAdapter(val context: Context, val itemClick: (ContentModel) -> Unit) :
+    RecyclerView.Adapter<ScrapRecommendAdapter.ScrapRecommendViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 
-    inner class ScrapViewHolder(val binding: ItemScrapContentBinding) :
+    inner class ScrapRecommendViewHolder(val binding: ItemScrapEmptyContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
             binding.model = contentModel
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
 
-            clickItem(contentModel)
-//            clickScrap()
-        }
-
-        private fun clickItem(contentModel: ContentModel) {
             binding.root.setOnClickListener {
                 itemClick(contentModel)
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScrapViewHolder {
-        val binding = DataBindingUtil.inflate<ItemScrapContentBinding>(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScrapRecommendViewHolder {
+        val binding = DataBindingUtil.inflate<ItemScrapEmptyContentBinding>(
             LayoutInflater.from(parent.context),
-            R.layout.item_scrap_content,
+            R.layout.item_scrap_empty_content,
             parent,
             false
         )
-        return ScrapViewHolder(binding)
+        return ScrapRecommendViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ScrapViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ScrapRecommendViewHolder, position: Int) {
         holder.bind(itemList[position])
     }
 

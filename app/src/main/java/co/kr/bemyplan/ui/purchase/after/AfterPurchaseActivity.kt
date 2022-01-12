@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.DailyContents
 import co.kr.bemyplan.data.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
+import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
+import co.kr.bemyplan.ui.purchase.after.adapter.DayAdapter
 import net.daum.mf.map.api.MapView
 
 class AfterPurchaseActivity : AppCompatActivity() {
+    private lateinit var dayAdapter: DayAdapter
     private lateinit var binding: ActivityAfterPurchaseBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,13 +25,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // fragment 보이기
         initFragment()
 
+        // 일차별 버튼
+        initDayButtonAdpater()
+
         setContentView(binding.root)
 
-        // Kakao Map 세팅
-        //setMap()
-
-        // 액션바 숨기기
-        supportActionBar?.hide()
+        // TODO: Kakao Map 세팅 (안먹힘)
+        setMap()
     }
 
     private fun setMap() {
@@ -41,5 +45,21 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val fragment = DailyContentsFragment()
         fragmentTransaction.add(R.id.fcv_daily_context, fragment)
         fragmentTransaction.commit()
+    }
+
+    private fun initDayButtonAdpater() {
+        dayAdapter = DayAdapter()
+
+        val items = listOf(
+            DailyContents(1, false),
+            DailyContents(2, false),
+            DailyContents(3, false),
+            DailyContents(4, false),
+            DailyContents(5, false),
+            DailyContents(6, true)
+        )
+
+        dayAdapter.setItems(items)
+        binding.rvDayButton.adapter = dayAdapter
     }
 }

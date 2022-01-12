@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="dailyContents"
+            type="co.kr.bemyplan.data.DailyContents" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:id="@+id/tv_day_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_daily"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="8dp"
+            android:text="1일차"
+            android:textColor="@drawable/btn_daily_text_color"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:text="@{dailyContents.day + `일차`}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:layout_marginStart="9dp"
         android:text="구매한 여행 일정"
         android:fontFamily="@font/spoqa_han_sans_neo_bold"
         android:textSize="16sp"

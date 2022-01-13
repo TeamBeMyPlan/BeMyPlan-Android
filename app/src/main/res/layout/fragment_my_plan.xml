@@ -118,7 +118,7 @@
             android:id="@+id/fcv_purchase_plan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
+            android:layout_marginHorizontal="15dp"
             tools:layout="@layout/fragment_exist_my_plan"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/v_box_grey"/>

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.myplan.PurchaseTour
 import co.kr.bemyplan.databinding.FragmentExistMyPlanBinding
@@ -31,6 +32,7 @@ class ExistMyPlanFragment : Fragment() {
     }
 
     private fun initAdapter() {
+        binding.rvMyPlanPurchase.layoutManager = GridLayoutManager(context, 2)
         purchaseTourAdapter = ExistMyPlanAdapter()
 
         val items = listOf(

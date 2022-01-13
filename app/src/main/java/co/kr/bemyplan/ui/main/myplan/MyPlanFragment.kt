@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.myplan.Profile
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
+import co.kr.bemyplan.ui.main.myplan.empty.EmptyMyPlanFragment
 import co.kr.bemyplan.ui.main.myplan.exist.ExistMyPlanFragment
 import co.kr.bemyplan.ui.purchase.after.DailyContentsFragment
 import com.bumptech.glide.Glide
@@ -42,7 +43,7 @@ class MyPlanFragment : Fragment() {
     private fun initFragment() {
         val fragmentManager = parentFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        val fragment = ExistMyPlanFragment()
+        val fragment = EmptyMyPlanFragment()
         fragmentTransaction.add(R.id.fcv_purchase_plan, fragment)
         fragmentTransaction.commit()
     }

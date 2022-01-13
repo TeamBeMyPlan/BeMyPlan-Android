@@ -130,7 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
-                    tools:layout="@layout/fragment_exist_my_plan"
+                    tools:layout="@layout/fragment_empty_my_plan"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/v_box_grey"/>
 

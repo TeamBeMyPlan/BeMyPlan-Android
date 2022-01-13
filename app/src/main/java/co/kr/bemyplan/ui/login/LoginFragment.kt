@@ -19,9 +19,11 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
+        _binding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
 
         clickGuestLogin()
+        test()
 
         return binding.root
     }
@@ -35,6 +37,15 @@ class LoginFragment : Fragment() {
         binding.tvGuestLogin.setOnClickListener {
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun test() {
+        binding.layoutKakao.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fcv_login, SignUpFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 }

@@ -106,12 +106,22 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
+            android:id="@+id/v_box_grey"
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:layout_marginTop="26dp"
             android:background="@color/grey_f4f5f7"
             app:layout_constraintTop_toBottomOf="@id/cl_purchase_count"
             app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_purchase_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            tools:layout="@layout/fragment_exist_my_plan"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_box_grey"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

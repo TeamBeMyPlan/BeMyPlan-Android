@@ -10,6 +10,7 @@ import co.kr.bemyplan.databinding.ActivityMainBinding
 import co.kr.bemyplan.ui.main.scrap.ScrapFragment
 import co.kr.bemyplan.ui.main.home.HomeFragment
 import co.kr.bemyplan.ui.main.location.LocationFragment
+import co.kr.bemyplan.ui.main.myplan.MyPlanFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
             HOME_FRAGMENT -> transaction.replace(R.id.fcv_main, HomeFragment())
             LOCATION_FRAGMENT -> transaction.replace(R.id.fcv_main, LocationFragment())
             SCRAP_FRAGMENT -> transaction.replace(R.id.fcv_main, ScrapFragment())
-            MY_PLAN_FRAGMENT -> transaction.replace(R.id.fcv_main, MyPageFragment())
+            MY_PLAN_FRAGMENT -> transaction.replace(R.id.fcv_main, MyPlanFragment())
         }
         transaction.commit()
     }

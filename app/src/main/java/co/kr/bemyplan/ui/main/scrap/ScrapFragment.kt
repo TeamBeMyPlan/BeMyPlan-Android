@@ -1,19 +1,13 @@
 package co.kr.bemyplan.ui.main.scrap
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.main.scrap.ContentModel
 import co.kr.bemyplan.databinding.FragmentScrapBinding
-import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
-import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
-import co.kr.bemyplan.ui.sort.SortFragment
 
 class ScrapFragment : Fragment() {
     private var _binding: FragmentScrapBinding? = null

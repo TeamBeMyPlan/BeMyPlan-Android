@@ -11,7 +11,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.main.scrap.ContentModel
 import co.kr.bemyplan.databinding.FragmentEmptyScrapBinding
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapRecommendAdapter
-import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
+import co.kr.bemyplan.ui.purchase.PurchaseActivity
 
 class EmptyScrapFragment : Fragment() {
     private var _binding: FragmentEmptyScrapBinding? = null
@@ -46,7 +46,7 @@ class EmptyScrapFragment : Fragment() {
 
     private fun initRecyclerView() {
         scrapRecommendAdapter = ScrapRecommendAdapter(requireContext()) {
-            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
         scrapRecommendAdapter.itemList = listItem

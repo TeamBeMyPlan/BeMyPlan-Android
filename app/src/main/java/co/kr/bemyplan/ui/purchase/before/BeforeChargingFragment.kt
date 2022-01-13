@@ -4,33 +4,49 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.graphics.Rect
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.purchase.before.ContentModel
 import co.kr.bemyplan.data.purchase.before.SummaryModel
-import co.kr.bemyplan.databinding.ActivityBeforePurchaseBinding
+import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.adapter.SummaryAdapter
 
-class BeforePurchaseActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityBeforePurchaseBinding
+class BeforeChargingFragment : Fragment() {
+
+    private var _binding: FragmentBeforeChargingBinding? = null
+    private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
     private lateinit var summaryAdapter: SummaryAdapter
     private lateinit var contentAdapter: ContentAdapter
     private var summaryItemList = listOf<SummaryModel>()
     private var contentItemList = listOf<ContentModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_before_purchase)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
 
         initList()
         initRecyclerView()
         initNestedScrollView()
         clickBack()
         clickScrap()
+
+        binding.layoutPurchase.setOnClickListener{
+            val chargingFragment = ChargingFragment()
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.add(R.id.fragment_container_charging, chargingFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+        return binding.root
     }
 
     private fun initList() {
@@ -134,7 +150,10 @@ class BeforePurchaseActivity : AppCompatActivity() {
 
     private fun clickBack() {
         binding.layoutBack.setOnClickListener {
-            finish()
+            activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.remove(this)
+                ?.commit()
         }
     }
 
@@ -144,5 +163,10 @@ class BeforePurchaseActivity : AppCompatActivity() {
                 isSelected = !isSelected
             }
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

@@ -15,6 +15,8 @@
     <string name="charging_toss">토스</string>
     <string name="charging_naverpay">네이버페이</string>
     <string name="charging_charge">결제하기</string>
+    <string name="charging_completed">결제가 완료되었습니다!</string>
+    <string name="charging_goto_content">콘텐츠 보러가기</string>
 
     <string name="title_purchase_benefit">콘텐츠를 구매하시면 이런 내용을 볼 수 있어요!</string>
     <string name="body_purchase_benefit">✔️ 장소를 핀한 지도\n✔️ 정류장 형식 일정\n✔️ 솔직 후기\n✔️ 가본 사람만 알 수 있는 꿀팁\n✔️ 다음 장소로 이동할 때의 교통편</string>

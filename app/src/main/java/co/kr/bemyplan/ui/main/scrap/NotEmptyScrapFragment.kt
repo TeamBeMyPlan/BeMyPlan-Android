@@ -12,7 +12,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.main.scrap.ContentModel
 import co.kr.bemyplan.databinding.FragmentNotEmptyScrapBinding
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
-import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
+import co.kr.bemyplan.ui.purchase.PurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 
 class NotEmptyScrapFragment : Fragment() {
@@ -51,7 +51,7 @@ class NotEmptyScrapFragment : Fragment() {
 
     private fun initRecyclerView() {
         scrapAdapter = ScrapAdapter {
-            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
         scrapAdapter.itemList = listItem

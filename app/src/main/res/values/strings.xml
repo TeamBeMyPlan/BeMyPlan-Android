@@ -22,4 +22,14 @@
     <string name="text_guest_mode"><u>둘러보기</u></string>
     <string name="text_google_login">Google 계정으로 로그인</string>
     <string name="text_kakao_login">카카오 로그인</string>
+    <string name="text_sign_up_nickname_title">닉네임을 알려주세요</string>
+    <string name="text_sign_up_title_description">설정된 닉네임은 수정이 불가합니다.</string>
+    <string name="text_all_agree">약관 전체 동의</string>
+    <string name="text_essential">[필수]</string>
+    <string name="text_agree_terms">이용약관 동의</string>
+    <string name="text_agree_info">개인정보 수집 이용 동의</string>
+    <string name="text_nickname_word_count_limit">20자 이내로 입력해주세요.</string>
+    <string name="text_start">시작하기</string>
+    <string name="text_no">취소</string>
+    <string name="text_yes">확인</string>
 </resources>

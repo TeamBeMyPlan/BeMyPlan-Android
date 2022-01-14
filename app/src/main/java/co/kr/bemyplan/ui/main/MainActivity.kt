@@ -68,9 +68,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun moveHome() {
-        binding.bnv.findViewById<View>(R.id.menu_home).performClick()
+        binding.bnv.selectedItemId = R.id.menu_home
         replaceFragment(HOME_FRAGMENT)
-
     }
 
     companion object {

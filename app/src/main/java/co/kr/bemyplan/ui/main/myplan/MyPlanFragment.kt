@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.main.myplan
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import co.kr.bemyplan.databinding.FragmentMyPlanBinding
 import co.kr.bemyplan.ui.main.MainActivity
 import co.kr.bemyplan.ui.main.home.HomeFragment
 import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter
+import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 
 class MyPlanFragment : Fragment() {
     private lateinit var purchaseTourAdapter: MyPlanAdapter
@@ -27,6 +29,7 @@ class MyPlanFragment : Fragment() {
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_plan, container, false)
         initProfile()
+        initSettingsButton()
         return binding.root
     }
 
@@ -40,7 +43,7 @@ class MyPlanFragment : Fragment() {
         binding.profile = Profile("다운타운베이비", R.drawable.ic_img_profile, purchaseCount)
 
         if(purchaseCount != 0) initAdapter()
-        else btnEvent()
+        else lookingAroundEvent()
     }
 
     private fun initAdapter() {
@@ -60,12 +63,16 @@ class MyPlanFragment : Fragment() {
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
     }
 
-    private fun btnEvent() {
+    private fun lookingAroundEvent() {
         binding.tvLookingAround.setOnClickListener {
             (activity as MainActivity).moveHome()
-//            val fragmentTransaction = parentFragmentManager.beginTransaction()
-//            fragmentTransaction.replace(R.id.fragment_container_view_tag, fragmentHome)
-//            fragmentTransaction.commit()
+        }
+    }
+
+    private fun initSettingsButton() {
+        binding.ivSettings.setOnClickListener {
+            val intent = Intent(activity, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 }

@@ -16,6 +16,9 @@
         android:theme="@style/Theme.BeMyPlan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.main.myplan.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">

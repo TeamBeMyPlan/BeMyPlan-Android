@@ -1,9 +1,11 @@
 package co.kr.bemyplan.ui.main.myplan.settings
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
+import co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -40,7 +42,8 @@ class SettingsActivity : AppCompatActivity() {
 
         // 회원탈퇴
         binding.tvWithdrawal.setOnClickListener {
-            TODO()
+            val intent = Intent(this, WithdrawalActivity::class.java)
+            startActivity(intent)
         }
     }
 }

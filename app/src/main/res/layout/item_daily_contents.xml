@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
         android:layout_marginHorizontal="24dp" >
 
         <TextView
@@ -54,8 +55,10 @@
         <ImageView
             android:id="@+id/iv_photo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
+            android:background="@drawable/rectangle_radius_5"
+            app:layout_constraintDimensionRatio="3:4"
             app:layout_constraintTop_toBottomOf="@+id/tv_address"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -63,6 +66,7 @@
             android:id="@+id/tv_context"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:textColor="@color/grey_313740"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:textSize="14sp"
@@ -84,40 +88,33 @@
             app:layout_constraintTop_toBottomOf="@id/tv_context"
             app:layout_constraintStart_toStartOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/tv_place_route"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:text="산방산 → 난드르바당"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:textColor="@color/blue_0077b0"
+                android:textSize="12sp"
+                app:text="@{spot.placeName + `→` + spot.placeNext + ` `}"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintEnd_toStartOf="@id/tv_moving_time"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tv_place_route"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="산방산 → 난드르바당"
-                    android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                    android:textColor="@color/blue_0077b0"
-                    android:textSize="12sp"
-                    app:text="@{spot.placeName + `→` + spot.placeNext + ` `}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_moving_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="도보 3분"
-                    android:textColor="@color/blue_0077b0"
-                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                    android:textSize="12sp"
-                    app:text="@{spot.transportation + spot.duration + `분`}"
-                    app:layout_constraintStart_toEndOf="@id/tv_place_route"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_moving_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="도보 3분"
+                android:textColor="@color/blue_0077b0"
+                android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                android:textSize="12sp"
+                app:text="@{spot.transportation + spot.duration + `분`}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_place_route"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

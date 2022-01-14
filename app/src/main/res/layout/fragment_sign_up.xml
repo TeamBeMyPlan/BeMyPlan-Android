@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="co.kr.bemyplan.ui.login.viewmodel.LoginViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,8 +20,8 @@
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/layout_body"
             android:paddingHorizontal="24dp"
+            app:layout_constraintBottom_toTopOf="@id/layout_body"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -64,15 +72,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rectangle_border_radius_5"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:background="@{(viewModel.isDuplicated || !viewModel.isValid) ? @drawable/rectangle_border_red_radius_5 : @drawable/rectangle_border_radius_5}"
                 android:fontFamily="@font/spoqa_han_sans_neo_medium"
                 android:hint="@string/text_nickname_word_count_limit"
                 android:inputType="text"
+                android:maxLength="20"
                 android:maxLines="1"
                 android:paddingHorizontal="13dp"
                 android:paddingVertical="15dp"
+                android:text="@={viewModel.nickname}"
                 android:textColorHint="@color/grey_cbd0d7"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/tv_nickname_description" />
@@ -82,6 +90,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:visibility="@{(viewModel.isDuplicated || !viewModel.isValid) ? View.VISIBLE : View.INVISIBLE}"
+                android:text="@{viewModel.isDuplicated ? @string/text_duplicated : @string/text_invalid}"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
                 android:textColor="@color/red_c8094e"
                 android:textSize="12sp"
@@ -106,6 +116,7 @@
                     android:layout_marginVertical="10dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="30dp"
+                    android:onClick="@{()->viewModel.setAllAgree()}"
                     app:layout_constraintBottom_toTopOf="@id/layout_linear1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +129,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/selector_terms"
+                        android:src="@{viewModel.isAllAgree ? @drawable/circle_blue : @drawable/circle_border}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -156,6 +167,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="10dp"
+                    android:onClick="@{() -> viewModel.setTermsAgree()}"
                     app:layout_constraintBottom_toTopOf="@id/layout_agree_info"
                     app:layout_constraintEnd_toStartOf="@id/layout_agree_terms_detail"
                     app:layout_constraintStart_toStartOf="parent"
@@ -167,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="8dp"
                         android:layout_marginStart="10dp"
-                        android:background="@drawable/selector_terms"
+                        android:src="@{viewModel.isTermsAgree ? @drawable/circle_blue : @drawable/circle_border}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -230,6 +242,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
+                    android:onClick="@{()->viewModel.setInfoAgree()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/layout_agree_info_detail"
                     app:layout_constraintStart_toStartOf="parent"
@@ -241,7 +254,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="8dp"
                         android:layout_marginStart="10dp"
-                        android:background="@drawable/selector_terms"
+                        android:src="@{viewModel.isInfoAgree ? @drawable/circle_blue : @drawable/circle_border}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -304,13 +317,15 @@
             android:id="@+id/layout_start"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/grey_cbd0d7"
             android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/layout_body"
+            android:background="@{!viewModel.nickname.isEmpty() &amp;&amp; viewModel.isAllAgree &amp;&amp; viewModel.isValid ? @color/blue_0077b0 : @color/grey_cbd0d7}"
+            android:clickable="@{!viewModel.nickname.isEmpty() &amp;&amp; viewModel.isAllAgree &amp;&amp; viewModel.isValid ? true : false}"
+            android:onClick="@{() -> viewModel.signUp()}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHeight_percent="0.1"
-            app:layout_constraintHeight_min="66dp"
             app:layout_constraintHeight_max="80dp"
+            app:layout_constraintHeight_min="66dp"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintTop_toBottomOf="@id/layout_body"
             app:layout_constraintVertical_bias="1">
 
             <TextView

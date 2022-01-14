@@ -21,7 +21,7 @@ class CustomDialog(context: Context, val title: String, val content: String) {
 
     fun showChoiceDialog(@LayoutRes layout: Int) {
         dialog.setContentView(layout)
-        dialog.findViewById<TextView>(R.id.tv_title).text = content
+        dialog.findViewById<TextView>(R.id.tv_content).text = content
         dialog.window?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT

@@ -32,4 +32,7 @@
     <string name="text_start">시작하기</string>
     <string name="text_no">취소</string>
     <string name="text_yes">확인</string>
+    <string name="text_invalid">특수문자를 사용할 수 없습니다.</string>
+    <string name="text_duplicated">중복된 닉네임입니다.</string>
+    <string name="text_keep_login">닉네임은 수정할 수 없습니다.\n이대로 가입을 진행할까요?</string>
 </resources>

@@ -66,6 +66,10 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
+    fun movehome() {
+
+    }
+
     companion object {
         const val HOME_FRAGMENT = 0
         const val LOCATION_FRAGMENT = 1

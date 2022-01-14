@@ -1,4 +1,4 @@
-package co.kr.bemyplan.ui.main.myplan.exist.adapter
+package co.kr.bemyplan.ui.main.myplan.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.data.myplan.PurchaseTour
 import co.kr.bemyplan.databinding.ItemMyPlanPurchaseListBinding
 
-class ExistMyPlanAdapter: RecyclerView.Adapter<ExistMyPlanAdapter.ExistMyPlanViewHolder>() {
+class MyPlanAdapter: RecyclerView.Adapter<MyPlanAdapter.ExistMyPlanViewHolder>() {
     private var purchaseTourList = listOf<PurchaseTour>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExistMyPlanViewHolder {

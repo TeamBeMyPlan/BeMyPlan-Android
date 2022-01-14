@@ -150,10 +150,11 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickBack() {
         binding.layoutBack.setOnClickListener {
-            activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.remove(this)
-                ?.commit()
+            activity?.finish()
+//            activity?.supportFragmentManager
+//                ?.beginTransaction()
+//                ?.remove(this)
+//                ?.commit()
         }
     }
 

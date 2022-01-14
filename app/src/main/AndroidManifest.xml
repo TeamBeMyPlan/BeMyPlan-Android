@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BeMyPlan"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".ui.purchase.PurchaseActivity"
             android:exported="false" />
@@ -32,9 +33,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.list.ListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.purchase.before.PurchaseActivity"
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"

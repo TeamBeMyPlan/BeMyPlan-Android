@@ -63,9 +63,20 @@ class ChargingFragment : Fragment() {
         }
 
 
-//        binding.tvPayBtn.setOnClickListener{
-//
-//        }
+        binding.tvPayBtn.setOnClickListener{
+            val chargedFragment = ChargedFragment()
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container_charging, chargedFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        binding.ivBackBtn.setOnClickListener{
+            activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.remove(this)
+                ?.commit()
+        }
 
         return binding.root
     }

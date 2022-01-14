@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/iv_back_btn"
+            android:id="@+id/iv_clear_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -35,10 +35,10 @@
             android:text="@string/charging_title"
             android:textColor="@color/grey_313740"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_back_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_clear_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_back_btn" />
+            app:layout_constraintTop_toTopOf="@+id/iv_clear_btn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,7 +108,7 @@
 
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/iv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/img_charge"
@@ -126,21 +126,25 @@
                 android:text="작성자"
                 android:textColor="@color/grey_5d687a"
                 android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
+                app:layout_constraintStart_toEndOf="@+id/iv_content"
+                app:layout_constraintTop_toTopOf="@+id/iv_content" />
 
             <TextView
                 android:id="@+id/tv_content_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
                 android:includeFontPadding="false"
+                android:maxLines="1"
                 android:text="감성을 느낄 수 있는 힐링여행"
                 android:textColor="@color/black_1a1e23"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_content"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_writter"
                 app:layout_constraintTop_toBottomOf="@+id/tv_writter" />
 
@@ -150,8 +154,8 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="21dp"
                 android:background="@color/grey_cbd0d7"
-                app:layout_constraintStart_toStartOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                app:layout_constraintStart_toStartOf="@+id/iv_content"
+                app:layout_constraintTop_toBottomOf="@+id/iv_content" />
 
             <TextView
                 android:id="@+id/tv_cost_title"

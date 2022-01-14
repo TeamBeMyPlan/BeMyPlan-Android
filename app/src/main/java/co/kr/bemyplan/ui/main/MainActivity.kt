@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityMainBinding
 import co.kr.bemyplan.ui.main.scrap.ScrapFragment
@@ -69,6 +70,11 @@ class MainActivity : AppCompatActivity() {
             MY_PLAN_FRAGMENT -> transaction.replace(R.id.fcv_main, MyPlanFragment())
         }
         transaction.commit()
+    }
+
+    fun moveHome() {
+        binding.bnv.selectedItemId = R.id.menu_home
+        replaceFragment(HOME_FRAGMENT)
     }
 
     companion object {

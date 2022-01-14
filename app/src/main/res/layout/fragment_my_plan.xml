@@ -4,9 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="profile"
             type="co.kr.bemyplan.data.myplan.Profile" />
+        <variable
+            name="purchaseTour"
+            type="co.kr.bemyplan.data.myplan.PurchaseTour" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -125,14 +129,83 @@
                     app:layout_constraintTop_toBottomOf="@id/cl_purchase_count"
                     app:layout_constraintStart_toStartOf="parent"/>
 
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/fcv_purchase_plan"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_my_plan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
-                    tools:layout="@layout/fragment_exist_my_plan"
+                    tools:layout="@layout/fragment_empty_my_plan"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/v_box_grey"/>
+                    app:layout_constraintTop_toBottomOf="@id/v_box_grey">
+
+                    <TextView
+                        android:id="@+id/tv_my_plan_purchase_list_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginStart="9dp"
+                        android:text="구매한 여행 일정"
+                        android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/grey_313740"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_my_plan_purchase"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:visibility="@{profile.purchaseCount == 0 ? View.GONE : View.VISIBLE}"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_my_plan_purchase_list_title"
+                        tools:listitem="@layout/item_my_plan_purchase_list" />
+
+                    <ImageView
+                        android:id="@+id/iv_my_plan_empty"
+                        android:layout_width="94dp"
+                        android:layout_height="94dp"
+                        android:layout_marginTop="140dp"
+                        android:src="@drawable/img_scrap_empty"
+                        android:visibility="@{profile.purchaseCount == 0 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_notice_empty_plan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:text="아직 내 여행 일정이 없어요!"
+                        android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                        android:textSize="14sp"
+                        android:textColor="@color/grey_919bab"
+                        android:visibility="@{profile.purchaseCount == 0 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_my_plan_empty"/>
+
+                    <TextView
+                        android:id="@+id/tv_looking_around"
+                        android:layout_width="158dp"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="41dp"
+                        android:background="@drawable/rectangle_radius_5"
+                        android:backgroundTint="@color/blue_0077b0"
+                        android:textAlignment="center"
+                        android:gravity="center"
+                        android:text="둘러보기"
+                        android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:visibility="@{profile.purchaseCount == 0 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/tv_notice_empty_plan"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

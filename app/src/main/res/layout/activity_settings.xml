@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.myplan.settings.SettingsActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="13dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/icon_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:text="설정"
+            android:textColor="@color/grey_313740"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_top">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="37dp"
+                android:layout_marginStart="26dp"
+                android:src="@drawable/ic_icn_upload"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:text="콘텐츠 업로드 신청"
+                android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                android:textSize="16sp"
+                android:textColor="@color/grey_313740"
+                app:layout_constraintStart_toEndOf="@id/iv_upload"
+                app:layout_constraintTop_toTopOf="@id/iv_upload"
+                app:layout_constraintBottom_toBottomOf="@id/iv_upload" />
+            
+            <View
+                android:id="@+id/v_line_grey_upload"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginHorizontal="24dp"
+                android:background="@color/grey_e8eaed"
+                app:layout_constraintTop_toBottomOf="@id/iv_upload"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_qna"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:src="@drawable/ic_icn_qna"
+                app:layout_constraintTop_toBottomOf="@id/v_line_grey_upload"
+                app:layout_constraintStart_toStartOf="@id/iv_upload" />
+
+            <TextView
+                android:id="@+id/tv_qna"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="문의하기"
+                android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                android:textSize="16sp"
+                android:textColor="@color/grey_313740"
+                app:layout_constraintStart_toStartOf="@id/tv_upload"
+                app:layout_constraintTop_toTopOf="@id/iv_qna"
+                app:layout_constraintBottom_toBottomOf="@id/iv_qna" />
+
+            <View
+                android:id="@+id/v_line_grey_qna"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginHorizontal="24dp"
+                android:background="@color/grey_e8eaed"
+                app:layout_constraintTop_toBottomOf="@id/iv_qna"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:src="@drawable/ic_icn_info"
+                app:layout_constraintTop_toBottomOf="@id/v_line_grey_qna"
+                app:layout_constraintStart_toStartOf="@id/iv_upload" />
+
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이용약관"
+                android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                android:textSize="16sp"
+                android:textColor="@color/grey_313740"
+                app:layout_constraintStart_toStartOf="@id/tv_upload"
+                app:layout_constraintTop_toTopOf="@id/iv_info"
+                app:layout_constraintBottom_toBottomOf="@id/iv_info" />
+
+            <View
+                android:id="@+id/v_line_grey_info"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginHorizontal="24dp"
+                android:background="@color/grey_e8eaed"
+                app:layout_constraintTop_toBottomOf="@id/iv_info"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:layout_marginStart="32dp"
+                android:text="로그아웃"
+                android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                android:textSize="14sp"
+                android:textColor="@color/grey_919bab"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v_line_grey_info" />
+
+            <View
+                android:id="@+id/v_line_grey_logout"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="24dp"
+                android:background="@color/grey_e8eaed"
+                app:layout_constraintTop_toBottomOf="@id/tv_logout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_withdrawal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="32dp"
+                android:text="회원탈퇴"
+                android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                android:textSize="14sp"
+                android:textColor="@color/grey_919bab"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v_line_grey_logout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

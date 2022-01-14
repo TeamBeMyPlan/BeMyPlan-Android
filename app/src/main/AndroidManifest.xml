@@ -20,6 +20,12 @@
             android:name=".ui.purchase.PurchaseActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.main.myplan.settings.withdrawal.WithdrawalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.main.myplan.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">

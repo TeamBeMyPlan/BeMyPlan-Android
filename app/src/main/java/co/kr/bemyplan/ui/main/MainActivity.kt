@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityMainBinding
 import co.kr.bemyplan.ui.main.scrap.ScrapFragment
@@ -66,7 +67,9 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    fun movehome() {
+    fun moveHome() {
+        binding.bnv.findViewById<View>(R.id.menu_home).performClick()
+        replaceFragment(HOME_FRAGMENT)
 
     }
 

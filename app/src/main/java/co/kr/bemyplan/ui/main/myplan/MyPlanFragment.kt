@@ -62,7 +62,7 @@ class MyPlanFragment : Fragment() {
 
     private fun btnEvent() {
         binding.tvLookingAround.setOnClickListener {
-            (activity as MainActivity).replaceFragment(0)
+            (activity as MainActivity).moveHome()
 //            val fragmentTransaction = parentFragmentManager.beginTransaction()
 //            fragmentTransaction.replace(R.id.fragment_container_view_tag, fragmentHome)
 //            fragmentTransaction.commit()

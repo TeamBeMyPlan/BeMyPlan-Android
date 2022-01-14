@@ -12,7 +12,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.home.TempHomeData
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
-import co.kr.bemyplan.ui.purchase.before.BeforePurchaseActivity
+import co.kr.bemyplan.ui.purchase.PurchaseActivity
 import co.kr.bemyplan.util.ZoomOutPageTransformer
 
 class HomeFragment : Fragment() {
@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
 
     private fun initAdapterRecent(){
         homeAdapter = HomeAdapter {
-            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
         binding.rvRecent.adapter=homeAdapter
@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
 
     private fun initAdapterEditor(){
         homeAdapter = HomeAdapter {
-            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
         binding.rvEditorSuggest.adapter=homeAdapter
@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
 
     private fun initAdapterPopular(){
         homeViewPagerAdapter = HomeViewPagerAdapter {
-            val intent = Intent(requireContext(), BeforePurchaseActivity::class.java)
+            val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
 
@@ -96,7 +96,7 @@ class HomeFragment : Fragment() {
             val pagePadding = ((deviceWidth-pageWidth)/2).toInt()
             val innerPadding = (pagePadding/2).toInt()
 
-            getChildAt(0).overScrollMode=RecyclerView.OVER_SCROLL_NEVER //맨 위에서 더 이상 위로 스크롤할 영역이 없을 때 위로 땡겨지지 않도록
+            getChildAt(0).overScrollMode= RecyclerView.OVER_SCROLL_NEVER //맨 위에서 더 이상 위로 스크롤할 영역이 없을 때 위로 땡겨지지 않도록
             offscreenPageLimit=1 //리사이클러뷰에서 현재 보고있는 아이템의 양쪽으로 지정한 숫자만큼의 아이템을 유지한다. 그 밖의 아이템들은 필요할 때 어댑터에서 만든다.
             // Set the number of pages that should be retained to either side of the currently visible page(s). Pages beyond this limit will be recreated from the adapter when needed
 

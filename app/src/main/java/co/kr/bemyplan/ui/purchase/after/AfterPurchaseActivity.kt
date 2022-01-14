@@ -24,14 +24,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // fragment 보이기
         initFragment()
-
         // 일차별 버튼
         initDayButtonAdpater()
 
         setContentView(binding.root)
 
         // TODO: Kakao Map 세팅 (안먹힘)
-        setMap()
+        //setMap()
     }
 
     private fun setMap() {

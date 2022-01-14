@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.purchase.before.BeforePurchaseActivity">
+        tools:context=".ui.purchase.before.BeforeChargingFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_top"

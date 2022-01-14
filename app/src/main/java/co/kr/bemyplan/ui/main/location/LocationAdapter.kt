@@ -42,6 +42,8 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
     class LocationViewHolder(private val binding:ItemLocationBinding):RecyclerView.ViewHolder(binding.root){
         fun onBind(data:LocationData){
             binding.tvLocation.text=data.text
+            binding.ivLock.clipToOutline = true
+            binding.ivLocation.clipToOutline = true
             Glide.with(binding.ivLocation.context).load(data.img).into(binding.ivLocation)
             if(data.lock==true){
                 binding.ivLock.visibility=View.VISIBLE

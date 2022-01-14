@@ -1,15 +1,18 @@
 package co.kr.bemyplan.ui.purchase.after
 
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.DailyContents
 import co.kr.bemyplan.data.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
-import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 import co.kr.bemyplan.ui.purchase.after.adapter.DayAdapter
 import net.daum.mf.map.api.MapView
+import java.security.MessageDigest
 
 class AfterPurchaseActivity : AppCompatActivity() {
     private lateinit var dayAdapter: DayAdapter
@@ -30,7 +33,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // TODO: Kakao Map 세팅 (안먹힘)
-        //setMap()
+        setMap()
     }
 
     private fun setMap() {

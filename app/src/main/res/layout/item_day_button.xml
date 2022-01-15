@@ -13,22 +13,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp">
+        android:layout_marginHorizontal="5dp">
 
         <TextView
             android:id="@+id/tv_day_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_daily"
-            android:fontFamily="@font/spoqa_han_sans_neo_bold"
             android:paddingHorizontal="14dp"
             android:paddingVertical="8dp"
-            android:text="1일차"
+            tools:text="1일차"
+            android:text="@{dailyContents.day + `일차`}"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
             android:textColor="@drawable/btn_daily_text_color"
             android:textSize="14sp"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:text="@{dailyContents.day + `일차`}" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

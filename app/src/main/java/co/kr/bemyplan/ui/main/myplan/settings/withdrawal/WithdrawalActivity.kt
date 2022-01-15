@@ -10,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
 import android.util.Log
+import android.view.MotionEvent
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -61,8 +62,16 @@ class WithdrawalActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initTouchListener() {
-        binding.etWithdrawal.setOnTouchListener { _, _ ->
-            binding.sv.requestDisallowInterceptTouchEvent(true)
+        binding.etWithdrawal.setOnTouchListener { view, event ->
+            if(binding.etWithdrawal.hasFocus()) {
+                view.parent.requestDisallowInterceptTouchEvent(true)
+                when(event.action) {
+                    MotionEvent.ACTION_SCROLL -> {
+                        view.parent.requestDisallowInterceptTouchEvent(false)
+                        true
+                    }
+                }
+            }
             false
         }
     }

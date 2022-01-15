@@ -1,98 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.myplan.settings.withdrawal.WithdrawalActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <import type="co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="13dp"
-            android:layout_marginStart="24dp"
-            android:src="@drawable/icon_arrow"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-            android:text="탈퇴하기"
-            android:textColor="@color/grey_313740"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ScrollView
-        android:id="@+id/sv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/layout_top">
+        android:layout_height="match_parent"
+        tools:context=".ui.main.myplan.settings.withdrawal.WithdrawalActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/tv_why_withdrawal"
+            <ImageView
+                android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="13dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="38dp"
-                android:text="탈퇴하시는 이유를 알려주세요."
-                android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                android:textColor="@color/grey_313740"
-                android:textSize="16sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <EditText
-                android:id="@+id/et_withdrawal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginHorizontal="24dp"
-                android:padding="15dp"
-                android:gravity="top"
-                android:background="@drawable/rectangle_border_radius_5"
-                android:fontFamily="@font/spoqa_han_sans_neo_medium"
-                android:textSize="14sp"
-                android:textColor="@color/grey_313740"
-                android:hint="직접 입력"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintTop_toBottomOf="@id/tv_why_withdrawal"/>
+                android:src="@drawable/icon_arrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_next_button"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginHorizontal="24dp"
-                android:gravity="center"
-                android:text="다음"
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                android:textSize="16sp"
-                android:textColor="@color/white"
-                android:background="@color/grey_cbd0d7"
-                app:layout_constraintTop_toBottomOf="@id/et_withdrawal"/>
+                android:text="탈퇴하기"
+                android:textColor="@color/grey_313740"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+        <ScrollView
+            android:id="@+id/sv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_top">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_why_withdrawal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="38dp"
+                    android:text="탈퇴하시는 이유를 알려주세요."
+                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                    android:textColor="@color/grey_313740"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <EditText
+                    android:id="@+id/et_withdrawal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:padding="15dp"
+                    android:gravity="top"
+                    android:background="@drawable/rectangle_border_radius_5"
+                    android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                    android:textSize="14sp"
+                    android:textColor="@color/grey_313740"
+                    android:hint="직접 입력"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintTop_toBottomOf="@id/tv_why_withdrawal"/>
+
+                <TextView
+                    android:id="@+id/tv_next_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:gravity="center"
+                    android:text="다음"
+                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/rectangle_grey_radius_5"
+                    app:layout_constraintTop_toBottomOf="@id/et_withdrawal"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

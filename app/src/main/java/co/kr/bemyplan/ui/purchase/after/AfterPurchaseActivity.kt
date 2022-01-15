@@ -14,6 +14,7 @@ import co.kr.bemyplan.data.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 import co.kr.bemyplan.ui.purchase.after.adapter.DayAdapter
+import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.MapView
 
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -29,6 +30,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // fragment 보이기
         initFragment()
+        // back button
+        initBackButton()
         // 일차별 버튼
         initDayButtonAdapter()
         // 스크롤뷰 설정
@@ -50,6 +53,12 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val fragment = DailyContentsFragment()
         fragmentTransaction.add(R.id.fcv_daily_context, fragment)
         fragmentTransaction.commit()
+    }
+
+    private fun initBackButton() {
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun initDayButtonAdapter() {

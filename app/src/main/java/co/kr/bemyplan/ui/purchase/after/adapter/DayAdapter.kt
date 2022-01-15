@@ -10,7 +10,7 @@ import co.kr.bemyplan.databinding.ItemDayButtonBinding
 
 class DayAdapter: RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
 
-    private var dailyContentsList = listOf<DailyContents>()
+    var dailyContentsList = listOf<DailyContents>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
         val binding = ItemDayButtonBinding.inflate(

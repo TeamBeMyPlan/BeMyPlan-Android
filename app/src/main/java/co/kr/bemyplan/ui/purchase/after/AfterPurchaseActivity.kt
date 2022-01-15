@@ -1,7 +1,12 @@
 package co.kr.bemyplan.ui.purchase.after
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.DailyContents
@@ -25,12 +30,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // fragment 보이기
         initFragment()
         // 일차별 버튼
-        initDayButtonAdpater()
+        initDayButtonAdapter()
+        // 스크롤뷰 설정
+        initNestedScrollView()
 
         setContentView(binding.root)
 
-        // TODO: Kakao Map 세팅 (안먹힘)
-        //setMap()
+        setMap()
     }
 
     private fun setMap() {
@@ -46,7 +52,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    private fun initDayButtonAdpater() {
+    private fun initDayButtonAdapter() {
         dayAdapter = DayAdapter()
 
         val items = listOf(
@@ -60,5 +66,23 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         dayAdapter.setItems(items)
         binding.rvDayButton.adapter = dayAdapter
+    }
+
+    private fun initNestedScrollView() {
+        binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ ->
+            setTopTitle()
+        })
+    }
+
+    private fun setTopTitle() {
+        val rect = Rect()
+        binding.svDailyContents.getHitRect(rect)
+        if (binding.tvTitle.getLocalVisibleRect(rect)) {
+            // view가 보이는 경우
+            binding.tvTopTitle.visibility = View.INVISIBLE
+        } else {
+            // view가 안 보이는 경우
+            binding.tvTopTitle.visibility = View.VISIBLE
+        }
     }
 }

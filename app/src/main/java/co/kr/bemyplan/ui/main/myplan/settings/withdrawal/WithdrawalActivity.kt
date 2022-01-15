@@ -2,13 +2,18 @@ package co.kr.bemyplan.ui.main.myplan.settings.withdrawal
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
 import android.util.Log
+import android.view.MotionEvent
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityWithdrawalBinding
 import com.kakao.util.maps.helper.Utility
@@ -48,17 +53,25 @@ class WithdrawalActivity : AppCompatActivity() {
     @SuppressLint("ResourceAsColor")
     private fun buttonEvent(statement: Boolean) {
         if(statement) {
-            binding.tvNextButton.setBackgroundResource(R.color.blue_0077b0)
+            binding.tvNextButton.setBackgroundResource(R.drawable.rectangle_blue_radius_5)
         }
         else {
-            binding.tvNextButton.setBackgroundResource(R.color.grey_cbd0d7)
+            binding.tvNextButton.setBackgroundResource(R.drawable.rectangle_grey_radius_5)
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initTouchListener() {
-        binding.etWithdrawal.setOnTouchListener { _, _ ->
-            binding.sv.requestDisallowInterceptTouchEvent(true)
+        binding.etWithdrawal.setOnTouchListener { view, event ->
+            if(binding.etWithdrawal.hasFocus()) {
+                view.parent.requestDisallowInterceptTouchEvent(true)
+                when(event.action) {
+                    MotionEvent.ACTION_SCROLL -> {
+                        view.parent.requestDisallowInterceptTouchEvent(false)
+                        true
+                    }
+                }
+            }
             false
         }
     }

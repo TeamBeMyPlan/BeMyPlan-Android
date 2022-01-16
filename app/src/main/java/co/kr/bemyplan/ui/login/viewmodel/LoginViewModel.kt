@@ -77,7 +77,7 @@ class LoginViewModel : ViewModel() {
         Log.d("mlog: isValid.value", isValid.value.toString())
     }
 
-    fun signUp() {
+    fun clickSignUp() {
         checkIsDuplicated()
 
         Log.d("mlog: isDuplicated.value", isDuplicated.value.toString())

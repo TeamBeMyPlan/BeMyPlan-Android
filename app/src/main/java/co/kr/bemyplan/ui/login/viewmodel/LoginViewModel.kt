@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import co.kr.bemyplan.util.SingleLiveEvent
+import com.kakao.sdk.user.UserApiClient
 
 class LoginViewModel : ViewModel() {
     var nickname = MutableLiveData<String>("")
@@ -28,6 +29,18 @@ class LoginViewModel : ViewModel() {
 
     private val _signUpPermission = SingleLiveEvent<Boolean>()
     val signUpPermission: LiveData<Boolean> get() = _signUpPermission
+
+    // 로그인
+    private var _loginType = MutableLiveData<String>()
+    val loginType: LiveData<String> get() = _loginType
+
+    private var _isMember = MutableLiveData<Boolean>()
+    val isMember: LiveData<Boolean> get() = _isMember
+
+    // 카카오로그인
+    private val userApiClient = UserApiClient.instance
+    private var _kakaoToken = MutableLiveData<String>()
+    val kakaoToken: LiveData<String> get() = _kakaoToken
 
     fun setAllAgree() {
         Log.d("mlog: setAllAgree()", "executed")
@@ -84,5 +97,21 @@ class LoginViewModel : ViewModel() {
         if(!isDuplicated.value!! && isValid.value!!) {
             _signUpPermission.call()
         }
+    }
+
+    fun setKakaoToken(token: String) {
+        _kakaoToken.value = token
+        _loginType.value = KAKAO
+
+        // 임시코드
+        _isMember.value = false
+
+        Log.d("mlog: kakaoToken.value", kakaoToken.value.toString())
+        Log.d("mlog: loginType.value", loginType.value.toString())
+    }
+
+    companion object {
+        const val KAKAO = "KAKAO"
+        const val GOOGLE = "GOOGLE"
     }
 }

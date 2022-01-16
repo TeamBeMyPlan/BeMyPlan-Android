@@ -3,8 +3,10 @@ package co.kr.bemyplan.ui.main
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityMainBinding
 import co.kr.bemyplan.ui.main.scrap.ScrapFragment
@@ -47,11 +49,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
         // LongClick 시 ToolTip 안 뜨게 하는 코드입니다.
+//        binding.bnv.menu.forEach {
+//            val view = binding.bnv.findViewById<View>(it.itemId)
+//            view.setOnLongClickListener {
+//                true
+//            }
+//        }
+
         binding.bnv.menu.forEach {
-            val view = binding.bnv.findViewById<View>(it.itemId)
-            view.setOnLongClickListener {
-                true
-            }
+            TooltipCompat.setTooltipText(findViewById(it.itemId), null)
         }
     }
 
@@ -64,6 +70,11 @@ class MainActivity : AppCompatActivity() {
             MY_PLAN_FRAGMENT -> transaction.replace(R.id.fcv_main, MyPlanFragment())
         }
         transaction.commit()
+    }
+
+    fun moveHome() {
+        binding.bnv.selectedItemId = R.id.menu_home
+        replaceFragment(HOME_FRAGMENT)
     }
 
     companion object {

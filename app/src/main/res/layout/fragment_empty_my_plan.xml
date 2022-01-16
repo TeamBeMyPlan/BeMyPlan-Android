@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.myplan.empty.EmptyMyPlanFragment">
+    tools:context=".ui.main.myplan.MyPlanFragment">
 
     <TextView
         android:id="@+id/tv_my_plan_purchase_list_title"
@@ -43,6 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/iv_my_plan_empty"/>
     
     <TextView
+        android:id="@+id/tv_looking_around"
         android:layout_width="158dp"
         android:layout_height="48dp"
         android:layout_marginTop="41dp"

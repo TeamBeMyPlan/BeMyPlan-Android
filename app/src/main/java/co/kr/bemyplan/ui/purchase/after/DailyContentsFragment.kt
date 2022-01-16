@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import co.kr.bemyplan.data.Spot
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
+import co.kr.bemyplan.util.clipTo
 
 class DailyContentsFragment : Fragment() {
     private lateinit var contentsAdapter: DailyContentsAdapter

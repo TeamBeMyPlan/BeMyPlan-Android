@@ -2,10 +2,12 @@ package co.kr.bemyplan.ui.main.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import co.kr.bemyplan.R
@@ -21,17 +23,18 @@ class HomeFragment : Fragment() {
     private lateinit var homeAdapter: HomeAdapter
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
+    private val homeViewModel : HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
+        homeViewModel.initPopularNetwork()
+
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
-
-
 
         clickMore()
 
@@ -49,6 +52,7 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
         binding.rvRecent.adapter=homeAdapter
+
         homeAdapter.planList.addAll(
             listOf(
                 TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
@@ -85,6 +89,12 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+        homeViewModel.popular.observe(viewLifecycleOwner) {
+            homeViewPagerAdapter.planList.addAll(it)
+            Log.d("yongminAddLog", it.toString())
+            homeViewPagerAdapter.notifyDataSetChanged()
+        }
+
         with(binding.vpPopular){
             adapter=homeViewPagerAdapter
 
@@ -107,15 +117,6 @@ class HomeFragment : Fragment() {
             })
         }
 
-        homeViewPagerAdapter.planList.addAll(
-            listOf(
-                TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어dadasdsadasdsadasdasdasdasd"),
-                TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어"),
-                TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어"),
-                TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어"),
-                TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어")
-            )
-        )
         homeViewPagerAdapter.notifyDataSetChanged()
     }
 

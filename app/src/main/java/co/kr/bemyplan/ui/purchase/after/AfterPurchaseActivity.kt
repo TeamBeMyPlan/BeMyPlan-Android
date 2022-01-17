@@ -1,21 +1,22 @@
 package co.kr.bemyplan.ui.purchase.after
 
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.os.Bundle
-import android.util.Base64
-import android.util.Log
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.DailyContents
-import co.kr.bemyplan.data.Post
+import co.kr.bemyplan.data.entity.DailyContents
+import co.kr.bemyplan.data.entity.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
-import co.kr.bemyplan.ui.purchase.after.adapter.DayAdapter
+import co.kr.bemyplan.databinding.ItemDayButtonBinding
+import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.MapView
 import java.security.MessageDigest
 
 class AfterPurchaseActivity : AppCompatActivity() {
-    private lateinit var dayAdapter: DayAdapter
     private lateinit var binding: ActivityAfterPurchaseBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +28,12 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // fragment 보이기
         initFragment()
+        // back button
+        initBackButton()
         // 일차별 버튼
-        initDayButtonAdpater()
+        initChips()
+        // 스크롤뷰 설정
+        initNestedScrollView()
 
         setContentView(binding.root)
 
@@ -49,9 +54,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    private fun initDayButtonAdpater() {
-        dayAdapter = DayAdapter()
+    private fun initBackButton() {
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
+    }
 
+    @SuppressLint("ResourceType")
+    private fun initChips() {
         val items = listOf(
             DailyContents(1, false),
             DailyContents(2, false),
@@ -61,7 +71,32 @@ class AfterPurchaseActivity : AppCompatActivity() {
             DailyContents(6, true)
         )
 
-        dayAdapter.setItems(items)
-        binding.rvDayButton.adapter = dayAdapter
+        val chipGroup: ChipGroup = binding.chipGroupDay
+        for (i in items) {
+            val chip = ItemDayButtonBinding.inflate(layoutInflater)
+            chip.root.id = View.generateViewId()
+            chip.dailyContents = i
+
+            if(i.day == 1) chip.tvDayButton.isChecked = true
+            chipGroup.addView(chip.root)
+        }
+    }
+
+    private fun initNestedScrollView() {
+        binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ ->
+            setTopTitle()
+        })
+    }
+
+    private fun setTopTitle() {
+        val rect = Rect()
+        binding.svDailyContents.getHitRect(rect)
+        if (binding.tvTitle.getLocalVisibleRect(rect)) {
+            // view가 보이는 경우
+            binding.tvTopTitle.visibility = View.INVISIBLE
+        } else {
+            // view가 안 보이는 경우
+            binding.tvTopTitle.visibility = View.VISIBLE
+        }
     }
 }

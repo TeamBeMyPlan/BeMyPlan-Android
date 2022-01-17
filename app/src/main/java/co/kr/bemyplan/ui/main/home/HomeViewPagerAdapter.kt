@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.home.TempHomeData
+import co.kr.bemyplan.data.entity.main.home.TempHomeData
 import co.kr.bemyplan.databinding.ItemPopularBinding
 import co.kr.bemyplan.util.clipTo
 import com.bumptech.glide.Glide

@@ -320,7 +320,7 @@
             android:layout_marginTop="10dp"
             android:background="@{!viewModel.nickname.isEmpty() &amp;&amp; viewModel.isAllAgree &amp;&amp; viewModel.isValid ? @color/blue_0077b0 : @color/grey_cbd0d7}"
             android:clickable="@{!viewModel.nickname.isEmpty() &amp;&amp; viewModel.isAllAgree &amp;&amp; viewModel.isValid ? true : false}"
-            android:onClick="@{() -> viewModel.signUp()}"
+            android:onClick="@{() -> viewModel.clickSignUp()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHeight_max="80dp"
             app:layout_constraintHeight_min="66dp"

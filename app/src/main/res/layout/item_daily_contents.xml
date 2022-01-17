@@ -7,7 +7,7 @@
 
         <variable
             name="spot"
-            type="co.kr.bemyplan.data.Spot" />
+            type="co.kr.bemyplan.data.entity.Spot" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+            android:padding="5dp"
             android:src="@drawable/ic_icn_copy"
             app:layout_constraintTop_toTopOf="@+id/tv_address"
             app:layout_constraintBottom_toBottomOf="@id/tv_address"

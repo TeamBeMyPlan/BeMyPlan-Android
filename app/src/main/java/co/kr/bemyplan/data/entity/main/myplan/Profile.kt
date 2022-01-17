@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.myplan
+package co.kr.bemyplan.data.entity.main.myplan
 
 data class Profile(
     val nickname: String,

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.list.ContentModel
+import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.ItemListContentBinding
 
 class ListAdapter(val itemClick: (ContentModel) -> Unit) :

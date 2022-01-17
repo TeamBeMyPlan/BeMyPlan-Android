@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.main.scrap.ContentModel
+import co.kr.bemyplan.data.entity.main.scrap.ContentModel
 import co.kr.bemyplan.databinding.FragmentEmptyScrapBinding
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapRecommendAdapter
 import co.kr.bemyplan.ui.purchase.PurchaseActivity

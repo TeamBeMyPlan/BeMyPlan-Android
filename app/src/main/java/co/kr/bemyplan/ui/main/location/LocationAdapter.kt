@@ -1,17 +1,10 @@
 package co.kr.bemyplan.ui.main.location
 
-import android.content.Context
-import android.graphics.Rect
-import android.location.Location
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.R
-import co.kr.bemyplan.data.home.TempHomeData
-import co.kr.bemyplan.data.location.LocationData
+import co.kr.bemyplan.data.entity.main.location.LocationData
 import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.databinding.ItemLocationBinding
 import co.kr.bemyplan.util.clipTo
@@ -41,7 +34,7 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
     }
 
     class LocationViewHolder(private val binding:ItemLocationBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data:LocationData){
+        fun onBind(data: LocationData){
             binding.tvLocation.text=data.text
             Glide.with(binding.ivLocation.context).load(data.img).into(binding.ivLocation)
             //clipTo(binding.ivLocation, data.img)

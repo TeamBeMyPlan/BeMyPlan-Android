@@ -7,6 +7,8 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def kakao_map_app_key = properties.get('kakao_map_app_key')
+def kakao_app_key = properties.get('kakao_app_key')
+def base_url = properties.get('base_url')
 
 android {
     compileSdk 32
@@ -21,7 +23,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // KakaoMap AppKey
+        buildConfigField ("String", "KAKAO_APP_KEY", properties.get('kakao_app_key'))
         manifestPlaceholders = [KAKAO_MAP_APP_KEY: kakao_map_app_key]
+
+        // BaseUrl
+        buildConfigField ("String", "BASE_URL", properties.get('base_url'))
     }
 
     buildTypes {
@@ -46,7 +52,7 @@ android {
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -63,6 +69,9 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
+    // Chip
+    implementation 'com.google.android.material:material:1.4.0'
+
     // NavigationComponent
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
@@ -70,4 +79,7 @@ dependencies {
     // KakaoMap
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
+
+    // Kakao Login
+    implementation "com.kakao.sdk:v2-user:2.8.4"
 }

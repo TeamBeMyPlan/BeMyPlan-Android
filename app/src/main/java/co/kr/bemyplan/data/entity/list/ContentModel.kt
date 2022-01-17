@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.list
+package co.kr.bemyplan.data.entity.list
 
 data class ContentModel(
     val photo: Int,

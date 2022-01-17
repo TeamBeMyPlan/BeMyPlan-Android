@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.main.scrap.ContentModel
+import co.kr.bemyplan.data.entity.main.scrap.ContentModel
 import co.kr.bemyplan.databinding.FragmentNotEmptyScrapBinding
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
 import co.kr.bemyplan.ui.purchase.PurchaseActivity

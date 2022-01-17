@@ -8,10 +8,12 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.databinding.ItemBeforePurchaseContentBinding
 
-class ContentAdapter: RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() {
+class ContentViewPagerAdapter :
+    RecyclerView.Adapter<ContentViewPagerAdapter.ContentViewPagerViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 
-    class ContentViewHolder(private val binding: ItemBeforePurchaseContentBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ContentViewPagerViewHolder(val binding: ItemBeforePurchaseContentBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
             binding.model = contentModel
             binding.ivPhoto.clipToOutline = true
@@ -19,17 +21,17 @@ class ContentAdapter: RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContentViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContentViewPagerViewHolder {
         val binding = DataBindingUtil.inflate<ItemBeforePurchaseContentBinding>(
             LayoutInflater.from(parent.context),
             R.layout.item_before_purchase_content,
             parent,
             false
         )
-        return ContentViewHolder(binding)
+        return ContentViewPagerViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ContentViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ContentViewPagerViewHolder, position: Int) {
         holder.bind(itemList[position])
     }
 

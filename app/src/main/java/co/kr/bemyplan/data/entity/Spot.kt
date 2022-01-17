@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data
+package co.kr.bemyplan.data.entity
 
 data class Spot(
     val placeName: String,
@@ -9,5 +9,5 @@ data class Spot(
     val placeNext: String?,
     val duration: Int?,
     val isFirst: Boolean,
-    val isLast: Boolean
+    var isLast: Boolean
 )

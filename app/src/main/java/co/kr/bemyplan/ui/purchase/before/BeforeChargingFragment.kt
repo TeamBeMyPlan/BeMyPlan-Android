@@ -22,6 +22,7 @@ class BeforeChargingFragment : Fragment() {
     private var _binding: FragmentBeforeChargingBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private lateinit var summaryAdapter: SummaryAdapter
+//    private lateinit var contentViewPagerAdapter: ContentViewPagerAdapter
     private lateinit var contentAdapter: ContentAdapter
     private var summaryItemList = listOf<SummaryModel>()
     private var contentItemList = listOf<ContentModel>()
@@ -57,7 +58,10 @@ class BeforeChargingFragment : Fragment() {
         )
 
         contentItemList = listOf(
-            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
+            ContentModel(
+                R.drawable.rectangle_5715,
+                "그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ "
+            ),
             ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
             ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
             ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
@@ -71,6 +75,27 @@ class BeforeChargingFragment : Fragment() {
         binding.rvSummary.adapter = summaryAdapter
 
         // Preview
+        // 가로 스크롤(뷰페이저)
+//        contentViewPagerAdapter = ContentViewPagerAdapter()
+//        contentViewPagerAdapter.itemList = contentItemList
+//        binding.vpContent.adapter = contentViewPagerAdapter
+//        binding.vpContent.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+//                val view = (binding.vpContent[0] as RecyclerView).layoutManager?.findViewByPosition(position)
+//
+//                view?.post {
+//                    val wMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+//                    val hMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+//                    view.measure(wMeasureSpec, hMeasureSpec)
+//
+//                    if (binding.vpContent.layoutParams.height != view.measuredHeight) {
+//                        binding.vpContent.layoutParams = (binding.vpContent.layoutParams).also { lp -> lp.height = view.measuredHeight }
+//                    }
+//                }
+//            }
+//        })
+        // 세로 스크롤(리사이클러뷰)
         contentAdapter = ContentAdapter()
         contentAdapter.itemList = contentItemList
         binding.rvContent.adapter = contentAdapter

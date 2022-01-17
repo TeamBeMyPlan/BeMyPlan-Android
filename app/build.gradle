@@ -8,6 +8,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def kakao_map_app_key = properties.get('kakao_map_app_key')
 def kakao_app_key = properties.get('kakao_app_key')
+def base_url = properties.get('base_url')
 
 android {
     compileSdk 32
@@ -24,6 +25,9 @@ android {
         // KakaoMap AppKey
         buildConfigField ("String", "KAKAO_APP_KEY", properties.get('kakao_app_key'))
         manifestPlaceholders = [KAKAO_MAP_APP_KEY: kakao_map_app_key]
+
+        // BaseUrl
+        buildConfigField ("String", "BASE_URL", properties.get('base_url'))
     }
 
     buildTypes {

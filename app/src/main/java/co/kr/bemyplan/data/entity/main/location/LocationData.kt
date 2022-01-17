@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.location
+package co.kr.bemyplan.data.entity.main.location
 
 data class LocationData(
     val text : String,

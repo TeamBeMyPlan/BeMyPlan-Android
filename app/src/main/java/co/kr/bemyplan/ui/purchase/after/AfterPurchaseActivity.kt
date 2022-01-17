@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.DailyContents
-import co.kr.bemyplan.data.Post
+import co.kr.bemyplan.data.entity.DailyContents
+import co.kr.bemyplan.data.entity.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import com.google.android.material.chip.ChipGroup

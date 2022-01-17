@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data
+package co.kr.bemyplan.data.entity
 
 data class Spot(
     val placeName: String,

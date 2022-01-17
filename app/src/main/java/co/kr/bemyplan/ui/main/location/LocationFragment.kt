@@ -1,18 +1,13 @@
 package co.kr.bemyplan.ui.main.location
 
-import android.graphics.Rect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.location.LocationData
-import co.kr.bemyplan.databinding.FragmentHomeBinding
+import co.kr.bemyplan.data.entity.main.location.LocationData
 import co.kr.bemyplan.databinding.FragmentLocationBinding
-import co.kr.bemyplan.databinding.ItemLocationBinding
 
 class LocationFragment : Fragment() {
 

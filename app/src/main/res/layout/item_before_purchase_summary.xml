@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="co.kr.bemyplan.data.purchase.before.SummaryModel" />
+            type="co.kr.bemyplan.data.entity.purchase.before.SummaryModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

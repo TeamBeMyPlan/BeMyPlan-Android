@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.home.TempHomeData
+import co.kr.bemyplan.data.entity.main.home.TempHomeData
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.PurchaseActivity

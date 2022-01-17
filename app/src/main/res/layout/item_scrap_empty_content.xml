@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="co.kr.bemyplan.data.main.scrap.ContentModel" />
+            type="co.kr.bemyplan.data.entity.main.scrap.ContentModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

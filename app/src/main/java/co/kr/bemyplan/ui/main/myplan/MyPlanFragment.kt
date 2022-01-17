@@ -2,7 +2,6 @@ package co.kr.bemyplan.ui.main.myplan
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +9,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.myplan.Profile
-import co.kr.bemyplan.data.myplan.PurchaseTour
+import co.kr.bemyplan.data.entity.main.myplan.Profile
+import co.kr.bemyplan.data.entity.main.myplan.PurchaseTour
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
 import co.kr.bemyplan.ui.main.MainActivity
-import co.kr.bemyplan.ui.main.home.HomeFragment
 import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter
 import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 

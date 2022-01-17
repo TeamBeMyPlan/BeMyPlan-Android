@@ -9,7 +9,7 @@
 
         <variable
             name="model"
-            type="co.kr.bemyplan.data.list.ContentModel" />
+            type="co.kr.bemyplan.data.entity.list.ContentModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

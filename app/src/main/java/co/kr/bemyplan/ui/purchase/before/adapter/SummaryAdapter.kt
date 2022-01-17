@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.purchase.before.SummaryModel
+import co.kr.bemyplan.data.entity.purchase.before.SummaryModel
 import co.kr.bemyplan.databinding.ItemBeforePurchaseSummaryBinding
 
 class SummaryAdapter : RecyclerView.Adapter<SummaryAdapter.SummaryViewHolder>() {

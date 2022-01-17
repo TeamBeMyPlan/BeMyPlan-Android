@@ -6,7 +6,7 @@
     <data>
         <variable
             name="purchaseTour"
-            type="co.kr.bemyplan.data.myplan.PurchaseTour" />
+            type="co.kr.bemyplan.data.entity.main.myplan.PurchaseTour" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

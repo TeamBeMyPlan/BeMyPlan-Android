@@ -9,5 +9,5 @@ data class Spot(
     val placeNext: String?,
     val duration: Int?,
     val isFirst: Boolean,
-    val isLast: Boolean
+    var isLast: Boolean
 )

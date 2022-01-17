@@ -92,15 +92,19 @@
 
             <TextView
                 android:id="@+id/tv_content_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
                 android:text="감성을 느낄 수 있는 힐링여행"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
                 android:textSize="14sp"
                 android:textColor="@color/black_1a1e23"
                 android:includeFontPadding="false"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_content"
                 app:layout_constraintStart_toStartOf="@+id/tv_writter"
                 app:layout_constraintTop_toBottomOf="@+id/tv_writter" />

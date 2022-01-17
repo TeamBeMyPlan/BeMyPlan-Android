@@ -2,6 +2,7 @@ package co.kr.bemyplan.ui.purchase.before
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,15 @@ class ChargedFragment : Fragment() {
             startActivity(intent)
             activity?.finish()
         }
+
+
+        binding.tvContentTitle.post(Runnable {
+
+            val lineCount: Int = binding.tvContentTitle.lineCount
+            Log.d("yongmin", "$lineCount")
+            Log.d("yongmin", binding.tvContentTitle.text.toString())
+        })
+
         return binding.root
     }
 

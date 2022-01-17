@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
         android:src="@drawable/img_home_popular"
+        android:background="@drawable/rectangle_radius_5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,7 +19,7 @@
         tools:src="@drawable/img_home_popular" />
 
     <TextView
-        android:id="@+id/tv_popular1"
+        android:id="@+id/tv_popular_plan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -26,20 +27,24 @@
         android:fontFamily="@font/spoqa_han_sans_neo_bold"
         android:textSize="16sp"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/tv_popular2"
-        app:layout_constraintStart_toStartOf="@+id/tv_popular2"
+        app:layout_constraintBottom_toTopOf="@+id/tv_popular_content"
+        app:layout_constraintStart_toStartOf="@+id/tv_popular_content"
         tools:text="인기 여행 일정"/>
 
     <TextView
-        android:id="@+id/tv_popular2"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_popular_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="30dp"
+        android:layout_marginEnd="24dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:text="제주도 &amp; 우도 인생샷 투어"
         android:fontFamily="@font/spoqa_han_sans_neo_bold"
         android:textSize="20sp"
         android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@id/iv_popular"
         app:layout_constraintBottom_toBottomOf="@+id/iv_popular"
         app:layout_constraintStart_toStartOf="@+id/iv_popular"
         tools:text="제주도 &amp; 우도 인생샷 투어"/>

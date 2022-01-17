@@ -31,7 +31,7 @@ class BeforeChargingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
+        _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_before_charging, container, false)
 
         initList()
         initRecyclerView()

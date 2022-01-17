@@ -38,14 +38,8 @@ class BeforeChargingFragment : Fragment() {
         initNestedScrollView()
         clickBack()
         clickScrap()
+        clickPurchase()
 
-        binding.layoutPurchase.setOnClickListener{
-            val chargingFragment = ChargingFragment()
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.add(R.id.fragment_container_charging, chargingFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
         return binding.root
     }
 
@@ -163,6 +157,15 @@ class BeforeChargingFragment : Fragment() {
             binding.ivScrap.apply {
                 isSelected = !isSelected
             }
+        }
+    }
+
+    private fun clickPurchase() {
+        binding.layoutPurchase.setOnClickListener {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.add(R.id.fragment_container_charging, ChargingFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 

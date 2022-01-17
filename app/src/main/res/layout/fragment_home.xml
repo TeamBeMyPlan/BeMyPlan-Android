@@ -45,12 +45,12 @@
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vp_popular"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginTop="20dp"
                     android:clipChildren="false"
                     android:clipToPadding="false"
-                    app:layout_constraintDimensionRatio="1:1.3"
+                    app:layout_constraintDimensionRatio="1:1.15"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_suggest" />

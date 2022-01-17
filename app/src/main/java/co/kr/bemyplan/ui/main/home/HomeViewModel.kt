@@ -11,17 +11,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class HomeViewModel: ViewModel() {
+
     private val _popular = MutableLiveData<List<ResponseHomePopularData.Data>>()
     val popular : LiveData<List<ResponseHomePopularData.Data>> get() = _popular
-//    private lateinit var viewPagerAdapter : HomeViewPagerAdapter
 
-
-//    private fun initViewPagerAdapter(){
-//        viewPagerAdapter = HomeViewPagerAdapter()
-//
-//    }
-
-    private fun initNetwork(){
+    fun initPopularNetwork(){
         val call : Call<ResponseHomePopularData> = ApiService.homePopularService.getPopularData()
         call.enqueue(object: Callback<ResponseHomePopularData>{
 

@@ -2,6 +2,7 @@ package co.kr.bemyplan.ui.main.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,11 +30,11 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
+        homeViewModel.initPopularNetwork()
+
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
-
-
 
         clickMore()
 
@@ -88,6 +89,12 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+        homeViewModel.popular.observe(viewLifecycleOwner) {
+            homeViewPagerAdapter.planList.addAll(it)
+            Log.d("yongminAddLog", it.toString())
+            homeViewPagerAdapter.notifyDataSetChanged()
+        }
+
         with(binding.vpPopular){
             adapter=homeViewPagerAdapter
 
@@ -108,10 +115,8 @@ class HomeFragment : Fragment() {
                 addTransformer(ZoomOutPageTransformer())
                 addTransformer{page, position-> page.translationX = position*-(innerPadding) }
             })
-            homeViewModel.popular.observe(viewLifecycleOwner) {
-                homeViewPagerAdapter.planList.addAll(it)
-            }
         }
+
         homeViewPagerAdapter.notifyDataSetChanged()
     }
 

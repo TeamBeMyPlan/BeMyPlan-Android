@@ -26,6 +26,7 @@ class HomeViewPagerAdapter(val itemClick: (ResponseHomePopularData.Data) -> Unit
 //            Glide.with(binding.ivPopular.context).load(data.img).into(binding.ivPopular)
 
             binding.popularityItem=data
+            Log.d("yongminPopularImage", "잘 들어오나")
             clipTo(binding.ivPopular, data.thumbnail_url)
 
 //            if(binding.tvPopularContent.isLaidOut){

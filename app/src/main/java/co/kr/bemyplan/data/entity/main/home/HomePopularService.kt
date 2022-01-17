@@ -5,6 +5,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface HomePopularService {
-    @GET()
+    @GET("/api/v1/post/popular")
     fun getPopularData(): Call<ResponseHomePopularData>
 }

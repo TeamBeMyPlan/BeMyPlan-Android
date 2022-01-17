@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.myplan.PurchaseTour
+import co.kr.bemyplan.data.entity.main.myplan.PurchaseTour
 import co.kr.bemyplan.databinding.ItemMyPlanPurchaseListBinding
 
 class MyPlanAdapter: RecyclerView.Adapter<MyPlanAdapter.ExistMyPlanViewHolder>() {

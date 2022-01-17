@@ -11,8 +11,8 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.purchase.before.ContentModel
-import co.kr.bemyplan.data.purchase.before.SummaryModel
+import co.kr.bemyplan.data.entity.purchase.before.ContentModel
+import co.kr.bemyplan.data.entity.purchase.before.SummaryModel
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.adapter.SummaryAdapter

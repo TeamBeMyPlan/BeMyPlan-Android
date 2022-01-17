@@ -3,7 +3,7 @@ package co.kr.bemyplan.ui.main.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.home.TempHomeData
+import co.kr.bemyplan.data.entity.main.home.TempHomeData
 import co.kr.bemyplan.databinding.ItemPopularBinding
 import com.bumptech.glide.Glide
 
@@ -13,7 +13,7 @@ class HomeViewPagerAdapter(val itemClick: (TempHomeData) -> Unit) :
     val planList = mutableListOf<TempHomeData>()
 
     inner class PagerViewHolder(private val binding:ItemPopularBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data:TempHomeData){
+        fun onBind(data: TempHomeData){
             binding.tvPopular1.text = data.text
             binding.tvPopular2.text = data.text2
             Glide.with(binding.ivPopular.context).load(data.img).into(binding.ivPopular)

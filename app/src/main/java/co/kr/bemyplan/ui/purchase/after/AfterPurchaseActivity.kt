@@ -4,10 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.DailyContents
-import co.kr.bemyplan.data.Post
+import co.kr.bemyplan.data.entity.DailyContents
+import co.kr.bemyplan.data.entity.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
-import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 import co.kr.bemyplan.ui.purchase.after.adapter.DayAdapter
 import net.daum.mf.map.api.MapView
 

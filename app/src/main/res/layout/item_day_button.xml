@@ -7,7 +7,7 @@
 
         <variable
             name="dailyContents"
-            type="co.kr.bemyplan.data.DailyContents" />
+            type="co.kr.bemyplan.data.entity.DailyContents" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

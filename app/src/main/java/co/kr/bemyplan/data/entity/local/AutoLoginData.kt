@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.local
+package co.kr.bemyplan.data.entity.local
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.main.scrap.ContentModel
+import co.kr.bemyplan.data.entity.main.scrap.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapEmptyContentBinding
 
 class ScrapRecommendAdapter(val context: Context, val itemClick: (ContentModel) -> Unit) :

@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.main.scrap
+package co.kr.bemyplan.data.entity.main.scrap
 
 data class ContentModel(
     val photo: Int,

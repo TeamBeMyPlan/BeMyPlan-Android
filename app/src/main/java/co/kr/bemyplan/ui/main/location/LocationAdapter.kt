@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.data.entity.main.location.LocationData
 import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.databinding.ItemLocationBinding
+import co.kr.bemyplan.util.clipTo
 import com.bumptech.glide.Glide
 
 class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
@@ -36,6 +37,7 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
         fun onBind(data: LocationData){
             binding.tvLocation.text=data.text
             Glide.with(binding.ivLocation.context).load(data.img).into(binding.ivLocation)
+            //clipTo(binding.ivLocation, data.img)
             if(data.lock==true){
                 binding.ivLock.visibility=View.VISIBLE
             }

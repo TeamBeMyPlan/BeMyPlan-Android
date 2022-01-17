@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.data.entity.main.home.TempHomeData
 import co.kr.bemyplan.databinding.ItemHomePlanBinding
+import co.kr.bemyplan.util.clipTo
 import com.bumptech.glide.Glide
 
 class HomeAdapter(val itemClick: (TempHomeData) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
@@ -16,7 +17,7 @@ class HomeAdapter(val itemClick: (TempHomeData) -> Unit) : RecyclerView.Adapter<
             Log.d("bindtest", data.text)
             binding.tvHomeCommon.text = data.text
             Glide.with(binding.ivHomeCommon.context).load(data.img).into(binding.ivHomeCommon)
-
+            //clipTo(binding.ivHomeCommon, data.img)
             clickItem(data)
         }
 

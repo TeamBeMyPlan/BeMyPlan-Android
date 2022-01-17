@@ -50,7 +50,8 @@
         </activity>
         <activity
             android:name=".ui.purchase.after.AfterPurchaseActivity"
-            android:exported="false" />
+            android:exported="false" >
+        </activity>
         <activity
             android:name=".ui.list.ListActivity"
             android:exported="false" />

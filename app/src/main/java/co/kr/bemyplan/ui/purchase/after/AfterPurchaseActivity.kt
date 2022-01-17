@@ -14,6 +14,7 @@ import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.MapView
+import java.security.MessageDigest
 
 class AfterPurchaseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAfterPurchaseBinding
@@ -36,6 +37,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        // TODO: Kakao Map 세팅 (안먹힘)
         setMap()
     }
 

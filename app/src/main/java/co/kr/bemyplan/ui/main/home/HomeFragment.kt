@@ -109,7 +109,7 @@ class HomeFragment : Fragment() {
 
         homeViewPagerAdapter.planList.addAll(
             listOf(
-                TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어"),
+                TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어dadasdsadasdsadasdasdasdasd"),
                 TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어"),
                 TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어"),
                 TempHomeData(R.drawable.img_home_popular, "인기 여행 일정", "제주도 & 우도 인생샷 투어"),

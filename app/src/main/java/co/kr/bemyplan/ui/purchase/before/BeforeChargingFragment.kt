@@ -20,7 +20,7 @@ import co.kr.bemyplan.ui.purchase.before.adapter.SummaryAdapter
 class BeforeChargingFragment : Fragment() {
 
     private var _binding: FragmentBeforeChargingBinding? = null
-    private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
+    private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private lateinit var summaryAdapter: SummaryAdapter
     private lateinit var contentAdapter: ContentAdapter
     private var summaryItemList = listOf<SummaryModel>()
@@ -31,7 +31,8 @@ class BeforeChargingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
 
         initList()
         initRecyclerView()
@@ -80,7 +81,7 @@ class BeforeChargingFragment : Fragment() {
         binding.nsv.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY < oldScrollY) {
                 // 하단 View 표시하기
-                if(!isVisible) {
+                if (!isVisible) {
                     isVisible = true
                     showLayoutPurchase()
                 }
@@ -93,7 +94,7 @@ class BeforeChargingFragment : Fragment() {
                     showLayoutPurchase()
                 } else {
                     // 하단 View 숨기기
-                    if(isVisible) {
+                    if (isVisible) {
                         isVisible = false
                         hideLayoutPurchase()
                     }

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout>
     <data>
         <import type="android.view.View" />
 
@@ -10,26 +8,21 @@
             type="co.kr.bemyplan.data.DailyContents" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/tv_day_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp">
-
-        <TextView
-            android:id="@+id/tv_day_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_daily"
-            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="8dp"
-            android:text="1일차"
-            android:textColor="@drawable/btn_daily_text_color"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:text="@{dailyContents.day + `일차`}" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        style="@style/Widget.MaterialComponents.Chip.Choice"
+        tools:text="1일차"
+        android:textAppearance="@style/ChipText"
+        android:text="@{dailyContents.day + `일차`}"
+        android:fontFamily="@font/spoqa_han_sans_neo_bold"
+        android:textColor="@drawable/btn_daily_text_color"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:checkable="true"
+        app:chipCornerRadius="5dp"
+        app:chipBackgroundColor="@color/selector_chip" />
 </layout>

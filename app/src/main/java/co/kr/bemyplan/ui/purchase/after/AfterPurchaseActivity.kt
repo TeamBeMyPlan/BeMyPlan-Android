@@ -1,14 +1,26 @@
 package co.kr.bemyplan.ui.purchase.after
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.DailyContents
 import co.kr.bemyplan.data.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
+import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 import co.kr.bemyplan.ui.purchase.after.adapter.DayAdapter
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.MapView
 
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -24,13 +36,17 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // fragment 보이기
         initFragment()
+        // back button
+        initBackButton()
         // 일차별 버튼
-        initDayButtonAdpater()
+        //initDayButtonAdapter()
+        initChips()
+        // 스크롤뷰 설정
+        initNestedScrollView()
 
         setContentView(binding.root)
 
-        // TODO: Kakao Map 세팅 (안먹힘)
-        //setMap()
+        setMap()
     }
 
     private fun setMap() {
@@ -46,7 +62,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    private fun initDayButtonAdpater() {
+    private fun initBackButton() {
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun initDayButtonAdapter() {
         dayAdapter = DayAdapter()
 
         val items = listOf(
@@ -59,6 +81,46 @@ class AfterPurchaseActivity : AppCompatActivity() {
         )
 
         dayAdapter.setItems(items)
-        binding.rvDayButton.adapter = dayAdapter
+        //binding.rvDayButton.adapter = dayAdapter
+    }
+
+    @SuppressLint("ResourceType")
+    private fun initChips() {
+        val items = listOf(
+            DailyContents(1, false),
+            DailyContents(2, false),
+            DailyContents(3, false),
+            DailyContents(4, false),
+            DailyContents(5, false),
+            DailyContents(6, true)
+        )
+
+        val chipGroup: ChipGroup = binding.chipGroupDay
+        for (i in items) {
+            val chip = ItemDayButtonBinding.inflate(layoutInflater)
+            chip.root.id = View.generateViewId()
+            chip.dailyContents = i
+
+            if(i.day == 1) chip.tvDayButton.isChecked = true
+            chipGroup.addView(chip.root)
+        }
+    }
+
+    private fun initNestedScrollView() {
+        binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ ->
+            setTopTitle()
+        })
+    }
+
+    private fun setTopTitle() {
+        val rect = Rect()
+        binding.svDailyContents.getHitRect(rect)
+        if (binding.tvTitle.getLocalVisibleRect(rect)) {
+            // view가 보이는 경우
+            binding.tvTopTitle.visibility = View.INVISIBLE
+        } else {
+            // view가 안 보이는 경우
+            binding.tvTopTitle.visibility = View.VISIBLE
+        }
     }
 }

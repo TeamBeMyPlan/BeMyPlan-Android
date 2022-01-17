@@ -1,8 +1,15 @@
 package co.kr.bemyplan.ui.purchase.after.adapter
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.get
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
@@ -10,8 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.data.entity.Spot
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
+import co.kr.bemyplan.util.ToastMessage
+import co.kr.bemyplan.util.ToastMessage.shortToast
 import co.kr.bemyplan.util.clipTo
 import java.lang.IllegalStateException
+import kotlin.coroutines.coroutineContext
+import kotlin.reflect.typeOf
 
 class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<DailyContentsAdapter.DailyContentsViewHolder>() {
 
@@ -25,7 +36,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
                 LayoutInflater.from(parent.context),
                 parent, false
             )
-            ContentsViewHolder(binding)
+            ContentsViewHolder(binding, parent.context)
         }
         TYPE_ROUTE -> {
             val binding = ItemDailyRouteBinding.inflate(
@@ -65,15 +76,25 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         adapter?.setItems(items)
     }
 
-    abstract class DailyContentsViewHolder(private val binding: ViewDataBinding)
+    abstract class DailyContentsViewHolder(binding: ViewDataBinding)
         : RecyclerView.ViewHolder(binding.root) {
         abstract fun onBind(data: Spot)
     }
 
-    class ContentsViewHolder(private val binding: ItemDailyContentsBinding): DailyContentsViewHolder(binding) {
+    class ContentsViewHolder(private val binding: ItemDailyContentsBinding, private val mContext: Context): DailyContentsViewHolder(binding) {
         override fun onBind(data: Spot) {
             binding.spot = data
             clipTo(binding.ivPhoto, data.photo)
+            copyButton()
+        }
+
+        private fun copyButton() {
+            binding.ivCopy.setOnClickListener {
+                var clipboard = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("CODE", binding.tvAddress.text)
+                clipboard.setPrimaryClip(clip)
+                mContext.shortToast("주소를 복사했습니다")
+            }
         }
     }
 

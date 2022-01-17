@@ -35,7 +35,7 @@ class DayAdapter: RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
 
     class DayViewHolder(private val binding: ItemDayButtonBinding): RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: DailyContents) {
-            binding.dailyContents = data
+            //binding.dailyContents = data
             binding.tvDayButton.setOnClickListener {
                 it.isSelected = true
             }

@@ -2,9 +2,13 @@ package co.kr.bemyplan.ui.purchase.after
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
@@ -12,8 +16,10 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.DailyContents
 import co.kr.bemyplan.data.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
+import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 import co.kr.bemyplan.ui.purchase.after.adapter.DayAdapter
+import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.MapView
 
@@ -33,7 +39,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // back button
         initBackButton()
         // 일차별 버튼
-        initDayButtonAdapter()
+        //initDayButtonAdapter()
+        initChips()
         // 스크롤뷰 설정
         initNestedScrollView()
 
@@ -74,7 +81,29 @@ class AfterPurchaseActivity : AppCompatActivity() {
         )
 
         dayAdapter.setItems(items)
-        binding.rvDayButton.adapter = dayAdapter
+        //binding.rvDayButton.adapter = dayAdapter
+    }
+
+    @SuppressLint("ResourceType")
+    private fun initChips() {
+        val items = listOf(
+            DailyContents(1, false),
+            DailyContents(2, false),
+            DailyContents(3, false),
+            DailyContents(4, false),
+            DailyContents(5, false),
+            DailyContents(6, true)
+        )
+
+        val chipGroup: ChipGroup = binding.chipGroupDay
+        for (i in items) {
+            val chip = ItemDayButtonBinding.inflate(layoutInflater)
+            chip.root.id = View.generateViewId()
+            chip.dailyContents = i
+
+            if(i.day == 1) chip.tvDayButton.isChecked = true
+            chipGroup.addView(chip.root)
+        }
     }
 
     private fun initNestedScrollView() {

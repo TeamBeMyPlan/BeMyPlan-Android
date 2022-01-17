@@ -170,11 +170,7 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickBack() {
         binding.layoutBack.setOnClickListener {
-            activity?.finish()
-//            activity?.supportFragmentManager
-//                ?.beginTransaction()
-//                ?.remove(this)
-//                ?.commit()
+            requireActivity().finish()
         }
     }
 

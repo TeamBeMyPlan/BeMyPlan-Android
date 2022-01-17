@@ -5,23 +5,28 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.marginBottom
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import co.kr.bemyplan.R
+import co.kr.bemyplan.data.entity.main.home.ResponseHomePopularData
 import co.kr.bemyplan.data.entity.main.home.TempHomeData
 import co.kr.bemyplan.databinding.ItemPopularBinding
 import co.kr.bemyplan.util.clipTo
 import com.bumptech.glide.Glide
 
-class HomeViewPagerAdapter(val itemClick: (TempHomeData) -> Unit) :
+class HomeViewPagerAdapter(val itemClick: (ResponseHomePopularData.Data) -> Unit) :
     RecyclerView.Adapter<HomeViewPagerAdapter.PagerViewHolder>() {
 
-    val planList = mutableListOf<TempHomeData>()
+    val planList = mutableListOf<ResponseHomePopularData.Data>()
 
     inner class PagerViewHolder(private val binding:ItemPopularBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data:TempHomeData){
-            binding.tvPopularPlan.text = data.text
-            binding.tvPopularContent.text = data.text2
-            Glide.with(binding.ivPopular.context).load(data.img).into(binding.ivPopular)
-            //clipTo(binding.ivPopular, data.img)x`
+        fun onBind(data:ResponseHomePopularData.Data){
+//            binding.tvPopularPlan.text = data.text
+//            binding.tvPopularContent.text = data.text2
+//            Glide.with(binding.ivPopular.context).load(data.img).into(binding.ivPopular)
+
+            binding.popularityItem=data
+            clipTo(binding.ivPopular, data.thumbnail_url)
 
 //            if(binding.tvPopularContent.isLaidOut){
 //                val lineCount = binding.tvPopularContent.lineCount
@@ -39,19 +44,21 @@ class HomeViewPagerAdapter(val itemClick: (TempHomeData) -> Unit) :
 //            else{
 //                Log.d("yongminLineCount2", "laidout안됨")
 //            }
-            binding.tvPopularContent.post {
 
-                val lineCount: Int = binding.tvPopularContent.lineCount
-                Log.d("yongmin", "$lineCount")
-                Log.d("yongmin", binding.tvPopularContent.text.toString())
-            }
+
+//            binding.tvPopularContent.post {
+//
+//                val lineCount: Int = binding.tvPopularContent.lineCount
+//                Log.d("yongmin", "$lineCount")
+//                Log.d("yongmin", binding.tvPopularContent.text.toString())
+//            }
 
 
 
             clickItem(data)
         }
 
-        private fun clickItem(data: TempHomeData) {
+        private fun clickItem(data: ResponseHomePopularData.Data) {
             binding.root.setOnClickListener {
                 itemClick(data)
             }
@@ -59,7 +66,9 @@ class HomeViewPagerAdapter(val itemClick: (TempHomeData) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
-        val binding = ItemPopularBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+//        val binding = ItemPopularBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        //val binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_popular, parent, false)
+        val binding : ItemPopularBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_popular, parent, false)
         return PagerViewHolder(binding)
     }
 

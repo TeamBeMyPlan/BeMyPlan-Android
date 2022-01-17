@@ -47,7 +47,6 @@ class LoginFragment : Fragment() {
 
         clickGuestLogin()
         clickKakaoLogin()
-        test()
 
         return binding.root
     }
@@ -61,12 +60,6 @@ class LoginFragment : Fragment() {
         binding.tvGuestLogin.setOnClickListener {
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
-        }
-    }
-
-    private fun test() {
-        binding.layoutGoogle.setOnClickListener {
-            startSignUpFragment()
         }
     }
 

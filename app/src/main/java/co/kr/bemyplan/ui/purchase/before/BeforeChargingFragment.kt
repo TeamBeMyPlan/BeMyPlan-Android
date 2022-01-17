@@ -4,12 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.graphics.Rect
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.purchase.before.ContentModel
 import co.kr.bemyplan.data.purchase.before.SummaryModel
@@ -20,8 +20,9 @@ import co.kr.bemyplan.ui.purchase.before.adapter.SummaryAdapter
 class BeforeChargingFragment : Fragment() {
 
     private var _binding: FragmentBeforeChargingBinding? = null
-    private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
+    private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private lateinit var summaryAdapter: SummaryAdapter
+//    private lateinit var contentViewPagerAdapter: ContentViewPagerAdapter
     private lateinit var contentAdapter: ContentAdapter
     private var summaryItemList = listOf<SummaryModel>()
     private var contentItemList = listOf<ContentModel>()
@@ -31,21 +32,16 @@ class BeforeChargingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
 
         initList()
         initRecyclerView()
         initNestedScrollView()
         clickBack()
         clickScrap()
+        clickPurchase()
 
-        binding.layoutPurchase.setOnClickListener{
-            val chargingFragment = ChargingFragment()
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.add(R.id.fragment_container_charging, chargingFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
         return binding.root
     }
 
@@ -62,7 +58,10 @@ class BeforeChargingFragment : Fragment() {
         )
 
         contentItemList = listOf(
-            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
+            ContentModel(
+                R.drawable.rectangle_5715,
+                "그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ 그래서 난 눈누난나 ~ "
+            ),
             ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
             ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
             ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
@@ -76,6 +75,27 @@ class BeforeChargingFragment : Fragment() {
         binding.rvSummary.adapter = summaryAdapter
 
         // Preview
+        // 가로 스크롤(뷰페이저)
+//        contentViewPagerAdapter = ContentViewPagerAdapter()
+//        contentViewPagerAdapter.itemList = contentItemList
+//        binding.vpContent.adapter = contentViewPagerAdapter
+//        binding.vpContent.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+//                val view = (binding.vpContent[0] as RecyclerView).layoutManager?.findViewByPosition(position)
+//
+//                view?.post {
+//                    val wMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+//                    val hMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+//                    view.measure(wMeasureSpec, hMeasureSpec)
+//
+//                    if (binding.vpContent.layoutParams.height != view.measuredHeight) {
+//                        binding.vpContent.layoutParams = (binding.vpContent.layoutParams).also { lp -> lp.height = view.measuredHeight }
+//                    }
+//                }
+//            }
+//        })
+        // 세로 스크롤(리사이클러뷰)
         contentAdapter = ContentAdapter()
         contentAdapter.itemList = contentItemList
         binding.rvContent.adapter = contentAdapter
@@ -86,7 +106,7 @@ class BeforeChargingFragment : Fragment() {
         binding.nsv.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY < oldScrollY) {
                 // 하단 View 표시하기
-                if(!isVisible) {
+                if (!isVisible) {
                     isVisible = true
                     showLayoutPurchase()
                 }
@@ -99,7 +119,7 @@ class BeforeChargingFragment : Fragment() {
                     showLayoutPurchase()
                 } else {
                     // 하단 View 숨기기
-                    if(isVisible) {
+                    if (isVisible) {
                         isVisible = false
                         hideLayoutPurchase()
                     }
@@ -150,11 +170,7 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickBack() {
         binding.layoutBack.setOnClickListener {
-            activity?.finish()
-//            activity?.supportFragmentManager
-//                ?.beginTransaction()
-//                ?.remove(this)
-//                ?.commit()
+            requireActivity().finish()
         }
     }
 
@@ -163,6 +179,15 @@ class BeforeChargingFragment : Fragment() {
             binding.ivScrap.apply {
                 isSelected = !isSelected
             }
+        }
+    }
+
+    private fun clickPurchase() {
+        binding.layoutPurchase.setOnClickListener {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.add(R.id.fragment_container_charging, ChargingFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 

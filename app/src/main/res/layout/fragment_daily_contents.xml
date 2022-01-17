@@ -9,19 +9,18 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".ui.purchase.after.DailyContentsFragment" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_route"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="20dp"
+            android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="24dp"
             android:elevation="10dp"
             android:background="@color/white"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_daily_route"
@@ -33,6 +32,72 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/item_daily_route" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_look_more"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:paddingBottom="13dp"
+                android:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@id/rv_daily_route"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_look_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_icn_arrow_down"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_look_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="더보기"
+                    android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                    android:textSize="12sp"
+                    android:textColor="@color/grey_919bab"
+                    app:layout_constraintTop_toTopOf="@id/iv_look_more"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_look_more"
+                    app:layout_constraintStart_toEndOf="@id/iv_look_more"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_look_close"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:paddingBottom="13dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/rv_daily_route"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_look_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_icn_arrow_up"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_look_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="접기"
+                    android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                    android:textSize="12sp"
+                    android:textColor="@color/grey_919bab"
+                    app:layout_constraintTop_toTopOf="@id/iv_look_close"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_look_close"
+                    app:layout_constraintStart_toEndOf="@id/iv_look_close"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

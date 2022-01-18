@@ -2,6 +2,7 @@ package co.kr.bemyplan.ui.purchase.before
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.data.entity.purchase.before.SummaryModel
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
+import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.adapter.SummaryAdapter
 
@@ -38,6 +40,7 @@ class BeforeChargingFragment : Fragment() {
         initNestedScrollView()
         clickBack()
         clickScrap()
+        clickNickname()
 
         binding.layoutPurchase.setOnClickListener{
             val chargingFragment = ChargingFragment()
@@ -163,6 +166,14 @@ class BeforeChargingFragment : Fragment() {
             binding.ivScrap.apply {
                 isSelected = !isSelected
             }
+        }
+    }
+
+    private fun clickNickname() {
+        binding.layoutAuthor.setOnClickListener {
+            val intent = Intent(requireContext(), ListActivity::class.java)
+            intent.putExtra("from", "user")
+            startActivity(intent)
         }
     }
 

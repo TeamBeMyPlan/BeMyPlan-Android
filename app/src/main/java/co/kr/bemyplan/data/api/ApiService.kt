@@ -1,6 +1,7 @@
 package co.kr.bemyplan.data.api
 
 import co.kr.bemyplan.BuildConfig
+import co.kr.bemyplan.data.entity.list.NewListService
 import co.kr.bemyplan.data.entity.main.home.HomePopularService
 import co.kr.bemyplan.data.entity.main.scrap.ScrapListService
 import retrofit2.Retrofit
@@ -15,6 +16,8 @@ object ApiService {
         .build()
 
     val homePopularService: HomePopularService = retrofit.create(HomePopularService::class.java)
-    // 스크랩 리스트 불러오기
+    // 스크랩한 리스트 조회
     val scrapListService: ScrapListService = retrofit.create(ScrapListService::class.java)
+    // 최신 여행 리스트 조회
+    val newListService: NewListService = retrofit.create(NewListService::class.java)
 }

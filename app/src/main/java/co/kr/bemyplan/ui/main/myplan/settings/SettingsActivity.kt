@@ -81,6 +81,9 @@ class SettingsActivity : AppCompatActivity() {
    }
 
     private fun showInfo() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/a69b7abcdb9f42399825f4ff25343bfd"))
+        binding.tvInfo.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/a69b7abcdb9f42399825f4ff25343bfd"))
+            startActivity(intent)
+        }
     }
 }

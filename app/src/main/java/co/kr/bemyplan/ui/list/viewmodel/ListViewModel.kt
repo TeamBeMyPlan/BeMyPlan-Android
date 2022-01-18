@@ -9,6 +9,7 @@ import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.data.repository.list.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.NewListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.SuggestListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.UserPostListRepositoryImpl
 import kotlinx.coroutines.launch
 
 class ListViewModel: ViewModel() {
@@ -20,6 +21,9 @@ class ListViewModel: ViewModel() {
 
     private var _locationList = MutableLiveData<List<ContentModel>>()
     val locationList: LiveData<List<ContentModel>> get() = _locationList
+
+    private var _userPostList = MutableLiveData<List<ContentModel>>()
+    val userPostList: LiveData<List<ContentModel>> get() = _userPostList
 
     fun getNewList(page: Int, pageSize: Int) {
         val newListRepositoryImpl = NewListRepositoryImpl()
@@ -46,6 +50,15 @@ class ListViewModel: ViewModel() {
             val response = locationListRepositoryImpl.getLocationList(area_id, page, pageSize, sort)
             _locationList.value = response.data.items
             Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
+        }
+    }
+
+    fun getUserPostList(userId: String, page: Int, pageSize: Int, sort: String) {
+        val userPostListRepositoryImpl = UserPostListRepositoryImpl()
+        viewModelScope.launch {
+            val response = userPostListRepositoryImpl.getUserPostList(userId, page, pageSize, sort)
+            _userPostList.value = response.data.items
+            Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
         }
     }
 }

@@ -31,19 +31,20 @@ class ListActivity : AppCompatActivity() {
     private fun initList(from: String?) {
         when (from) {
             "new" -> {
-                viewModel.getNewList(0)
+                viewModel.getNewList(0, 10)
                 viewModel.newList.observe(this) {
                     listItem = it
+                    initRecyclerView()
                 }
             }
             "suggest" -> {
-                viewModel.getSuggestList(1)
+                viewModel.getSuggestList(0, 10)
                 viewModel.suggestList.observe(this) {
                     listItem = it
+                    initRecyclerView()
                 }
             }
         }
-        initRecyclerView()
     }
 
     private fun initRecyclerView() {

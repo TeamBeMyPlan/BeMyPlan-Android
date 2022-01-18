@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.data.entity.main.location.LocationData
+import co.kr.bemyplan.data.entity.main.location.ResponseLocationData
 import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.databinding.ItemLocationBinding
 import co.kr.bemyplan.util.clipTo
@@ -12,10 +13,7 @@ import com.bumptech.glide.Glide
 
 class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 
-    val locationList = mutableListOf<LocationData>()
-
-    private lateinit var binding : FragmentLocationBinding
-    private var last : Boolean = false
+    val locationList = mutableListOf<ResponseLocationData.LocationData>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -34,13 +32,14 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
     }
 
     class LocationViewHolder(private val binding:ItemLocationBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data: LocationData){
-            binding.tvLocation.text=data.text
-            Glide.with(binding.ivLocation.context).load(data.img).into(binding.ivLocation)
-            //clipTo(binding.ivLocation, data.img)
-            if(data.lock==true){
+        fun onBind(data: ResponseLocationData.LocationData){
+
+            binding.locationItem=data
+            clipTo(binding.ivLocation, data.photo_url)
+
+            if(data.is_activated){
                 binding.ivLock.visibility=View.VISIBLE
-            }
+            }else{binding.ivLock.visibility=View.GONE}
         }
     }
 }

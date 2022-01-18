@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentScrapBinding
+import co.kr.bemyplan.ui.main.scrap.viewmodel.ScrapViewModel
 
 class ScrapFragment : Fragment() {
     private var _binding: FragmentScrapBinding? = null
     private val binding get() = _binding!!
+    private val viewModel by activityViewModels<ScrapViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,14 +31,20 @@ class ScrapFragment : Fragment() {
     }
 
     private fun initFragmentContainerView() {
-        // 스크랩한 글이 있을 때
-//        val transaction = childFragmentManager.beginTransaction()
-//        transaction.add(R.id.fcv_scrap, NotEmptyScrapFragment())
-//            .commit()
-
-        // 스크랩한 글이 없을 때
-        val transaction = childFragmentManager.beginTransaction()
-        transaction.add(R.id.fcv_scrap, EmptyScrapFragment())
-            .commit()
+        viewModel.getScrapList("1", 0, 5, "created_at")
+        viewModel.scrapList.observe(viewLifecycleOwner) {
+            when(it.size) {
+                0 -> {
+                    val transaction = childFragmentManager.beginTransaction()
+                    transaction.add(R.id.fcv_scrap, EmptyScrapFragment())
+                        .commit()
+                }
+                else -> {
+                    val transaction = childFragmentManager.beginTransaction()
+                    transaction.add(R.id.fcv_scrap, NotEmptyScrapFragment())
+                        .commit()
+                }
+            }
+        }
     }
 }

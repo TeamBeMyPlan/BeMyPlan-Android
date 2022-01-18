@@ -103,7 +103,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         }
 
         private fun initTabLayout() {
-            TabLayoutMediator(binding.tlPhoto, binding.vpPhoto) { tab, position ->
+            TabLayoutMediator(binding.tlPhoto, binding.vpPhoto) { _, _ ->
 
             }.attach()
         }

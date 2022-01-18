@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.purchase.after
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
@@ -12,6 +13,7 @@ import co.kr.bemyplan.data.entity.purchase.after.DailyContents
 import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
+import co.kr.bemyplan.ui.list.ListActivity
 import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.MapView
 
@@ -27,6 +29,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // fragment 보이기
         initFragment()
+        // user button
+        initUserButton()
         // back button
         initBackButton()
         // 일차별 버튼
@@ -36,7 +40,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        // TODO: Kakao Map 세팅 (안먹힘)
+        // TODO: Kakao Map
         setMap()
     }
 
@@ -51,6 +55,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val fragment = DailyContentsFragment()
         fragmentTransaction.add(R.id.fcv_daily_context, fragment)
         fragmentTransaction.commit()
+    }
+
+    private fun initUserButton() {
+        binding.clWriter.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("from", "user")
+            startActivity(intent)
+        }
     }
 
     private fun initBackButton() {

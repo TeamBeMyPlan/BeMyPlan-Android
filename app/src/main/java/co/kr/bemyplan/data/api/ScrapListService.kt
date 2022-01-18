@@ -1,5 +1,6 @@
-package co.kr.bemyplan.data.entity.main.scrap
+package co.kr.bemyplan.data.api
 
+import co.kr.bemyplan.data.entity.main.scrap.ResponseScrapList
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

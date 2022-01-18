@@ -1,9 +1,7 @@
 package co.kr.bemyplan.data.api
 
 import co.kr.bemyplan.BuildConfig
-import co.kr.bemyplan.data.entity.list.NewListService
 import co.kr.bemyplan.data.entity.main.home.HomePopularService
-import co.kr.bemyplan.data.entity.main.scrap.ScrapListService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

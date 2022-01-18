@@ -44,6 +44,13 @@ class ListActivity : AppCompatActivity() {
                     initRecyclerView()
                 }
             }
+            "location" -> {
+                viewModel.getLocationList(2, 0, 10, "created_at")
+                viewModel.locationList.observe(this) {
+                    listItem = it
+                    initRecyclerView()
+                }
+            }
         }
     }
 

@@ -8,5 +8,6 @@ interface NewListService {
     @GET("api/v1/post/new")
     suspend fun getNewList(
         @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int
     ): ResponseNewList
 }

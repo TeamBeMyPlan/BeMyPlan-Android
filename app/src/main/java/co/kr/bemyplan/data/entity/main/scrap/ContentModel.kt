@@ -1,9 +1,8 @@
 package co.kr.bemyplan.data.entity.main.scrap
 
 data class ContentModel(
-    val photo: Int,
-    val author: String?,
+    val id: Int,
+    val thumbnail_url: String,
     val title: String,
-    var isScrap: Boolean,
-    val isFree: Boolean
+    val nickname: String,
 )

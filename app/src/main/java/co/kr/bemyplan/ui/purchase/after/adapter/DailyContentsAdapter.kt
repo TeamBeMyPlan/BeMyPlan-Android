@@ -17,6 +17,7 @@ import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import co.kr.bemyplan.util.clipTo
+import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.IllegalStateException
 
 class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<DailyContentsAdapter.DailyContentsViewHolder>() {
@@ -81,6 +82,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         override fun onBind(data: Spot) {
             binding.spot = data
             initViewPagerAdapter()
+            initTabLayout()
             copyButton()
         }
 
@@ -98,6 +100,12 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
             viewPagerAdapter.setItems(binding.spot!!.photo)
             binding.vpPhoto.adapter = viewPagerAdapter
             binding.vpPhoto.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        }
+
+        private fun initTabLayout() {
+            TabLayoutMediator(binding.tlPhoto, binding.vpPhoto) { tab, position ->
+
+            }.attach()
         }
     }
 

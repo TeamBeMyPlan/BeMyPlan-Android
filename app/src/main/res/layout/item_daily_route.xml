@@ -7,7 +7,7 @@
 
         <variable
             name="spot"
-            type="co.kr.bemyplan.data.entity.Spot" />
+            type="co.kr.bemyplan.data.entity.purchase.after.Spot" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -18,7 +18,7 @@
     <string name="charging_completed">결제가 완료되었습니다!</string>
     <string name="charging_goto_content">콘텐츠 보러가기</string>
 
-    <string name="title_purchase_benefit">콘텐츠를 구매하시면 이런 내용을 볼 수 있어요!</string>
+    <string name="title_purchase_benefit">여행 일정을 구매하시면\n이런 내용을 볼 수 있어요!</string>
     <string name="body_purchase_benefit">✔️ 장소를 핀한 지도\n✔️ 정류장 형식 일정\n✔️ 솔직 후기\n✔️ 가본 사람만 알 수 있는 꿀팁\n✔️ 다음 장소로 이동할 때의 교통편</string>
     <string name="text_purchase">구매하기</string>
     <string name="text_bottom_sheet_dialog_sort">정렬</string>
@@ -44,4 +44,18 @@
     <string name="text_invalid">특수문자를 사용할 수 없습니다.</string>
     <string name="text_duplicated">중복된 닉네임입니다.</string>
     <string name="text_keep_login">닉네임은 수정할 수 없습니다.\n이대로 가입을 진행할까요?</string>
+    <string name="text_purchase_benefit_subtitle">*구매 전에는 일부 사진과 글만 공개해요</string>
+    <string name="text_purchase_benefit_main_1">장소를 표시한 지도</string>
+    <string name="text_purchase_benefit_main_2">일차별 여행 코스</string>
+    <string name="text_purchase_benefit_main_3">더 많은 양의 사진과 글</string>
+    <string name="text_purchase_benefit_main_4">솔직 후기</string>
+    <string name="text_purchase_benefit_main_5">가본 사람만 알 수 있는 꿀팁</string>
+    <string name="text_purchase_benefit_main_6">다음 장소로 이동할 때의 교통편</string>
+    <string name="text_purchase_benefit_sub_1">여행 일정에 포함된 모든 장소가 지도에 다 있어요</string>
+    <string name="text_purchase_benefit_sub_2">일차별 일정을 한눈에 살펴보세요</string>
+    <string name="text_purchase_benefit_sub_3">구매 후 더 풍부한 사진과 정보를 만나보세요</string>
+    <string name="text_purchase_benefit_sub_4">여행 플레이스의 장점과 단점을 알아보세요</string>
+    <string name="text_purchase_benefit_sub_5">검색으로 쉽게 안 나오는 팁들을 챙겨가세요</string>
+    <string name="text_purchase_benefit_sub_6">어떻게 이동했고, 몇 분이 걸렸는지 확인해보세요</string>
+    <string name="text_purchase_example"><u>구매한 여행 일정 예시</u></string>
 </resources>

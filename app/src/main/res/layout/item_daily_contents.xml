@@ -67,6 +67,7 @@
             android:layout_height="3dp"
             android:layout_marginBottom="4dp"
             android:background="#80ffffff"
+            android:visibility="@{spot.photo.size() &lt;= 1 ? View.GONE : View.VISIBLE}"
             app:tabIndicatorHeight="3dp"
             app:tabIndicatorColor="@color/grey_313740"
             app:layout_constraintWidth_percent="0.5"

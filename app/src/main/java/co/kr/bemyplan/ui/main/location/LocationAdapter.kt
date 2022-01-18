@@ -1,9 +1,12 @@
 package co.kr.bemyplan.ui.main.location
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.main.location.LocationData
 import co.kr.bemyplan.data.entity.main.location.ResponseLocationData
 import co.kr.bemyplan.databinding.FragmentLocationBinding
@@ -19,7 +22,7 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
         parent: ViewGroup,
         viewType: Int
     ): LocationAdapter.LocationViewHolder {
-        val binding = ItemLocationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding : ItemLocationBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_location, parent, false)
         return LocationViewHolder(binding)
     }
 
@@ -36,10 +39,6 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
 
             binding.locationItem=data
             clipTo(binding.ivLocation, data.photo_url)
-
-            if(data.is_activated){
-                binding.ivLock.visibility=View.VISIBLE
-            }else{binding.ivLock.visibility=View.GONE}
         }
     }
 }

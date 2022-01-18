@@ -1,5 +1,10 @@
 package co.kr.bemyplan.data.entity.list
 
 data class ResponseNewList(
-    val data: List<ContentModel>
-)
+    val data: Data
+) {
+    data class Data(
+        val items: List<ContentModel>,
+        val totalPage: Int
+    )
+}

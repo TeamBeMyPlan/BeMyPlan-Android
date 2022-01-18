@@ -10,18 +10,20 @@ import co.kr.bemyplan.databinding.ItemLocationBinding
 import co.kr.bemyplan.util.clipTo
 import com.bumptech.glide.Glide
 
-class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
+class LocationAdapter(val itemClick: (LocationData) -> Unit) :
+    RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 
     val locationList = mutableListOf<LocationData>()
 
-    private lateinit var binding : FragmentLocationBinding
-    private var last : Boolean = false
+    private lateinit var binding: FragmentLocationBinding
+    private var last: Boolean = false
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): LocationAdapter.LocationViewHolder {
-        val binding = ItemLocationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemLocationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return LocationViewHolder(binding)
     }
 
@@ -33,13 +35,18 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
         return locationList.size
     }
 
-    class LocationViewHolder(private val binding:ItemLocationBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data: LocationData){
-            binding.tvLocation.text=data.text
+    inner class LocationViewHolder(private val binding: ItemLocationBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun onBind(data: LocationData) {
+            binding.tvLocation.text = data.text
             Glide.with(binding.ivLocation.context).load(data.img).into(binding.ivLocation)
             //clipTo(binding.ivLocation, data.img)
-            if(data.lock==true){
-                binding.ivLock.visibility=View.VISIBLE
+            if (data.lock == true) {
+                binding.ivLock.visibility = View.VISIBLE
+            }
+
+            binding.root.setOnClickListener {
+                itemClick(data)
             }
         }
     }

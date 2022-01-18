@@ -1,11 +1,14 @@
 package co.kr.bemyplan.ui.main.location
 
+import android.content.Intent
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.main.location.ResponseLocationData
+import co.kr.bemyplan.ui.list.ListActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

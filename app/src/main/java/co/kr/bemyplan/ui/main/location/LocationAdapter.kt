@@ -2,17 +2,13 @@ package co.kr.bemyplan.ui.main.location
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.main.location.LocationData
 import co.kr.bemyplan.data.entity.main.location.ResponseLocationData
-import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.databinding.ItemLocationBinding
 import co.kr.bemyplan.util.clipTo
-import com.bumptech.glide.Glide
 
 class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 

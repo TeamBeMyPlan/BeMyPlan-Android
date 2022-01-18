@@ -25,7 +25,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
 
         // data 객체 생성
-        binding.post = Post("감성을 느낄 수 있는 힐링여행", "thisisuzzwon", 4)
+        binding.post = Post("kym", "여행 포스트 제목", listOf(),3)
 
         // fragment 보이기
         initFragment()
@@ -34,7 +34,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // back button
         initBackButton()
         // 일차별 버튼
-        initChips()
+        initChips(binding.post.spots)
         // 스크롤뷰 설정
         initNestedScrollView()
 
@@ -72,23 +72,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ResourceType")
-    private fun initChips() {
-        val items = listOf(
-            DailyContents(1, false),
-            DailyContents(2, false),
-            DailyContents(3, false),
-            DailyContents(4, false),
-            DailyContents(5, false),
-            DailyContents(6, true)
-        )
-
+    private fun initChips(data: List<DailyContents>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
-        for (i in items) {
+        for (i in data.indices) {
             val chip = ItemDayButtonBinding.inflate(layoutInflater)
             chip.root.id = View.generateViewId()
-            chip.dailyContents = i
+            chip.dailyContents = data[i]
 
-            if(i.day == 1) chip.tvDayButton.isChecked = true
+            if(i == 0) chip.tvDayButton.isChecked = true
             chipGroup.addView(chip.root)
         }
     }

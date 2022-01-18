@@ -1,13 +1,12 @@
 package co.kr.bemyplan.data.entity.purchase.after
 
 data class Spot(
-    val placeName: String,
+    val title: String,
+    val description: String,
+    val photo_urls: List<String>,
     val address: String,
-    val photo: List<String>,
-    val context: String,
-    val transportation: String?,
-    val placeNext: String?,
-    val duration: Int?,
-    val isFirst: Boolean,
-    var isLast: Boolean
+    val latitude: Double,
+    val longitude: Double,
+    val next_spot_mobility: String,
+    val next_spot_required_time: String
 )

@@ -38,9 +38,28 @@ class CustomDialog(context: Context, val title: String, val content: String) {
         }
     }
 
-    fun showConfirmDialog(@LayoutRes layout: Int) {
+    fun showChoiceDialogWithTitle(@LayoutRes layout: Int) {
         dialog.setContentView(layout)
         dialog.findViewById<TextView>(R.id.tv_title).text = title
+        dialog.findViewById<TextView>(R.id.tv_content).text = content
+        dialog.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setBackgroundDrawableResource(R.drawable.inset_horizontal_24)
+        dialog.show()
+
+        dialog.findViewById<TextView>(R.id.tv_no).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.findViewById<TextView>(R.id.tv_yes).setOnClickListener {
+            onClickedListener.onClicked(1)
+            dialog.dismiss()
+        }
+    }
+
+    fun showConfirmDialog(@LayoutRes layout: Int) {
+        dialog.setContentView(layout)
         dialog.findViewById<TextView>(R.id.tv_content).text = content
         dialog.window?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,

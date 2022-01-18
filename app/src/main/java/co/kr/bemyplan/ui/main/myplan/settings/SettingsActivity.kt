@@ -3,9 +3,14 @@ package co.kr.bemyplan.ui.main.myplan.settings
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
+import co.kr.bemyplan.ui.login.LoginActivity
+import co.kr.bemyplan.ui.main.MainActivity
 import co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity
+import co.kr.bemyplan.util.CustomDialog
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -36,8 +41,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // 로그아웃
         binding.tvLogout.setOnClickListener {
-            TODO()
-            finish()
+            showLogoutDialog()
         }
 
         // 회원탈퇴
@@ -46,4 +50,32 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    private fun showLogoutDialog() {
+        val content = "로그아웃 하시겠습니까?"
+        val dialog = CustomDialog(this, "로그아웃", content)
+        dialog.showChoiceDialogWithTitle(R.layout.dialog_yes_no_with_title)
+        dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
+            override fun onClicked(num: Int) {
+                if (num == 1) {
+                    showLogoutFinishedDialog()
+                }
+            }
+        })
+    }
+
+    private fun showLogoutFinishedDialog() {
+        val content = "로그아웃 되었습니다."
+        val dialog = CustomDialog(this, "", content)
+        dialog.showConfirmDialog(R.layout.dialog_yes)
+        dialog.setOnClickedListener(object: CustomDialog.ButtonClickListener {
+            override fun onClicked(num: Int) {
+                if (num == 1) {
+                    val intent = Intent(this@SettingsActivity, LoginActivity::class.java)
+                    startActivity(intent)
+                    this@SettingsActivity.finish()
+                }
+            }
+        })
+   }
 }

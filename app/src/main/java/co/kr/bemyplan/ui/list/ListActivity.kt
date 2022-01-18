@@ -51,6 +51,13 @@ class ListActivity : AppCompatActivity() {
                     initRecyclerView()
                 }
             }
+            "user" -> {
+                viewModel.getUserPostList("1", 0, 10, "created_at")
+                viewModel.userPostList.observe(this) {
+                    listItem = it
+                    initRecyclerView()
+                }
+            }
         }
     }
 

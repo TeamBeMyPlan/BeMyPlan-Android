@@ -1,17 +1,20 @@
 package co.kr.bemyplan.ui.list
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
+import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.purchase.PurchaseActivity
 
 class ListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListBinding
+    private val viewModel by viewModels<ListViewModel>()
     private lateinit var listAdapter: ListAdapter
     private var listItem = listOf<ContentModel>()
     private var orderBy: Int = 0
@@ -26,12 +29,11 @@ class ListActivity : AppCompatActivity() {
     }
 
     private fun initList() {
-        listItem = listOf(
-            ContentModel(R.drawable.rectangle_5715, "비마플", "한승현은 퇴근하고싶다", true, true),
-            ContentModel(R.drawable.rectangle_5715, "비마플", "한승현은 퇴근하고싶다", true, false),
-            ContentModel(R.drawable.rectangle_5715, "한승현", "한승현은 퇴근하고싶다", false, true),
-            ContentModel(R.drawable.rectangle_5715, "한승현", "한승현은 퇴근하고싶다", false, false),
-        )
+        viewModel.getNewList(0)
+        viewModel.newList.observe(this) {
+            listItem = it
+            initRecyclerView()
+        }
     }
 
     private fun initRecyclerView() {

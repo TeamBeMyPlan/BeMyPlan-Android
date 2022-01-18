@@ -17,20 +17,21 @@ class ListViewModel: ViewModel() {
     private var _suggestList = MutableLiveData<List<ContentModel>>()
     val suggestList: LiveData<List<ContentModel>> get() = _suggestList
 
-    fun getNewList(page: Int) {
+    fun getNewList(page: Int, pageSize: Int) {
         val newListRepositoryImpl = NewListRepositoryImpl()
         viewModelScope.launch {
-            val response = newListRepositoryImpl.getNewList(page)
-            _newList.value = response.data
+            val response = newListRepositoryImpl.getNewList(page, pageSize)
+            Log.d("mlog: ListViewModel.response.data.item.size", response.data.items.size.toString())
+            _newList.value = response.data.items
             Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
         }
     }
 
-    fun getSuggestList(page: Int) {
+    fun getSuggestList(page: Int, pageSize: Int) {
         val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
-            val response = suggestListRepositoryImpl.getSuggestList(page)
-            _suggestList.value = response.data
+            val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
+            _suggestList.value = response.data.items
             Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
         }
     }

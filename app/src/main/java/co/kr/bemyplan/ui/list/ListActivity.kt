@@ -22,17 +22,42 @@ class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
-
-        initList()
+        val from = intent.getStringExtra("from")
+        initList(from)
         initRecyclerView()
         clickBack()
     }
 
-    private fun initList() {
-        viewModel.getNewList(0)
-        viewModel.newList.observe(this) {
-            listItem = it
-            initRecyclerView()
+    private fun initList(from: String?) {
+        when (from) {
+            "new" -> {
+                viewModel.getNewList(0, 10)
+                viewModel.newList.observe(this) {
+                    listItem = it
+                    initRecyclerView()
+                }
+            }
+            "suggest" -> {
+                viewModel.getSuggestList(0, 10)
+                viewModel.suggestList.observe(this) {
+                    listItem = it
+                    initRecyclerView()
+                }
+            }
+            "location" -> {
+                viewModel.getLocationList(2, 0, 10, "created_at")
+                viewModel.locationList.observe(this) {
+                    listItem = it
+                    initRecyclerView()
+                }
+            }
+            "user" -> {
+                viewModel.getUserPostList("1", 0, 10, "created_at")
+                viewModel.userPostList.observe(this) {
+                    listItem = it
+                    initRecyclerView()
+                }
+            }
         }
     }
 

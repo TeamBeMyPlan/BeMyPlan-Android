@@ -123,9 +123,11 @@ class HomeFragment : Fragment() {
     private fun clickMore() {
         val intent = Intent(requireContext(), ListActivity::class.java)
         binding.ivRecentMore.setOnClickListener {
+            intent.putExtra("from", "new")
             startActivity(intent)
         }
         binding.ivEditorMore.setOnClickListener {
+            intent.putExtra("from", "suggest")
             startActivity(intent)
         }
     }

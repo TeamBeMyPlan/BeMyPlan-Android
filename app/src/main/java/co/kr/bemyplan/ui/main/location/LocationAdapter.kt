@@ -1,6 +1,5 @@
 package co.kr.bemyplan.ui.main.location
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -10,7 +9,8 @@ import co.kr.bemyplan.data.entity.main.location.ResponseLocationData
 import co.kr.bemyplan.databinding.ItemLocationBinding
 import co.kr.bemyplan.util.clipTo
 
-class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
+class LocationAdapter(val itemClick: (ResponseLocationData.LocationData) -> Unit) :
+    RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 
     val locationList = mutableListOf<ResponseLocationData.LocationData>()
 
@@ -30,11 +30,15 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
         return locationList.size
     }
 
-    class LocationViewHolder(private val binding:ItemLocationBinding):RecyclerView.ViewHolder(binding.root){
+    inner class LocationViewHolder(private val binding:ItemLocationBinding):RecyclerView.ViewHolder(binding.root){
         fun onBind(data: ResponseLocationData.LocationData){
 
             binding.locationItem=data
             clipTo(binding.ivLocation, data.photo_url)
+
+            binding.root.setOnClickListener {
+                itemClick(data)
+            }
         }
     }
 }

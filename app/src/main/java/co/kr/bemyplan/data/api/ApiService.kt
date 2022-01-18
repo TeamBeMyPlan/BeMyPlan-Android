@@ -1,10 +1,6 @@
 package co.kr.bemyplan.data.api
 
-import android.location.Location
 import co.kr.bemyplan.BuildConfig
-import co.kr.bemyplan.data.entity.list.NewListService
-import co.kr.bemyplan.data.api.HomePopularService
-import co.kr.bemyplan.data.entity.main.scrap.ScrapListService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -24,4 +20,10 @@ object ApiService {
     val newListService: NewListService = retrofit.create(NewListService::class.java)
     // 여행지 리스트 조회
     val locationService:LocationService=retrofit.create(LocationService::class.java)
+    // 추천 여행 리스트 조회
+    val suggestListService: SuggestListService = retrofit.create(SuggestListService::class.java)
+    // 여행지 여행일정 조회
+    val locationListService: LocationListService = retrofit.create(LocationListService::class.java)
+    // 유저가 게시한 포스트 조회
+    val userPostListService: UserPostListService = retrofit.create(UserPostListService::class.java)
 }

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="post"
-            type="co.kr.bemyplan.data.entity.Post" />
+            type="co.kr.bemyplan.data.entity.purchase.after.Post" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

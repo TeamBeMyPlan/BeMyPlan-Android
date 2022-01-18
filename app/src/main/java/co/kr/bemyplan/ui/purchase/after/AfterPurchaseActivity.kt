@@ -8,13 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.DailyContents
-import co.kr.bemyplan.data.entity.Post
+import co.kr.bemyplan.data.entity.purchase.after.DailyContents
+import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.MapView
-import java.security.MessageDigest
 
 class AfterPurchaseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAfterPurchaseBinding

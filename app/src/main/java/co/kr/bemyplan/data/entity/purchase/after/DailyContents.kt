@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.entity
+package co.kr.bemyplan.data.entity.purchase.after
 
 data class DailyContents(
     val day: Int,

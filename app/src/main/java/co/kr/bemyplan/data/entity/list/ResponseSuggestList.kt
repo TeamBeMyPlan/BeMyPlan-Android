@@ -1,6 +1,6 @@
 package co.kr.bemyplan.data.entity.list
 
-data class ResponseNewList(
+data class ResponseSuggestList(
     val data: Data
 ) {
     data class Data(

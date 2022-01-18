@@ -18,4 +18,6 @@ object ApiService {
     val scrapListService: ScrapListService = retrofit.create(ScrapListService::class.java)
     // 최신 여행 리스트 조회
     val newListService: NewListService = retrofit.create(NewListService::class.java)
+    // 추천 여행 리스트 조회
+    val suggestListService: SuggestListService = retrofit.create(SuggestListService::class.java)
 }

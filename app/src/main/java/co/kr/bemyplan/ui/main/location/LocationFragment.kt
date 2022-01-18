@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.main.location
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.main.location.LocationData
 import co.kr.bemyplan.databinding.FragmentLocationBinding
+import co.kr.bemyplan.ui.list.ListActivity
 
 class LocationFragment : Fragment() {
 
@@ -27,7 +29,11 @@ class LocationFragment : Fragment() {
     }
 
     private fun initAdapter(){
-        locationAdapter = LocationAdapter()
+        locationAdapter = LocationAdapter {
+            val intent = Intent(requireContext(), ListActivity::class.java)
+            intent.putExtra("from", "location")
+            startActivity(intent)
+        }
         binding.rvLocation.adapter=locationAdapter
         binding.rvLocation.addItemDecoration(VerticalItemDecorator(resources.getDimensionPixelOffset(R.dimen.margin_12)))
         binding.rvLocation.addItemDecoration(HorizontalItemDecorator(resources.getDimensionPixelOffset(R.dimen.margin_6)))

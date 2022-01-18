@@ -20,4 +20,6 @@ object ApiService {
     val newListService: NewListService = retrofit.create(NewListService::class.java)
     // 추천 여행 리스트 조회
     val suggestListService: SuggestListService = retrofit.create(SuggestListService::class.java)
+    // 여행지 여행일정 조회
+    val locationListService: LocationListService = retrofit.create(LocationListService::class.java)
 }

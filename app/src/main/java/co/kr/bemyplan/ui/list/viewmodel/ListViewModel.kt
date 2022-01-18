@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.list.ContentModel
+import co.kr.bemyplan.data.repository.list.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.NewListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.SuggestListRepositoryImpl
 import kotlinx.coroutines.launch
@@ -16,6 +17,9 @@ class ListViewModel: ViewModel() {
 
     private var _suggestList = MutableLiveData<List<ContentModel>>()
     val suggestList: LiveData<List<ContentModel>> get() = _suggestList
+
+    private var _locationList = MutableLiveData<List<ContentModel>>()
+    val locationList: LiveData<List<ContentModel>> get() = _locationList
 
     fun getNewList(page: Int, pageSize: Int) {
         val newListRepositoryImpl = NewListRepositoryImpl()
@@ -33,6 +37,15 @@ class ListViewModel: ViewModel() {
             val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
             _suggestList.value = response.data.items
             Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
+        }
+    }
+
+    fun getLocationList(area_id: Int, page: Int, pageSize: Int, sort: String) {
+        val locationListRepositoryImpl = LocationListRepositoryImpl()
+        viewModelScope.launch {
+            val response = locationListRepositoryImpl.getLocationList(area_id, page, pageSize, sort)
+            _locationList.value = response.data.items
+            Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
         }
     }
 }

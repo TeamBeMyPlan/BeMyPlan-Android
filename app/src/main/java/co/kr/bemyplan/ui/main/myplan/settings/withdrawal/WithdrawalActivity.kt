@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.main.myplan.settings.withdrawal
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -16,6 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityWithdrawalBinding
+import co.kr.bemyplan.ui.login.LoginActivity
+import co.kr.bemyplan.util.CustomDialog
 import com.kakao.util.maps.helper.Utility
 import java.security.MessageDigest
 
@@ -29,6 +32,7 @@ class WithdrawalActivity : AppCompatActivity() {
         binding.ivBack.setOnClickListener {
             finish()
         }
+
         binding.etWithdrawal.addTextChangedListener(watcherListener)
         initTouchListener()
     }
@@ -47,7 +51,13 @@ class WithdrawalActivity : AppCompatActivity() {
     }
 
     private fun toggleButtonClickable() {
-        binding.tvNextButton.isClickable = binding.etWithdrawal.text.toString().isNotEmpty()
+        binding.tvNextButton.isClickable = false
+        if(binding.etWithdrawal.text.toString().isNotEmpty()) {
+            binding.tvNextButton.isClickable = true
+            binding.tvNextButton.setOnClickListener {
+                showWithdrawalDialog()
+            }
+        }
     }
 
     @SuppressLint("ResourceAsColor")
@@ -74,5 +84,33 @@ class WithdrawalActivity : AppCompatActivity() {
             }
             false
         }
+    }
+
+    private fun showWithdrawalDialog() {
+        val content = "정말 탈퇴하시겠습니까?"
+        val dialog = CustomDialog(this, "탈퇴하기", content)
+        dialog.showChoiceDialogWithTitle(R.layout.dialog_yes_no_with_title)
+        dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
+            override fun onClicked(num: Int) {
+                if (num == 1) {
+                    showWithdrawalFinishedDialog()
+                }
+            }
+        })
+    }
+
+    private fun showWithdrawalFinishedDialog() {
+        val content = "탈퇴 완료되었습니다."
+        val dialog = CustomDialog(this, "탈퇴하기", content)
+        dialog.showConfirmDialog(R.layout.dialog_yes)
+        dialog.setOnClickedListener(object: CustomDialog.ButtonClickListener {
+            override fun onClicked(num: Int) {
+                if (num == 1) {
+                    val intent = Intent(this@WithdrawalActivity, LoginActivity::class.java)
+                    startActivity(intent)
+                    this@WithdrawalActivity.finish()
+                }
+            }
+        })
     }
 }

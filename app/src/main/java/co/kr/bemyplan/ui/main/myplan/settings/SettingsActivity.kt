@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.main.myplan.settings
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -36,7 +37,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // 이용약관
         binding.ivInfo.setOnClickListener {
-            TODO()
+            showInfo()
         }
 
         // 로그아웃
@@ -66,7 +67,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun showLogoutFinishedDialog() {
         val content = "로그아웃 되었습니다."
-        val dialog = CustomDialog(this, "", content)
+        val dialog = CustomDialog(this, "로그아웃", content)
         dialog.showConfirmDialog(R.layout.dialog_yes)
         dialog.setOnClickedListener(object: CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
@@ -78,4 +79,8 @@ class SettingsActivity : AppCompatActivity() {
             }
         })
    }
+
+    private fun showInfo() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/a69b7abcdb9f42399825f4ff25343bfd"))
+    }
 }

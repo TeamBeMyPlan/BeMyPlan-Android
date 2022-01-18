@@ -7,10 +7,6 @@
         <variable
             name="locationItem"
             type="co.kr.bemyplan.data.entity.main.location.ResponseLocationData.LocationData" />
-        <variable
-            name="locationViewModel"
-            type="co.kr.bemyplan.ui.main.location.LocationViewModel"/>
-
         <import type="android.view.View"/>
     </data>
 
@@ -24,6 +20,7 @@
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/rectangle_radius_5"
+            android:clickable="@{locationItem._activated ? false : true}"
             app:circularflow_radiusInDP="15"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -39,8 +36,8 @@
             android:layout_height="0dp"
             android:background="@drawable/rectangle_radius_5"
             android:visibility="@{locationItem._activated ? View.GONE : View.VISIBLE}"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -11,6 +11,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import co.kr.bemyplan.data.entity.purchase.after.DailyContents
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
@@ -20,7 +21,7 @@ import co.kr.bemyplan.util.clipTo
 import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.IllegalStateException
 
-class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<DailyContentsAdapter.DailyContentsViewHolder>() {
+class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
@@ -46,13 +47,13 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         }
     }
 
-    override fun onBindViewHolder(holder: DailyContentsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SpotViewHolder, position: Int) {
         when(holder) {
             is ContentsViewHolder -> {
                 holder.onBind(spotList[position])
             }
             is RouteViewHolder -> {
-                holder.onBind(spotList[position])
+                holder.onBind(spotList[position], position)
             }
         }
     }
@@ -72,12 +73,13 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         adapter?.setItems(items)
     }
 
-    abstract class DailyContentsViewHolder(binding: ViewDataBinding)
+    open class SpotViewHolder(binding: ViewDataBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        abstract fun onBind(data: Spot)
+        open fun onBind(data: Spot) {}
+        open fun onBind(data: Spot, position: Int) {}
     }
 
-    class ContentsViewHolder(private val binding: ItemDailyContentsBinding, private val mContext: Context): DailyContentsViewHolder(binding) {
+    class ContentsViewHolder(private val binding: ItemDailyContentsBinding, private val mContext: Context): SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
         override fun onBind(data: Spot) {
             binding.spot = data
@@ -88,7 +90,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
 
         private fun copyButton() {
             binding.ivCopy.setOnClickListener {
-                var clipboard = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clipboard = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("CODE", binding.tvAddress.text)
                 clipboard.setPrimaryClip(clip)
                 mContext.shortToast("주소를 복사했습니다")
@@ -97,7 +99,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
 
         private fun initViewPagerAdapter() {
             viewPagerAdapter = PhotoViewPagerAdapter()
-            viewPagerAdapter.setItems(binding.spot!!.photo)
+            viewPagerAdapter.setItems(binding.spot!!.photo_urls)
             binding.vpPhoto.adapter = viewPagerAdapter
             binding.vpPhoto.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }
@@ -109,9 +111,10 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         }
     }
 
-    class RouteViewHolder(private val binding: ItemDailyRouteBinding): DailyContentsViewHolder(binding) {
-        override fun onBind(data: Spot) {
+    class RouteViewHolder(private val binding: ItemDailyRouteBinding): SpotViewHolder(binding) {
+        override fun onBind(data: Spot, position: Int) {
             binding.spot = data
+            binding.position = position
         }
     }
 

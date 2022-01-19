@@ -92,7 +92,7 @@
                         android:textColor="@color/grey_5d687a"
                         android:fontFamily="@font/spoqa_han_sans_neo_regular"
                         android:textSize="14sp"
-                        app:text="@{post.writer}"
+                        app:text="@{post.author}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

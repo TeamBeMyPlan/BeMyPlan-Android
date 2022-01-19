@@ -51,12 +51,12 @@ class BeforeChargingFragment : Fragment() {
     }
 
     private fun initList() {
-        viewModel.getPreviewInfo(3)
+        viewModel.getPreviewInfo()
         viewModel.previewInfo.observe(viewLifecycleOwner) {
             binding.infoModel = it
         }
 
-        viewModel.getPreviewList(3)
+        viewModel.getPreviewList()
         viewModel.previewList.observe(viewLifecycleOwner) {
             contentItemList = it
             initRecyclerView()

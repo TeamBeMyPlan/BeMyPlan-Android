@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.repository.list
+package co.kr.bemyplan.data.repository.list.location
 
 import co.kr.bemyplan.data.entity.list.ResponseLocationList
 

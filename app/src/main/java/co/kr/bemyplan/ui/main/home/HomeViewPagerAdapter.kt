@@ -21,9 +21,6 @@ class HomeViewPagerAdapter(val itemClick: (ResponseHomePopularData.Data) -> Unit
 
     inner class PagerViewHolder(private val binding:ItemPopularBinding):RecyclerView.ViewHolder(binding.root){
         fun onBind(data:ResponseHomePopularData.Data){
-//            binding.tvPopularPlan.text = data.text
-//            binding.tvPopularContent.text = data.text2
-//            Glide.with(binding.ivPopular.context).load(data.img).into(binding.ivPopular)
 
             binding.popularityItem=data
             Log.d("yongminPopularImage", "잘 들어오나")
@@ -67,8 +64,6 @@ class HomeViewPagerAdapter(val itemClick: (ResponseHomePopularData.Data) -> Unit
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
-//        val binding = ItemPopularBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        //val binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_popular, parent, false)
         val binding : ItemPopularBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_popular, parent, false)
         return PagerViewHolder(binding)
     }

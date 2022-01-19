@@ -1,29 +1,24 @@
 package co.kr.bemyplan.ui.main.location
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.entity.main.location.LocationData
-import co.kr.bemyplan.databinding.FragmentLocationBinding
+import co.kr.bemyplan.R
+import co.kr.bemyplan.data.entity.main.location.ResponseLocationData
 import co.kr.bemyplan.databinding.ItemLocationBinding
 import co.kr.bemyplan.util.clipTo
-import com.bumptech.glide.Glide
 
-class LocationAdapter(val itemClick: (LocationData) -> Unit) :
+class LocationAdapter(val itemClick: (ResponseLocationData.LocationData) -> Unit) :
     RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 
-    val locationList = mutableListOf<LocationData>()
-
-    private lateinit var binding: FragmentLocationBinding
-    private var last: Boolean = false
+    val locationList = mutableListOf<ResponseLocationData.LocationData>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): LocationAdapter.LocationViewHolder {
-        val binding =
-            ItemLocationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding : ItemLocationBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_location, parent, false)
         return LocationViewHolder(binding)
     }
 
@@ -35,17 +30,14 @@ class LocationAdapter(val itemClick: (LocationData) -> Unit) :
         return locationList.size
     }
 
-    inner class LocationViewHolder(private val binding: ItemLocationBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun onBind(data: LocationData) {
-            binding.tvLocation.text = data.text
-            Glide.with(binding.ivLocation.context).load(data.img).into(binding.ivLocation)
-            //clipTo(binding.ivLocation, data.img)
-            if (data.lock == true) {
-                binding.ivLock.visibility = View.VISIBLE
-            }
+    inner class LocationViewHolder(private val binding:ItemLocationBinding):RecyclerView.ViewHolder(binding.root){
+        fun onBind(data: ResponseLocationData.LocationData){
+
+            binding.locationItem=data
+            clipTo(binding.ivLocation, data.photo_url)
 
             binding.root.setOnClickListener {
+
                 itemClick(data)
             }
         }

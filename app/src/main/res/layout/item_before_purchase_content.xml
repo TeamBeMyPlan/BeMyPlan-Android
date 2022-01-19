@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:background="@drawable/rectangle_radius_5"
-            app:setImage="@{model.photo}"
+            app:setImageString="@{model.photo_url}"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

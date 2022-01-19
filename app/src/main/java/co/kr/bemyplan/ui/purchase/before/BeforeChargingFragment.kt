@@ -2,28 +2,28 @@ package co.kr.bemyplan.ui.purchase.before
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
-import co.kr.bemyplan.data.entity.purchase.before.SummaryModel
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
+import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
-import co.kr.bemyplan.ui.purchase.before.adapter.SummaryAdapter
+import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 
 class BeforeChargingFragment : Fragment() {
-
     private var _binding: FragmentBeforeChargingBinding? = null
     private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
-    private lateinit var summaryAdapter: SummaryAdapter
+    private val viewModel by activityViewModels<BeforeChargingViewModel>()
     private lateinit var contentAdapter: ContentAdapter
-    private var summaryItemList = listOf<SummaryModel>()
     private var contentItemList = listOf<ContentModel>()
 
     override fun onCreateView(
@@ -38,6 +38,7 @@ class BeforeChargingFragment : Fragment() {
         initNestedScrollView()
         clickBack()
         clickScrap()
+        clickNickname()
 
         binding.layoutPurchase.setOnClickListener{
             val chargingFragment = ChargingFragment()
@@ -50,32 +51,19 @@ class BeforeChargingFragment : Fragment() {
     }
 
     private fun initList() {
-        summaryItemList = listOf(
-            SummaryModel(R.drawable.icn_theme, "힐링"),
-            SummaryModel(R.drawable.icn_place, "14곳"),
-            SummaryModel(R.drawable.icn_restarurant, "3곳"),
-            SummaryModel(R.drawable.icn_day, "4일"),
-            SummaryModel(R.drawable.icn_friend, "친구"),
-            SummaryModel(R.drawable.icn_money, "45만원"),
-            SummaryModel(R.drawable.icn_transfortaion, "택시"),
-            SummaryModel(R.drawable.icn_calendar, "8월"),
-        )
+        viewModel.getPreviewInfo(3)
+        viewModel.previewInfo.observe(viewLifecycleOwner) {
+            binding.infoModel = it
+        }
 
-        contentItemList = listOf(
-            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
-            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
-            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
-            ContentModel(R.drawable.rectangle_5715, "그래서 난 눈누난나 ~"),
-        )
+        viewModel.getPreviewList(3)
+        viewModel.previewList.observe(viewLifecycleOwner) {
+            contentItemList = it
+            initRecyclerView()
+        }
     }
 
     private fun initRecyclerView() {
-        // Overview
-        summaryAdapter = SummaryAdapter()
-        summaryAdapter.itemList = summaryItemList
-        binding.rvSummary.adapter = summaryAdapter
-
-        // Preview
         contentAdapter = ContentAdapter()
         contentAdapter.itemList = contentItemList
         binding.rvContent.adapter = contentAdapter
@@ -150,11 +138,7 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickBack() {
         binding.layoutBack.setOnClickListener {
-            activity?.finish()
-//            activity?.supportFragmentManager
-//                ?.beginTransaction()
-//                ?.remove(this)
-//                ?.commit()
+            requireActivity().finish()
         }
     }
 
@@ -163,6 +147,14 @@ class BeforeChargingFragment : Fragment() {
             binding.ivScrap.apply {
                 isSelected = !isSelected
             }
+        }
+    }
+
+    private fun clickNickname() {
+        binding.layoutAuthor.setOnClickListener {
+            val intent = Intent(requireContext(), ListActivity::class.java)
+            intent.putExtra("from", "user")
+            startActivity(intent)
         }
     }
 

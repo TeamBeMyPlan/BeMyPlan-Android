@@ -1,50 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/iv_location"
+    <data>
+        <variable
+            name="locationItem"
+            type="co.kr.bemyplan.data.entity.main.location.ResponseLocationData.LocationData" />
+        <import type="android.view.View"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/rectangle_radius_5"
-        app:circularflow_radiusInDP="15"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:srcCompat="@drawable/img_gangneung"
-        tools:srcCompat="@drawable/img_gangneung" />
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_lock"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        android:background="@drawable/rectangle_radius_5"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_img_layer" />
+        <ImageView
+            android:id="@+id/iv_location"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rectangle_radius_5"
+            android:clickable="@{locationItem._activated ? false : true}"
+            app:circularflow_radiusInDP="15"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            tools:srcCompat="@drawable/img_gangneung" />
 
-    <TextView
-        android:id="@+id/tv_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/spoqa_han_sans_neo_bold"
-        android:text="강릉"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_location"
-        app:layout_constraintEnd_toEndOf="@+id/iv_location"
-        app:layout_constraintStart_toStartOf="@+id/iv_location"
-        app:layout_constraintTop_toTopOf="@+id/iv_location"
-        tools:text="강릉" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/iv_lock"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/rectangle_radius_5"
+            android:visibility="@{locationItem._activated ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_img_layer" />
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:text="@{locationItem.name}"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_location"
+            app:layout_constraintEnd_toEndOf="@+id/iv_location"
+            app:layout_constraintStart_toStartOf="@+id/iv_location"
+            app:layout_constraintTop_toTopOf="@+id/iv_location"
+            tools:text="강릉" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

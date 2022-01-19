@@ -74,14 +74,16 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
 
     open class SpotViewHolder(binding: ViewDataBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Spot) {}
+        open fun onBind(data: Spot?) {}
         open fun onBind(data: Spot, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(private val binding: ItemDailyContentsBinding, private val mContext: Context): SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-        override fun onBind(data: Spot) {
-            binding.spot = data
+        override fun onBind(data: Spot?) {
+            data?.let {
+                binding.spot = it
+            }
             initViewPagerAdapter()
             initTabLayout()
             copyButton()
@@ -98,7 +100,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
 
         private fun initViewPagerAdapter() {
             viewPagerAdapter = PhotoViewPagerAdapter()
-            viewPagerAdapter.setItems(binding.spot!!.photo_urls)
+            viewPagerAdapter.setItems(binding.spot!!.photoUrls)
             binding.vpPhoto.adapter = viewPagerAdapter
             binding.vpPhoto.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }

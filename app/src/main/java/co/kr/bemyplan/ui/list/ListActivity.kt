@@ -2,6 +2,8 @@ package co.kr.bemyplan.ui.list
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -11,18 +13,23 @@ import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.purchase.PurchaseActivity
+import co.kr.bemyplan.ui.sort.SortFragment
 
 class ListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListBinding
     private val viewModel by viewModels<ListViewModel>()
     private lateinit var listAdapter: ListAdapter
     private var listItem = listOf<ContentModel>()
-    private var orderBy: Int = 0
+    var from: String = ""
+    var areaId: Int = -1
+    var userId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
-        val from = intent.getStringExtra("from")
+        from = intent.getStringExtra("from") ?: ""
+        areaId = intent.getIntExtra("area_id", 2)
+        userId = intent.getStringExtra("userId") ?: "1"
         initList(from)
         initRecyclerView()
         clickBack()
@@ -31,28 +38,30 @@ class ListActivity : AppCompatActivity() {
     private fun initList(from: String?) {
         when (from) {
             "new" -> {
-                viewModel.getNewList(0, 10)
+                binding.layoutSort.visibility = View.GONE
+                viewModel.getNewList()
                 viewModel.newList.observe(this) {
                     listItem = it
                     initRecyclerView()
                 }
             }
             "suggest" -> {
-                viewModel.getSuggestList(0, 10)
+                binding.layoutSort.visibility = View.GONE
+                viewModel.getSuggestList()
                 viewModel.suggestList.observe(this) {
                     listItem = it
                     initRecyclerView()
                 }
             }
             "location" -> {
-                viewModel.getLocationList(2, 0, 10, "created_at")
+                viewModel.getLocationList(areaId)
                 viewModel.locationList.observe(this) {
                     listItem = it
                     initRecyclerView()
                 }
             }
             "user" -> {
-                viewModel.getUserPostList("1", 0, 10, "created_at")
+                viewModel.getUserPostList(userId)
                 viewModel.userPostList.observe(this) {
                     listItem = it
                     initRecyclerView()

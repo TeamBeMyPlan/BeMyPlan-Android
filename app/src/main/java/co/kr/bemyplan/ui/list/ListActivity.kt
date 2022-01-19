@@ -33,6 +33,7 @@ class ListActivity : AppCompatActivity() {
         initList(from)
         initRecyclerView()
         clickBack()
+        openBottomSheetDialog()
     }
 
     private fun initList(from: String?) {
@@ -82,6 +83,15 @@ class ListActivity : AppCompatActivity() {
     private fun clickBack() {
         binding.ivBack.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun openBottomSheetDialog() {
+        binding.ivOrder.setOnClickListener {
+            val bottomSheetDialogFragment = SortFragment ()
+            bottomSheetDialogFragment.show(supportFragmentManager, bottomSheetDialogFragment.tag)
+            Log.d("mlog: ListActivity에서의 sort", viewModel.sort.value.toString())
+            Log.d("mlog: viewModel.sort.equals", viewModel.sort.value.equals("created_at").toString())
         }
     }
 }

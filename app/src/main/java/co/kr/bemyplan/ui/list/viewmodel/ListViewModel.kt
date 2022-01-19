@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.newest.NewListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.new.NewListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl

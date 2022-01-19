@@ -18,6 +18,9 @@
         android:theme="@style/Theme.BeMyPlan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.main.myplan.settings.creator.CreatorProposeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.purchase.PurchaseActivity"
             android:exported="false" />
         <activity
@@ -41,17 +44,18 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="oauth"
+                <data
+                    android:host="oauth"
                     android:scheme="kakao${KAKAO_MAP_APP_KEY}" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.purchase.after.AfterPurchaseActivity"
-            android:exported="false" >
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".ui.list.ListActivity"
             android:exported="false" />

@@ -10,6 +10,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.main.MainActivity
+import co.kr.bemyplan.ui.main.myplan.settings.creator.CreatorProposeActivity
 import co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity
 import co.kr.bemyplan.util.CustomDialog
 
@@ -27,7 +28,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // 콘텐츠 업로드 신청
         binding.ivUpload.setOnClickListener {
-            TODO()
+            showProposeContentsUpload()
         }
 
         // 문의하기
@@ -85,5 +86,10 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/a69b7abcdb9f42399825f4ff25343bfd"))
             startActivity(intent)
         }
+    }
+
+    private fun showProposeContentsUpload() {
+        val intent = Intent(this, CreatorProposeActivity::class.java)
+        startActivity(intent)
     }
 }

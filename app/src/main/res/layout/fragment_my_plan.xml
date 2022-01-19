@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
-            name="profile"
-            type="co.kr.bemyplan.data.entity.main.myplan.Profile" />
-        <variable
-            name="purchaseTour"
-            type="co.kr.bemyplan.data.entity.main.myplan.PurchaseTour" />
+            name="viewModel"
+            type="co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,8 +52,8 @@
             android:id="@+id/sv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/cl_myplan_bar"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_myplan_bar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -76,10 +75,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:fontFamily="@font/spoqa_han_sans_neo_medium"
-                    android:text="다운타운베이비"
+                    android:text="직접 넣어라 ㅇㅇㅇㅇㅇㅇ"
                     android:textColor="@color/grey_313740"
                     android:textSize="14sp"
-                    app:text="@{profile.nickname}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_profile_photo" />
@@ -89,8 +87,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_nickname">
 
                     <TextView
@@ -102,7 +100,7 @@
                         android:textColor="@color/grey_313740"
                         android:textSize="14sp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/tv_purchase_count"
@@ -110,13 +108,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
                         android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                        android:text="0"
+                        android:text="@{Integer.toString(viewModel.myPlan.size())}"
                         android:textColor="@color/blue_0077b0"
                         android:textSize="14sp"
-                        app:text="@{Integer.toString(profile.purchaseCount)}"
-                        app:layout_constraintTop_toTopOf="@id/tv_purchase"
                         app:layout_constraintBottom_toBottomOf="@id/tv_purchase"
-                        app:layout_constraintStart_toEndOf="@id/tv_purchase"/>
+                        app:layout_constraintStart_toEndOf="@id/tv_purchase"
+                        app:layout_constraintTop_toTopOf="@id/tv_purchase" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -126,37 +123,37 @@
                     android:layout_height="10dp"
                     android:layout_marginTop="26dp"
                     android:background="@color/grey_f4f5f7"
-                    app:layout_constraintTop_toBottomOf="@id/cl_purchase_count"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cl_purchase_count" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_my_plan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
-                    tools:layout="@layout/fragment_empty_my_plan"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/v_box_grey">
+                    app:layout_constraintTop_toBottomOf="@id/v_box_grey"
+                    tools:layout="@layout/fragment_empty_my_plan">
 
                     <TextView
                         android:id="@+id/tv_my_plan_purchase_list_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
                         android:layout_marginStart="9dp"
-                        android:text="구매한 여행 일정"
+                        android:layout_marginTop="30dp"
                         android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                        android:textSize="16sp"
+                        android:text="구매한 여행 일정"
                         android:textColor="@color/grey_313740"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_my_plan_purchase"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:visibility="@{profile.purchaseCount == 0 ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.myPlan.empty ? View.GONE : View.VISIBLE}"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_my_plan_purchase_list_title"
@@ -168,7 +165,7 @@
                         android:layout_height="94dp"
                         android:layout_marginTop="140dp"
                         android:src="@drawable/img_scrap_empty"
-                        android:visibility="@{profile.purchaseCount == 0 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.myPlan.empty ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -178,14 +175,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
-                        android:text="아직 내 여행 일정이 없어요!"
                         android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                        android:textSize="14sp"
+                        android:text="아직 내 여행 일정이 없어요!"
                         android:textColor="@color/grey_919bab"
-                        android:visibility="@{profile.purchaseCount == 0 ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintStart_toStartOf="parent"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.myPlan.empty ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/iv_my_plan_empty"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_my_plan_empty" />
 
                     <TextView
                         android:id="@+id/tv_looking_around"
@@ -194,18 +191,19 @@
                         android:layout_marginTop="41dp"
                         android:background="@drawable/rectangle_radius_5"
                         android:backgroundTint="@color/blue_0077b0"
-                        android:textAlignment="center"
+                        android:fontFamily="@font/spoqa_han_sans_neo_regular"
                         android:gravity="center"
                         android:text="둘러보기"
-                        android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                        android:textSize="14sp"
+                        android:textAlignment="center"
                         android:textColor="@color/white"
-                        android:visibility="@{profile.purchaseCount == 0 ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/tv_notice_empty_plan"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.myPlan.empty ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintTop_toBottomOf="@id/tv_notice_empty_plan" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                >
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

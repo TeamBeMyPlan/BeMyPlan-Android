@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.main.scrap.ContentModel
+import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapContentBinding
 
 class ScrapAdapter(val itemClick: (ContentModel) -> Unit) :

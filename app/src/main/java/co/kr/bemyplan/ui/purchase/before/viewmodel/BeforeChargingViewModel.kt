@@ -11,6 +11,9 @@ import co.kr.bemyplan.data.repository.list.preview.PreviewListRepositoryImpl
 import kotlinx.coroutines.launch
 
 class BeforeChargingViewModel: ViewModel() {
+    private var _postId = -1
+    val postId get() = _postId
+
     private val previewInfoRepositoryImpl = PreviewInfoRepositoryImpl()
     private val previewListRepositoryImpl = PreviewListRepositoryImpl()
 
@@ -20,16 +23,20 @@ class BeforeChargingViewModel: ViewModel() {
     private var _previewList = MutableLiveData<List<ContentModel>>()
     val previewList: LiveData<List<ContentModel>> get() = _previewList
 
-    fun getPreviewInfo(post_id: Int) {
+    fun setPostId(postId: Int) {
+        _postId = postId
+    }
+
+    fun getPreviewInfo() {
         viewModelScope.launch {
-            val response = previewInfoRepositoryImpl.getPreviewInfo(post_id)
+            val response = previewInfoRepositoryImpl.getPreviewInfo(postId)
             _previewInfo.value = response.data
         }
     }
 
-    fun getPreviewList(post_id: Int) {
+    fun getPreviewList() {
         viewModelScope.launch {
-            val response = previewListRepositoryImpl.getPreviewList(post_id)
+            val response = previewListRepositoryImpl.getPreviewList(postId)
             _previewList.value = response.data
         }
     }

@@ -13,9 +13,11 @@ object BindingAdapter1 {
 
     @JvmStatic
     @BindingAdapter("setImageString")
-    fun setImageString(view: ImageView, src: String) {
-        Glide.with(view.context)
-            .load(src)
-            .into(view)
+    fun setImageString(view: ImageView, src: String?) {
+        if(src != null) {
+            Glide.with(view.context)
+                .load(src)
+                .into(view)
+        }
     }
 }

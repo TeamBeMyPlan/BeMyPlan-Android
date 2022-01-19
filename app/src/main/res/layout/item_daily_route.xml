@@ -11,6 +11,9 @@
         <variable
             name="position"
             type="java.lang.Integer" />
+        <variable
+            name="last_position"
+            type="java.lang.Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,7 +61,7 @@
             android:layout_height="40dp"
             android:background="@drawable/dotted_line_blue_vertical"
             android:layerType="software"
-            android:visibility="@{spot.next_spot_required_time == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{last_position == position ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/iv_blue_circle"
             app:layout_constraintStart_toStartOf="@id/iv_blue_circle"
             app:layout_constraintEnd_toEndOf="@id/iv_blue_circle" />
@@ -70,7 +73,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_icn_walk"
-            android:visibility="@{spot.next_spot_required_time == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{last_position == position ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="@id/v_bottom_blue_dotted_line"
             app:layout_constraintBottom_toBottomOf="@id/v_bottom_blue_dotted_line"
             app:layout_constraintEnd_toStartOf="@id/iv_blue_circle" />
@@ -84,7 +87,7 @@
             android:textColor="@color/grey_919bab"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:textSize="12sp"
-            android:visibility="@{spot.next_spot_required_time == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{last_position == position ? View.GONE : View.VISIBLE}"
             app:text="@{spot.next_spot_required_time}"
             app:layout_constraintStart_toEndOf="@id/iv_transportation"
             app:layout_constraintTop_toTopOf="@id/iv_transportation"

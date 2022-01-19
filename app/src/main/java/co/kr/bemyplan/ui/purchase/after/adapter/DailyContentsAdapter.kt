@@ -11,7 +11,6 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import co.kr.bemyplan.data.entity.purchase.after.DailyContents
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
@@ -53,7 +52,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
                 holder.onBind(spotList[position])
             }
             is RouteViewHolder -> {
-                holder.onBind(spotList[position], position)
+                holder.onBind(spotList[position], position, itemCount - 1)
             }
         }
     }
@@ -76,7 +75,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
     open class SpotViewHolder(binding: ViewDataBinding)
         : RecyclerView.ViewHolder(binding.root) {
         open fun onBind(data: Spot) {}
-        open fun onBind(data: Spot, position: Int) {}
+        open fun onBind(data: Spot, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(private val binding: ItemDailyContentsBinding, private val mContext: Context): SpotViewHolder(binding) {
@@ -112,9 +111,10 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
     }
 
     class RouteViewHolder(private val binding: ItemDailyRouteBinding): SpotViewHolder(binding) {
-        override fun onBind(data: Spot, position: Int) {
+        override fun onBind(data: Spot, position: Int, lastPosition: Int) {
             binding.spot = data
             binding.position = position
+            binding.lastPosition = lastPosition
         }
     }
 

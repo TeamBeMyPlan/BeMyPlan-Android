@@ -11,8 +11,6 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.api.ApiService
-import co.kr.bemyplan.data.entity.purchase.after.DailyContents
-import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
@@ -34,8 +32,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // network 연결
         initNetwork()
-        // fragment 보이기
-//        initFragment()
 
         // 스크롤뷰 설정
         initNestedScrollView()
@@ -57,13 +53,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     Log.d("hoooni", response.body()?.data.toString())
                     val data = response.body()?.data
                     binding.post = data
-                    initFragment()
+                    // fragment 보이기
+                    initFragment(0)
                     // user button
                     initUserButton()
                     // back button
                     initBackButton()
                     // 일차별 버튼
-                    initChips(binding.post!!.spots[0])
+                    initChips(binding.post!!.spots)
                 }
                 else {
                     Log.d("hoooni", "sdf2")
@@ -81,12 +78,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.mapView.addView(mapView)
     }
 
-    private fun initFragment() {
+    private fun initFragment(index: Int) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        Log.d("hoooni", binding.post!!.spots[0][0].title)
-        val fragment = DailyContentsFragment(binding.post!!.spots[0])
-        fragmentTransaction.add(R.id.fcv_daily_context, fragment)
+        val fragment = DailyContentsFragment(binding.post!!.spots[index])
+        fragmentTransaction.replace(R.id.fcv_daily_context, fragment)
         fragmentTransaction.commit()
     }
 
@@ -105,14 +101,18 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ResourceType")
-    private fun initChips(data: List<Spot>) {
+    private fun initChips(data: List<List<Spot>>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
         for (i in data.indices) {
             val chip = ItemDayButtonBinding.inflate(layoutInflater)
             chip.root.id = View.generateViewId()
-            //chip.dailyContents = data[i]
+            chip.position = i
 
-            if(i == 0) chip.tvDayButton.isChecked = true
+            chip.chipDayButton.setOnClickListener {
+                initFragment(i)
+            }
+
+            if(i == 0) chip.chipDayButton.isChecked = true
             chipGroup.addView(chip.root)
         }
     }

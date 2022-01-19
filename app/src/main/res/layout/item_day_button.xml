@@ -4,9 +4,6 @@
         <import type="android.view.View" />
 
         <variable
-            name="post"
-            type="co.kr.bemyplan.data.entity.purchase.after.Post" />
-        <variable
             name="position"
             type="java.lang.Integer" />
     </data>
@@ -14,7 +11,7 @@
     <com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/tv_day_button"
+        android:id="@+id/chip_day_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.Chip.Choice"

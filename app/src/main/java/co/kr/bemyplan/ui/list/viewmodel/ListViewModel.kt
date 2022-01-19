@@ -10,9 +10,16 @@ import co.kr.bemyplan.data.repository.list.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.NewListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.UserPostListRepositoryImpl
+import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import kotlinx.coroutines.launch
 
-class ListViewModel: ViewModel() {
+class ListViewModel : ViewModel() {
+    private var page = 0
+    private var pageSize = 10
+
+    private var _sort = MutableLiveData<String>(CREATED_AT)
+    val sort: LiveData<String> get() = _sort
+
     private var _newList = MutableLiveData<List<ContentModel>>()
     val newList: LiveData<List<ContentModel>> get() = _newList
 
@@ -25,17 +32,39 @@ class ListViewModel: ViewModel() {
     private var _userPostList = MutableLiveData<List<ContentModel>>()
     val userPostList: LiveData<List<ContentModel>> get() = _userPostList
 
-    fun getNewList(page: Int, pageSize: Int) {
+    private var _scrapList = MutableLiveData<List<ContentModel>>()
+    val scrapList: LiveData<List<ContentModel>> get() = _scrapList
+
+    fun setSort(sortType: Int) {
+        when (sortType) {
+            0 -> {
+                _sort.value = CREATED_AT
+            }
+            1 -> {
+                _sort.value = BEST_SELLER
+            }
+            2 -> {
+                _sort.value = BEST_SCRAPPER
+            }
+            else -> _sort.value = ""
+        }
+        Log.d("mlog: sort", sort.value.toString())
+    }
+
+    fun getNewList() {
         val newListRepositoryImpl = NewListRepositoryImpl()
         viewModelScope.launch {
             val response = newListRepositoryImpl.getNewList(page, pageSize)
-            Log.d("mlog: ListViewModel.response.data.item.size", response.data.items.size.toString())
+            Log.d(
+                "mlog: ListViewModel.response.data.item.size",
+                response.data.items.size.toString()
+            )
             _newList.value = response.data.items
             Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
         }
     }
 
-    fun getSuggestList(page: Int, pageSize: Int) {
+    fun getSuggestList() {
         val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
             val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
@@ -44,21 +73,36 @@ class ListViewModel: ViewModel() {
         }
     }
 
-    fun getLocationList(area_id: Int, page: Int, pageSize: Int, sort: String) {
+    fun getLocationList(area_id: Int) {
         val locationListRepositoryImpl = LocationListRepositoryImpl()
         viewModelScope.launch {
-            val response = locationListRepositoryImpl.getLocationList(area_id, page, pageSize, sort)
+            val response = locationListRepositoryImpl.getLocationList(area_id, page, pageSize, sort.value.toString())
             _locationList.value = response.data.items
             Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
         }
     }
 
-    fun getUserPostList(userId: String, page: Int, pageSize: Int, sort: String) {
+    fun getUserPostList(userId: String) {
         val userPostListRepositoryImpl = UserPostListRepositoryImpl()
         viewModelScope.launch {
-            val response = userPostListRepositoryImpl.getUserPostList(userId, page, pageSize, sort)
+            val response = userPostListRepositoryImpl.getUserPostList(userId, page, pageSize, sort.value.toString())
             _userPostList.value = response.data.items
             Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
         }
+    }
+
+    fun getScrapList(user_id: String) {
+        val scrapListRepositoryImpl = ScrapListRepositoryImpl()
+        viewModelScope.launch {
+            val response = scrapListRepositoryImpl.getScrapList(user_id, page, pageSize, sort.value.toString())
+            _scrapList.value = response.data
+            Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
+        }
+    }
+
+    companion object {
+        const val CREATED_AT = "created_at"
+        const val BEST_SELLER = "best_seller"
+        const val BEST_SCRAPPER = "best_scrapper"
     }
 }

@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentScrapBinding
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
-import co.kr.bemyplan.ui.main.scrap.viewmodel.ScrapViewModel
 
 class ScrapFragment : Fragment() {
     private var _binding: FragmentScrapBinding? = null

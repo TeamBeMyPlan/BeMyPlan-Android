@@ -124,7 +124,7 @@
                 android:textColor="@color/blue_0077b0"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
                 android:textSize="12sp"
-                app:text="@{spot.next_spot_mobility + spot.next_spot_required_time}"
+                app:text="@{spot.next_spot_mobility + ` ` + spot.next_spot_required_time}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_place_route"
                 app:layout_constraintTop_toTopOf="parent" />

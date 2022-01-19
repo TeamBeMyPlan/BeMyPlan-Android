@@ -4,20 +4,20 @@
         <import type="android.view.View" />
 
         <variable
-            name="dailyContents"
-            type="co.kr.bemyplan.data.entity.purchase.after.DailyContents" />
+            name="position"
+            type="java.lang.Integer" />
     </data>
 
     <com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/tv_day_button"
+        android:id="@+id/chip_day_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.Chip.Choice"
         tools:text="1일차"
         android:textAppearance="@style/ChipText"
-        android:text="@{dailyContents.day + `일차`}"
+        android:text="@{position+1 + `일차`}"
         android:fontFamily="@font/spoqa_han_sans_neo_bold"
         android:textColor="@drawable/btn_daily_text_color"
         android:textSize="14sp"

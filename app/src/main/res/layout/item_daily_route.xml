@@ -8,6 +8,12 @@
         <variable
             name="spot"
             type="co.kr.bemyplan.data.entity.purchase.after.Spot" />
+        <variable
+            name="position"
+            type="java.lang.Integer" />
+        <variable
+            name="last_position"
+            type="java.lang.Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,11 +35,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="96dp"
-            android:text="산방산"
+            tools:text="산방산"
             android:textColor="@color/grey_313740"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:textSize="14sp"
-            app:text="@{spot.placeName}"
+            app:text="@{spot.title}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +49,7 @@
             android:layout_height="8dp"
             android:background="@drawable/dotted_line_blue_vertical"
             android:layerType="software"
-            android:visibility="@{spot.isFirst ? View.GONE : View.VISIBLE}"
+            android:visibility="@{position == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/iv_blue_circle"
             app:layout_constraintEnd_toEndOf="@id/iv_blue_circle"
@@ -55,7 +61,7 @@
             android:layout_height="40dp"
             android:background="@drawable/dotted_line_blue_vertical"
             android:layerType="software"
-            android:visibility="@{spot.isLast ? View.GONE : View.VISIBLE}"
+            android:visibility="@{last_position == position ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/iv_blue_circle"
             app:layout_constraintStart_toStartOf="@id/iv_blue_circle"
             app:layout_constraintEnd_toEndOf="@id/iv_blue_circle" />
@@ -67,7 +73,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_icn_walk"
-            android:visibility="@{spot.isLast ? View.GONE : View.VISIBLE}"
+            android:visibility="@{last_position == position ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="@id/v_bottom_blue_dotted_line"
             app:layout_constraintBottom_toBottomOf="@id/v_bottom_blue_dotted_line"
             app:layout_constraintEnd_toStartOf="@id/iv_blue_circle" />
@@ -81,8 +87,8 @@
             android:textColor="@color/grey_919bab"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:textSize="12sp"
-            android:visibility="@{spot.isLast ? View.GONE : View.VISIBLE}"
-            app:text="@{spot.duration + `분`}"
+            android:visibility="@{last_position == position ? View.GONE : View.VISIBLE}"
+            app:text="@{spot.next_spot_required_time}"
             app:layout_constraintStart_toEndOf="@id/iv_transportation"
             app:layout_constraintTop_toTopOf="@id/iv_transportation"
             app:layout_constraintBottom_toBottomOf="@id/iv_transportation" />

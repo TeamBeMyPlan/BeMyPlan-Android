@@ -1,43 +1,76 @@
 package co.kr.bemyplan.ui.purchase.after
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.purchase.after.DailyContents
-import co.kr.bemyplan.data.entity.purchase.after.Post
+import co.kr.bemyplan.data.api.ApiService
+import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
+import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
+import co.kr.bemyplan.ui.list.ListActivity
 import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.MapView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AfterPurchaseActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAfterPurchaseBinding
+    private var _binding: ActivityAfterPurchaseBinding? = null
+    private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
+        _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
 
-        // data 객체 생성
-        binding.post = Post("감성을 느낄 수 있는 힐링여행", "thisisuzzwon", 4)
+        // network 연결
+        initNetwork()
 
-        // fragment 보이기
-        initFragment()
-        // back button
-        initBackButton()
-        // 일차별 버튼
-        initChips()
         // 스크롤뷰 설정
         initNestedScrollView()
 
         setContentView(binding.root)
 
-        // TODO: Kakao Map 세팅 (안먹힘)
+        // TODO: Kakao Map
         setMap()
+    }
+
+    private fun initNetwork() {
+        val call = ApiService.afterPostService.getPost(5)
+        call.enqueue(object: Callback<ResponseAfterPost> {
+            override fun onResponse(
+                call: Call<ResponseAfterPost>,
+                response: Response<ResponseAfterPost>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("hoooni", response.body()?.data.toString())
+                    val data = response.body()?.data
+                    binding.post = data
+                    // fragment 보이기
+                    initFragment(0)
+                    // user button
+                    initUserButton()
+                    // back button
+                    initBackButton()
+                    // 일차별 버튼
+                    initChips(binding.post!!.spots)
+                }
+                else {
+                    Log.d("hoooni", "sdf2")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseAfterPost>, t: Throwable) {
+                Log.d("NetworkTest", "error: $t")
+            }
+        })
     }
 
     private fun setMap() {
@@ -45,12 +78,20 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.mapView.addView(mapView)
     }
 
-    private fun initFragment() {
+    private fun initFragment(index: Int) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        val fragment = DailyContentsFragment()
-        fragmentTransaction.add(R.id.fcv_daily_context, fragment)
+        val fragment = DailyContentsFragment(binding.post!!.spots[index])
+        fragmentTransaction.replace(R.id.fcv_daily_context, fragment)
         fragmentTransaction.commit()
+    }
+
+    private fun initUserButton() {
+        binding.clWriter.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("from", "user")
+            startActivity(intent)
+        }
     }
 
     private fun initBackButton() {
@@ -60,23 +101,18 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ResourceType")
-    private fun initChips() {
-        val items = listOf(
-            DailyContents(1, false),
-            DailyContents(2, false),
-            DailyContents(3, false),
-            DailyContents(4, false),
-            DailyContents(5, false),
-            DailyContents(6, true)
-        )
-
+    private fun initChips(data: List<List<Spot>>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
-        for (i in items) {
+        for (i in data.indices) {
             val chip = ItemDayButtonBinding.inflate(layoutInflater)
             chip.root.id = View.generateViewId()
-            chip.dailyContents = i
+            chip.position = i
 
-            if(i.day == 1) chip.tvDayButton.isChecked = true
+            chip.chipDayButton.setOnClickListener {
+                initFragment(i)
+            }
+
+            if(i == 0) chip.chipDayButton.isChecked = true
             chipGroup.addView(chip.root)
         }
     }

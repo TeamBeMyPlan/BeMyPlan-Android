@@ -24,6 +24,8 @@ object ApiService {
     val suggestListService: SuggestListService = retrofit.create(SuggestListService::class.java)
     // 여행지 여행일정 조회
     val locationListService: LocationListService = retrofit.create(LocationListService::class.java)
+    // 구매 후 포스트 조회
+    val afterPostService: AfterPostService = retrofit.create(AfterPostService::class.java)
     // 유저가 게시한 포스트 조회
     val userPostListService: UserPostListService = retrofit.create(UserPostListService::class.java)
     // 여행 컨텐츠 구매 전 정보 조회

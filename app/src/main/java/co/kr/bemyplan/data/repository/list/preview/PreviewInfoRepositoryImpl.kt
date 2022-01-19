@@ -1,7 +1,6 @@
-package co.kr.bemyplan.data.repository.list
+package co.kr.bemyplan.data.repository.list.preview
 
 import co.kr.bemyplan.data.api.ApiService
-import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
 import co.kr.bemyplan.data.entity.purchase.before.ResponsePreviewInfo
 
 class PreviewInfoRepositoryImpl: PreviewInfoRepository {

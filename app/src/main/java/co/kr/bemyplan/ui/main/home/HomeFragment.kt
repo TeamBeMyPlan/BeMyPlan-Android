@@ -30,8 +30,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
-        homeViewModel.initPopularNetwork()
-
+        
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
@@ -47,43 +46,42 @@ class HomeFragment : Fragment() {
     }
 
     private fun initAdapterRecent(){
+        homeViewModel.initNewNetwork()
+
         homeAdapter = HomeAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
         binding.rvRecent.adapter=homeAdapter
 
-        homeAdapter.planList.addAll(
-            listOf(
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", "")
-            )
-        )
+        homeViewModel.new.observe(viewLifecycleOwner){
+            homeAdapter.planList.addAll(it)
+            Log.d("yongminNewAdapter", it.toString())
+            homeAdapter.notifyDataSetChanged()
+        }
         homeAdapter.notifyDataSetChanged()
     }
 
     private fun initAdapterEditor(){
+        homeViewModel.initSuggestNetwork()
+
         homeAdapter = HomeAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
         binding.rvEditorSuggest.adapter=homeAdapter
-        homeAdapter.planList.addAll(
-            listOf(
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", ""),
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", ""),
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", ""),
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", ""),
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", "")
-            )
-        )
+
+        homeViewModel.suggest.observe(viewLifecycleOwner){
+            homeAdapter.planList.addAll(it)
+            Log.d("yongminSuggestAdapter", it.toString())
+            homeAdapter.notifyDataSetChanged()
+        }
         homeAdapter.notifyDataSetChanged()
     }
 
     private fun initAdapterPopular(){
+        homeViewModel.initPopularNetwork()
+
         homeViewPagerAdapter = HomeViewPagerAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)

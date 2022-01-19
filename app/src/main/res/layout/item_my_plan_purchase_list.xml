@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="purchaseTour"
-            type="co.kr.bemyplan.data.entity.main.myplan.PurchaseTour" />
+            name="model"
+            type="co.kr.bemyplan.data.entity.main.myplan.MyModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_home_editor"
+            setImageString="@{model.thumbnail_url}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,11 +33,10 @@
             android:paddingBottom="20dp"
             android:lines="2"
             android:ellipsize="end"
-            android:text="27년 제주 토박이의 히든 플레이스 투어"
             android:fontFamily="@font/spoqa_han_sans_neo_bold"
             android:textSize="14sp"
             android:textColor="@color/grey_313740"
-            app:text="@{purchaseTour.title}"
+            android:text="@{model.title}"
             app:layout_constraintTop_toBottomOf="@id/iv_my_plan_spot"
             app:layout_constraintStart_toStartOf="@id/iv_my_plan_spot"
             app:layout_constraintEnd_toEndOf="@id/iv_my_plan_spot"/>

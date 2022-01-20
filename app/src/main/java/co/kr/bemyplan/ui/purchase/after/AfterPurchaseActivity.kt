@@ -48,7 +48,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
         val postId = intent.getIntExtra("postId", -1)
-        Log.d("hoooni", postId.toString())
 
         // 카카오맵
         initMap()
@@ -144,7 +143,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             chip.chipDayButton.setOnClickListener {
                 initFragment(i)
                 setMarker(i, data)
-                mapView.setMapCenterPoint(mapPoints[i], true)
+                mapView.setMapCenterPoint(mapPoints[0], true)
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
             }
 

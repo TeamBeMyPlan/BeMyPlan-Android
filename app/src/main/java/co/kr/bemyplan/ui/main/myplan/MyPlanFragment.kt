@@ -16,6 +16,7 @@ import co.kr.bemyplan.ui.main.MainActivity
 import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter
 import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 import co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel
+import co.kr.bemyplan.ui.purchase.PurchaseActivity
 
 class MyPlanFragment : Fragment() {
     private var _binding: FragmentMyPlanBinding? = null
@@ -40,7 +41,7 @@ class MyPlanFragment : Fragment() {
         viewModel.getMyPlan("1")
         viewModel.myPlan.observe(viewLifecycleOwner) {
             listItem = it
-            if(listItem.isEmpty()) {
+            if (listItem.isEmpty()) {
                 lookingAroundEvent()
             } else {
                 initAdapter()
@@ -50,7 +51,11 @@ class MyPlanFragment : Fragment() {
 
     private fun initAdapter() {
         binding.rvMyPlanPurchase.layoutManager = GridLayoutManager(requireContext(), 2)
-        purchaseTourAdapter = MyPlanAdapter()
+        purchaseTourAdapter = MyPlanAdapter {
+            val intent = Intent(requireContext(), PurchaseActivity::class.java)
+            intent.putExtra("postId", it.id)
+            startActivity(intent)
+        }
         purchaseTourAdapter.setItems(listItem)
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
     }

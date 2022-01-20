@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.ItemMyPlanPurchaseListBinding
 
-class MyPlanAdapter: RecyclerView.Adapter<MyPlanAdapter.ExistMyPlanViewHolder>() {
+class MyPlanAdapter(val itemClick: (MyModel) -> Unit) :
+    RecyclerView.Adapter<MyPlanAdapter.ExistMyPlanViewHolder>() {
     private var purchaseTourList = listOf<MyModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExistMyPlanViewHolder {
@@ -31,10 +32,13 @@ class MyPlanAdapter: RecyclerView.Adapter<MyPlanAdapter.ExistMyPlanViewHolder>()
         notifyDataSetChanged()
     }
 
-    class ExistMyPlanViewHolder(private val binding: ItemMyPlanPurchaseListBinding)
-        : RecyclerView.ViewHolder(binding.root) {
-            fun onBind(data: MyModel) {
-                binding.model = data
+    inner class ExistMyPlanViewHolder(private val binding: ItemMyPlanPurchaseListBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun onBind(data: MyModel) {
+            binding.model = data
+            binding.root.setOnClickListener {
+                itemClick(data)
             }
+        }
     }
 }

@@ -1,9 +1,10 @@
 package co.kr.bemyplan.data.entity.purchase.before
 
 data class PreviewInfoModel(
-    val post_id: Int,
-    val nickname: String,
+    val author_id: Int,
+    val author: String,
     val title: String,
+    val price: Int,
     val description: String,
     val tag_theme: String,
     val tag_count_spot: Int,

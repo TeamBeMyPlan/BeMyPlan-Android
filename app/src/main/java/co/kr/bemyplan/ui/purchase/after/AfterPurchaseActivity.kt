@@ -31,6 +31,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
+        Log.d("mlog: postId", intent.getStringExtra("postId").toString())
 
         initDummy()
         // network 연결

@@ -15,10 +15,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.api.ApiService
+import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
@@ -47,15 +49,21 @@ class AfterPurchaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
-        Log.d("mlog: postId", intent.getStringExtra("postId").toString())
+        val postId = intent.getIntExtra("postId", -1)
 
-        initDummy()
-        // network 연결
-        //initNetwork()
+        // 카카오맵
+        initMap()
 
+        if (postId == -1) {
+            initDummy()
+        } else { // network 연결
+            initNetwork(postId)
+        }
+
+        // back button
+        initBackButton()
         // 스크롤뷰 설정
         initNestedScrollView()
-        initTouchListener()
 
         setContentView(binding.root)
     }
@@ -64,19 +72,17 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val dummy = ExampleDummy().getPost()
         binding.post = dummy
         // 카카오맵
-        initMap(dummy.spots)
+        initMap()
         // fragment 보이기
         initFragment(0)
         // user button
-        initUserButton()
-        // back button
-        initBackButton()
+        initUserButton(dummy)
         // 일차별 버튼
         initChips(dummy.spots)
     }
 
-    private fun initNetwork() {
-        val call = ApiService.afterPostService.getPost(5)
+    private fun initNetwork(postId: Int) {
+        val call = ApiService.afterPostService.getPost(postId)
         call.enqueue(object : Callback<ResponseAfterPost> {
             override fun onResponse(
                 call: Call<ResponseAfterPost>,
@@ -86,17 +92,17 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     val data = response.body()?.data
                     data?.let {
                         binding.post = it
-                        // 카카오맵
-                        initMap(binding.post!!.spots)
-                        // fragment 보이기
-                        initFragment(0)
-                        // user button
-                        initUserButton()
-                        // back button
-                        initBackButton()
+                        // 마커 생성
+                        initMarker(it.spots)
                         // 일차별 버튼
-                        initChips(binding.post!!.spots)
+                        initChips(it.spots)
                     }
+                    // kakaomap 터치 이벤
+                    initTouchListener()
+                    // fragment 보이기
+                    initFragment(0)
+                    // user button
+                    initUserButton(data)
                 }
             }
 
@@ -114,11 +120,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    private fun initUserButton() {
+    private fun initUserButton(data: Post?) {
         binding.clWriter.setOnClickListener {
             val intent = Intent(this, ListActivity::class.java)
             intent.putExtra("from", "user")
+            intent.putExtra("userId", data?.authorId)
+            intent.putExtra("authorNickname", data?.author)
             startActivity(intent)
+            finish()
         }
     }
 
@@ -139,7 +148,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             chip.chipDayButton.setOnClickListener {
                 initFragment(i)
                 setMarker(i, data)
-                mapView.setMapCenterPoint(mapPoints[i], true)
+                mapView.setMapCenterPoint(mapPoints[0], true)
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
             }
 
@@ -155,7 +164,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initTouchListener() {
-        binding.mapView.getChildAt(0).setOnTouchListener { view, event ->
+        binding.mapView.getChildAt(0).setOnTouchListener { _, _ ->
             binding.svDailyContents.requestDisallowInterceptTouchEvent(true)
             false
         }
@@ -179,15 +188,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun initMap(data: List<List<Spot>>) {
+    private fun initMap() {
         mapView = MapView(this)
 
         // 커스텀 말풍선 등록
         mapView.setCalloutBalloonAdapter(CustomBalloonAdapter(layoutInflater))
         // 마커 클릭 이벤트 리스너 등록
         mapView.setPOIItemEventListener(eventListener)
-        // 마커 생성
-        initMarker(data)
 
         binding.mapView.addView(mapView)
     }

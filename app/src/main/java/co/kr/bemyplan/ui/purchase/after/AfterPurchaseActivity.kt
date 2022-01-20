@@ -155,36 +155,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initTouchListener() {
-        binding.vMap.setOnTouchListener { view, event ->
-            binding.svDailyContents.isClickable = false
-            binding.svDailyContents.isSmoothScrollingEnabled = false
-            binding.svDailyContents.isActivated = false
-            binding.svDailyContents.isSmoothScrollingEnabled = false
-            if(binding.vMap.hasFocus()) {
-                view.parent.requestDisallowInterceptTouchEvent(true)
-                when(event.action) {
-                    MotionEvent.ACTION_SCROLL -> {
-                        view.parent.requestDisallowInterceptTouchEvent(false)
-                        binding.svDailyContents.isEnabled = false
-                    }
-                }
-                Log.d("hoooni", "okokok")
-            }
-            else {
-                binding.svDailyContents.isEnabled = true
-            }
-            false
-        }
-        binding.mapView.setOnTouchListener { view, event ->
-            if(binding.mapView.hasFocus()) {
-                view.parent.requestDisallowInterceptTouchEvent(true)
-                when(event.action) {
-                    MotionEvent.ACTION_SCROLL -> {
-                        view.parent.requestDisallowInterceptTouchEvent(false)
-                    }
-                }
-            }
-            Log.d("hoooni", "okokok")
+        binding.mapView.getChildAt(0).setOnTouchListener { view, event ->
+            binding.svDailyContents.requestDisallowInterceptTouchEvent(true)
             false
         }
     }

@@ -91,7 +91,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
             binding.spot = data
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
-            initViewPagerAdapter()
+            initViewPagerAdapter(data)
             initTabLayout()
             copyButton()
         }
@@ -99,7 +99,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         override fun onBind(data: Spot, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spot = data
-            initViewPagerAdapter()
+            initViewPagerAdapter(data)
             initTabLayout()
             copyButton()
         }
@@ -113,9 +113,9 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
             }
         }
 
-        private fun initViewPagerAdapter() {
+        private fun initViewPagerAdapter(data: Spot) {
             viewPagerAdapter = PhotoViewPagerAdapter()
-            viewPagerAdapter.setItems(binding.spot!!.photoUrls)
+            viewPagerAdapter.setItems(data.photoUrls)
             binding.vpPhoto.adapter = viewPagerAdapter
             binding.vpPhoto.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }

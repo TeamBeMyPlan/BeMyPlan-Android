@@ -19,7 +19,6 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.api.ApiService
-import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
@@ -48,6 +47,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
+        Log.d("mlog: postId", intent.getStringExtra("postId").toString())
 
         initDummy()
         // network 연결
@@ -76,8 +76,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     private fun initNetwork() {
-        val call = ApiService.afterPostService.getPost(2)
-        call.enqueue(object: Callback<ResponseAfterPost> {
+        val call = ApiService.afterPostService.getPost(5)
+        call.enqueue(object : Callback<ResponseAfterPost> {
             override fun onResponse(
                 call: Call<ResponseAfterPost>,
                 response: Response<ResponseAfterPost>

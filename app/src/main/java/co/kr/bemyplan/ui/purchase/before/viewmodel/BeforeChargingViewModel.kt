@@ -17,8 +17,8 @@ class BeforeChargingViewModel: ViewModel() {
     private val previewInfoRepositoryImpl = PreviewInfoRepositoryImpl()
     private val previewListRepositoryImpl = PreviewListRepositoryImpl()
 
-    private var _previewInfo = MutableLiveData<PreviewInfoModel>()
-    val previewInfo: LiveData<PreviewInfoModel> get() = _previewInfo
+    private var _previewInfor = MutableLiveData<PreviewInfoModel>()
+    val previewInfor: LiveData<PreviewInfoModel> get() = _previewInfor
 
     private var _previewList = MutableLiveData<List<ContentModel>>()
     val previewList: LiveData<List<ContentModel>> get() = _previewList
@@ -30,7 +30,7 @@ class BeforeChargingViewModel: ViewModel() {
     fun getPreviewInfo() {
         viewModelScope.launch {
             val response = previewInfoRepositoryImpl.getPreviewInfo(postId)
-            _previewInfo.value = response.data
+            _previewInfor.value = response.data
         }
     }
 

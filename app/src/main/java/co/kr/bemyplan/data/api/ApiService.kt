@@ -38,4 +38,6 @@ object ApiService {
     val homeSuggestService : HomeSuggestService = retrofit.create(HomeSuggestService::class.java)
     // 마이페이지 조회
     val myPlanService: MyPlanService = retrofit.create(MyPlanService::class.java)
+    // Empty일 때 스크랩 추천 리스트 조회
+    val emptyScrapListService: EmptyScrapListService = retrofit.create(EmptyScrapListService::class.java)
 }

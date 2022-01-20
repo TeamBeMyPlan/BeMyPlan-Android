@@ -10,6 +10,7 @@ import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.new.NewListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
+import co.kr.bemyplan.data.repository.main.scrap.EmptyScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import kotlinx.coroutines.launch
 
@@ -35,16 +36,19 @@ class ListViewModel : ViewModel() {
     private var _scrapList = MutableLiveData<List<ContentModel>>()
     val scrapList: LiveData<List<ContentModel>> get() = _scrapList
 
+    private var _emptyScrapList = MutableLiveData<List<ContentModel>>()
+    val emptyScrapList: LiveData<List<ContentModel>> get() = _emptyScrapList
+
     fun setSort(sortType: Int) {
         when (sortType) {
             0 -> {
-                _sort.value = CREATED_AT
+                _sort.value = "created_at"
             }
             1 -> {
-                _sort.value = BEST_SELLER
+                _sort.value = "order_count"
             }
             2 -> {
-                _sort.value = BEST_SCRAPPER
+                _sort.value = "price"
             }
             else -> _sort.value = ""
         }
@@ -76,16 +80,26 @@ class ListViewModel : ViewModel() {
     fun getLocationList(area_id: Int) {
         val locationListRepositoryImpl = LocationListRepositoryImpl()
         viewModelScope.launch {
-            val response = locationListRepositoryImpl.getLocationList(area_id, page, pageSize, sort.value.toString())
+            val response = locationListRepositoryImpl.getLocationList(
+                area_id,
+                page,
+                pageSize,
+                sort.value.toString()
+            )
             _locationList.value = response.data.items
             Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
         }
     }
 
-    fun getUserPostList(userId: String) {
+    fun getUserPostList(userId: Int) {
         val userPostListRepositoryImpl = UserPostListRepositoryImpl()
         viewModelScope.launch {
-            val response = userPostListRepositoryImpl.getUserPostList(userId, page, pageSize, sort.value.toString())
+            val response = userPostListRepositoryImpl.getUserPostList(
+                userId,
+                page,
+                pageSize,
+                sort.value.toString()
+            )
             _userPostList.value = response.data.items
             Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
         }
@@ -94,9 +108,19 @@ class ListViewModel : ViewModel() {
     fun getScrapList(user_id: String) {
         val scrapListRepositoryImpl = ScrapListRepositoryImpl()
         viewModelScope.launch {
-            val response = scrapListRepositoryImpl.getScrapList(user_id, page, pageSize, sort.value.toString())
-            _scrapList.value = response.data
+            val response =
+                scrapListRepositoryImpl.getScrapList(user_id, page, pageSize, sort.value.toString())
+            _scrapList.value = response.data.items
             Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
+        }
+    }
+
+    fun getEmptyScrapList() {
+        val emptyScrapListRepositoryImpl = EmptyScrapListRepositoryImpl()
+        viewModelScope.launch {
+            val response = emptyScrapListRepositoryImpl.getEmptyScrapList()
+            _emptyScrapList.value = response.data
+            Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
         }
     }
 

@@ -35,6 +35,7 @@ class LocationFragment : Fragment() {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "location")
             intent.putExtra("areaId", it.id)
+            intent.putExtra("locationName", it.name)
             Log.d("mlog: areaId", it.id.toString())
             startActivity(intent)
         }

@@ -1,254 +1,264 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/grey_f4f5f7"
-    tools:context=".ui.purchase.before.ChargingFragment" >
+<layout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_top_bar"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginBottom="13dp"
-            android:src="@drawable/ic_icon_arrow"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-            android:text="@string/charging_title"
-            android:textColor="@color/grey_313740"
-            android:textSize="18sp"
-            android:includeFontPadding="false"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_back_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_back_btn" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_top_bar">
+        android:layout_height="match_parent"
+        android:background="@color/grey_f4f5f7"
+        tools:context=".ui.purchase.before.ChargingFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_content_inside"
-            android:layout_width="0dp"
+            android:id="@+id/layout_top_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/rectangle_border_radius_5"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/iv_content"
+                android:id="@+id/iv_back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="22dp"
-                android:src="@drawable/img_charge"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="13dp"
+                android:src="@drawable/ic_icon_arrow"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_writter"
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:text="작성자"
-                android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                android:textSize="12sp"
-                android:textColor="@color/grey_5d687a"
-                android:includeFontPadding="false"
-                app:layout_constraintStart_toEndOf="@+id/iv_content"
-                app:layout_constraintTop_toTopOf="@+id/iv_content" />
-
-            <TextView
-                android:id="@+id/tv_content_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="9dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="15dp"
-                android:text="감성을 느낄 수 있는 힐링여행"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                android:textSize="14sp"
-                android:textColor="@color/black_1a1e23"
                 android:includeFontPadding="false"
-                android:ellipsize="end"
-                android:maxLines="1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_content"
-                app:layout_constraintStart_toStartOf="@+id/tv_writter"
-                app:layout_constraintTop_toBottomOf="@+id/tv_writter" />
-
-            <View
-                android:id="@+id/view_line"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="21dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/grey_cbd0d7"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/iv_content"
-                app:layout_constraintTop_toBottomOf="@+id/iv_content" />
-
-            <TextView
-                android:id="@+id/tv_cost_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/charging_cost_title"
-                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:text="@string/charging_title"
                 android:textColor="@color/grey_313740"
-                android:textSize="14sp"
-                android:layout_marginTop="29dp"
-                android:layout_marginBottom="25dp"
-                android:includeFontPadding="false"
-                app:layout_constraintStart_toStartOf="@id/view_line"
-                app:layout_constraintTop_toBottomOf="@id/view_line"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <TextView
-                android:id="@+id/tv_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1,000 원"
-                android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                android:textColor="@color/blue_0077b0"
-                android:textSize="14sp"
-                android:includeFontPadding="false"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"
-                app:layout_constraintEnd_toEndOf="@id/view_line"
-                app:layout_constraintTop_toTopOf="@+id/tv_cost_title" />
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_back_btn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_back_btn" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_charging_way"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_content">
-
-        <TextView
-            android:id="@+id/tv_charging_way"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/charging_charging_way"
-            android:fontFamily="@font/spoqa_han_sans_neo_medium"
-            android:textSize="16sp"
-            android:textColor="@color/grey_313740"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="24dp"
-            android:includeFontPadding="false"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <TextView
-            android:id="@+id/tv_kakaopay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/charging_kakaopay"
-            android:fontFamily="@font/spoqa_han_sans_neo_regular"
-            android:textSize="14sp"
-            android:textColor="@color/selector_blue0077b0_313740"
-            android:textAlignment="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="15dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rectangle_selector_blue_grey_radius_5"
-            android:includeFontPadding="false"
-            app:layout_constraintTop_toBottomOf="@id/tv_charging_way"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_charging_way"
-            tools:layout_editor_absoluteY="71dp" />
-
-        <TextView
-            android:id="@+id/tv_toss"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/charging_toss"
-            android:fontFamily="@font/spoqa_han_sans_neo_regular"
-            android:textSize="14sp"
-            android:textColor="@color/selector_blue0077b0_313740"
-            android:textAlignment="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="15dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/rectangle_selector_blue_grey_radius_5"
-            android:includeFontPadding="false"
-            app:layout_constraintTop_toBottomOf="@id/tv_kakaopay"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_kakaopay"
-            tools:layout_editor_absoluteY="71dp" />
-
-        <TextView
-            android:id="@+id/tv_naverpay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/charging_naverpay"
-            android:fontFamily="@font/spoqa_han_sans_neo_regular"
-            android:textSize="14sp"
-            android:textColor="@color/selector_blue0077b0_313740"
-            android:textAlignment="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="15dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/rectangle_selector_blue_grey_radius_5"
-            android:includeFontPadding="false"
-            app:layout_constraintTop_toBottomOf="@id/tv_toss"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_toss"
-            tools:layout_editor_absoluteY="71dp" />
-
-        <TextView
-            android:id="@+id/tv_pay_btn"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/charging_charge"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:background="@color/blue_0077b0"
-            android:paddingTop="29dp"
-            android:paddingBottom="29dp"
-            android:includeFontPadding="false"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_top_bar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_content_inside"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/rectangle_border_radius_5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="22dp"
+                    android:src="@drawable/img_charge"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_writter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                    android:includeFontPadding="false"
+                    android:text="@{viewModel.previewInfor.author}"
+                    android:textColor="@color/grey_5d687a"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toEndOf="@+id/iv_content"
+                    app:layout_constraintTop_toTopOf="@+id/iv_content" />
+
+                <TextView
+                    android:id="@+id/tv_content_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:text="@{viewModel.previewInfor.title}"
+                    android:textColor="@color/black_1a1e23"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_writter"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_writter" />
+
+                <View
+                    android:id="@+id/view_line"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="21dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/grey_cbd0d7"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/iv_content"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_content" />
+
+                <TextView
+                    android:id="@+id/tv_cost_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="29dp"
+                    android:layout_marginBottom="25dp"
+                    android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                    android:includeFontPadding="false"
+                    android:text="@string/charging_cost_title"
+                    android:textColor="@color/grey_313740"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/view_line"
+                    app:layout_constraintTop_toBottomOf="@id/view_line" />
+
+                <TextView
+                    android:id="@+id/tv_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                    android:includeFontPadding="false"
+                    android:text="@{Integer.toString(viewModel.previewInfor.price) + `원`}"
+                    android:textColor="@color/blue_0077b0"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"
+                    app:layout_constraintEnd_toEndOf="@id/view_line"
+                    app:layout_constraintTop_toTopOf="@+id/tv_cost_title" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_charging_way"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_content">
+
+            <TextView
+                android:id="@+id/tv_charging_way"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                android:includeFontPadding="false"
+                android:text="@string/charging_charging_way"
+                android:textColor="@color/grey_313740"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_kakaopay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/rectangle_selector_blue_grey_radius_5"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:includeFontPadding="false"
+                android:paddingTop="16dp"
+                android:paddingBottom="15dp"
+                android:text="@string/charging_kakaopay"
+                android:textAlignment="center"
+                android:textColor="@color/selector_blue0077b0_313740"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_charging_way"
+                app:layout_constraintTop_toBottomOf="@id/tv_charging_way"
+                tools:layout_editor_absoluteY="71dp" />
+
+            <TextView
+                android:id="@+id/tv_toss"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/rectangle_selector_blue_grey_radius_5"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:includeFontPadding="false"
+                android:paddingTop="16dp"
+                android:paddingBottom="15dp"
+                android:text="@string/charging_toss"
+                android:textAlignment="center"
+                android:textColor="@color/selector_blue0077b0_313740"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_kakaopay"
+                app:layout_constraintTop_toBottomOf="@id/tv_kakaopay"
+                tools:layout_editor_absoluteY="71dp" />
+
+            <TextView
+                android:id="@+id/tv_naverpay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/rectangle_selector_blue_grey_radius_5"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:includeFontPadding="false"
+                android:paddingTop="16dp"
+                android:paddingBottom="15dp"
+                android:text="@string/charging_naverpay"
+                android:textAlignment="center"
+                android:textColor="@color/selector_blue0077b0_313740"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_toss"
+                app:layout_constraintTop_toBottomOf="@id/tv_toss"
+                tools:layout_editor_absoluteY="71dp" />
+
+            <TextView
+                android:id="@+id/tv_pay_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/blue_0077b0"
+                android:includeFontPadding="false"
+                android:paddingTop="29dp"
+                android:paddingBottom="29dp"
+                android:text="@string/charging_charge"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

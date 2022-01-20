@@ -6,5 +6,5 @@ data class ContentModel(
     val title: String,
     val nickname: String,
     var isScrap: Boolean,
-    val price: Int,
+    val price: Int?,
 )

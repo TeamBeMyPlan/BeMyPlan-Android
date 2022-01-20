@@ -103,7 +103,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_daily_contents"
             android:layout_width="match_parent"
-            android:layout_height="0dp"ㅇ
+            android:layout_height="0dp"
             android:clipToPadding="false"
             android:paddingBottom="100dp"
             android:overScrollMode="never"

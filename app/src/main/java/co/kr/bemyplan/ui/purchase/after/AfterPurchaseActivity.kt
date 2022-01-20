@@ -11,7 +11,6 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.api.ApiService
-import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
@@ -60,7 +59,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     private fun initNetwork() {
         val call = ApiService.afterPostService.getPost(5)
-        call.enqueue(object: Callback<ResponseAfterPost> {
+        call.enqueue(object : Callback<ResponseAfterPost> {
             override fun onResponse(
                 call: Call<ResponseAfterPost>,
                 response: Response<ResponseAfterPost>
@@ -77,8 +76,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     initBackButton()
                     // 일차별 버튼
                     initChips(binding.post!!.spots)
-                }
-                else {
+                } else {
                     Log.d("hoooni", "sdf2")
                 }
             }
@@ -128,7 +126,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 initFragment(i)
             }
 
-            if(i == 0) chip.chipDayButton.isChecked = true
+            if (i == 0) chip.chipDayButton.isChecked = true
             chipGroup.addView(chip.root)
         }
     }

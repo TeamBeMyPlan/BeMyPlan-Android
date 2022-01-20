@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
-import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.main.home.TempHomeData
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.PurchaseActivity
@@ -20,7 +18,8 @@ import co.kr.bemyplan.util.ZoomOutPageTransformer
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
-    private lateinit var homeAdapter: HomeAdapter
+    private lateinit var recentAdapter: HomeAdapter
+    private lateinit var editorAdapter : HomeAdapter
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
     private val homeViewModel : HomeViewModel by viewModels()
@@ -48,35 +47,35 @@ class HomeFragment : Fragment() {
     private fun initAdapterRecent(){
         homeViewModel.initNewNetwork()
 
-        homeAdapter = HomeAdapter {
+        recentAdapter = HomeAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
-        binding.rvRecent.adapter=homeAdapter
+        binding.rvRecent.adapter=recentAdapter
 
         homeViewModel.new.observe(viewLifecycleOwner){
-            homeAdapter.planList.addAll(it)
+            recentAdapter.planList.addAll(it)
             Log.d("yongminNewAdapter", it.toString())
-            homeAdapter.notifyDataSetChanged()
+            recentAdapter.notifyDataSetChanged()
         }
-        homeAdapter.notifyDataSetChanged()
+        recentAdapter.notifyDataSetChanged()
     }
 
     private fun initAdapterEditor(){
         homeViewModel.initSuggestNetwork()
 
-        homeAdapter = HomeAdapter {
+        editorAdapter = HomeAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
-        binding.rvEditorSuggest.adapter=homeAdapter
+        binding.rvEditorSuggest.adapter=editorAdapter
 
         homeViewModel.suggest.observe(viewLifecycleOwner){
-            homeAdapter.planList.addAll(it)
+            editorAdapter.planList.addAll(it)
             Log.d("yongminSuggestAdapter", it.toString())
-            homeAdapter.notifyDataSetChanged()
+            editorAdapter.notifyDataSetChanged()
         }
-        homeAdapter.notifyDataSetChanged()
+        editorAdapter.notifyDataSetChanged()
     }
 
     private fun initAdapterPopular(){

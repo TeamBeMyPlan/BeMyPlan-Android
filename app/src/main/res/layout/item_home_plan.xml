@@ -5,19 +5,23 @@
     <data>
         <variable
             name="homeItem"
-            type="co.kr.bemyplan.data.entity.main.home.ResponseHomeData.HomeData" />
+            type="co.kr.bemyplan.data.entity.main.home.ResponseHomeData.ResponseHomeItems.HomeData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingEnd="12dp">
 
         <ImageView
             android:id="@+id/iv_home_common"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@drawable/rectangle_radius_5"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.75"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

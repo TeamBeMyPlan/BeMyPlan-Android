@@ -27,17 +27,17 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // 콘텐츠 업로드 신청
-        binding.ivUpload.setOnClickListener {
+        binding.clUpload.setOnClickListener {
             showProposeContentsUpload()
         }
 
         // 문의하기
-        binding.ivQna.setOnClickListener {
+        binding.clQna.setOnClickListener {
             TODO()
         }
 
         // 이용약관
-        binding.ivInfo.setOnClickListener {
+        binding.clInfo.setOnClickListener {
             showInfo()
         }
 

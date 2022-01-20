@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.list.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -18,6 +19,11 @@ class ListAdapter(val itemClick: (ContentModel) -> Unit) :
             binding.model = contentModel
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
+
+            Log.d(
+                "mlog: price & itemId",
+                contentModel.price.toString() + "," + contentModel.id.toString()
+            )
 
             clickItem(contentModel)
 //            clickScrap()

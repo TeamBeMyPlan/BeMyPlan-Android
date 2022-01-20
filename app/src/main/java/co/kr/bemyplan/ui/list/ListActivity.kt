@@ -103,7 +103,7 @@ class ListActivity : AppCompatActivity() {
             val intent = Intent(this, PurchaseActivity::class.java)
             // TODO: 분기처리 필요
             intent.putExtra("postId", it.id)
-            intent.putExtra("nickname", it.nickname)
+            intent.putExtra("nickname", it.author)
             Log.d("mlog: putExtra에서 postId", it.id.toString())
             startActivity(intent)
         }

@@ -2,6 +2,7 @@ package co.kr.bemyplan.util
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import co.kr.bemyplan.R
 import com.bumptech.glide.Glide
 
 object BindingAdapter1 {
@@ -17,6 +18,7 @@ object BindingAdapter1 {
         if(src != null) {
             Glide.with(view.context)
                 .load(src)
+                .placeholder(R.drawable.rectangle_grey_radius_5)
                 .into(view)
         }
     }

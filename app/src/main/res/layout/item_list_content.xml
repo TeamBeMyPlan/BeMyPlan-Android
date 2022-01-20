@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
-            android:text="@{model.nickname}"
+            android:text="@{model.author}"
             android:textColor="@color/grey_5d687a"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"

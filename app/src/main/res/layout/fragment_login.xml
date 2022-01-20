@@ -67,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/rectangle_border_radius_5"
+            android:background="@drawable/rectangle_border_grey_radius_5"
             android:paddingVertical="4dp"
             app:layout_constraintBottom_toTopOf="@id/tv_guest_login"
             app:layout_constraintEnd_toEndOf="parent"

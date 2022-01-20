@@ -173,7 +173,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/rectangle_border_radius_5"
+                    android:background="@drawable/rectangle_border_grey_radius_5"
                     app:layout_constraintTop_toBottomOf="@id/tv_introduction_top">
 
                     <androidx.constraintlayout.widget.ConstraintLayout

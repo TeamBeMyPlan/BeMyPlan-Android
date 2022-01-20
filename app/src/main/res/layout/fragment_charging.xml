@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
-
+        <variable
+            name="payment"
+            type="Integer" />
         <variable
             name="viewModel"
             type="co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey_f4f5f7"
@@ -69,7 +70,7 @@
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="30dp"
-                android:background="@drawable/rectangle_border_radius_5"
+                android:background="@drawable/rectangle_border_grey_radius_5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -190,14 +191,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/rectangle_selector_blue_grey_radius_5"
+                android:background="@{payment==1?@drawable/rectangle_border_blue_radius_5 : @drawable/rectangle_border_grey_radius_5}"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
                 android:includeFontPadding="false"
                 android:paddingTop="16dp"
                 android:paddingBottom="15dp"
                 android:text="@string/charging_kakaopay"
                 android:textAlignment="center"
-                android:textColor="@color/selector_blue0077b0_313740"
+                android:textColor="@{payment == 1 ? @color/blue_0077b0 : @color/grey_313740}"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_charging_way"
@@ -210,14 +211,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/rectangle_selector_blue_grey_radius_5"
+                android:background="@{payment==2?@drawable/rectangle_border_blue_radius_5 : @drawable/rectangle_border_grey_radius_5}"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
                 android:includeFontPadding="false"
                 android:paddingTop="16dp"
                 android:paddingBottom="15dp"
                 android:text="@string/charging_toss"
                 android:textAlignment="center"
-                android:textColor="@color/selector_blue0077b0_313740"
+                android:textColor="@{payment == 2 ? @color/blue_0077b0 : @color/grey_313740}"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_kakaopay"
@@ -230,14 +231,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/rectangle_selector_blue_grey_radius_5"
+                android:background="@{payment==3?@drawable/rectangle_border_blue_radius_5 : @drawable/rectangle_border_grey_radius_5}"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
                 android:includeFontPadding="false"
                 android:paddingTop="16dp"
                 android:paddingBottom="15dp"
                 android:text="@string/charging_naverpay"
                 android:textAlignment="center"
-                android:textColor="@color/selector_blue0077b0_313740"
+                android:textColor="@{payment == 3 ? @color/blue_0077b0 : @color/grey_313740}"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_toss"

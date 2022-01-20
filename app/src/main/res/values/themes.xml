@@ -30,4 +30,5 @@
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/spoqa_han_sans_neo_bold</item>
     </style>
+
 </resources>

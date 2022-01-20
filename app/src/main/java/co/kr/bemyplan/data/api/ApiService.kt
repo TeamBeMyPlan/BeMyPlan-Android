@@ -32,6 +32,10 @@ object ApiService {
     val previewInfoService: PreviewInfoService = retrofit.create(PreviewInfoService::class.java)
     // 여행 컨텐츠 구매 전 리스트 조회
     val previewListService: PreviewListService = retrofit.create(PreviewListService::class.java)
+    // 최신 여행 일정 조회
+    val homeNewService : HomeNewService = retrofit.create(HomeNewService::class.java)
+    // 에디터 추천 여행 일정 조회
+    val homeSuggestService : HomeSuggestService = retrofit.create(HomeSuggestService::class.java)
     // 마이페이지 조회
     val myPlanService: MyPlanService = retrofit.create(MyPlanService::class.java)
 }

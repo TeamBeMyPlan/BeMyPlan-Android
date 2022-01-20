@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
-import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.main.home.TempHomeData
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.PurchaseActivity
@@ -20,7 +18,8 @@ import co.kr.bemyplan.util.ZoomOutPageTransformer
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
-    private lateinit var homeAdapter: HomeAdapter
+    private lateinit var recentAdapter: HomeAdapter
+    private lateinit var editorAdapter : HomeAdapter
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
     private val homeViewModel : HomeViewModel by viewModels()
@@ -30,8 +29,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
-        homeViewModel.initPopularNetwork()
-
+        
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
@@ -47,45 +45,44 @@ class HomeFragment : Fragment() {
     }
 
     private fun initAdapterRecent(){
-        homeAdapter = HomeAdapter {
+        homeViewModel.initNewNetwork()
+
+        recentAdapter = HomeAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             // TODO: postId 넘겨야 함
             // TODO: 결제여부 분기처리 필요
             startActivity(intent)
         }
-        binding.rvRecent.adapter=homeAdapter
+        binding.rvRecent.adapter=recentAdapter
 
-        homeAdapter.planList.addAll(
-            listOf(
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", ""),
-                TempHomeData(R.drawable.img_home_recent, "27년 제주 토박이의 히든 플레이스 투어", "")
-            )
-        )
-        homeAdapter.notifyDataSetChanged()
+        homeViewModel.new.observe(viewLifecycleOwner){
+            recentAdapter.planList.addAll(it)
+            Log.d("yongminNewAdapter", it.toString())
+            recentAdapter.notifyDataSetChanged()
+        }
+        recentAdapter.notifyDataSetChanged()
     }
 
     private fun initAdapterEditor(){
-        homeAdapter = HomeAdapter {
+        homeViewModel.initSuggestNetwork()
+
+        editorAdapter = HomeAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             startActivity(intent)
         }
-        binding.rvEditorSuggest.adapter=homeAdapter
-        homeAdapter.planList.addAll(
-            listOf(
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", ""),
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", ""),
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", ""),
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", ""),
-                TempHomeData(R.drawable.img_home_editor, "푸드파이터들을 위한 찐먹킷리스트 투어", "")
-            )
-        )
-        homeAdapter.notifyDataSetChanged()
+        binding.rvEditorSuggest.adapter=editorAdapter
+
+        homeViewModel.suggest.observe(viewLifecycleOwner){
+            editorAdapter.planList.addAll(it)
+            Log.d("yongminSuggestAdapter", it.toString())
+            editorAdapter.notifyDataSetChanged()
+        }
+        editorAdapter.notifyDataSetChanged()
     }
 
     private fun initAdapterPopular(){
+        homeViewModel.initPopularNetwork()
+
         homeViewPagerAdapter = HomeViewPagerAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             // TODO: 결제여부 분기처리 필요

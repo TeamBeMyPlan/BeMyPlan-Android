@@ -1,27 +1,23 @@
 package co.kr.bemyplan.ui.main.home
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.entity.main.home.TempHomeData
+import co.kr.bemyplan.data.entity.main.home.ResponseHomeData
 import co.kr.bemyplan.databinding.ItemHomePlanBinding
 import co.kr.bemyplan.util.clipTo
-import com.bumptech.glide.Glide
 
-class HomeAdapter(val itemClick: (TempHomeData) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
-    val planList = mutableListOf<TempHomeData>()
+class HomeAdapter(val itemClick: (ResponseHomeData.ResponseHomeItems.HomeData) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+    val planList = mutableListOf<ResponseHomeData.ResponseHomeItems.HomeData>()
 
     inner class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data: TempHomeData){
-            Log.d("bindtest", data.text)
-            binding.tvHomeCommon.text = data.text
-            Glide.with(binding.ivHomeCommon.context).load(data.img).into(binding.ivHomeCommon)
-            //clipTo(binding.ivHomeCommon, data.img)
+        fun onBind(data: ResponseHomeData.ResponseHomeItems.HomeData){
+            binding.homeItem = data
+            clipTo(binding.ivHomeCommon, data.thumbnailUrl)
             clickItem(data)
         }
 
-        private fun clickItem(data: TempHomeData) {
+        private fun clickItem(data: ResponseHomeData.ResponseHomeItems.HomeData) {
             binding.root.setOnClickListener {
                 itemClick(data)
             }

@@ -54,7 +54,7 @@ class BeforeChargingFragment : Fragment() {
 
     private fun initList() {
         viewModel.getPreviewInfo()
-        viewModel.previewInfo.observe(viewLifecycleOwner) {
+        viewModel.previewInfor.observe(viewLifecycleOwner) {
             binding.infoModel = it
         }
 
@@ -156,9 +156,9 @@ class BeforeChargingFragment : Fragment() {
         binding.layoutAuthor.setOnClickListener {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "user")
-            intent.putExtra("userId", viewModel.previewInfo.value?.author_id)
-            intent.putExtra("authorNickname", viewModel.previewInfo.value?.author)
-            Log.d("mlog: beforecharging.author_id", viewModel.previewInfo.value?.author_id.toString())
+            intent.putExtra("userId", viewModel.previewInfor.value?.author_id)
+            intent.putExtra("authorNickname", viewModel.previewInfor.value?.author)
+            Log.d("mlog: beforecharging.author_id", viewModel.previewInfor.value?.author_id.toString())
             startActivity(intent)
         }
     }

@@ -17,16 +17,6 @@
         android:theme="@style/Theme.BeMyPlan"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".data.entity.main.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ui.purchase.PurchaseActivity"
             android:exported="false" />
         <activity
@@ -37,8 +27,13 @@
             android:exported="false" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.main.location.LocationData
 import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.ui.list.ListActivity
 

@@ -20,7 +20,7 @@ class HomeViewPagerAdapter(val itemClick: (ResponseHomePopularData.Data) -> Unit
 
             binding.popularityItem=data
             Log.d("yongminPopularImage", "잘 들어오나")
-            clipTo(binding.ivPopular, data.thumbnail_url)
+            clipTo(binding.ivPopular, data.thumbnailUrl)
 
 //            if(binding.tvPopularContent.isLaidOut){
 //                val lineCount = binding.tvPopularContent.lineCount

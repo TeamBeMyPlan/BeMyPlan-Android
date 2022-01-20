@@ -13,7 +13,7 @@ class HomeAdapter(val itemClick: (ResponseHomeData.ResponseHomeItems.HomeData) -
     inner class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
         fun onBind(data: ResponseHomeData.ResponseHomeItems.HomeData){
             binding.homeItem = data
-            clipTo(binding.ivHomeCommon, data.thumbnail_url)
+            clipTo(binding.ivHomeCommon, data.thumbnailUrl)
             clickItem(data)
         }
 

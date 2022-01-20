@@ -5,7 +5,7 @@ import co.kr.bemyplan.data.entity.list.ResponseUserPostList
 
 class UserPostListRepositoryImpl : UserPostListRepository {
     override suspend fun getUserPostList(
-        userId: String,
+        userId: Int,
         page: Int,
         pageSize: Int,
         sort: String

@@ -127,6 +127,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             intent.putExtra("userId", data?.authorId)
             intent.putExtra("authorNickname", data?.author)
             startActivity(intent)
+            finish()
         }
     }
 

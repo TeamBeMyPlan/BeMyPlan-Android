@@ -51,6 +51,7 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
             // TODO: postId 넘겨야 함
             // TODO: 결제여부 분기처리 필요
+            intent.putExtra("postId", it.id)
             startActivity(intent)
         }
         binding.rvRecent.adapter=recentAdapter

@@ -10,9 +10,18 @@ import co.kr.bemyplan.data.repository.list.preview.PreviewInfoRepositoryImpl
 import co.kr.bemyplan.data.repository.list.preview.PreviewListRepositoryImpl
 import kotlinx.coroutines.launch
 
-class BeforeChargingViewModel: ViewModel() {
+
+class BeforeChargingViewModel : ViewModel() {
+
+    enum class Pay(val brand: String) {
+        NAVER("네이버페이"), KAKAO("카카오페이"), TOSS("토스")
+    }
+
     private var _postId = -1
     val postId get() = _postId
+
+    private val _payWay = MutableLiveData<Pay>()
+    val payWay: LiveData<Pay> get() = _payWay
 
     private val previewInfoRepositoryImpl = PreviewInfoRepositoryImpl()
     private val previewListRepositoryImpl = PreviewListRepositoryImpl()
@@ -22,6 +31,15 @@ class BeforeChargingViewModel: ViewModel() {
 
     private var _previewList = MutableLiveData<List<ContentModel>>()
     val previewList: LiveData<List<ContentModel>> get() = _previewList
+
+    fun selectPay(way: Pay) {
+        when (way) {
+            Pay.KAKAO -> _payWay.value = Pay.KAKAO
+            Pay.NAVER -> _payWay.value = Pay.NAVER
+            Pay.TOSS -> _payWay.value = Pay.TOSS
+        }
+    }
+
 
     fun setPostId(postId: Int) {
         _postId = postId

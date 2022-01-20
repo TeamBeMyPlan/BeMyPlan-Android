@@ -25,15 +25,14 @@ class ChargingFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        var num = 0
         binding.tvKakaopay.setOnClickListener{
-            binding.payment = 1
+            viewModel.selectPay(BeforeChargingViewModel.Pay.KAKAO)
         }
         binding.tvToss.setOnClickListener{
-            binding.payment = 2
+            viewModel.selectPay(BeforeChargingViewModel.Pay.TOSS)
         }
         binding.tvNaverpay.setOnClickListener{
-            binding.payment=3
+            viewModel.selectPay(BeforeChargingViewModel.Pay.NAVER)
         }
 
 

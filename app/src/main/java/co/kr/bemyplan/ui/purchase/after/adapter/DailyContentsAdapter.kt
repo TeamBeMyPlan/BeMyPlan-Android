@@ -51,7 +51,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         when(holder) {
             is ContentsViewHolder -> {
                 if (position == spotList.size - 1) {
-                    holder.onBind(spotList[position])
+                    holder.onBind(spotList[position], true)
                 }
                 else {
                     holder.onBind(spotList[position], spotList[position + 1].title)
@@ -80,7 +80,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
 
     open class SpotViewHolder(binding: ViewDataBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Spot) {}
+        open fun onBind(data: Spot, isLastSpot: Boolean) {}
         open fun onBind(data: Spot, nextSpot: String) {}
         open fun onBind(data: Spot, position: Int, lastPosition: Int) {}
     }
@@ -90,12 +90,14 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         override fun onBind(data: Spot, nextSpot: String) {
             binding.spot = data
             binding.nextSpot = nextSpot
+            binding.isLastSpot = false
             initViewPagerAdapter()
             initTabLayout()
             copyButton()
         }
 
-        override fun onBind(data: Spot) {
+        override fun onBind(data: Spot, isLastSpot: Boolean) {
+            binding.isLastSpot = true
             binding.spot = data
             initViewPagerAdapter()
             initTabLayout()

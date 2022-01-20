@@ -3,10 +3,13 @@ package co.kr.bemyplan.ui.purchase.after
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -31,12 +34,14 @@ import net.daum.mf.map.api.MapView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class AfterPurchaseActivity : AppCompatActivity() {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     private lateinit var mapView: MapView
+    private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
 
@@ -50,6 +55,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // 스크롤뷰 설정
         initNestedScrollView()
+        initTouchListener()
 
         setContentView(binding.root)
     }
@@ -135,8 +141,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 setMarker(i, data)
                 mapView.setMapCenterPoint(mapPoints[i], true)
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
-                Log.d("hoooni initchip action", mapPoints[i].mapPointGeoCoord.latitude.toString() + " " + mapPoints[i].mapPointGeoCoord.longitude.toString())
-                Log.d("hoooni initchip action", mapView.mapCenterPoint.mapPointGeoCoord.latitude.toString() + " " + mapView.mapCenterPoint.mapPointGeoCoord.longitude.toString())
             }
 
             if(i == 0) {
@@ -144,10 +148,44 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 setMarker(i, data)
                 mapView.setMapCenterPoint(mapPoints[i], true)
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
-                Log.d("hoooni initchip", mapPoints[i].mapPointGeoCoord.latitude.toString())
-                Log.d("hoooni initchip", mapView.mapCenterPoint.mapPointGeoCoord.latitude.toString())
             }
             chipGroup.addView(chip.root)
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun initTouchListener() {
+        binding.vMap.setOnTouchListener { view, event ->
+            binding.svDailyContents.isClickable = false
+            binding.svDailyContents.isSmoothScrollingEnabled = false
+            binding.svDailyContents.isActivated = false
+            binding.svDailyContents.isSmoothScrollingEnabled = false
+            if(binding.vMap.hasFocus()) {
+                view.parent.requestDisallowInterceptTouchEvent(true)
+                when(event.action) {
+                    MotionEvent.ACTION_SCROLL -> {
+                        view.parent.requestDisallowInterceptTouchEvent(false)
+                        binding.svDailyContents.isEnabled = false
+                    }
+                }
+                Log.d("hoooni", "okokok")
+            }
+            else {
+                binding.svDailyContents.isEnabled = true
+            }
+            false
+        }
+        binding.mapView.setOnTouchListener { view, event ->
+            if(binding.mapView.hasFocus()) {
+                view.parent.requestDisallowInterceptTouchEvent(true)
+                when(event.action) {
+                    MotionEvent.ACTION_SCROLL -> {
+                        view.parent.requestDisallowInterceptTouchEvent(false)
+                    }
+                }
+            }
+            Log.d("hoooni", "okokok")
+            false
         }
     }
 
@@ -171,13 +209,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     private fun initMap(data: List<List<Spot>>) {
         mapView = MapView(this)
-        mapView.setCalloutBalloonAdapter(CustomBalloonAdapter(layoutInflater))  // 커스텀 말풍선 등록
 
+        // 커스텀 말풍선 등록
+        mapView.setCalloutBalloonAdapter(CustomBalloonAdapter(layoutInflater))
+        // 마커 클릭 이벤트 리스너 등록
+        mapView.setPOIItemEventListener(eventListener)
         // 마커 생성
         initMarker(data)
-        //mapView.setMapCenterPoint(mapPoints[0], true)
-        Log.d("hoooni initmap", mapView.mapCenterPoint.mapPointGeoCoord.latitude.toString() + mapView.mapCenterPoint.mapPointGeoCoord.longitude.toString())
-        Log.d("hoooni initmap", mapPoints[0].mapPointGeoCoord.latitude.toString())
+
         binding.mapView.addView(mapView)
     }
 
@@ -208,7 +247,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                     customSelectedImageResourceId = R.drawable.icn_subpin_select
                     isCustomImageAutoscale = false
-                    setCustomImageAnchor(0.5f, 0.5f)
+                    setCustomImageAnchor(1.0f, 1.0f)
                 }
 
                 markerList.add(marker)
@@ -217,7 +256,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
                 mapView.addPOIItem(marker)
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
-                mapView.selectPOIItem(marker, true)
             }
 
             markers.add(markerList)
@@ -238,11 +276,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
                         customImageResourceId = R.drawable.icn_mainpin_select
                         customSelectedImageResourceId = R.drawable.icn_mainpin_select_pick
                         isShowCalloutBalloonOnTouch = true
-                        setCustomImageAnchor(0.5f, 0.5f)
+                        setCustomImageAnchor(1.0f, 1.0f)
                     }
                     mapPoints.add(markers[i][j].mapPoint)
                 }
-                Log.d("hoooni setMarker", mapPoints.size.toString())
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
             }
             else {
@@ -255,7 +292,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                         customImageResourceId = R.drawable.icn_subpin_select
                         customSelectedImageResourceId = R.drawable.icn_subpin_select
                         isShowCalloutBalloonOnTouch = false
-                        setCustomImageAnchor(0.5f, 0.5f)
+                        setCustomImageAnchor(1.0f, 1.0f)
                     }
                 }
             }
@@ -268,7 +305,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 커스텀 말풍선 클래스
-    class CustomBalloonAdapter(inflater: LayoutInflater): CalloutBalloonAdapter {
+    class CustomBalloonAdapter(private val inflater: LayoutInflater): CalloutBalloonAdapter {
         private val mCalloutBalloon: View = inflater.inflate(R.layout.card_balloon, null)
         val name: TextView = mCalloutBalloon.findViewById(R.id.tv_title)
 
@@ -280,7 +317,49 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         override fun getPressedCalloutBalloon(poiItem: MapPOIItem?): View {
             // 말풍선 클릭 시
+            mCalloutBalloon.setOnClickListener {
+                val intentKakaoMap = inflater.context.packageManager.getLaunchIntentForPackage("net.daum.android.map")
+                try {
+                    val latitude = poiItem?.mapPoint?.mapPointGeoCoord?.latitude
+                    val longitude = poiItem?.mapPoint?.mapPointGeoCoord?.longitude
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://look?p=$latitude,$longitude"))
+                    inflater.context.startActivity(intent)
+                } catch (e: Exception) {
+                    val intentPlayStore = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
+                    inflater.context.startActivity(intentPlayStore)
+                }
+            }
+
             return mCalloutBalloon
+        }
+    }
+
+    // 마커 클릭 이벤트 리스너
+    class MarkerEventListener(val context: Context): MapView.POIItemEventListener {
+        override fun onPOIItemSelected(mapView: MapView?, poiItem: MapPOIItem?) {
+            // 마커 클릭 시
+        }
+
+        override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, poiItem: MapPOIItem?) {
+            // 말풍선 클릭 시 (Deprecated)
+        }
+
+        override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, poiItem: MapPOIItem?, buttonType: MapPOIItem.CalloutBalloonButtonType?) {
+            // 말풍선 클릭 시
+            val intentKakaoMap = context.packageManager.getLaunchIntentForPackage("net.daum.android.map")
+            try {
+                val latitude = poiItem?.mapPoint?.mapPointGeoCoord?.latitude
+                val longitude = poiItem?.mapPoint?.mapPointGeoCoord?.longitude
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://look?p=$latitude,$longitude"))
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                val intentPlayStore = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
+                context.startActivity(intentPlayStore)
+            }
+        }
+
+        override fun onDraggablePOIItemMoved(mapView: MapView?, poiItem: MapPOIItem?, mapPoint: MapPoint?) {
+            // 마커의 속성 중 isDraggable = true 일 때 마커를 이동시켰을 경우
         }
     }
 }

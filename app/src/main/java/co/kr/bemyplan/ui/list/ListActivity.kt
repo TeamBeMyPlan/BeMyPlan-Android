@@ -74,6 +74,9 @@ class ListActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         listAdapter = ListAdapter {
             val intent = Intent(this, PurchaseActivity::class.java)
+            // TODO: 분기처리 필요
+            intent.putExtra("postId", it.id.toString())
+            Log.d("mlog: postId", it.id.toString())
             startActivity(intent)
         }
         listAdapter.itemList = listItem

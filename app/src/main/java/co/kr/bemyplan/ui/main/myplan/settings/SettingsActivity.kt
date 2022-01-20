@@ -33,7 +33,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // 문의하기
         binding.clQna.setOnClickListener {
-            TODO()
+            showQna()
         }
 
         // 이용약관
@@ -81,15 +81,21 @@ class SettingsActivity : AppCompatActivity() {
         })
    }
 
-    private fun showInfo() {
-        binding.tvInfo.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/a69b7abcdb9f42399825f4ff25343bfd"))
-            startActivity(intent)
-        }
-    }
-
     private fun showProposeContentsUpload() {
         val intent = Intent(this, CreatorProposeActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showQna() {
+        val email = Intent(Intent.ACTION_SEND)
+        email.type = "plain/text"
+        val address = arrayOf("bemyplan@gmail.com")
+        email.putExtra(Intent.EXTRA_EMAIL, address)
+        startActivity(email)
+    }
+
+    private fun showInfo() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/a69b7abcdb9f42399825f4ff25343bfd"))
         startActivity(intent)
     }
 }

@@ -32,8 +32,8 @@ class ChargedFragment : Fragment() {
             requireActivity().finish()
         }
         binding.tvGotoContentBtn.setOnClickListener {
-            startActivity(intent)
             intent.putExtra("postId", viewModel.postId)
+            startActivity(intent)
             requireActivity().finish()
         }
 

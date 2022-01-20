@@ -4,5 +4,5 @@ data class MyModel(
     val id: String,
     val thumbnail_url: String,
     val title: String,
-    val nickname: String
+    val author: String
 )

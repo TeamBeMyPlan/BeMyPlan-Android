@@ -47,6 +47,7 @@ class EmptyScrapFragment : Fragment() {
     private fun initRecyclerView() {
         scrapRecommendAdapter = ScrapRecommendAdapter(requireContext()) {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
+            intent.putExtra("postId", it.id)
             startActivity(intent)
         }
         scrapRecommendAdapter.itemList = listItem

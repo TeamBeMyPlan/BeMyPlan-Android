@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,7 @@ class BeforeChargingFragment : Fragment() {
 
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
 
+        Log.d("mlog: postId", viewModel.postId.toString())
         initList()
         initRecyclerView()
         initNestedScrollView()
@@ -51,12 +53,12 @@ class BeforeChargingFragment : Fragment() {
     }
 
     private fun initList() {
-        viewModel.getPreviewInfo(3)
+        viewModel.getPreviewInfo()
         viewModel.previewInfo.observe(viewLifecycleOwner) {
             binding.infoModel = it
         }
 
-        viewModel.getPreviewList(3)
+        viewModel.getPreviewList()
         viewModel.previewList.observe(viewLifecycleOwner) {
             contentItemList = it
             initRecyclerView()

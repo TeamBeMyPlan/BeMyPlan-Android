@@ -28,7 +28,7 @@ class ListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
         from = intent.getStringExtra("from") ?: ""
-        areaId = intent.getIntExtra("area_id", 2)
+        areaId = intent.getIntExtra("areaId", -1)
         userId = intent.getStringExtra("userId") ?: "1"
         initList(from)
         initRecyclerView()
@@ -88,10 +88,13 @@ class ListActivity : AppCompatActivity() {
 
     private fun openBottomSheetDialog() {
         binding.ivOrder.setOnClickListener {
-            val bottomSheetDialogFragment = SortFragment ()
+            val bottomSheetDialogFragment = SortFragment()
             bottomSheetDialogFragment.show(supportFragmentManager, bottomSheetDialogFragment.tag)
             Log.d("mlog: ListActivity에서의 sort", viewModel.sort.value.toString())
-            Log.d("mlog: viewModel.sort.equals", viewModel.sort.value.equals("created_at").toString())
+            Log.d(
+                "mlog: viewModel.sort.equals",
+                viewModel.sort.value.equals("created_at").toString()
+            )
         }
     }
 }

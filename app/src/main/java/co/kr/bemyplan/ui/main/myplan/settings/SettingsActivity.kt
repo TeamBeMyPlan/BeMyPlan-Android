@@ -10,6 +10,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.main.MainActivity
+import co.kr.bemyplan.ui.main.myplan.settings.creator.CreatorProposeActivity
 import co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity
 import co.kr.bemyplan.util.CustomDialog
 
@@ -26,17 +27,17 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // 콘텐츠 업로드 신청
-        binding.ivUpload.setOnClickListener {
-            TODO()
+        binding.clUpload.setOnClickListener {
+            showProposeContentsUpload()
         }
 
         // 문의하기
-        binding.ivQna.setOnClickListener {
-            TODO()
+        binding.clQna.setOnClickListener {
+            showQna()
         }
 
         // 이용약관
-        binding.ivInfo.setOnClickListener {
+        binding.clInfo.setOnClickListener {
             showInfo()
         }
 
@@ -80,10 +81,21 @@ class SettingsActivity : AppCompatActivity() {
         })
    }
 
+    private fun showProposeContentsUpload() {
+        val intent = Intent(this, CreatorProposeActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showQna() {
+        val email = Intent(Intent.ACTION_SEND)
+        email.type = "plain/text"
+        val address = arrayOf("bemyplan@gmail.com")
+        email.putExtra(Intent.EXTRA_EMAIL, address)
+        startActivity(email)
+    }
+
     private fun showInfo() {
-        binding.tvInfo.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/a69b7abcdb9f42399825f4ff25343bfd"))
-            startActivity(intent)
-        }
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/a69b7abcdb9f42399825f4ff25343bfd"))
+        startActivity(intent)
     }
 }

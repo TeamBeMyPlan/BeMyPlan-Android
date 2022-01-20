@@ -8,6 +8,10 @@
         <variable
             name="spot"
             type="co.kr.bemyplan.data.entity.purchase.after.Spot" />
+
+        <variable
+            name="next_spot"
+            type="java.lang.String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -109,7 +113,7 @@
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
                 android:textColor="@color/blue_0077b0"
                 android:textSize="12sp"
-                app:text="@{spot.title + `→` + spot.title + ` `}"
+                app:text="@{spot.title + `→` + next_spot + ` `}"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintEnd_toStartOf="@id/tv_moving_time"
                 app:layout_constraintStart_toStartOf="parent"

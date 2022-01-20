@@ -16,11 +16,13 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.api.ApiService
+import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.ui.list.ListActivity
+import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.CalloutBalloonAdapter
 import net.daum.mf.map.api.MapPOIItem
@@ -42,13 +44,26 @@ class AfterPurchaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
 
+        initDummy()
         // network 연결
-        initNetwork()
+        //initNetwork()
 
         // 스크롤뷰 설정
         initNestedScrollView()
 
         setContentView(binding.root)
+    }
+
+    private fun initDummy() {
+        val dummy = ExampleDummy().getPost()
+        binding.post = dummy
+        initFragment(0)
+        // user button
+        initUserButton()
+        // back button
+        initBackButton()
+        // 일차별 버튼
+        initChips(dummy.spots)
     }
 
     private fun initNetwork() {

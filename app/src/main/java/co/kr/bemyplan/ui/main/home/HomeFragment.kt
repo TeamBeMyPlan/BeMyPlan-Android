@@ -49,6 +49,8 @@ class HomeFragment : Fragment() {
     private fun initAdapterRecent(){
         homeAdapter = HomeAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
+            // TODO: postId 넘겨야 함
+            // TODO: 결제여부 분기처리 필요
             startActivity(intent)
         }
         binding.rvRecent.adapter=homeAdapter
@@ -86,6 +88,8 @@ class HomeFragment : Fragment() {
     private fun initAdapterPopular(){
         homeViewPagerAdapter = HomeViewPagerAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
+            // TODO: 결제여부 분기처리 필요
+            intent.putExtra("postId", it.id)
             startActivity(intent)
         }
 
@@ -116,7 +120,6 @@ class HomeFragment : Fragment() {
                 addTransformer{page, position-> page.translationX = position*-(innerPadding) }
             })
         }
-
         homeViewPagerAdapter.notifyDataSetChanged()
     }
 

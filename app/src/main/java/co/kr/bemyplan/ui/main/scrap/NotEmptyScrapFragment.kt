@@ -22,7 +22,6 @@ class NotEmptyScrapFragment : Fragment() {
     private val viewModel by activityViewModels<ListViewModel>()
     private lateinit var scrapAdapter: ScrapAdapter
     private var listItem = listOf<ContentModel>()
-    private var orderBy: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +45,9 @@ class NotEmptyScrapFragment : Fragment() {
 
     private fun initRecyclerView() {
         scrapAdapter = ScrapAdapter {
+            // TODO: 분기처리 필요
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
+            intent.putExtra("postId", it.id)
             startActivity(intent)
         }
         scrapAdapter.itemList = listItem

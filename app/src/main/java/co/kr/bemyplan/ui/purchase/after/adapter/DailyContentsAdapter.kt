@@ -11,6 +11,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
@@ -115,9 +116,20 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
             binding.spot = data
             binding.position = position
             binding.lastPosition = lastPosition
+            chooseImg()
         }
 
-        
+        private fun chooseImg() {
+            if (binding.spot.next_spot_mobility == "버스" || binding.spot.next_spot_mobility == "지하철") {
+                binding.ivTransportation.setImageResource(R.drawable.ic_icn_public_transport)
+            }
+            else if (binding.spot.next_spot_mobility == "택시" || binding.spot.next_spot_mobility == "차량") {
+                binding.ivTransportation.setImageResource(R.drawable.ic_icn_car)
+            }
+            else {
+                binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
+            }
+        }
     }
 
     companion object {

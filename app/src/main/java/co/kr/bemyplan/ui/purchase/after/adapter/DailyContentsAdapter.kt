@@ -116,6 +116,8 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
             binding.position = position
             binding.lastPosition = lastPosition
         }
+
+        
     }
 
     companion object {

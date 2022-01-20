@@ -11,6 +11,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
@@ -49,7 +50,12 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
     override fun onBindViewHolder(holder: SpotViewHolder, position: Int) {
         when(holder) {
             is ContentsViewHolder -> {
-                holder.onBind(spotList[position])
+                if (position == spotList.size - 1) {
+                    holder.onBind(spotList[position])
+                }
+                else {
+                    holder.onBind(spotList[position], spotList[position + 1].title)
+                }
             }
             is RouteViewHolder -> {
                 holder.onBind(spotList[position], position, itemCount - 1)
@@ -75,11 +81,20 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
     open class SpotViewHolder(binding: ViewDataBinding)
         : RecyclerView.ViewHolder(binding.root) {
         open fun onBind(data: Spot) {}
+        open fun onBind(data: Spot, nextSpot: String) {}
         open fun onBind(data: Spot, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(private val binding: ItemDailyContentsBinding, private val mContext: Context): SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
+        override fun onBind(data: Spot, nextSpot: String) {
+            binding.spot = data
+            binding.nextSpot = nextSpot
+            initViewPagerAdapter()
+            initTabLayout()
+            copyButton()
+        }
+
         override fun onBind(data: Spot) {
             binding.spot = data
             initViewPagerAdapter()
@@ -115,6 +130,19 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
             binding.spot = data
             binding.position = position
             binding.lastPosition = lastPosition
+            chooseImg(data)
+        }
+
+        private fun chooseImg(data: Spot) {
+            if (data.next_spot_mobility == "버스" || data.next_spot_mobility == "지하철") {
+                binding.ivTransportation.setImageResource(R.drawable.ic_icn_public_transport)
+            }
+            else if (data.next_spot_mobility == "택시" || data.next_spot_mobility == "차량") {
+                binding.ivTransportation.setImageResource(R.drawable.ic_icn_car)
+            }
+            else {
+                binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
+            }
         }
     }
 

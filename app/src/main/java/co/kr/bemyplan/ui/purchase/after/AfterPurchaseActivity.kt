@@ -57,6 +57,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private fun initDummy() {
         val dummy = ExampleDummy().getPost()
         binding.post = dummy
+        // 카카오맵
+        initMap(dummy.spots)
+        // fragment 보이기
         initFragment(0)
         // user button
         initUserButton()
@@ -129,14 +132,20 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
             chip.chipDayButton.setOnClickListener {
                 initFragment(i)
-                setMarker(i)
+                setMarker(i, data)
                 mapView.setMapCenterPoint(mapPoints[i], true)
+                mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
+                Log.d("hoooni initchip action", mapPoints[i].mapPointGeoCoord.latitude.toString() + " " + mapPoints[i].mapPointGeoCoord.longitude.toString())
+                Log.d("hoooni initchip action", mapView.mapCenterPoint.mapPointGeoCoord.latitude.toString() + " " + mapView.mapCenterPoint.mapPointGeoCoord.longitude.toString())
             }
 
             if(i == 0) {
                 chip.chipDayButton.isChecked = true
-                setMarker(i)
+                setMarker(i, data)
                 mapView.setMapCenterPoint(mapPoints[i], true)
+                mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
+                Log.d("hoooni initchip", mapPoints[i].mapPointGeoCoord.latitude.toString())
+                Log.d("hoooni initchip", mapView.mapCenterPoint.mapPointGeoCoord.latitude.toString())
             }
             chipGroup.addView(chip.root)
         }
@@ -166,11 +175,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // 마커 생성
         initMarker(data)
-        mapView.setMapCenterPoint(mapPoints[0], true)
+        //mapView.setMapCenterPoint(mapPoints[0], true)
+        Log.d("hoooni initmap", mapView.mapCenterPoint.mapPointGeoCoord.latitude.toString() + mapView.mapCenterPoint.mapPointGeoCoord.longitude.toString())
+        Log.d("hoooni initmap", mapPoints[0].mapPointGeoCoord.latitude.toString())
         binding.mapView.addView(mapView)
     }
 
     private fun initMarker(data: List<List<Spot>>) {
+        markers = mutableListOf()
         for (i in data.indices) {
             /*
             * 현재 일차의 위도, 경도 합을 구함
@@ -193,6 +205,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     mapPoint = MapPoint.mapPointWithGeoCoord(spot.latitude, spot.longitude)
                     markerType = MapPOIItem.MarkerType.CustomImage
                     customImageResourceId = R.drawable.icn_subpin_select
+                    selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+                    customSelectedImageResourceId = R.drawable.icn_subpin_select
                     isCustomImageAutoscale = false
                     setCustomImageAnchor(0.5f, 0.5f)
                 }
@@ -203,36 +217,47 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
                 mapView.addPOIItem(marker)
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
-                //mapView.selectPOIItem(marker, true)
+                mapView.selectPOIItem(marker, true)
             }
 
             markers.add(markerList)
         }
     }
 
-    private fun setMarker(index: Int) {
+    private fun setMarker(index: Int, data: List<List<Spot>>) {
         mapView.removeAllPOIItems()
-        for(i in markers.indices) {
+        mapPoints = mutableListOf()
+        for(i in data.indices) {
             if (index == i) {
-                for (j in markers[i]) {
-                    j.apply {
+                for (j in data[i].indices) {
+                    markers[i][j].apply {
+                        itemName = data[i][j].title
+                        mapPoint = MapPoint.mapPointWithGeoCoord(data[i][j].latitude, data[i][j].longitude)
+                        markerType = MapPOIItem.MarkerType.CustomImage
                         selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                         customImageResourceId = R.drawable.icn_mainpin_select
                         customSelectedImageResourceId = R.drawable.icn_mainpin_select_pick
                         isShowCalloutBalloonOnTouch = true
+                        setCustomImageAnchor(0.5f, 0.5f)
                     }
+                    mapPoints.add(markers[i][j].mapPoint)
                 }
+                Log.d("hoooni setMarker", mapPoints.size.toString())
+                mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
             }
             else {
-                for (j in markers[i]) {
-                    j.apply {
+                for (j in data[i].indices) {
+                    markers[i][j].apply {
+                        itemName = data[i][j].title
+                        mapPoint = MapPoint.mapPointWithGeoCoord(data[i][j].latitude, data[i][j].longitude)
+                        markerType = MapPOIItem.MarkerType.CustomImage
+                        selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                         customImageResourceId = R.drawable.icn_subpin_select
                         customSelectedImageResourceId = R.drawable.icn_subpin_select
                         isShowCalloutBalloonOnTouch = false
+                        setCustomImageAnchor(0.5f, 0.5f)
                     }
-                    mapPoints.add(j.mapPoint)
                 }
-                mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
             }
         }
         for (i in markers.indices) {

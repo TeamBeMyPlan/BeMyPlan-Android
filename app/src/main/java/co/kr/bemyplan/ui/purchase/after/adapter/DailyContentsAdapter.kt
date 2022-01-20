@@ -134,10 +134,10 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         }
 
         private fun chooseImg(data: Spot) {
-            if (data.next_spot_mobility == "버스" || data.next_spot_mobility == "지하철") {
+            if (data.nextSpotMobility == "버스" || data.nextSpotMobility == "지하철") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_public_transport)
             }
-            else if (data.next_spot_mobility == "택시" || data.next_spot_mobility == "차량") {
+            else if (data.nextSpotMobility == "택시" || data.nextSpotMobility == "차량") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_car)
             }
             else {

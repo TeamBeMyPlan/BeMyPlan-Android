@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <data>
-
         <variable
             name="viewModel"
             type="co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel" />
@@ -212,7 +210,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
-                    android:text="@string/charging_kakaopay"
+                    android:text="@{viewModel.payWay.brand}"
                     android:textColor="@color/blue_0077b0"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_way_title"

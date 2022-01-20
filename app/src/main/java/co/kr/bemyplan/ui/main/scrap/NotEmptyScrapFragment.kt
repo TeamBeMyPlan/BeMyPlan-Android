@@ -2,6 +2,7 @@ package co.kr.bemyplan.ui.main.scrap
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +28,10 @@ class NotEmptyScrapFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_not_empty_scrap, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_not_empty_scrap, container, false)
         initList()
+        reloadList()
         openBottomSheetDialog()
         return binding.root
     }
@@ -39,8 +42,20 @@ class NotEmptyScrapFragment : Fragment() {
     }
 
     private fun initList() {
-        listItem = viewModel.scrapList.value!!
-        initRecyclerView()
+        viewModel.scrapList.observe(viewLifecycleOwner) {
+            listItem = it
+            initRecyclerView()
+            Log.d("mlog: NotEmptyScrapFragment.initList", "execute")
+        }
+//        listItem = viewModel.scrapList.value!!
+//        initRecyclerView()
+    }
+
+    private fun reloadList() {
+        viewModel.sort.observe(viewLifecycleOwner) {
+            viewModel.getScrapList("3")
+            Log.d("mlog: viewModel.sort.value", viewModel.sort.value.toString())
+        }
     }
 
     private fun initRecyclerView() {

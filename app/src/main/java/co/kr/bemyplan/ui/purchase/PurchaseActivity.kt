@@ -13,8 +13,8 @@ class PurchaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val postId = intent.getIntExtra("postId", -1)
-        Log.d("mlog: postId", postId.toString())
+        var postId = intent.getIntExtra("postId", -1)
+        Log.d("mlog: getExtra에서 postId", postId.toString())
         viewModel.setPostId(postId)
         binding = ActivityPurchaseBinding.inflate(layoutInflater)
 

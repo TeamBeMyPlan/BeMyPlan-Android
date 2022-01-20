@@ -9,7 +9,7 @@ import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import kotlinx.coroutines.launch
 
-class MyPlanViewModel: ViewModel() {
+class MyPlanViewModel : ViewModel() {
     private var page = 0
     private var pageSize = 10
 
@@ -20,7 +20,7 @@ class MyPlanViewModel: ViewModel() {
         val myPlanRepositoryImpl = MyPlanRepositoryImpl()
         viewModelScope.launch {
             val response = myPlanRepositoryImpl.getMyPlan(userId, page, pageSize)
-            _myPlan.value = response.data
+            _myPlan.value = response.data.items
             Log.d("mlog: MyPlanViewModel.myPlan.size", myPlan.value?.size.toString())
         }
     }

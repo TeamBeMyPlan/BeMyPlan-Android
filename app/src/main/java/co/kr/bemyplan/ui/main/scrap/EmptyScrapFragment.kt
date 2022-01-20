@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.main.scrap.ContentModel
+import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.FragmentEmptyScrapBinding
+import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapRecommendAdapter
 import co.kr.bemyplan.ui.purchase.PurchaseActivity
 
 class EmptyScrapFragment : Fragment() {
     private var _binding: FragmentEmptyScrapBinding? = null
     private val binding get() = _binding!!
+    private val viewModel by viewModels<ListViewModel>()
     private lateinit var scrapRecommendAdapter: ScrapRecommendAdapter
     private var listItem = listOf<ContentModel>()
 
@@ -23,7 +26,8 @@ class EmptyScrapFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_empty_scrap, container, false)
+        _binding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.fragment_empty_scrap, container, false)
         initList()
         initRecyclerView()
         return binding.root
@@ -35,13 +39,18 @@ class EmptyScrapFragment : Fragment() {
     }
 
     private fun initList() {
-        listItem = listOf(
+        viewModel.getEmptyScrapList()
+        viewModel.emptyScrapList.observe(viewLifecycleOwner) {
+            listItem = it
+            initRecyclerView()
+        }
+//        listItem = listOf(
 //            ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을 위한 찐먹킷리스트 투어", true, true),
 //            ContentModel(R.drawable.img_charge, null, "부모님과 함께하는", true, false),
 //            ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을", false, true),
 //            ContentModel(R.drawable.img_charge, null, "3박 4일 제주 여행", false, false),
 //            ContentModel(R.drawable.rectangle_5715, null, "푸드파이터들을 위한 찐먹킷리스트 투어", true, false),
-        )
+//        )
     }
 
     private fun initRecyclerView() {

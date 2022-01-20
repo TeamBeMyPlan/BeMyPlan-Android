@@ -12,6 +12,10 @@
         <variable
             name="next_spot"
             type="java.lang.String" />
+
+        <variable
+            name="is_last_spot"
+            type="java.lang.Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -71,7 +75,7 @@
             android:layout_height="3dp"
             android:layout_marginBottom="4dp"
             android:background="#80ffffff"
-            android:visibility="@{spot.photo_urls.size() &lt;= 1 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{spot.photoUrls.size() &lt;= 1 ? View.GONE : View.VISIBLE}"
             app:tabIndicatorHeight="3dp"
             app:tabIndicatorColor="@color/grey_313740"
             app:layout_constraintWidth_percent="0.5"
@@ -101,7 +105,7 @@
             android:layout_marginVertical="20dp"
             android:background="@drawable/grey_empty_box"
             android:paddingVertical="10dp"
-            android:visibility='@{spot.next_spot_required_time == "" ? View.GONE : View.VISIBLE}'
+            android:visibility="@{is_last_spot ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/tv_context"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -128,7 +132,7 @@
                 android:textColor="@color/blue_0077b0"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
                 android:textSize="12sp"
-                app:text="@{spot.next_spot_mobility + ` ` + spot.next_spot_required_time}"
+                app:text="@{spot.nextSpotMobility + ` ` + spot.nextSpotRequiredTime}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_place_route"
                 app:layout_constraintTop_toTopOf="parent" />

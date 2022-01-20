@@ -22,14 +22,21 @@ class ListActivity : AppCompatActivity() {
     private var listItem = listOf<ContentModel>()
     var from: String = ""
     var areaId: Int = -1
-    var userId: String = ""
+    var userId: Int = -1
+    var authorNickname: String = ""
+    var locationName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
         from = intent.getStringExtra("from") ?: ""
         areaId = intent.getIntExtra("areaId", -1)
-        userId = intent.getStringExtra("userId") ?: "1"
+        userId = intent.getIntExtra("userId", -1)
+        locationName = intent.getStringExtra("locationName") ?: ""
+        authorNickname = intent.getStringExtra("authorNickname") ?: ""
+        Log.d("mlog: ListActivity.userId", userId.toString())
+        Log.d("mlog: ListActivity.userId", authorNickname.toString())
+//        authorId = intent.getStringExtra("authorId") ?: ""
         initList(from)
         initRecyclerView()
         clickBack()
@@ -39,33 +46,53 @@ class ListActivity : AppCompatActivity() {
     private fun initList(from: String?) {
         when (from) {
             "new" -> {
+                Log.d("mlog: new", "success")
                 binding.layoutSort.visibility = View.GONE
                 viewModel.getNewList()
+                binding.tvTitle.text = "최신 등록 여행 일정"
                 viewModel.newList.observe(this) {
                     listItem = it
                     initRecyclerView()
                 }
+                viewModel.sort.observe(this) {
+                    viewModel.getNewList()
+                }
             }
             "suggest" -> {
+                Log.d("mlog: suggest", "success")
                 binding.layoutSort.visibility = View.GONE
                 viewModel.getSuggestList()
+                binding.tvTitle.text = "비마플 추천 여행 일정"
                 viewModel.suggestList.observe(this) {
                     listItem = it
                     initRecyclerView()
                 }
+                viewModel.sort.observe(this) {
+                    viewModel.getSuggestList()
+                }
             }
             "location" -> {
+                Log.d("mlog: location", "success")
                 viewModel.getLocationList(areaId)
+                binding.tvTitle.text = locationName
                 viewModel.locationList.observe(this) {
                     listItem = it
                     initRecyclerView()
                 }
+                viewModel.sort.observe(this) {
+                    viewModel.getLocationList(areaId)
+                }
             }
             "user" -> {
+                Log.d("mlog: user", "success")
                 viewModel.getUserPostList(userId)
+                binding.tvTitle.text = authorNickname
                 viewModel.userPostList.observe(this) {
                     listItem = it
                     initRecyclerView()
+                }
+                viewModel.sort.observe(this) {
+                    viewModel.getUserPostList(userId)
                 }
             }
         }
@@ -75,8 +102,9 @@ class ListActivity : AppCompatActivity() {
         listAdapter = ListAdapter {
             val intent = Intent(this, PurchaseActivity::class.java)
             // TODO: 분기처리 필요
-            intent.putExtra("postId", it.id.toString())
-            Log.d("mlog: postId", it.id.toString())
+            intent.putExtra("postId", it.id)
+            intent.putExtra("nickname", it.nickname)
+            Log.d("mlog: putExtra에서 postId", it.id.toString())
             startActivity(intent)
         }
         listAdapter.itemList = listItem

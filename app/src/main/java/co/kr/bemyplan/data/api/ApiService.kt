@@ -36,4 +36,6 @@ object ApiService {
     val homeNewService : HomeNewService = retrofit.create(HomeNewService::class.java)
     // 에디터 추천 여행 일정 조회
     val homeSuggestService : HomeSuggestService = retrofit.create(HomeSuggestService::class.java)
+    // 마이페이지 조회
+    val myPlanService: MyPlanService = retrofit.create(MyPlanService::class.java)
 }

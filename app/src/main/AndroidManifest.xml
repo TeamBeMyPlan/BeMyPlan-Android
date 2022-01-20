@@ -17,6 +17,9 @@
         android:theme="@style/Theme.BeMyPlan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.main.myplan.settings.creator.CreatorProposeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.purchase.PurchaseActivity"
             android:exported="false" />
         <activity

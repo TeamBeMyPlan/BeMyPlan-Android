@@ -15,10 +15,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.api.ApiService
+import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
@@ -74,7 +76,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // fragment 보이기
         initFragment(0)
         // user button
-        initUserButton()
+        initUserButton(dummy)
         // 일차별 버튼
         initChips(dummy.spots)
     }
@@ -100,7 +102,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     // fragment 보이기
                     initFragment(0)
                     // user button
-                    initUserButton()
+                    initUserButton(data)
                 }
             }
 
@@ -118,10 +120,12 @@ class AfterPurchaseActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    private fun initUserButton() {
+    private fun initUserButton(data: Post?) {
         binding.clWriter.setOnClickListener {
             val intent = Intent(this, ListActivity::class.java)
             intent.putExtra("from", "user")
+            intent.putExtra("userId", data?.authorId)
+            intent.putExtra("authorNickname", data?.author)
             startActivity(intent)
         }
     }

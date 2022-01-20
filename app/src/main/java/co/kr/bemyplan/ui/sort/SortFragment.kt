@@ -40,27 +40,72 @@ class SortFragment : BottomSheetDialogFragment() {
             state = BottomSheetBehavior.STATE_COLLAPSED
         }
         viewModel.sort.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 "created_at" -> {
-                    binding.tvLatest.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue_0077b0))
-                    binding.tvBestSeller.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey_5d687a))
-                    binding.tvBestScrapper.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey_5d687a))
+                    binding.tvLatest.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.blue_0077b0
+                        )
+                    )
+                    binding.tvBestSeller.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey_5d687a
+                        )
+                    )
+                    binding.tvBestScrapper.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey_5d687a
+                        )
+                    )
                     binding.ivLatest.visibility = View.VISIBLE
                     binding.ivBestSeller.visibility = View.INVISIBLE
                     binding.ivBestScrapper.visibility = View.INVISIBLE
                 }
-                "best_seller" -> {
-                    binding.tvLatest.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey_5d687a))
-                    binding.tvBestSeller.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue_0077b0))
-                    binding.tvBestScrapper.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey_5d687a))
+                "order_count" -> {
+                    binding.tvLatest.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey_5d687a
+                        )
+                    )
+                    binding.tvBestSeller.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.blue_0077b0
+                        )
+                    )
+                    binding.tvBestScrapper.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey_5d687a
+                        )
+                    )
                     binding.ivLatest.visibility = View.INVISIBLE
                     binding.ivBestSeller.visibility = View.VISIBLE
                     binding.ivBestScrapper.visibility = View.INVISIBLE
                 }
-                "best_scrapper" -> {
-                    binding.tvLatest.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey_5d687a))
-                    binding.tvBestSeller.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey_5d687a))
-                    binding.tvBestScrapper.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue_0077b0))
+                "price" -> {
+                    binding.tvLatest.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey_5d687a
+                        )
+                    )
+                    binding.tvBestSeller.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey_5d687a
+                        )
+                    )
+                    binding.tvBestScrapper.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.blue_0077b0
+                        )
+                    )
                     binding.ivLatest.visibility = View.INVISIBLE
                     binding.ivBestSeller.visibility = View.INVISIBLE
                     binding.ivBestScrapper.visibility = View.VISIBLE

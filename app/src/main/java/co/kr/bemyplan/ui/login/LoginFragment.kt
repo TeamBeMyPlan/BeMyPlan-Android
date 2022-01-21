@@ -57,6 +57,7 @@ class LoginFragment : Fragment() {
 
         clickGuestLogin()
         clickKakaoLogin()
+        clickGoogleLogin()
 
         return binding.root
     }
@@ -95,9 +96,15 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun clickGoogleLogin() {
+        binding.layoutGoogle.setOnClickListener {
+            startSignUpFragment()
+        }
+    }
+
     private fun startSignUpFragment() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fcv_login, SignUpFragment())
+            .replace(R.id.fcv_login, SignUpFragment(), "signUpFragment")
             .addToBackStack(null)
             .commit()
     }

@@ -110,14 +110,18 @@ class ListViewModel : ViewModel() {
     fun getUserPostList(userId: Int) {
         val userPostListRepositoryImpl = UserPostListRepositoryImpl()
         viewModelScope.launch {
-            val response = userPostListRepositoryImpl.getUserPostList(
-                userId,
-                page,
-                pageSize,
-                sort.value.toString()
-            )
-            _userPostList.value = response.data.items
-            Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
+            try {
+                val response = userPostListRepositoryImpl.getUserPostList(
+                    userId,
+                    page,
+                    pageSize,
+                    sort.value.toString()
+                )
+                _userPostList.value = response.data.items
+                Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getUserPostList error handling", e.code().toString())
+            }
         }
     }
 

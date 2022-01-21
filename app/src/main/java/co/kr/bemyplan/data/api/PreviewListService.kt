@@ -7,6 +7,6 @@ import retrofit2.http.Path
 interface PreviewListService {
     @GET("api/v1/post/{post_id}/preview")
     suspend fun getPreviewList(
-        @Path("post_id") post_id: Int
+        @Path("post_id") postId: Int
     ): ResponsePreviewList
 }

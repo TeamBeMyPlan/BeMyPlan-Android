@@ -6,9 +6,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ScrapListService {
-    @GET("/api/v1/scrap/{user_id}")
+    @GET("/api/v1/scrap")
     suspend fun getScrapList(
-        @Path("user_id") user_id: String,
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
         @Query("sort") sort: String

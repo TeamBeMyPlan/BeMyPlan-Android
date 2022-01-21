@@ -54,7 +54,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // 카카오맵
         initMap()
 
-        if (postId == -1) {
+        if (postId == -1 || postId == 0) {
             initDummy()
         } else { // network 연결
             initNetwork(postId)
@@ -71,12 +71,15 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private fun initDummy() {
         val dummy = ExampleDummy().getPost()
         binding.post = dummy
-        // 카카오맵
-        initMap()
+
         // fragment 보이기
         initFragment(0)
+        // kakaomap 터치 이벤트
+        initTouchListener()
         // user button
         initUserButton(dummy)
+        // 마커 생성
+        initMarker(dummy.spots)
         // 일차별 버튼
         initChips(dummy.spots)
     }
@@ -97,7 +100,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                         // 일차별 버튼
                         initChips(it.spots)
                     }
-                    // kakaomap 터치 이벤
+                    // kakaomap 터치 이벤트
                     initTouchListener()
                     // fragment 보이기
                     initFragment(0)

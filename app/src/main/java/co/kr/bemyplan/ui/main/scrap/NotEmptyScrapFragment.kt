@@ -68,6 +68,7 @@ class NotEmptyScrapFragment : Fragment() {
             } else {
                 val intent = Intent(requireContext(), PurchaseActivity::class.java)
                 intent.putExtra("postId", it.postId)
+                intent.putExtra("isScraped", it.isScraped)
                 startActivity(intent)
             }
         }

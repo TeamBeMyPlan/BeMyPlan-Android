@@ -104,12 +104,14 @@ class ListActivity : AppCompatActivity() {
             if(it.isPurchased) {
                 val intent = Intent(this, AfterPurchaseActivity::class.java)
                 intent.putExtra("postId", it.postId)
+                intent.putExtra("isScraped", it.isScraped)
 //            intent.putExtra("nickname", it.author)
                 Log.d("mlog: putExtra에서 postId", it.postId.toString())
                 startActivity(intent)
             } else {
                 val intent = Intent(this, PurchaseActivity::class.java)
                 intent.putExtra("postId", it.postId)
+                intent.putExtra("isScraped", it.isScraped)
                 Log.d("mlog: putExtra에서 postId", it.postId.toString())
                 startActivity(intent)
             }

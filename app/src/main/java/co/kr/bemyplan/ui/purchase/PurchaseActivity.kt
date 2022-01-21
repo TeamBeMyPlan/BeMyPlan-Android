@@ -14,8 +14,11 @@ class PurchaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var postId = intent.getIntExtra("postId", -1)
-        Log.d("mlog: getExtra에서 postId", postId.toString())
+        var isScraped = intent.getBooleanExtra("isScraped", false)
+        Log.d("mlog: PurchaseActivity::getExtra에서 postId", postId.toString())
+        Log.d("mlog: PurchaseActivity::getExtra에서 isScraped", isScraped.toString())
         viewModel.setPostId(postId)
+        viewModel.setIsScraped(isScraped)
         binding = ActivityPurchaseBinding.inflate(layoutInflater)
 
         setContentView(binding.root)

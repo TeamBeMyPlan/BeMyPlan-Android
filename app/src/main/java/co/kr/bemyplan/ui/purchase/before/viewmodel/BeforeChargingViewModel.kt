@@ -21,6 +21,9 @@ class BeforeChargingViewModel : ViewModel() {
     private var _postId = -1
     val postId get() = _postId
 
+    private var _isScraped = MutableLiveData<Boolean>()
+    val isScraped: LiveData<Boolean> get() = _isScraped
+
     private val _payWay = MutableLiveData<Pay>()
     val payWay: LiveData<Pay> get() = _payWay
 
@@ -41,6 +44,12 @@ class BeforeChargingViewModel : ViewModel() {
         }
     }
 
+    fun setIsScraped(flag: Boolean?) {
+        if(flag != null) {
+            _isScraped.value = flag
+            Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
+        }
+    }
 
     fun setPostId(postId: Int) {
         _postId = postId

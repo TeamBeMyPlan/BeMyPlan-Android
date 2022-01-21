@@ -47,8 +47,20 @@ class BeforeChargingViewModel : ViewModel() {
 
     fun getPreviewInfo() {
         viewModelScope.launch {
-            val response = previewInfoRepositoryImpl.getPreviewInfo(postId)
-            _previewInfor.value = response.data
+            try {
+                val response = previewInfoRepositoryImpl.getPreviewInfo(postId)
+                _previewInfor.value = response.data
+            } catch (e: retrofit2.HttpException) {
+                Log.e(
+                    "mlog: BeforeChargingViewModel::getPreviewInfo error handling",
+                    e.code().toString()
+                )
+            } catch (t: Throwable) {
+                Log.e(
+                    "mlog: BeforeChargingViewModel::getPreviewInfo error handling",
+                    t.message.toString()
+                )
+            }
         }
     }
 

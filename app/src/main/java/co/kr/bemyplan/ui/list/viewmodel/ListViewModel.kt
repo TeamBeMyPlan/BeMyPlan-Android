@@ -147,9 +147,15 @@ class ListViewModel : ViewModel() {
     fun getEmptyScrapList() {
         val emptyScrapListRepositoryImpl = EmptyScrapListRepositoryImpl()
         viewModelScope.launch {
-            val response = emptyScrapListRepositoryImpl.getEmptyScrapList()
-            _emptyScrapList.value = response.data
-            Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
+            try {
+                val response = emptyScrapListRepositoryImpl.getEmptyScrapList()
+                _emptyScrapList.value = response.data
+                Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getEmptyScrapList error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getEmptyScrapList error handling", t.message.toString())
+            }
         }
     }
 

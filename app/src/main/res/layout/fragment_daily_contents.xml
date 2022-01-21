@@ -20,7 +20,8 @@
             android:paddingVertical="20dp"
             android:layout_marginHorizontal="24dp"
             android:elevation="3dp"
-            android:background="@color/white"
+            android:background="@drawable/rectangle_grey_radius_5"
+            android:backgroundTint="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/rv_daily_contents">
 

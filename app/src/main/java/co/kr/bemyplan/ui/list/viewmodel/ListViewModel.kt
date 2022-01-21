@@ -58,13 +58,19 @@ class ListViewModel : ViewModel() {
     fun getNewList() {
         val newListRepositoryImpl = NewListRepositoryImpl()
         viewModelScope.launch {
-            val response = newListRepositoryImpl.getNewList(page, pageSize)
-            Log.d(
-                "mlog: ListViewModel.response.data.item.size",
-                response.data.items.size.toString()
-            )
-            _newList.value = response.data.items
-            Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
+            try {
+                val response = newListRepositoryImpl.getNewList(page, pageSize)
+                Log.d(
+                    "mlog: ListViewModel.response.data.item.size",
+                    response.data.items.size.toString()
+                )
+                _newList.value = response.data.items
+                Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getNewList error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getNewList error handling", t.message.toString())
+            }
         }
     }
 

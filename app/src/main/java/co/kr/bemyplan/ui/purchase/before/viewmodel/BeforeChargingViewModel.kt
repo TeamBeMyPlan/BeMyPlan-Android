@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.purchase.before.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,15 +48,39 @@ class BeforeChargingViewModel : ViewModel() {
 
     fun getPreviewInfo() {
         viewModelScope.launch {
-            val response = previewInfoRepositoryImpl.getPreviewInfo(postId)
-            _previewInfor.value = response.data
+            try {
+                val response = previewInfoRepositoryImpl.getPreviewInfo(postId)
+                _previewInfor.value = response.data
+            } catch (e: retrofit2.HttpException) {
+                Log.e(
+                    "mlog: BeforeChargingViewModel::getPreviewInfo error handling",
+                    e.code().toString()
+                )
+            } catch (t: Throwable) {
+                Log.e(
+                    "mlog: BeforeChargingViewModel::getPreviewInfo error handling",
+                    t.message.toString()
+                )
+            }
         }
     }
 
     fun getPreviewList() {
         viewModelScope.launch {
-            val response = previewListRepositoryImpl.getPreviewList(postId)
-            _previewList.value = response.data
+            try {
+                val response = previewListRepositoryImpl.getPreviewList(postId)
+                _previewList.value = response.data
+            } catch (e: retrofit2.HttpException) {
+                Log.e(
+                    "mlog: BeforeChargingViewModel::getPreviewList error handling",
+                    e.code().toString()
+                )
+            } catch (t: Throwable) {
+                Log.e(
+                    "mlog: BeforeChargingViewModel::getPreviewList error handling",
+                    t.message.toString()
+                )
+            }
         }
     }
 }

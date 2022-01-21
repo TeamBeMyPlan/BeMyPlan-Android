@@ -58,69 +58,104 @@ class ListViewModel : ViewModel() {
     fun getNewList() {
         val newListRepositoryImpl = NewListRepositoryImpl()
         viewModelScope.launch {
-            val response = newListRepositoryImpl.getNewList(page, pageSize)
-            Log.d(
-                "mlog: ListViewModel.response.data.item.size",
-                response.data.items.size.toString()
-            )
-            _newList.value = response.data.items
-            Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
+            try {
+                val response = newListRepositoryImpl.getNewList(page, pageSize)
+                Log.d(
+                    "mlog: ListViewModel.response.data.item.size",
+                    response.data.items.size.toString()
+                )
+                _newList.value = response.data.items
+                Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getNewList error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getNewList error handling", t.message.toString())
+            }
         }
     }
 
     fun getSuggestList() {
         val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
-            val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
-            _suggestList.value = response.data.items
-            Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
+            try {
+                val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
+                _suggestList.value = response.data.items
+                Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getSuggestList error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getSuggestList error handling", t.message.toString())
+            }
         }
     }
 
     fun getLocationList(area_id: Int) {
         val locationListRepositoryImpl = LocationListRepositoryImpl()
         viewModelScope.launch {
-            val response = locationListRepositoryImpl.getLocationList(
-                area_id,
-                page,
-                pageSize,
-                sort.value.toString()
-            )
-            _locationList.value = response.data.items
-            Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
+            try {
+                val response = locationListRepositoryImpl.getLocationList(
+                    area_id,
+                    page,
+                    pageSize,
+                    sort.value.toString()
+                )
+                _locationList.value = response.data.items
+                Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getLocation error handling", e.code().toString())
+            }
         }
     }
 
     fun getUserPostList(userId: Int) {
         val userPostListRepositoryImpl = UserPostListRepositoryImpl()
         viewModelScope.launch {
-            val response = userPostListRepositoryImpl.getUserPostList(
-                userId,
-                page,
-                pageSize,
-                sort.value.toString()
-            )
-            _userPostList.value = response.data.items
-            Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
+            try {
+                val response = userPostListRepositoryImpl.getUserPostList(
+                    userId,
+                    page,
+                    pageSize,
+                    sort.value.toString()
+                )
+                _userPostList.value = response.data.items
+                Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getUserPostList error handling", e.code().toString())
+            }
         }
     }
 
     fun getScrapList(user_id: String) {
         val scrapListRepositoryImpl = ScrapListRepositoryImpl()
         viewModelScope.launch {
-            val response =
-                scrapListRepositoryImpl.getScrapList(user_id, page, pageSize, sort.value.toString())
-            _scrapList.value = response.data.items
-            Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
+            try {
+                val response =
+                    scrapListRepositoryImpl.getScrapList(
+                        user_id,
+                        page,
+                        pageSize,
+                        sort.value.toString()
+                    )
+                _scrapList.value = response.data.items
+                Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getScrapList error handling", e.code().toString())
+            }
         }
     }
 
     fun getEmptyScrapList() {
         val emptyScrapListRepositoryImpl = EmptyScrapListRepositoryImpl()
         viewModelScope.launch {
-            val response = emptyScrapListRepositoryImpl.getEmptyScrapList()
-            _emptyScrapList.value = response.data
-            Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
+            try {
+                val response = emptyScrapListRepositoryImpl.getEmptyScrapList()
+                _emptyScrapList.value = response.data
+                Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getEmptyScrapList error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getEmptyScrapList error handling", t.message.toString())
+            }
         }
     }
 

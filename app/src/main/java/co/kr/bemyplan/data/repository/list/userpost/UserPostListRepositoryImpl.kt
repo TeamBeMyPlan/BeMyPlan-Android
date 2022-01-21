@@ -2,6 +2,8 @@ package co.kr.bemyplan.data.repository.list.userpost
 
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.list.ResponseUserPostList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class UserPostListRepositoryImpl : UserPostListRepository {
     override suspend fun getUserPostList(
@@ -10,6 +12,13 @@ class UserPostListRepositoryImpl : UserPostListRepository {
         pageSize: Int,
         sort: String
     ): ResponseUserPostList {
-        return ApiService.userPostListService.getUserPostList(userId, page, pageSize, sort)
+        return withContext(Dispatchers.IO) {
+            ApiService.userPostListService.getUserPostList(
+                userId,
+                page,
+                pageSize,
+                sort
+            )
+        }
     }
 }

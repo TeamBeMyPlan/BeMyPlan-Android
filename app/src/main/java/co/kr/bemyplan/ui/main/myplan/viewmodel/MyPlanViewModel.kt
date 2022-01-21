@@ -19,9 +19,15 @@ class MyPlanViewModel : ViewModel() {
     fun getMyPlan(userId: String) {
         val myPlanRepositoryImpl = MyPlanRepositoryImpl()
         viewModelScope.launch {
-            val response = myPlanRepositoryImpl.getMyPlan(userId, page, pageSize)
-            _myPlan.value = response.data.items
-            Log.d("mlog: MyPlanViewModel.myPlan.size", myPlan.value?.size.toString())
+            try {
+                val response = myPlanRepositoryImpl.getMyPlan(userId, page, pageSize)
+                _myPlan.value = response.data.items
+                Log.d("mlog: MyPlanViewModel.myPlan.size", myPlan.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: MyPlanViewModel::getMyPlan error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: MyPlanViewModel::getMyPlan error handling", t.message.toString())
+            }
         }
     }
 }

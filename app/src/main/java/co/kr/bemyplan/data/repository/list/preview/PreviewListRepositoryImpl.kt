@@ -2,9 +2,13 @@ package co.kr.bemyplan.data.repository.list.preview
 
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.purchase.before.ResponsePreviewList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class PreviewListRepositoryImpl: PreviewListRepository {
+class PreviewListRepositoryImpl : PreviewListRepository {
     override suspend fun getPreviewList(post_id: Int): ResponsePreviewList {
-        return ApiService.previewListService.getPreviewList(post_id)
+        return withContext(Dispatchers.IO) {
+            ApiService.previewListService.getPreviewList(post_id)
+        }
     }
 }

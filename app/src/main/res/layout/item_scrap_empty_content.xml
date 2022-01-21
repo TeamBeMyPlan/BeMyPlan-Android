@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/iv_photo"
-            setImageString="@{model.thumbnail_url}"
+            setImageString="@{model.thumbnailUrl}"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:adjustViewBounds="true"

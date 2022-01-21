@@ -7,7 +7,10 @@ import co.kr.bemyplan.data.entity.main.home.ResponseHomeData
 import co.kr.bemyplan.databinding.ItemHomePlanBinding
 import co.kr.bemyplan.util.clipTo
 
-class HomeAdapter(val itemClick: (ResponseHomeData.ResponseHomeItems.HomeData) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+class HomeAdapter(
+    val beforePurchase: (Int, Boolean) -> Unit,
+    val afterPurchase: (Int) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+
     val planList = mutableListOf<ResponseHomeData.ResponseHomeItems.HomeData>()
 
     inner class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
@@ -19,7 +22,11 @@ class HomeAdapter(val itemClick: (ResponseHomeData.ResponseHomeItems.HomeData) -
 
         private fun clickItem(data: ResponseHomeData.ResponseHomeItems.HomeData) {
             binding.root.setOnClickListener {
-                itemClick(data)
+                if (data.isPurchased == true) {
+                    afterPurchase(data.postId)
+                } else {
+                    beforePurchase(data.postId, data.isScraped)
+                }
             }
         }
     }

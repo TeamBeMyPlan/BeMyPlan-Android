@@ -6,9 +6,14 @@ data class ResponseHomePopularData(
     val data : List<Data>
 ){
     data class Data(
-        val id : Int,
+        @SerializedName("post_id")
+        val postId : Int,
+        val title : String,
+        val author : String,
+        val price : Int,
         @SerializedName("thumbnail_url")
         val thumbnailUrl : String,
-        val title : String
+        @SerializedName("is_purchased")
+        val isPurchased : Boolean
     )
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.ItemMyPlanPurchaseListBinding
+import co.kr.bemyplan.util.clipTo
 
 class MyPlanAdapter(val itemClick: (MyModel) -> Unit) :
     RecyclerView.Adapter<MyPlanAdapter.ExistMyPlanViewHolder>() {
@@ -38,6 +39,8 @@ class MyPlanAdapter(val itemClick: (MyModel) -> Unit) :
         fun onBind(data: MyModel) {
             Log.d("mlog: MyPlanAdapter", data.postId.toString())
             binding.model = data
+            binding.ivMyPlanSpot.clipToOutline = true
+            //clipTo(binding.ivMyPlanSpot, data.thumbnailUrl)
             binding.root.setOnClickListener {
                 itemClick(data)
             }

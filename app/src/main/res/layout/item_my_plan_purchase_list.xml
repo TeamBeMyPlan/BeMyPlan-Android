@@ -20,6 +20,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
+            android:background="@drawable/rectangle_radius_5"
             setImageString="@{model.thumbnailUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"

@@ -8,6 +8,10 @@
         <variable
             name="infoModel"
             type="co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel" />
+
+        <variable
+            name="viewModel"
+            type="co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,7 +60,7 @@
                     android:id="@+id/iv_scrap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/selector_scrap"
+                    android:src="@{viewModel.isScraped ? @drawable/icn_scrap : @drawable/icn_not_scrap}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

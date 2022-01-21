@@ -34,6 +34,8 @@ class BeforeChargingFragment : Fragment() {
     ): View? {
 
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         Log.d("mlog: postId", viewModel.postId.toString())
         initList()

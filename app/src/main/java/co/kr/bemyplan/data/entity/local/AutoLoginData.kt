@@ -7,6 +7,7 @@ object AutoLoginData {
     private const val STORAGE_KEY = "USER_AUTH"
     private const val AUTO_LOGIN = "AUTO_LOGIN"
     private const val ACCESS_TOKEN = "ACCESS_TOKEN"
+    private const val NICKNAME = "NICKNAME"
 
     fun getAutoLogin(context: Context): Boolean {
         return getSharedPreference(context).getBoolean(AUTO_LOGIN, false)
@@ -16,14 +17,15 @@ object AutoLoginData {
         return getSharedPreference(context).getString(ACCESS_TOKEN, "") ?: ""
     }
 
-//    fun getRefreshToken(context: Context): String {
-//        return getSharedPreference(context).getString(REFRESH_TOKEN, "") ?: ""
-//    }
+    fun getNickname(context: Context): String {
+        return getSharedPreference(context).getString(NICKNAME, "") ?: ""
+    }
 
-    fun setAutoLogin(context: Context, value: Boolean, access_token: String, refresh_token: String) {
+    fun setAutoLogin(context: Context, value: Boolean, access_token: String, nickname: String) {
         getSharedPreference(context).edit()
             .putBoolean(AUTO_LOGIN, value)
             .putString(ACCESS_TOKEN, access_token)
+            .putString(NICKNAME, nickname)
             .apply()
     }
 

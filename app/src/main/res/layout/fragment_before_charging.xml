@@ -66,17 +66,21 @@
 
             <TextView
                 android:id="@+id/tv_top_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:animateLayoutChanges="true"
+                android:ellipsize="end"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                android:maxLines="1"
                 android:text="@{infoModel.title}"
                 android:textColor="@color/grey_313740"
                 android:textSize="18sp"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@id/layout_back"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/layout_scrap"
+                app:layout_constraintStart_toEndOf="@id/layout_back"
                 app:layout_constraintTop_toTopOf="@id/layout_back" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

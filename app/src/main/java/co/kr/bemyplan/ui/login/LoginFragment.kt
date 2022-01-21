@@ -24,16 +24,26 @@ class LoginFragment : Fragment() {
     private val userApiClient = UserApiClient.instance
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
-            Log.d("mlog: kakaoLogin", "로그인 실패")
+            Log.d("mlog: kakaoLogin", "카카오계정 로그인 실패")
         } else if (token != null) {
-            Log.d("mlog: kakaoLogin", "로그인 성공 ${token.accessToken}")
-            viewModel.setKakaoToken(token.accessToken)
+            Log.d("mlog: kakaoLogin", "카카오계정 로그인 성공 ${token.accessToken}")
 
-            // 회원이면 메인 액티비티로 이동, 회원이 아니면 회원가입 프래그먼트로 이동
-            if(viewModel.isMember.value == true) {
-                startMainActivity()
-            } else if(viewModel.isMember.value == false) {
-                startSignUpFragment()
+            viewModel.setSocialToken(token.accessToken)
+            viewModel.setSocialType("KAKAO")
+            Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
+            Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
+
+            viewModel.postLogin()
+            viewModel.isUser.observe(viewLifecycleOwner) {
+                when (it) {
+                    true -> {
+                        Log.d("mlog: LoginFragment", "isUser == true, go main")
+                    }
+                    else -> {
+                        Log.d("mlog: LoginFragment", "status code == 403 && isUser == false")
+                        startSignUpFragment()
+                    }
+                }
             }
         }
     }

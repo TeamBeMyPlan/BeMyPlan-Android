@@ -11,7 +11,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentSignUpBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
@@ -63,7 +62,6 @@ class SignUpFragment : Fragment() {
                     if (num == 1) {
                         // socialToken, loginType, nickname을 서버에 넘겨주는 코드 작성하는 부분
                         Log.d("mlog: nickname.value", viewModel.nickname.value.toString())
-                        Log.d("mlog: kakaoToken.value", viewModel.kakaoToken.value.toString())
                         Log.d("mlog: loginType.value", viewModel.loginType.value.toString())
                         val intent = Intent(requireContext(), MainActivity::class.java)
                         startActivity(intent)

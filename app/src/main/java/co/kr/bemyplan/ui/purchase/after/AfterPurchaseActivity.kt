@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
@@ -54,7 +55,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // 카카오맵
         initMap()
 
-        if (postId == -1 || postId == 0) {
+        if (postId == -1) {
             initDummy()
         } else { // network 연결
             initNetwork(postId)
@@ -71,13 +72,12 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private fun initDummy() {
         val dummy = ExampleDummy().getPost()
         binding.post = dummy
+        binding.ivToWriterProfile.isVisible = false
 
         // fragment 보이기
         initFragment(0)
         // kakaomap 터치 이벤트
         initTouchListener()
-        // user button
-        initUserButton(dummy)
         // 마커 생성
         initMarker(dummy.spots)
         // 일차별 버튼

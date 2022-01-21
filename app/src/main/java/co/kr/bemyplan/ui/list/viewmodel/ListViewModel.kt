@@ -92,14 +92,18 @@ class ListViewModel : ViewModel() {
     fun getLocationList(area_id: Int) {
         val locationListRepositoryImpl = LocationListRepositoryImpl()
         viewModelScope.launch {
-            val response = locationListRepositoryImpl.getLocationList(
-                area_id,
-                page,
-                pageSize,
-                sort.value.toString()
-            )
-            _locationList.value = response.data.items
-            Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
+            try {
+                val response = locationListRepositoryImpl.getLocationList(
+                    area_id,
+                    page,
+                    pageSize,
+                    sort.value.toString()
+                )
+                _locationList.value = response.data.items
+                Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getLocation error handling", e.code().toString())
+            }
         }
     }
 

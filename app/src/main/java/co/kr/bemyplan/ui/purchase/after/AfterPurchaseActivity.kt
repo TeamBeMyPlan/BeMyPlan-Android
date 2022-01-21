@@ -258,7 +258,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                         customImageResourceId = R.drawable.icn_mainpin_select
                         customSelectedImageResourceId = R.drawable.icn_mainpin_select_pick
                         isShowCalloutBalloonOnTouch = true
-                        setCustomImageAnchor(1.0f, 1.0f)
+                        setCustomImageAnchor(0.5f, 1.0f)
                     }
                     mapPoints.add(markers[i][j].mapPoint)
                 }
@@ -288,7 +288,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // 커스텀 말풍선 클래스
     class CustomBalloonAdapter(private val inflater: LayoutInflater): CalloutBalloonAdapter {
-        private val mCalloutBalloon: View = inflater.inflate(R.layout.card_balloon, null)
+        private val mCalloutBalloon = inflater.inflate(R.layout.card_balloon, null)
         val name: TextView = mCalloutBalloon.findViewById(R.id.tv_title)
 
         override fun getCalloutBalloon(poiItem: MapPOIItem?): View {

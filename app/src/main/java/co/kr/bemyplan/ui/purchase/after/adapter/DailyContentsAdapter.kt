@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
@@ -139,11 +140,14 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
             if (data.nextSpotMobility == "버스" || data.nextSpotMobility == "지하철") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_public_transport)
             }
-            else if (data.nextSpotMobility == "택시" || data.nextSpotMobility == "차량") {
+            else if (data.nextSpotMobility == "택시" || data.nextSpotMobility == "승용차") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_car)
             }
-            else {
+            else if (data.nextSpotMobility == "도보") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
+            }
+            else {
+                binding.ivTransportation.isVisible = false
             }
         }
     }

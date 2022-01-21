@@ -33,7 +33,6 @@ class DailyContentsFragment(private val spotList: List<Spot>) : Fragment() {
         routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE)
 
         contentsAdapter.setItems(spotList)
-        //dailyContents[4].isLast = true
         binding.rvDailyContents.adapter = contentsAdapter
 
         if (spotList.size > 5) {
@@ -52,7 +51,6 @@ class DailyContentsFragment(private val spotList: List<Spot>) : Fragment() {
 
     private fun initMoreBtn(items: List<Spot>) {
         binding.clLookMore.setOnClickListener {
-            //items[4].isLast = false
             routeAdapter.setItems(items)
             binding.clLookMore.isVisible = false
             binding.clLookClose.isVisible = true
@@ -61,7 +59,6 @@ class DailyContentsFragment(private val spotList: List<Spot>) : Fragment() {
 
     private fun initCloseBtn(items: List<Spot>) {
         binding.clLookClose.setOnClickListener {
-            //items[4].isLast = true
             routeAdapter.setItems(items.subList(0, 5))
             binding.clLookMore.isVisible = true
             binding.clLookClose.isVisible = false

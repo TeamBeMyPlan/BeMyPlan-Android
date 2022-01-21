@@ -77,9 +77,15 @@ class ListViewModel : ViewModel() {
     fun getSuggestList() {
         val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
-            val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
-            _suggestList.value = response.data.items
-            Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
+            try {
+                val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
+                _suggestList.value = response.data.items
+                Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getSuggestList error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getSuggestList error handling", t.message.toString())
+            }
         }
     }
 

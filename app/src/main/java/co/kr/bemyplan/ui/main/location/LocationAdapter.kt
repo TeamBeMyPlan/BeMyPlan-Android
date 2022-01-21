@@ -34,7 +34,7 @@ class LocationAdapter(val itemClick: (ResponseLocationData.LocationData) -> Unit
         fun onBind(data: ResponseLocationData.LocationData){
 
             binding.locationItem=data
-            clipTo(binding.ivLocation, data.photo_url)
+            clipTo(binding.ivLocation, data.photoUrl)
 
             binding.root.setOnClickListener {
 

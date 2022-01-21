@@ -15,16 +15,16 @@ import kotlinx.coroutines.launch
 class BeforeChargingViewModel : ViewModel() {
 
     enum class Pay(val brand: String) {
-        NAVER("네이버페이"), KAKAO("카카오페이"), TOSS("토스")
+        NAVER("네이버페이"), KAKAO("카카오페이"), TOSS("토스"), NULL("null")
     }
 
     private var _postId = -1
     val postId get() = _postId
 
+    private val _payWay = MutableLiveData<Pay>(Pay.NULL)
     private var _isScraped = MutableLiveData<Boolean>()
     val isScraped: LiveData<Boolean> get() = _isScraped
 
-    private val _payWay = MutableLiveData<Pay>()
     val payWay: LiveData<Pay> get() = _payWay
 
     private val previewInfoRepositoryImpl = PreviewInfoRepositoryImpl()

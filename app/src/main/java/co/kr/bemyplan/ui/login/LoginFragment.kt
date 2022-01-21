@@ -71,6 +71,7 @@ class LoginFragment : Fragment() {
         binding.tvGuestLogin.setOnClickListener {
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
+            requireActivity().finish()
         }
     }
 

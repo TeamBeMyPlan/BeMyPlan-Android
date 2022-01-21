@@ -128,10 +128,19 @@ class ListViewModel : ViewModel() {
     fun getScrapList(user_id: String) {
         val scrapListRepositoryImpl = ScrapListRepositoryImpl()
         viewModelScope.launch {
-            val response =
-                scrapListRepositoryImpl.getScrapList(user_id, page, pageSize, sort.value.toString())
-            _scrapList.value = response.data.items
-            Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
+            try {
+                val response =
+                    scrapListRepositoryImpl.getScrapList(
+                        user_id,
+                        page,
+                        pageSize,
+                        sort.value.toString()
+                    )
+                _scrapList.value = response.data.items
+                Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: ListViewModel::getScrapList error handling", e.code().toString())
+            }
         }
     }
 

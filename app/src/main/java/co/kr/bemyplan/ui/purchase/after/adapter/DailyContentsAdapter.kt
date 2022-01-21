@@ -4,8 +4,11 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableArrayList
@@ -17,12 +20,13 @@ import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
+import co.kr.bemyplan.ui.purchase.PurchaseActivity
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import co.kr.bemyplan.util.clipTo
 import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.IllegalStateException
 
-class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
+class DailyContentsAdapter(private val viewType: Int, val photoUrl: (String) -> Unit): RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
@@ -34,7 +38,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         TYPE_CONTENTS -> {
             _binding = ItemDailyContentsBinding.inflate(LayoutInflater.from(parent.context),
                 parent, false)
-            ContentsViewHolder(binding, parent.context)
+            ContentsViewHolder(binding, parent.context, photoUrl)
         }
         TYPE_ROUTE -> {
             val binding = ItemDailyRouteBinding.inflate(
@@ -86,7 +90,7 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         open fun onBind(data: Spot, position: Int, lastPosition: Int) {}
     }
 
-    class ContentsViewHolder(private val binding: ItemDailyContentsBinding, private val mContext: Context): SpotViewHolder(binding) {
+    class ContentsViewHolder(private val binding: ItemDailyContentsBinding, private val mContext: Context, private val photoUrl: (String) -> Unit): SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
         override fun onBind(data: Spot, nextSpot: String) {
             binding.spot = data
@@ -115,7 +119,10 @@ class DailyContentsAdapter(private val viewType: Int): RecyclerView.Adapter<Dail
         }
 
         private fun initViewPagerAdapter(data: Spot) {
-            viewPagerAdapter = PhotoViewPagerAdapter()
+            viewPagerAdapter = PhotoViewPagerAdapter(photoUrl = {
+                Log.d("hoooni","asdfasdf")
+                photoUrl
+            })
             viewPagerAdapter.setItems(data.photoUrls)
             binding.vpPhoto.adapter = viewPagerAdapter
             binding.vpPhoto.orientation = ViewPager2.ORIENTATION_HORIZONTAL

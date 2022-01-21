@@ -17,6 +17,9 @@
         android:theme="@style/Theme.BeMyPlan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.purchase.after.ImageViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.main.SplashActivity"
             android:exported="true">
             <intent-filter>
@@ -40,8 +43,7 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">

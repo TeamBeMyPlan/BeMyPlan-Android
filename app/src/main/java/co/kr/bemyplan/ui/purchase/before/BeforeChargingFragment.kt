@@ -17,6 +17,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.list.ListActivity
+import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 
@@ -41,6 +42,7 @@ class BeforeChargingFragment : Fragment() {
         clickBack()
         clickScrap()
         clickNickname()
+        showExample()
 
         binding.layoutPurchase.setOnClickListener{
             val chargingFragment = ChargingFragment()
@@ -156,9 +158,17 @@ class BeforeChargingFragment : Fragment() {
         binding.layoutAuthor.setOnClickListener {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "user")
-            intent.putExtra("userId", viewModel.previewInfor.value?.author_id)
+            intent.putExtra("userId", viewModel.previewInfor.value?.authorId)
             intent.putExtra("authorNickname", viewModel.previewInfor.value?.author)
-            Log.d("mlog: beforecharging.author_id", viewModel.previewInfor.value?.author_id.toString())
+            Log.d("mlog: beforecharging.author_id", viewModel.previewInfor.value?.authorId.toString())
+            startActivity(intent)
+        }
+    }
+
+    private fun showExample() {
+        binding.tvPurchaseExample.setOnClickListener {
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
+            intent.putExtra("postId", -1)
             startActivity(intent)
         }
     }

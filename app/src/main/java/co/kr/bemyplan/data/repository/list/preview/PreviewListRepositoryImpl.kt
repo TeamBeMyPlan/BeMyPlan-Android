@@ -6,9 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class PreviewListRepositoryImpl : PreviewListRepository {
-    override suspend fun getPreviewList(post_id: Int): ResponsePreviewList {
+    override suspend fun getPreviewList(postId: Int): ResponsePreviewList {
         return withContext(Dispatchers.IO) {
-            ApiService.previewListService.getPreviewList(post_id)
+            ApiService.previewListService.getPreviewList(postId)
         }
     }
 }

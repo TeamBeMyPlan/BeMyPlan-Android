@@ -32,7 +32,7 @@ class ScrapFragment : Fragment() {
     }
 
     private fun initFragmentContainerView() {
-        viewModel.getScrapList("3")
+        viewModel.getScrapList()
         viewModel.scrapList.observe(viewLifecycleOwner) {
             Log.d("mlog: ScrapFragment.initFragmentContainerView", "execute")
             when (it.size) {

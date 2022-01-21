@@ -59,6 +59,7 @@ class ListViewModel : ViewModel() {
         val newListRepositoryImpl = NewListRepositoryImpl()
         viewModelScope.launch {
             try {
+                // TODO
                 val response = newListRepositoryImpl.getNewList(page, pageSize)
                 Log.d(
                     "mlog: ListViewModel.response.data.item.size",
@@ -78,6 +79,7 @@ class ListViewModel : ViewModel() {
         val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
             try {
+                // TODO
                 val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
                 _suggestList.value = response.data.items
                 Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
@@ -125,13 +127,12 @@ class ListViewModel : ViewModel() {
         }
     }
 
-    fun getScrapList(user_id: String) {
+    fun getScrapList() {
         val scrapListRepositoryImpl = ScrapListRepositoryImpl()
         viewModelScope.launch {
             try {
                 val response =
                     scrapListRepositoryImpl.getScrapList(
-                        user_id,
                         page,
                         pageSize,
                         sort.value.toString()

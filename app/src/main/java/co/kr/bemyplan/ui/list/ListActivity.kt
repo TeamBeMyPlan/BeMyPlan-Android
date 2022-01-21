@@ -13,6 +13,7 @@ import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.purchase.PurchaseActivity
+import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 
 class ListActivity : AppCompatActivity() {
@@ -100,12 +101,18 @@ class ListActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         listAdapter = ListAdapter {
-            val intent = Intent(this, PurchaseActivity::class.java)
-            // TODO: 분기처리 필요
-            intent.putExtra("postId", it.id)
-            intent.putExtra("nickname", it.author)
-            Log.d("mlog: putExtra에서 postId", it.id.toString())
-            startActivity(intent)
+            if(it.isPurchased) {
+                val intent = Intent(this, AfterPurchaseActivity::class.java)
+                intent.putExtra("postId", it.postId)
+//            intent.putExtra("nickname", it.author)
+                Log.d("mlog: putExtra에서 postId", it.postId.toString())
+                startActivity(intent)
+            } else {
+                val intent = Intent(this, PurchaseActivity::class.java)
+                intent.putExtra("postId", it.postId)
+                Log.d("mlog: putExtra에서 postId", it.postId.toString())
+                startActivity(intent)
+            }
         }
         listAdapter.itemList = listItem
         binding.rvLinearContent.adapter = listAdapter

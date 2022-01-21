@@ -16,11 +16,11 @@ class MyPlanViewModel : ViewModel() {
     private var _myPlan = MutableLiveData<List<MyModel>>()
     val myPlan: LiveData<List<MyModel>> get() = _myPlan
 
-    fun getMyPlan(userId: String) {
+    fun getMyPlanList() {
         val myPlanRepositoryImpl = MyPlanRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = myPlanRepositoryImpl.getMyPlan(userId, page, pageSize)
+                val response = myPlanRepositoryImpl.getMyPlan(page, pageSize)
                 _myPlan.value = response.data.items
                 Log.d("mlog: MyPlanViewModel.myPlan.size", myPlan.value?.size.toString())
             } catch (e: retrofit2.HttpException) {

@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/iv_photo"
-            setImageString="@{model.thumbnail_url}"
+            setImageString="@{model.thumbnailUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
-            android:src="@{model.isScrap ? @drawable/icn_scrap_white : @drawable/icn_not_scrap_white}"
+            android:src="@{model.isScraped ? @drawable/icn_scrap_white : @drawable/icn_not_scrap_white}"
             app:layout_constraintEnd_toEndOf="@id/iv_photo"
             app:layout_constraintTop_toTopOf="@id/iv_photo" />
 

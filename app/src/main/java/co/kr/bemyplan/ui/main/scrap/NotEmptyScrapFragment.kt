@@ -15,6 +15,7 @@ import co.kr.bemyplan.databinding.FragmentNotEmptyScrapBinding
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
 import co.kr.bemyplan.ui.purchase.PurchaseActivity
+import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 
 class NotEmptyScrapFragment : Fragment() {
@@ -53,17 +54,22 @@ class NotEmptyScrapFragment : Fragment() {
 
     private fun reloadList() {
         viewModel.sort.observe(viewLifecycleOwner) {
-            viewModel.getScrapList("3")
+            viewModel.getScrapList()
             Log.d("mlog: viewModel.sort.value", viewModel.sort.value.toString())
         }
     }
 
     private fun initRecyclerView() {
         scrapAdapter = ScrapAdapter {
-            // TODO: 분기처리 필요
-            val intent = Intent(requireContext(), PurchaseActivity::class.java)
-            intent.putExtra("postId", it.id)
-            startActivity(intent)
+            if(it.isPurchased) {
+                val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
+                intent.putExtra("postId", it.postId)
+                startActivity(intent)
+            } else {
+                val intent = Intent(requireContext(), PurchaseActivity::class.java)
+                intent.putExtra("postId", it.postId)
+                startActivity(intent)
+            }
         }
         scrapAdapter.itemList = listItem
         binding.rvContent.adapter = scrapAdapter

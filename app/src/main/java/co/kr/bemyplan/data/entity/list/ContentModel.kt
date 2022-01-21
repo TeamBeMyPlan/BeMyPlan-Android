@@ -1,10 +1,17 @@
 package co.kr.bemyplan.data.entity.list
 
+import com.google.gson.annotations.SerializedName
+
 data class ContentModel(
-    val id: Int,
-    val thumbnail_url: String,
+    @SerializedName("post_id")
+    val postId: Int,
     val title: String,
+    @SerializedName("thumbnail_url")
+    val thumbnailUrl: String,
     val author: String,
-    var isScrap: Boolean,
+    @SerializedName("is_purchased")
+    val isPurchased: Boolean,
+    @SerializedName("is_scraped")
+    val isScraped: Boolean,
     val price: Int?,
 )

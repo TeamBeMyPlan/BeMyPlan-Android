@@ -16,10 +16,17 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.api.ApiService
+import co.kr.bemyplan.data.entity.main.myplan.RequestWithdraw
+import co.kr.bemyplan.data.entity.main.myplan.ResponseWithdraw
+import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.databinding.ActivityWithdrawalBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.util.CustomDialog
 import com.kakao.util.maps.helper.Utility
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.security.MessageDigest
 
 class WithdrawalActivity : AppCompatActivity() {
@@ -116,6 +123,21 @@ class WithdrawalActivity : AppCompatActivity() {
     }
 
     private fun initNetwork() {
+        val reason = binding.etWithdrawal.text.toString()
+        val call = ApiService.withdrawService.deleteToken(body = RequestWithdraw(reason))
+        call.enqueue(object : Callback<ResponseWithdraw> {
+            override fun onResponse(
+                call: Call<ResponseWithdraw>,
+                response: Response<ResponseWithdraw>
+            ) {
+                if (response.isSuccessful) {
+                    //TODO: 삭제
+                }
+            }
 
+            override fun onFailure(call: Call<ResponseWithdraw>, t: Throwable) {
+                Log.d("탈퇴 서버 통신 실패", t.message!!)
+            }
+        })
     }
 }

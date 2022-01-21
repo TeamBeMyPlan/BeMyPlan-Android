@@ -74,20 +74,24 @@ class SignUpFragment : Fragment() {
 
     private fun clickExit() {
         binding.ivClear.setOnClickListener {
-            val content = "회원가입을 그만두시겠습니까?"
-            val dialog = CustomDialog(requireContext(), "", content)
-            dialog.showChoiceDialog(R.layout.dialog_yes_no)
-            dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
-                override fun onClicked(num: Int) {
-                    if (num == 1) {
-                        parentFragmentManager.beginTransaction()
-                            .remove(this@SignUpFragment)
-                            .commit()
-                        parentFragmentManager.popBackStack()
-                    }
-                }
-            })
+            showExitDialog()
         }
+    }
+
+    private fun showExitDialog() {
+        val content = "회원가입을 그만두시겠습니까?"
+        val dialog = CustomDialog(requireContext(), "", content)
+        dialog.showChoiceDialog(R.layout.dialog_yes_no)
+        dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
+            override fun onClicked(num: Int) {
+                if (num == 1) {
+                    parentFragmentManager.beginTransaction()
+                        .remove(this@SignUpFragment)
+                        .commit()
+                    parentFragmentManager.popBackStack()
+                }
+            }
+        })
     }
 
     private fun closeKeyboard() {

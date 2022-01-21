@@ -9,6 +9,7 @@ import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
 import co.kr.bemyplan.data.repository.list.preview.PreviewInfoRepositoryImpl
 import co.kr.bemyplan.data.repository.list.preview.PreviewListRepositoryImpl
+import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
 import kotlinx.coroutines.launch
 
 
@@ -44,8 +45,24 @@ class BeforeChargingViewModel : ViewModel() {
         }
     }
 
+    fun postScrap() {
+        val postScrapRepositoryImpl = PostScrapRepositoryImpl()
+        viewModelScope.launch {
+            try {
+                val response = postScrapRepositoryImpl.postScrap(postId)
+                if (_isScraped.value != null) {
+                    _isScraped.value = !_isScraped.value!!
+                }
+            } catch (e : retrofit2.HttpException) {
+                Log.e("mlog: BeforeChargingViewModel::postScrap error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: BeforeChargingViewModel::postScrap error handling", t.message.toString())
+            }
+        }
+    }
+
     fun setIsScraped(flag: Boolean?) {
-        if(flag != null) {
+        if (flag != null) {
             _isScraped.value = flag
             Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
         }

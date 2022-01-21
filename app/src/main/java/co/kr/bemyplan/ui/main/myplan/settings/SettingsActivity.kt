@@ -89,7 +89,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun showQna() {
         val email = Intent(Intent.ACTION_SEND)
         email.type = "plain/text"
-        val address = arrayOf("bemyplan@gmail.com")
+        val address = arrayOf("teambemyplan@gmail.com")
         email.putExtra(Intent.EXTRA_EMAIL, address)
         startActivity(email)
     }

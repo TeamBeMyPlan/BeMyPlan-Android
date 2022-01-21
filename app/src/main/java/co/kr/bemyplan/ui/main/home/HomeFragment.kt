@@ -13,23 +13,24 @@ import androidx.viewpager2.widget.CompositePageTransformer
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.PurchaseActivity
+import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.util.ZoomOutPageTransformer
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
     private lateinit var recentAdapter: HomeAdapter
-    private lateinit var editorAdapter : HomeAdapter
+    private lateinit var editorAdapter: HomeAdapter
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
-    private val homeViewModel : HomeViewModel by viewModels()
+    private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
-        
+
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
@@ -44,19 +45,22 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun initAdapterRecent(){
+    private fun initAdapterRecent() {
         homeViewModel.initNewNetwork()
 
-        recentAdapter = HomeAdapter {
+        recentAdapter = HomeAdapter(beforePurchase = { id: Int, scraped : Boolean ->
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
-            // TODO: postId 넘겨야 함
-            // TODO: 결제여부 분기처리 필요
-            intent.putExtra("postId", it.id)
+            intent.putExtra("postId", id)
+            intent.putExtra("isScraped", scraped)
             startActivity(intent)
-        }
-        binding.rvRecent.adapter=recentAdapter
+        }, afterPurchase = { id: Int ->
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
+            intent.putExtra("postId", id)
+            startActivity(intent)
+        })
+        binding.rvRecent.adapter = recentAdapter
 
-        homeViewModel.new.observe(viewLifecycleOwner){
+        homeViewModel.new.observe(viewLifecycleOwner) {
             recentAdapter.planList.addAll(it)
             Log.d("yongminNewAdapter", it.toString())
             recentAdapter.notifyDataSetChanged()
@@ -64,16 +68,22 @@ class HomeFragment : Fragment() {
         recentAdapter.notifyDataSetChanged()
     }
 
-    private fun initAdapterEditor(){
+    private fun initAdapterEditor() {
         homeViewModel.initSuggestNetwork()
 
-        editorAdapter = HomeAdapter {
+        editorAdapter = HomeAdapter(beforePurchase = { id: Int, scraped : Boolean ->
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
+            intent.putExtra("postId", id)
+            intent.putExtra("isScraped", scraped)
             startActivity(intent)
-        }
-        binding.rvEditorSuggest.adapter=editorAdapter
+        }, afterPurchase = { id: Int ->
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
+            intent.putExtra("postId", id)
+            startActivity(intent)
+        })
+        binding.rvEditorSuggest.adapter = editorAdapter
 
-        homeViewModel.suggest.observe(viewLifecycleOwner){
+        homeViewModel.suggest.observe(viewLifecycleOwner) {
             editorAdapter.planList.addAll(it)
             Log.d("yongminSuggestAdapter", it.toString())
             editorAdapter.notifyDataSetChanged()
@@ -81,15 +91,19 @@ class HomeFragment : Fragment() {
         editorAdapter.notifyDataSetChanged()
     }
 
-    private fun initAdapterPopular(){
+    private fun initAdapterPopular() {
         homeViewModel.initPopularNetwork()
 
-        homeViewPagerAdapter = HomeViewPagerAdapter {
+        homeViewPagerAdapter = HomeViewPagerAdapter(beforePurchase = { id: Int, scraped : Boolean ->
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
-            // TODO: 결제여부 분기처리 필요
-            intent.putExtra("postId", it.id)
+            intent.putExtra("postId", id)
+            intent.putExtra("isScraped", scraped)
             startActivity(intent)
-        }
+        }, afterPurchase = { id: Int ->
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
+            intent.putExtra("postId", id)
+            startActivity(intent)
+        })
 
         homeViewModel.popular.observe(viewLifecycleOwner) {
             homeViewPagerAdapter.planList.addAll(it)
@@ -97,25 +111,27 @@ class HomeFragment : Fragment() {
             homeViewPagerAdapter.notifyDataSetChanged()
         }
 
-        with(binding.vpPopular){
-            adapter=homeViewPagerAdapter
+        with(binding.vpPopular) {
+            adapter = homeViewPagerAdapter
 
             val display = activity?.applicationContext?.resources?.displayMetrics
             val deviceWidth = display?.widthPixels
 
-            val ratio : Double = 312/360.0
+            val ratio: Double = 312 / 360.0
             val pageWidth = ratio * deviceWidth!!
-            val pagePadding = ((deviceWidth-pageWidth)/2).toInt()
-            val innerPadding = (pagePadding/2).toInt()
+            val pagePadding = ((deviceWidth - pageWidth) / 2).toInt()
+            val innerPadding = (pagePadding / 2).toInt()
 
-            getChildAt(0).overScrollMode= RecyclerView.OVER_SCROLL_NEVER //맨 위에서 더 이상 위로 스크롤할 영역이 없을 때 위로 땡겨지지 않도록
-            offscreenPageLimit=1 //리사이클러뷰에서 현재 보고있는 아이템의 양쪽으로 지정한 숫자만큼의 아이템을 유지한다. 그 밖의 아이템들은 필요할 때 어댑터에서 만든다.
+            getChildAt(0).overScrollMode =
+                RecyclerView.OVER_SCROLL_NEVER //맨 위에서 더 이상 위로 스크롤할 영역이 없을 때 위로 땡겨지지 않도록
+            offscreenPageLimit =
+                1 //리사이클러뷰에서 현재 보고있는 아이템의 양쪽으로 지정한 숫자만큼의 아이템을 유지한다. 그 밖의 아이템들은 필요할 때 어댑터에서 만든다.
             // Set the number of pages that should be retained to either side of the currently visible page(s). Pages beyond this limit will be recreated from the adapter when needed
 
             setPadding(pagePadding, 0, pagePadding, 0) //패딩 값 코드단에서 주기
-            setPageTransformer(CompositePageTransformer().apply{
+            setPageTransformer(CompositePageTransformer().apply {
                 addTransformer(ZoomOutPageTransformer())
-                addTransformer{page, position-> page.translationX = position*-(innerPadding) }
+                addTransformer { page, position -> page.translationX = position * -(innerPadding) }
             })
         }
         homeViewPagerAdapter.notifyDataSetChanged()
@@ -131,5 +147,6 @@ class HomeFragment : Fragment() {
             intent.putExtra("from", "suggest")
             startActivity(intent)
         }
+
     }
 }

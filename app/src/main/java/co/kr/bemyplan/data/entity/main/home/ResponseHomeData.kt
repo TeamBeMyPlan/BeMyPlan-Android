@@ -10,12 +10,17 @@ data class ResponseHomeData(
         val items: List<HomeData>
     ){
         data class HomeData(
-            val id: Int,
+            @SerializedName("post_id")
+            val postId: Int,
+            val title: String,
+            val author : String,
             @SerializedName("thumbnail_url")
             val thumbnailUrl: String,
-            val title: String,
             val price: Int,
-            val nickname: String
+            @SerializedName("is_purchased")
+            val isPurchased : Boolean,
+            @SerializedName("is_scraped")
+            val isScraped : Boolean
         )
     }
 }

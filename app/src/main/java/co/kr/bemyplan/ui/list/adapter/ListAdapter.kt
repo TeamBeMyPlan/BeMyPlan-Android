@@ -22,7 +22,7 @@ class ListAdapter(val itemClick: (ContentModel) -> Unit) :
 
             Log.d(
                 "mlog: price & itemId",
-                contentModel.price.toString() + "," + contentModel.id.toString()
+                contentModel.price.toString() + "," + contentModel.postId.toString()
             )
 
             clickItem(contentModel)

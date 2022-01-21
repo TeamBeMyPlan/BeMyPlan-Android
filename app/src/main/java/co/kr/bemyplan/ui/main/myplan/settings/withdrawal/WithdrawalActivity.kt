@@ -93,6 +93,7 @@ class WithdrawalActivity : AppCompatActivity() {
         dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
+                    initNetwork()
                     showWithdrawalFinishedDialog()
                 }
             }
@@ -112,5 +113,9 @@ class WithdrawalActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun initNetwork() {
+
     }
 }

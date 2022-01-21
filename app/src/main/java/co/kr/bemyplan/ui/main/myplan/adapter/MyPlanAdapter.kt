@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.main.myplan.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,7 @@ class MyPlanAdapter(val itemClick: (MyModel) -> Unit) :
     inner class ExistMyPlanViewHolder(private val binding: ItemMyPlanPurchaseListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: MyModel) {
+            Log.d("mlog: MyPlanAdapter", data.postId.toString())
             binding.model = data
             binding.root.setOnClickListener {
                 itemClick(data)

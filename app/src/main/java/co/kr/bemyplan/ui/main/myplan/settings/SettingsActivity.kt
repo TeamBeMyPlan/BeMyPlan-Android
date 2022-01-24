@@ -2,14 +2,12 @@ package co.kr.bemyplan.ui.main.myplan.settings
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
 import co.kr.bemyplan.ui.login.LoginActivity
-import co.kr.bemyplan.ui.main.MainActivity
 import co.kr.bemyplan.ui.main.myplan.settings.creator.CreatorProposeActivity
 import co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity
 import co.kr.bemyplan.util.CustomDialog
@@ -60,6 +58,7 @@ class SettingsActivity : AppCompatActivity() {
         dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
+                    AutoLoginData.clearStorage(this@SettingsActivity)
                     showLogoutFinishedDialog()
                 }
             }

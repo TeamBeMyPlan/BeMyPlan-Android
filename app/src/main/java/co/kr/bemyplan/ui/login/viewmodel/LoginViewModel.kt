@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.login.RequestLogin
+import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.data.entity.login.UserInfoModel
 import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
+import co.kr.bemyplan.data.entity.login.login.RequestLogin
+import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.kakao.sdk.user.UserApiClient
@@ -53,29 +55,23 @@ class LoginViewModel : ViewModel() {
     private val _signUpPermission = SingleLiveEvent<Boolean>()
     val signUpPermission: LiveData<Boolean> get() = _signUpPermission
 
-    // 로그인
-    private var _loginType = MutableLiveData<String>()
-    val loginType: LiveData<String> get() = _loginType
-
     private var _isMember = MutableLiveData<Boolean>()
     val isMember: LiveData<Boolean> get() = _isMember
 
     fun setSocialToken(token: String) {
         _socialToken.value = token
-        Log.d("mlog: LoginViewModel::socialToken.value", socialToken.value.toString())
     }
 
     fun setSocialType(type: String) {
         _socialType.value = type
-        Log.d("mlog: LoginViewModel::socialType.value", socialType.value.toString())
     }
 
-    fun postLogin() {
+    fun login() {
         val requestLogin = RequestLogin(socialToken.value.toString(), socialType.value.toString())
         viewModelScope.launch {
             try {
                 val response = loginRepositoryImpl.postLogin(requestLogin)
-                _userInfo.value = response.data.userInfo
+                _userInfo.value = response.data
                 _isUser.value = true
             } catch (e: retrofit2.HttpException) {
                 e.printStackTrace()
@@ -142,13 +138,6 @@ class LoginViewModel : ViewModel() {
                 Log.e("mlog: Throwable", t.message.toString())
             }
         }
-//        if (nickname.value.toString() == "test") {
-//            // 중복인 경우
-//            _isDuplicated.value = true
-//        } else {
-//            // 중복 아닌 경우
-//            _isDuplicated.value = false
-//        }
     }
 
     fun checkIsValid() {
@@ -159,6 +148,25 @@ class LoginViewModel : ViewModel() {
 
     fun clickSignUp() {
         checkIsDuplicated()
+    }
+
+    fun signUp() {
+        viewModelScope.launch {
+            try {
+                val response = loginRepositoryImpl.postSignUp(
+                    RequestSignUp(
+                        socialToken.value.toString(),
+                        socialType.value.toString(),
+                        nickname.value.toString()
+                    )
+                )
+                _userInfo.value = response.data
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: LoginViewModel::signUp()", e.message().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: LoginViewModel::signUp", t.message.toString())
+            }
+        }
     }
 
     companion object {

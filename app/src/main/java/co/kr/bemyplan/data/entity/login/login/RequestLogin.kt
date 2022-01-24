@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.entity.login
+package co.kr.bemyplan.data.entity.login.login
 
 import com.google.gson.annotations.SerializedName
 

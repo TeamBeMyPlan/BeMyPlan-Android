@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
 import co.kr.bemyplan.ui.main.MainActivity
@@ -35,6 +36,11 @@ class MyPlanFragment : Fragment() {
         initList()
         initSettingsButton()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.setNickname(AutoLoginData.getNickname(requireContext()))
     }
 
     private fun initList() {

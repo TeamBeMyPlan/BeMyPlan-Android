@@ -21,10 +21,10 @@ object AutoLoginData {
         return getSharedPreference(context).getString(NICKNAME, "") ?: ""
     }
 
-    fun setAutoLogin(context: Context, value: Boolean, access_token: String, nickname: String) {
+    fun setAutoLogin(context: Context, value: Boolean, accessToken: String, nickname: String) {
         getSharedPreference(context).edit()
             .putBoolean(AUTO_LOGIN, value)
-            .putString(ACCESS_TOKEN, access_token)
+            .putString(ACCESS_TOKEN, accessToken)
             .putString(NICKNAME, nickname)
             .apply()
     }
@@ -41,7 +41,7 @@ object AutoLoginData {
             .apply()
     }
 
-    fun getSharedPreference(context: Context): SharedPreferences {
+    private fun getSharedPreference(context: Context): SharedPreferences {
         return context.getSharedPreferences(STORAGE_KEY, Context.MODE_PRIVATE)
     }
 }

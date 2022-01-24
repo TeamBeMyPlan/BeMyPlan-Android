@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
@@ -28,8 +29,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             viewModel.setSocialType("KAKAO")
             Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
             Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
+            viewModel.login()
 
-            viewModel.postLogin()
+            viewModel.userInfo.observe(viewLifecycleOwner) {
+                AutoLoginData.setAutoLogin(requireContext(), true, it.accessToken, it.nickname)
+                startMainActivity()
+            }
+
             viewModel.isUser.observe(viewLifecycleOwner) {
                 when (it) {
                     true -> {

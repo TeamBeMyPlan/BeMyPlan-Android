@@ -53,10 +53,16 @@ class BeforeChargingViewModel : ViewModel() {
                 if (_isScraped.value != null) {
                     _isScraped.value = !_isScraped.value!!
                 }
-            } catch (e : retrofit2.HttpException) {
-                Log.e("mlog: BeforeChargingViewModel::postScrap error handling", e.code().toString())
+            } catch (e: retrofit2.HttpException) {
+                Log.e(
+                    "mlog: BeforeChargingViewModel::postScrap error handling",
+                    e.code().toString()
+                )
             } catch (t: Throwable) {
-                Log.e("mlog: BeforeChargingViewModel::postScrap error handling", t.message.toString())
+                Log.e(
+                    "mlog: BeforeChargingViewModel::postScrap error handling",
+                    t.message.toString()
+                )
             }
         }
     }

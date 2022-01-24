@@ -28,9 +28,6 @@ class LoginViewModel : ViewModel() {
     private var _isUser = SingleLiveEvent<Boolean>()
     val isUser: LiveData<Boolean> get() = _isUser
 
-//    private var _responseLogin = MutableLiveData<ResponseLogin>()
-//    val responseLogin: LiveData<ResponseLogin> get() = _responseLogin
-
     private var _isAllAgree = MutableLiveData<Boolean>(false)
     val isAllAgree: LiveData<Boolean> get() = _isAllAgree
 

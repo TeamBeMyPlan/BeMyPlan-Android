@@ -12,7 +12,10 @@ class ScrapAdapter(val itemClick: (ContentModel) -> Unit) :
     RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 
-    inner class ScrapViewHolder(val binding: ItemScrapContentBinding) :
+    class ScrapViewHolder(
+        private val binding: ItemScrapContentBinding,
+        private val itemClick: (ContentModel) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
             binding.model = contentModel
@@ -37,7 +40,7 @@ class ScrapAdapter(val itemClick: (ContentModel) -> Unit) :
             parent,
             false
         )
-        return ScrapViewHolder(binding)
+        return ScrapViewHolder(binding, itemClick)
     }
 
     override fun onBindViewHolder(holder: ScrapViewHolder, position: Int) {

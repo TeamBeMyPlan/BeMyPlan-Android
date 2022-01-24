@@ -1,6 +1,5 @@
 package co.kr.bemyplan.ui.main.scrap.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -9,11 +8,14 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapEmptyContentBinding
 
-class ScrapRecommendAdapter(val context: Context, val itemClick: (ContentModel) -> Unit) :
+class ScrapRecommendAdapter(private val itemClick: (ContentModel) -> Unit) :
     RecyclerView.Adapter<ScrapRecommendAdapter.ScrapRecommendViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 
-    inner class ScrapRecommendViewHolder(val binding: ItemScrapEmptyContentBinding) :
+    class ScrapRecommendViewHolder(
+        val binding: ItemScrapEmptyContentBinding,
+        private val itemClick: (ContentModel) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
             binding.model = contentModel
@@ -33,7 +35,7 @@ class ScrapRecommendAdapter(val context: Context, val itemClick: (ContentModel) 
             parent,
             false
         )
-        return ScrapRecommendViewHolder(binding)
+        return ScrapRecommendViewHolder(binding, itemClick)
     }
 
     override fun onBindViewHolder(holder: ScrapRecommendViewHolder, position: Int) {

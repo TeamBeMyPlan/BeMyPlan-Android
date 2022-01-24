@@ -18,7 +18,7 @@ class ListViewModel : ViewModel() {
     private var page = 0
     private var pageSize = 10
 
-    private var _sort = MutableLiveData<String>(CREATED_AT)
+    private var _sort = MutableLiveData<String>("created_at")
     val sort: LiveData<String> get() = _sort
 
     private var _newList = MutableLiveData<List<ContentModel>>()
@@ -41,15 +41,9 @@ class ListViewModel : ViewModel() {
 
     fun setSort(sortType: Int) {
         when (sortType) {
-            0 -> {
-                _sort.value = "created_at"
-            }
-            1 -> {
-                _sort.value = "order_count"
-            }
-            2 -> {
-                _sort.value = "price"
-            }
+            0 -> _sort.value = "created_at"
+            1 -> _sort.value = "order_count"
+            2 -> _sort.value = "price"
             else -> _sort.value = ""
         }
         Log.d("mlog: sort", sort.value.toString())
@@ -59,12 +53,7 @@ class ListViewModel : ViewModel() {
         val newListRepositoryImpl = NewListRepositoryImpl()
         viewModelScope.launch {
             try {
-                // TODO
                 val response = newListRepositoryImpl.getNewList(page, pageSize)
-                Log.d(
-                    "mlog: ListViewModel.response.data.item.size",
-                    response.data.items.size.toString()
-                )
                 _newList.value = response.data.items
                 Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {
@@ -79,7 +68,6 @@ class ListViewModel : ViewModel() {
         val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
             try {
-                // TODO
                 val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
                 _suggestList.value = response.data.items
                 Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
@@ -105,6 +93,8 @@ class ListViewModel : ViewModel() {
                 Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {
                 Log.e("mlog: ListViewModel::getLocation error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getLocationList error handling", t.message.toString())
             }
         }
     }
@@ -123,6 +113,8 @@ class ListViewModel : ViewModel() {
                 Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {
                 Log.e("mlog: ListViewModel::getUserPostList error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getUserPostList error handling", t.message.toString())
             }
         }
     }
@@ -141,6 +133,8 @@ class ListViewModel : ViewModel() {
                 Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {
                 Log.e("mlog: ListViewModel::getScrapList error handling", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: ListViewModel::getScrapList error handling", t.message.toString())
             }
         }
     }
@@ -158,11 +152,5 @@ class ListViewModel : ViewModel() {
                 Log.e("mlog: ListViewModel::getEmptyScrapList error handling", t.message.toString())
             }
         }
-    }
-
-    companion object {
-        const val CREATED_AT = "created_at"
-        const val BEST_SELLER = "best_seller"
-        const val BEST_SCRAPPER = "best_scrapper"
     }
 }

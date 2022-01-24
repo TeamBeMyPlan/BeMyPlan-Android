@@ -1,9 +1,11 @@
 package co.kr.bemyplan.data.api
 
-import co.kr.bemyplan.data.entity.login.RequestLogin
-import co.kr.bemyplan.data.entity.login.ResponseLogin
+import co.kr.bemyplan.data.entity.login.login.RequestLogin
+import co.kr.bemyplan.data.entity.login.login.ResponseLogin
 import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.check.ResponseDuplicatedNickname
+import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
+import co.kr.bemyplan.data.entity.login.signup.ResponseSignUp
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -17,4 +19,9 @@ interface LoginService {
     suspend fun postDuplicatedNickname(
         @Body body: RequestDuplicatedNickname
     ): ResponseDuplicatedNickname
+
+    @POST("api/v1/auth/signup")
+    suspend fun postSignUp(
+        @Body body: RequestSignUp
+    ): ResponseSignUp
 }

@@ -30,18 +30,20 @@ class SignUpFragment : Fragment() {
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_sign_up, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-
-        observeNickname()
-        showSignUpDialog()
-        clickExit()
-        closeKeyboard()
-
         return binding.root
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeNickname()
+        showSignUpDialog()
+        clickExit()
+        closeKeyboard()
     }
 
     private fun observeNickname() {

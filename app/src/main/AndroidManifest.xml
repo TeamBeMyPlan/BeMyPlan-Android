@@ -29,7 +29,7 @@
             android:name=".ui.main.myplan.settings.creator.CreatorProposeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.purchase.PurchaseActivity"
+            android:name=".ui.purchase.before.PurchaseActivity"
             android:exported="false" />
         <activity
             android:name=".ui.main.myplan.settings.withdrawal.WithdrawalActivity"

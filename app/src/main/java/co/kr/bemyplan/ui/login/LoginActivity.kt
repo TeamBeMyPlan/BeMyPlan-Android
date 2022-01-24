@@ -15,9 +15,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-
-        var keyHash = Utility.getKeyHash(this)
-        Log.d("keyHash", keyHash.toString())
     }
 
     override fun onBackPressed() {

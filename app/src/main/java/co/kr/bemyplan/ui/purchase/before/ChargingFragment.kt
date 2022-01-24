@@ -24,18 +24,42 @@ class ChargingFragment : Fragment() {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_charging, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        clickKakaoPay()
+        clickToss()
+        clickNaverPay()
+        clickPay()
+        clickBack()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    private fun clickKakaoPay() {
         binding.tvKakaopay.setOnClickListener{
             viewModel.selectPay(BeforeChargingViewModel.Pay.KAKAO)
         }
+    }
+
+    private fun clickToss() {
         binding.tvToss.setOnClickListener{
             viewModel.selectPay(BeforeChargingViewModel.Pay.TOSS)
         }
+    }
+
+    private fun clickNaverPay() {
         binding.tvNaverpay.setOnClickListener{
             viewModel.selectPay(BeforeChargingViewModel.Pay.NAVER)
         }
+    }
 
-
+    private fun clickPay() {
         binding.tvPayBtn.setOnClickListener {
             val chargedFragment = ChargedFragment()
             val transaction = parentFragmentManager.beginTransaction()
@@ -46,19 +70,14 @@ class ChargingFragment : Fragment() {
             transaction.remove(chargingFragment)
             transaction.commit()
         }
+    }
 
+    private fun clickBack() {
         binding.ivBackBtn.setOnClickListener {
             activity?.supportFragmentManager
                 ?.beginTransaction()
                 ?.remove(this)
                 ?.commit()
         }
-
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 }

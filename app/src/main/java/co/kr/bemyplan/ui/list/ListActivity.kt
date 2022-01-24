@@ -12,7 +12,7 @@ import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
-import co.kr.bemyplan.ui.purchase.PurchaseActivity
+import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 
@@ -37,7 +37,6 @@ class ListActivity : AppCompatActivity() {
         authorNickname = intent.getStringExtra("authorNickname") ?: ""
         Log.d("mlog: ListActivity.userId", userId.toString())
         Log.d("mlog: ListActivity.userId", authorNickname.toString())
-//        authorId = intent.getStringExtra("authorId") ?: ""
         initList(from)
         initRecyclerView()
         clickBack()

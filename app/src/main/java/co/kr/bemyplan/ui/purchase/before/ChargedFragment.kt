@@ -2,7 +2,6 @@ package co.kr.bemyplan.ui.purchase.before
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,31 +24,38 @@ class ChargedFragment : Fragment() {
         _binding = FragmentChargedBinding.inflate(layoutInflater)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-
-        val intent = Intent(activity, AfterPurchaseActivity::class.java)
-
-        binding.ivClearBtn.setOnClickListener {
-            requireActivity().finish()
-        }
-        binding.tvGotoContentBtn.setOnClickListener {
-            intent.putExtra("postId", viewModel.postId)
-            startActivity(intent)
-            requireActivity().finish()
-        }
-
-
-        binding.tvContentTitle.post(Runnable {
-
-            val lineCount: Int = binding.tvContentTitle.lineCount
-            Log.d("yongmin", "$lineCount")
-            Log.d("yongmin", binding.tvContentTitle.text.toString())
-        })
-
         return binding.root
+//        무슨 코드인지 몰라서 일단 주석처리
+//        binding.tvContentTitle.post(Runnable {
+//            val lineCount: Int = binding.tvContentTitle.lineCount
+//            Log.d("yongmin", "$lineCount")
+//            Log.d("yongmin", binding.tvContentTitle.text.toString())
+//        })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        clickExit()
+        clickGoToContent()
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun clickExit() {
+        binding.ivClearBtn.setOnClickListener {
+            requireActivity().finish()
+        }
+    }
+
+    private fun clickGoToContent() {
+        val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
+        binding.tvGotoContentBtn.setOnClickListener {
+            intent.putExtra("postId", viewModel.postId)
+            startActivity(intent)
+            requireActivity().finish()
+        }
     }
 }

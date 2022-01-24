@@ -14,7 +14,7 @@ import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.FragmentNotEmptyScrapBinding
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
-import co.kr.bemyplan.ui.purchase.PurchaseActivity
+import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 
@@ -31,10 +31,14 @@ class NotEmptyScrapFragment : Fragment() {
     ): View? {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_not_empty_scrap, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initList()
         reloadList()
         openBottomSheetDialog()
-        return binding.root
     }
 
     override fun onDestroyView() {
@@ -48,8 +52,6 @@ class NotEmptyScrapFragment : Fragment() {
             initRecyclerView()
             Log.d("mlog: NotEmptyScrapFragment.initList", "execute")
         }
-//        listItem = viewModel.scrapList.value!!
-//        initRecyclerView()
     }
 
     private fun reloadList() {

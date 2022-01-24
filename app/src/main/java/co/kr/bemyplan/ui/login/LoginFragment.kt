@@ -22,6 +22,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
+
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
             Log.d("mlog: kakaoLogin", "카카오계정 로그인 실패")
@@ -54,12 +55,14 @@ class LoginFragment : Fragment() {
     ): View? {
         _binding =
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         clickGuestLogin()
         clickKakaoLogin()
         clickGoogleLogin()
-
-        return binding.root
     }
 
     override fun onDestroyView() {
@@ -69,15 +72,19 @@ class LoginFragment : Fragment() {
 
     private fun clickGuestLogin() {
         binding.tvGuestLogin.setOnClickListener {
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
+            startMainActivity()
         }
     }
 
     private fun clickKakaoLogin() {
         binding.layoutKakao.setOnClickListener {
             getKakaoToken()
+        }
+    }
+
+    private fun clickGoogleLogin() {
+        binding.layoutGoogle.setOnClickListener {
+            startSignUpFragment()
         }
     }
 
@@ -94,12 +101,6 @@ class LoginFragment : Fragment() {
                 requireContext(),
                 callback = kakaoLoginCallback
             )
-        }
-    }
-
-    private fun clickGoogleLogin() {
-        binding.layoutGoogle.setOnClickListener {
-            startSignUpFragment()
         }
     }
 

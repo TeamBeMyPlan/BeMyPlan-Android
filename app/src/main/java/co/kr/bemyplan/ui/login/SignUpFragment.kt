@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.databinding.FragmentSignUpBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
@@ -64,10 +65,19 @@ class SignUpFragment : Fragment() {
                     if (num == 1) {
                         // socialToken, loginType, nickname을 서버에 넘겨주는 코드 작성하는 부분
                         Log.d("mlog: nickname.value", viewModel.nickname.value.toString())
-                        Log.d("mlog: loginType.value", viewModel.loginType.value.toString())
-                        val intent = Intent(requireContext(), MainActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
+                        Log.d("mlog: socialType.value", viewModel.socialType.value.toString())
+
+                        viewModel.userInfo.observe(viewLifecycleOwner) {
+                            AutoLoginData.setAutoLogin(
+                                requireContext(),
+                                true,
+                                it.accessToken,
+                                it.nickname
+                            )
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                            requireActivity().finish()
+                        }
                     }
                 }
             })

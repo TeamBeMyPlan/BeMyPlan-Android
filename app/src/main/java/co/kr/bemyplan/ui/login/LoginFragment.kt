@@ -3,23 +3,18 @@ package co.kr.bemyplan.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentLoginBinding
+import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 
 
-class LoginFragment : Fragment() {
-    private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
+class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
 
@@ -49,25 +44,11 @@ class LoginFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding =
-            DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         clickGuestLogin()
         clickKakaoLogin()
         clickGoogleLogin()
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 
     private fun clickGuestLogin() {

@@ -27,7 +27,7 @@ class SplashActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             val fadeAnim : Animation = AnimationUtils.loadAnimation(this, R.anim.splash_animation)
             binding.imageView.startAnimation(fadeAnim)
-//            checkAutoLogin()
+            checkAutoLogin()
         }, 1500L)
 
         setContentView(binding.root)

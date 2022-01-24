@@ -22,8 +22,12 @@ class ScrapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_scrap, container, false)
-        initFragmentContainerView()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initFragmentContainerView()
     }
 
     override fun onDestroyView() {

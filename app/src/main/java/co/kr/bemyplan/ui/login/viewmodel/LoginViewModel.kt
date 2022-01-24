@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.UserInfoModel
+import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.kakao.sdk.user.UserApiClient
@@ -14,6 +15,10 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 
 class LoginViewModel : ViewModel() {
+    // 카카오로그인
+    private val userApiClient = UserApiClient.instance
+    private val loginRepositoryImpl = LoginRepositoryImpl()
+
     var nickname = MutableLiveData<String>("")
 
     private var _socialToken = MutableLiveData<String>()
@@ -55,9 +60,6 @@ class LoginViewModel : ViewModel() {
     private var _isMember = MutableLiveData<Boolean>()
     val isMember: LiveData<Boolean> get() = _isMember
 
-    // 카카오로그인
-    private val userApiClient = UserApiClient.instance
-
     fun setSocialToken(token: String) {
         _socialToken.value = token
         Log.d("mlog: LoginViewModel::socialToken.value", socialToken.value.toString())
@@ -70,7 +72,6 @@ class LoginViewModel : ViewModel() {
 
     fun postLogin() {
         val requestLogin = RequestLogin(socialToken.value.toString(), socialType.value.toString())
-        val loginRepositoryImpl = LoginRepositoryImpl()
         viewModelScope.launch {
             try {
                 val response = loginRepositoryImpl.postLogin(requestLogin)
@@ -125,13 +126,29 @@ class LoginViewModel : ViewModel() {
     }
 
     fun checkIsDuplicated() {
-        if (nickname.value.toString() == "test") {
-            // 중복인 경우
-            _isDuplicated.value = true
-        } else {
-            // 중복 아닌 경우
-            _isDuplicated.value = false
+        viewModelScope.launch {
+            try {
+                val response =
+                    loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+                _isDuplicated.value = response.data.duplicated
+                Log.d("mlog: LoginViewModel::isDuplicated.value", isDuplicated.value.toString())
+
+                if (!isDuplicated.value!! && isValid.value!!) {
+                    _signUpPermission.call()
+                }
+            } catch (e: retrofit2.HttpException) {
+                Log.e("mlog: HttpException", e.code().toString())
+            } catch (t: Throwable) {
+                Log.e("mlog: Throwable", t.message.toString())
+            }
         }
+//        if (nickname.value.toString() == "test") {
+//            // 중복인 경우
+//            _isDuplicated.value = true
+//        } else {
+//            // 중복 아닌 경우
+//            _isDuplicated.value = false
+//        }
     }
 
     fun checkIsValid() {
@@ -142,11 +159,6 @@ class LoginViewModel : ViewModel() {
 
     fun clickSignUp() {
         checkIsDuplicated()
-
-        Log.d("mlog: isDuplicated.value", isDuplicated.value.toString())
-        if (!isDuplicated.value!! && isValid.value!!) {
-            _signUpPermission.call()
-        }
     }
 
     companion object {

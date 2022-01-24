@@ -37,7 +37,6 @@ class ListActivity : AppCompatActivity() {
         authorNickname = intent.getStringExtra("authorNickname") ?: ""
         Log.d("mlog: ListActivity.userId", userId.toString())
         Log.d("mlog: ListActivity.userId", authorNickname.toString())
-//        authorId = intent.getStringExtra("authorId") ?: ""
         initList(from)
         initRecyclerView()
         clickBack()

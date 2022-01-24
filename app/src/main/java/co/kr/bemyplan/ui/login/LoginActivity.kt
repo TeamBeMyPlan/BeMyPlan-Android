@@ -1,22 +1,11 @@
 package co.kr.bemyplan.ui.login
 
-import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityLoginBinding
+import co.kr.bemyplan.ui.base.BaseActivity
 import co.kr.bemyplan.util.CustomDialog
-import com.kakao.util.maps.helper.Utility
 
-class LoginActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityLoginBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-    }
-
+class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentByTag("signUpFragment")
         if(fragment != null && fragment.isVisible) {

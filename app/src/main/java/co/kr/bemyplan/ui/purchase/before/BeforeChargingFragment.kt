@@ -32,28 +32,27 @@ class BeforeChargingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
+    }
 
-        Log.d("mlog: postId", viewModel.postId.toString())
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initList()
         initRecyclerView()
         initNestedScrollView()
         clickBack()
         clickScrap()
         clickNickname()
+        clickPurchase()
         showExample()
+    }
 
-        binding.layoutPurchase.setOnClickListener{
-            val chargingFragment = ChargingFragment()
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.add(R.id.fragment_container_charging, chargingFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-        return binding.root
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     private fun initList() {
@@ -175,8 +174,13 @@ class BeforeChargingFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+    private fun clickPurchase() {
+        binding.layoutPurchase.setOnClickListener{
+            val chargingFragment = ChargingFragment()
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.add(R.id.fragment_container_charging, chargingFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
     }
 }

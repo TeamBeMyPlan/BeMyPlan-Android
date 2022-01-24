@@ -25,13 +25,22 @@ class SortFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.dialog_sort, container, false)
+        Log.d("mlog: SortFragment에서의 sort", viewModel.sort.value.toString())
+        Log.d("mlog: requireActivity() 의 클래스명", requireActivity().localClassName)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initDialog()
         clickLatest()
         clickBestSeller()
         clickBestScrapper()
-        Log.d("mlog: SortFragment에서의 sort", viewModel.sort.value.toString())
-        Log.d("mlog: requireActivity() 의 클래스명", requireActivity().localClassName)
-        return binding.root
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     private fun initDialog() {

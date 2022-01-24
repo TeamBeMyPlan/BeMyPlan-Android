@@ -14,7 +14,7 @@ import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.FragmentNotEmptyScrapBinding
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
-import co.kr.bemyplan.ui.purchase.PurchaseActivity
+import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 

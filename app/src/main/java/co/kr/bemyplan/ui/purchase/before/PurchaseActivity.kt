@@ -1,4 +1,4 @@
-package co.kr.bemyplan.ui.purchase
+package co.kr.bemyplan.ui.purchase.before
 
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +20,6 @@ class PurchaseActivity : AppCompatActivity() {
         viewModel.setPostId(postId)
         viewModel.setIsScraped(isScraped)
         binding = ActivityPurchaseBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
     }
 }

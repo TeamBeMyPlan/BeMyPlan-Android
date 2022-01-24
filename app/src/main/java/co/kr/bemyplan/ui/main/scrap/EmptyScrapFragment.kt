@@ -13,7 +13,7 @@ import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.FragmentEmptyScrapBinding
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapRecommendAdapter
-import co.kr.bemyplan.ui.purchase.PurchaseActivity
+import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 
 class EmptyScrapFragment : Fragment() {
     private var _binding: FragmentEmptyScrapBinding? = null

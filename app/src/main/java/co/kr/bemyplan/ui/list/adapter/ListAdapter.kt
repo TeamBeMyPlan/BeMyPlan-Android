@@ -13,7 +13,10 @@ class ListAdapter(val itemClick: (ContentModel) -> Unit) :
     RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 
-    inner class ListViewHolder(private val binding: ItemListContentBinding) :
+    class ListViewHolder(
+        private val binding: ItemListContentBinding,
+        private val itemClick: (ContentModel) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
             binding.model = contentModel
@@ -43,7 +46,7 @@ class ListAdapter(val itemClick: (ContentModel) -> Unit) :
             parent,
             false
         )
-        return ListViewHolder(binding)
+        return ListViewHolder(binding, itemClick)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {

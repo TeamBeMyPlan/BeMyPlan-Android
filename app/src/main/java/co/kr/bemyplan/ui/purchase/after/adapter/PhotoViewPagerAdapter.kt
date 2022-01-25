@@ -9,7 +9,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemAfterPurchasePhotoBinding
 import co.kr.bemyplan.util.clipTo
 
-class PhotoViewPagerAdapter(val photoUrl: (String) -> Unit): RecyclerView.Adapter<PhotoViewPagerAdapter.PagerViewHolder>() {
+class PhotoViewPagerAdapter: RecyclerView.Adapter<PhotoViewPagerAdapter.PagerViewHolder>() {
     private var photoList = listOf<String>()
 
     override fun onCreateViewHolder(
@@ -17,7 +17,7 @@ class PhotoViewPagerAdapter(val photoUrl: (String) -> Unit): RecyclerView.Adapte
         viewType: Int
     ): PagerViewHolder {
         val binding: ItemAfterPurchasePhotoBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_after_purchase_photo, parent, false)
-        return PagerViewHolder(binding, photoUrl)
+        return PagerViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
@@ -32,7 +32,7 @@ class PhotoViewPagerAdapter(val photoUrl: (String) -> Unit): RecyclerView.Adapte
         notifyDataSetChanged()
     }
 
-    class PagerViewHolder(private val binding: ItemAfterPurchasePhotoBinding, private val photoUrl: (String) -> Unit):RecyclerView.ViewHolder(binding.root) {
+    inner class PagerViewHolder(private val binding: ItemAfterPurchasePhotoBinding):RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: String) {
             binding.photo = data
             clipTo(binding.ivPhoto, data)

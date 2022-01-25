@@ -1,9 +1,7 @@
 package co.kr.bemyplan.ui.purchase.after
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
-import co.kr.bemyplan.ui.purchase.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 
 class DailyContentsFragment(private val spotList: List<Spot>) : Fragment() {

@@ -11,6 +11,15 @@ class ImageViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityImageViewBinding.inflate(layoutInflater)
+        binding.photo = intent.getStringExtra("photoUrl")
+        initBackButton()
+
         setContentView(binding.root)
+    }
+
+    private fun initBackButton() {
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
     }
 }

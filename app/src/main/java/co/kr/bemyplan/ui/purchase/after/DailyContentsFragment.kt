@@ -29,8 +29,16 @@ class DailyContentsFragment(private val spotList: List<Spot>) : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initAdapter() {
-        contentsAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_CONTENTS)
-        routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE)
+        contentsAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_CONTENTS, photoUrl = { photoUrl: String ->
+            val intent = Intent(requireContext(), ImageViewActivity::class.java)
+            intent.putExtra("photoUrl", photoUrl)
+            requireActivity().startActivity(intent)
+        })
+        routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE, photoUrl = { photoUrl: String ->
+            val intent = Intent(requireContext(), ImageViewActivity::class.java)
+            intent.putExtra("photoUrl", photoUrl)
+            startActivity(intent)
+        })
 
         contentsAdapter.setItems(spotList)
         binding.rvDailyContents.adapter = contentsAdapter

@@ -19,7 +19,7 @@ import co.kr.bemyplan.databinding.ItemDailyRouteBinding
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
 
-class DailyContentsAdapter(private val viewType: Int, val photoUrl: (String) -> Unit) :
+class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
@@ -87,7 +87,7 @@ class DailyContentsAdapter(private val viewType: Int, val photoUrl: (String) -> 
     class ContentsViewHolder(
         private val binding: ItemDailyContentsBinding,
         private val mContext: Context,
-        private val photoUrl: (String) -> Unit
+        private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
         override fun onBind(data: Spot, nextSpot: String) {

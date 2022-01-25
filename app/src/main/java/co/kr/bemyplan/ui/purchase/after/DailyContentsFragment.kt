@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.purchase.after
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -34,11 +35,7 @@ class DailyContentsFragment(private val spotList: List<Spot>) : Fragment() {
             intent.putExtra("photoUrl", photoUrl)
             requireActivity().startActivity(intent)
         })
-        routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE, photoUrl = { photoUrl: String ->
-            val intent = Intent(requireContext(), ImageViewActivity::class.java)
-            intent.putExtra("photoUrl", photoUrl)
-            startActivity(intent)
-        })
+        routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE)
 
         contentsAdapter.setItems(spotList)
         binding.rvDailyContents.adapter = contentsAdapter

@@ -9,7 +9,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemAfterPurchasePhotoBinding
 import co.kr.bemyplan.util.clipTo
 
-class PhotoViewPagerAdapter: RecyclerView.Adapter<PhotoViewPagerAdapter.PagerViewHolder>() {
+class PhotoViewPagerAdapter(val photoUrl: ((String) -> Unit)?): RecyclerView.Adapter<PhotoViewPagerAdapter.PagerViewHolder>() {
     private var photoList = listOf<String>()
 
     override fun onCreateViewHolder(
@@ -38,7 +38,7 @@ class PhotoViewPagerAdapter: RecyclerView.Adapter<PhotoViewPagerAdapter.PagerVie
             clipTo(binding.ivPhoto, data)
 
             binding.ivPhoto.setOnClickListener {
-                photoUrl.invoke(data)
+                photoUrl?.invoke(data)
             }
         }
     }

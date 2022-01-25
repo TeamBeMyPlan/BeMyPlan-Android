@@ -89,4 +89,7 @@ dependencies {
     // Coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+
+    // nested scroll view
+    implementation 'com.github.henkhenken:StickyScrollView:1.1.2'
 }

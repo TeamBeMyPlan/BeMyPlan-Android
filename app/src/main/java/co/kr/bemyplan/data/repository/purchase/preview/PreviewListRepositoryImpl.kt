@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.repository.list.preview
+package co.kr.bemyplan.data.repository.purchase.preview
 
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.purchase.before.ResponsePreviewList

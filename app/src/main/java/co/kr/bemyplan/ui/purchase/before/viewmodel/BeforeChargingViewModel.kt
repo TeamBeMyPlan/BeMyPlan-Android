@@ -7,13 +7,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
-import co.kr.bemyplan.data.repository.list.preview.PreviewInfoRepositoryImpl
-import co.kr.bemyplan.data.repository.list.preview.PreviewListRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.preview.PreviewInfoRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.preview.PreviewListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class BeforeChargingViewModel : ViewModel() {
+// 우선,
+// PreviewInfoRepositoryImpl 만 Hilt 적용 해보기
+@HiltViewModel
+class BeforeChargingViewModel @Inject constructor(
+    private val previewInfoRepositoryImpl: PreviewInfoRepositoryImpl
+) : ViewModel() {
 
     enum class Pay(val brand: String) {
         NAVER("네이버페이"), KAKAO("카카오페이"), TOSS("토스"), NULL("null")
@@ -28,7 +34,6 @@ class BeforeChargingViewModel : ViewModel() {
 
     val payWay: LiveData<Pay> get() = _payWay
 
-    private val previewInfoRepositoryImpl = PreviewInfoRepositoryImpl()
     private val previewListRepositoryImpl = PreviewListRepositoryImpl()
 
     private var _previewInfor = MutableLiveData<PreviewInfoModel>()

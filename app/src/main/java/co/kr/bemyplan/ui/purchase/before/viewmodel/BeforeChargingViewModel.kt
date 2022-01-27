@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
-import co.kr.bemyplan.data.repository.list.preview.PreviewInfoRepositoryImpl
-import co.kr.bemyplan.data.repository.list.preview.PreviewListRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.preview.PreviewInfoRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.preview.PreviewListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

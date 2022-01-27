@@ -6,7 +6,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.databinding.ActivityPurchaseBinding
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PurchaseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPurchaseBinding
     private val viewModel by viewModels<BeforeChargingViewModel>()

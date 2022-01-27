@@ -20,7 +20,9 @@ import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BeforeChargingFragment : Fragment() {
     private var _binding: FragmentBeforeChargingBinding? = null
     private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")

@@ -17,7 +17,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:paddingHorizontal="24dp"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -64,7 +64,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <me.didik.component.StickyNestedScrollView
             android:id="@+id/sv_daily_contents"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -118,6 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginStart="24dp"
                     android:maxEms="15"
                     android:maxLines="2"
                     tools:text="감성을 느낄 수 있는 힐링 여행"
@@ -125,8 +126,8 @@
                     android:textColor="@color/grey_313740"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="@id/map_view"
-                    app:layout_constraintTop_toBottomOf="@id/cl_writer" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cl_writer"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/map_view"
@@ -134,15 +135,17 @@
                     android:layout_height="240dp"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="20dp"
-                    app:layout_constraintTop_toBottomOf="@id/tv_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_title"/>
 
                 <HorizontalScrollView
                     android:id="@+id/sv_days"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
+                    android:paddingHorizontal="24dp"
                     android:layout_marginTop="20dp"
                     android:scrollbars="none"
+                    android:background="@color/white"
+                    android:tag="sticky"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/map_view">
@@ -165,7 +168,7 @@
                     app:layout_constraintTop_toBottomOf="@id/sv_days" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+        </me.didik.component.StickyNestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

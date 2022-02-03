@@ -91,6 +91,9 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
+    // nested scroll view
+    implementation 'com.github.didikk:sticky-nestedscrollview:1.0.1'
+
     // Hilt
     implementation 'com.google.dagger:hilt-android:2.40'
     kapt 'com.google.dagger:hilt-android-compiler:2.40'

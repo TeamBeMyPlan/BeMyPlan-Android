@@ -91,5 +91,5 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
     // nested scroll view
-    implementation 'com.github.henkhenken:StickyScrollView:1.1.2'
+    implementation 'com.github.didikk:sticky-nestedscrollview:1.0.1'
 }

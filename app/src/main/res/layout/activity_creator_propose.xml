@@ -300,4 +300,18 @@
         android:textColor="@color/grey_313740"
         app:layout_constraintTop_toBottomOf="@id/tv_context"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_propose_button"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginHorizontal="24dp"
+        android:gravity="center"
+        android:text="신청하기"
+        android:fontFamily="@font/spoqa_han_sans_neo_bold"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:background="@drawable/rectangle_blue_radius_5"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

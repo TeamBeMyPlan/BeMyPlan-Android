@@ -20,7 +20,6 @@
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/rectangle_radius_5"
-            android:clickable="@{locationItem.activated ? false : true}"
             app:circularflow_radiusInDP="15"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"

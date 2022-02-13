@@ -1,14 +1,14 @@
 package co.kr.bemyplan.ui.main.location
 
-import android.content.Intent
 import android.util.Log
-import android.view.View
+import android.view.LayoutInflater
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.main.location.ResponseLocationData
-import co.kr.bemyplan.ui.list.ListActivity
+import co.kr.bemyplan.databinding.ActivityMainBinding
+import co.kr.bemyplan.databinding.ItemLocationBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,6 +16,7 @@ import retrofit2.Response
 class LocationViewModel:ViewModel() {
     private val _location = MutableLiveData<List<ResponseLocationData.LocationData>>()
     val location : LiveData<List<ResponseLocationData.LocationData>> get() = _location
+    //private val binding = ItemLocationBinding.inflate(LayoutInflater.from(A))
 
     fun initLocationNetwork(){
         val call : Call<ResponseLocationData> = ApiService.locationService.getLocationData()

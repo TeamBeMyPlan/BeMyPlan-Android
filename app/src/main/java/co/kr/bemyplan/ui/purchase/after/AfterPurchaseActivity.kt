@@ -69,21 +69,25 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // 카카오맵 초기화
         initMap()
 
+        // 더미데이터, 진짜데이터 구분
+        checkData(postId)
+
         // Observer
         viewModel.post.observe(this) {
+            // fragment 생성
+            initFragment(0)
             // 마커 생성
             initMarker(it.spots)
             // 일자별 버튼 생성
             initChips(it.spots)
+            // user 버튼 생성
+            binding.clWriter.setOnClickListener{ _ -> initUserButton(it) }
         }
 
-        // 더미데이터, 진짜데이터 구분
-        checkData(postId)
-
         // back button
-        initBackButton()
+        binding.ivBack.setOnClickListener { finish() }
         // 스크롤뷰 설정
-        initNestedScrollView()
+        binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ -> setTopTitle() })
 
         setContentView(binding.root)
     }
@@ -102,63 +106,21 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun initNetwork(postId: Int) {
-        val call = ApiService.afterPostService.getPost(postId)
-        call.enqueue(object : Callback<ResponseAfterPost> {
-            override fun onResponse(
-                call: Call<ResponseAfterPost>,
-                response: Response<ResponseAfterPost>
-            ) {
-                if (response.isSuccessful) {
-                    val data = response.body()?.data
-                    data?.let {
-                        binding.post = it
-                        // 마커 생성
-                        initMarker(it.spots)
-                        // 일차별 버튼
-                        initChips(it.spots)
-                    }
-                    // kakaomap 터치 이벤트
-                    initTouchListener()
-                    // fragment 보이기
-                    initFragment(0)
-                    // user button
-                    initUserButton(data)
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseAfterPost>, t: Throwable) {
-                Log.d("NetworkTest", "error: $t")
-            }
-        })
-    }
-
     private fun initFragment(index: Int) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val fragment = DailyContentsFragment(binding.post!!.spots[index])
-        fragmentTransaction.replace(R.id.fcv_daily_context, fragment)
-        fragmentTransaction.commit()
+        val fragment = DailyContentsFragment(binding.viewModel!!.post.value!!.spots[index])
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fcv_daily_context, fragment).commit()
     }
 
     private fun initUserButton(data: Post?) {
-        binding.clWriter.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            intent.putExtra("from", "user")
-            intent.putExtra("userId", data?.authorId)
-            intent.putExtra("authorNickname", data?.author)
-            startActivity(intent)
-            finish()
-        }
+        val intent = Intent(this, ListActivity::class.java)
+        intent.putExtra("from", "user")
+        intent.putExtra("userId", data?.authorId)
+        intent.putExtra("authorNickname", data?.author)
+        startActivity(intent)
+        finish()
     }
 
-    private fun initBackButton() {
-        binding.ivBack.setOnClickListener {
-            finish()
-        }
-    }
-
-    @SuppressLint("ResourceType")
     private fun initChips(data: List<List<Spot>>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
         for (i in data.indices) {
@@ -191,12 +153,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun initNestedScrollView() {
-        binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ ->
-            setTopTitle()
-        })
-    }
-
     private fun setTopTitle() {
         val rect = Rect()
         binding.svDailyContents.getHitRect(rect)
@@ -205,7 +161,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             binding.tvTopTitle.visibility = View.INVISIBLE
         } else {
             // view가 안 보이는 경우
-            binding.tvTopTitle.visibility = View.VISIBLE
+            binding.tvTitle.visibility = View.VISIBLE
         }
     }
 
@@ -231,7 +187,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             var sumLatitude = 0.0
             var sumLongitude = 0.0
 
-            var markerList = mutableListOf<MapPOIItem>()
+            val markerList = mutableListOf<MapPOIItem>()
 
             for (j in data[i].indices) {
                 val marker = MapPOIItem()

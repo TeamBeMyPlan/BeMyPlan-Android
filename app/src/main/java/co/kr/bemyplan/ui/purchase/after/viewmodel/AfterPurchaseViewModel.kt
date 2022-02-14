@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
+import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,6 +19,11 @@ class AfterPurchaseViewModel: ViewModel() {
     private var _post = MutableLiveData<Post>()
     val post: LiveData<Post>
         get() = _post
+
+    // spot
+    private var _spot = MutableLiveData<Spot>()
+    val spot: LiveData<Spot>
+        get() = spot
 
     fun initNetwork(postId: Int) {
         val call = ApiService.afterPostService.getPost(postId)
@@ -31,8 +37,6 @@ class AfterPurchaseViewModel: ViewModel() {
                     data?.let {
                         _post.value = it
                     }
-                    // user button
-                    initUserButton(data)
                 }
             }
 
@@ -49,18 +53,14 @@ class AfterPurchaseViewModel: ViewModel() {
     }
 
     init {
-        Log.i("GameViewModel", "GameViewModel created!")
-        nextWord()
+        Log.i("ViewModel", "ViewModel created!")
+    }
+
+    fun setSpot(index: Int) {
+//        _spot.value = post.value.spots[index]
     }
 
     override fun onCleared() {
         super.onCleared()
-    }
-
-    private fun nextWord() {
-        //Select and remove a word from the list
-        if (!wordList.isEmpty()) {
-            word = wordList.removeAt(0)
-        }
     }
 }

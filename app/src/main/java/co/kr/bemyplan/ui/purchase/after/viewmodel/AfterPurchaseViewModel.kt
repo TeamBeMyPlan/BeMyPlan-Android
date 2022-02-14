@@ -20,10 +20,10 @@ class AfterPurchaseViewModel: ViewModel() {
     val post: LiveData<Post>
         get() = _post
 
-    // spot
-    private var _spot = MutableLiveData<Spot>()
-    val spot: LiveData<Spot>
-        get() = spot
+    // 일차별 spot
+    private var _dailySpots = MutableLiveData<List<Spot>>()
+    val dailySpots: LiveData<List<Spot>>
+        get() = _dailySpots
 
     fun initNetwork(postId: Int) {
         val call = ApiService.afterPostService.getPost(postId)
@@ -56,8 +56,8 @@ class AfterPurchaseViewModel: ViewModel() {
         Log.i("ViewModel", "ViewModel created!")
     }
 
-    fun setSpot(index: Int) {
-//        _spot.value = post.value.spots[index]
+    fun setDailySpot(dailySpots: List<Spot>) {
+        _dailySpots.value = dailySpots
     }
 
     override fun onCleared() {

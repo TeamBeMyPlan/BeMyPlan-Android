@@ -107,7 +107,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     private fun initFragment(index: Int) {
-        val fragment = DailyContentsFragment(binding.viewModel!!.post.value!!.spots[index])
+        viewModel.setDailySpot(binding.viewModel!!.post.value!!.spots[index])
+        val fragment = DailyContentsFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fcv_daily_context, fragment).commit()
     }

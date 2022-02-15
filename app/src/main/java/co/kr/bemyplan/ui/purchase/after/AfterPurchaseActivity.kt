@@ -19,6 +19,8 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.purchase.after.Post
@@ -28,6 +30,7 @@ import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
+import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import net.daum.mf.map.api.CalloutBalloonAdapter
 import net.daum.mf.map.api.MapPOIItem
@@ -42,6 +45,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
+    private lateinit var viewModel: AfterPurchaseViewModel
+
     private lateinit var mapView: MapView
     private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
@@ -49,98 +54,80 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // binding
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
+
+        // viewmodel 설정
+        viewModel = ViewModelProvider(this)[AfterPurchaseViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        // post id 받아오기
         val postId = intent.getIntExtra("postId", -1)
 
-        // 카카오맵
+        // 카카오맵 초기화
         initMap()
 
-        if (postId == -1) {
-            initDummy()
-        } else { // network 연결
-            initNetwork(postId)
+        // 더미데이터, 진짜데이터 구분
+        checkData(postId)
+
+        // Observer
+        viewModel.post.observe(this) {
+            // fragment 생
+            initFragment(0)
+            // 마커 생성
+            initMarker(it.spots)
+            // 일자별 버튼 생성
+            initChips(it.spots)
+            // user 버튼 생성
+            binding.clWriter.setOnClickListener{ _ -> initUserButton(it) }
         }
 
         // back button
-        initBackButton()
+        binding.ivBack.setOnClickListener { finish() }
         // 스크롤뷰 설정
-        initNestedScrollView()
+        binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ -> setTopTitle() })
 
         setContentView(binding.root)
     }
 
-    private fun initDummy() {
-        val dummy = ExampleDummy().getPost()
-        binding.post = dummy
-        binding.ivToWriterProfile.isVisible = false
+    // 더미데이터인지, 진짜데이터인지 확인
+    private fun checkData(postId: Int) {
+        if (postId == -1) {
+            viewModel.initDummy()
+            binding.ivToWriterProfile.isVisible = false
 
-        // fragment 보이기
-        initFragment(0)
-        // kakaomap 터치 이벤트
-        initTouchListener()
-        // 마커 생성
-        initMarker(dummy.spots)
-        // 일차별 버튼
-        initChips(dummy.spots)
+            // fragment 보이기
+            initFragment(0)
+            // kakaomap 터치 이벤트
+            initTouchListener()
+        } else { // network 연결
+            viewModel.initNetwork(postId)
+        }
     }
 
-    private fun initNetwork(postId: Int) {
-        val call = ApiService.afterPostService.getPost(postId)
-        call.enqueue(object : Callback<ResponseAfterPost> {
-            override fun onResponse(
-                call: Call<ResponseAfterPost>,
-                response: Response<ResponseAfterPost>
-            ) {
-                if (response.isSuccessful) {
-                    val data = response.body()?.data
-                    data?.let {
-                        binding.post = it
-                        // 마커 생성
-                        initMarker(it.spots)
-                        // 일차별 버튼
-                        initChips(it.spots)
-                    }
-                    // kakaomap 터치 이벤트
-                    initTouchListener()
-                    // fragment 보이기
-                    initFragment(0)
-                    // user button
-                    initUserButton(data)
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseAfterPost>, t: Throwable) {
-                Log.d("NetworkTest", "error: $t")
-            }
-        })
-    }
-
+    // fragment 그리기
     private fun initFragment(index: Int) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val fragment = DailyContentsFragment(binding.post!!.spots[index])
-        fragmentTransaction.replace(R.id.fcv_daily_context, fragment)
-        fragmentTransaction.commit()
+        viewModel.setDailySpot(binding.viewModel!!.post.value!!.spots[index])
+        val fragment = DailyContentsFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fcv_daily_context, fragment)
+            .commit()
     }
 
+    // 작성자 정보 다음 뷰로 전송
     private fun initUserButton(data: Post?) {
-        binding.clWriter.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            intent.putExtra("from", "user")
-            intent.putExtra("userId", data?.authorId)
-            intent.putExtra("authorNickname", data?.author)
-            startActivity(intent)
-            finish()
-        }
+        val intent = Intent(this, ListActivity::class.java)
+        intent.putExtra("from", "user")
+        intent.putExtra("userId", data?.authorId)
+        intent.putExtra("authorNickname", data?.author)
+        startActivity(intent)
+        finish()
     }
 
-    private fun initBackButton() {
-        binding.ivBack.setOnClickListener {
-            finish()
-        }
-    }
-
-    @SuppressLint("ResourceType")
+    // 일차별 버튼 초기화
     private fun initChips(data: List<List<Spot>>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
         for (i in data.indices) {
@@ -173,12 +160,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun initNestedScrollView() {
-        binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ ->
-            setTopTitle()
-        })
-    }
-
+    // 툴바를 제외한 acitiviy에 제목이 보이지 않으면 제목이 툴바에서 보이고, 제목이 보이면 툴바에서 제목이 보이지 않도록 설정
     private fun setTopTitle() {
         val rect = Rect()
         binding.svDailyContents.getHitRect(rect)
@@ -187,10 +169,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
             binding.tvTopTitle.visibility = View.INVISIBLE
         } else {
             // view가 안 보이는 경우
-            binding.tvTopTitle.visibility = View.VISIBLE
+            binding.tvTitle.visibility = View.VISIBLE
         }
     }
 
+    // 카카오맵 초기화
     private fun initMap() {
         mapView = MapView(this)
 
@@ -202,6 +185,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.mapView.addView(mapView)
     }
 
+    // 카카오맵의 핀 초기화
     private fun initMarker(data: List<List<Spot>>) {
         markers = mutableListOf()
         for (i in data.indices) {
@@ -213,7 +197,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             var sumLatitude = 0.0
             var sumLongitude = 0.0
 
-            var markerList = mutableListOf<MapPOIItem>()
+            val markerList = mutableListOf<MapPOIItem>()
 
             for (j in data[i].indices) {
                 val marker = MapPOIItem()

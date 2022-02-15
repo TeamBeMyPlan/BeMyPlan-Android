@@ -38,7 +38,7 @@ class DailyContentsFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    // 어댑터 연결
     private fun initAdapter() {
         contentsAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_CONTENTS, photoUrl = { photoUrl: String ->
             val intent = Intent(requireContext(), ImageViewActivity::class.java)
@@ -47,37 +47,37 @@ class DailyContentsFragment : Fragment() {
         })
         routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE)
 
+        // 뷰모델에서 데이터 받아오기
         viewModel.dailySpots.observe(viewLifecycleOwner) {
-            contentsAdapter.setItems(it)
+            contentsAdapter.submitList(it)
 
-            if (it.size > 5) {
-                routeAdapter.setItems(it.subList(0, 5))
+            if (it.size > 5) { // 장소들이 5개 초과인 경우에 더보기, 닫기 버튼 추가
+                routeAdapter.submitList(it.subList(0, 5))
                 initMoreBtn(it)
+                binding.clLookMore.setOnClickListener { _ -> initMoreBtn(it) }
                 binding.clLookClose.setOnClickListener { _ -> initCloseBtn(it) }
-                initCloseBtn(it)
             }
-            else {
-                routeAdapter.setItems(it)
+            else { // 장소들이 5개 이하면 버튼 없이 진행
+                routeAdapter.submitList(it)
                 binding.clLookMore.isVisible = false
                 binding.clLookClose.isVisible = false
             }
         }
 
         binding.rvDailyContents.adapter = contentsAdapter
-
         binding.rvDailyRoute.adapter = routeAdapter
     }
 
+    // 더보기 버튼
     private fun initMoreBtn(items: List<Spot>) {
-        binding.clLookMore.setOnClickListener {
-            routeAdapter.setItems(items)
-            binding.clLookMore.isVisible = false
-            binding.clLookClose.isVisible = true
-        }
+        routeAdapter.submitList(items)
+        binding.clLookMore.isVisible = false
+        binding.clLookClose.isVisible = true
     }
 
+    // 더보기 닫기 버튼
     private fun initCloseBtn(items: List<Spot>) {
-        routeAdapter.setItems(items.subList(0, 5))
+        routeAdapter.submitList(items.subList(0, 5))
         binding.clLookMore.isVisible = true
         binding.clLookClose.isVisible = false
     }

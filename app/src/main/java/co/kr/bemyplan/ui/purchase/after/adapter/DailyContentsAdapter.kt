@@ -10,12 +10,15 @@ import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
+import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -24,7 +27,19 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
-    private var spotList = listOf<Spot>()
+    // item 갱신
+    private val differCallback = object: DiffUtil.ItemCallback<Spot>() {
+        override fun areItemsTheSame(oldItem: Spot, newItem: Spot): Boolean {
+            return oldItem == newItem
+        }
+        override fun areContentsTheSame(oldItem: Spot, newItem: Spot): Boolean {
+            return oldItem == newItem
+        }
+    }
+    private val differ = AsyncListDiffer(this, differCallback)
+
+    // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
+    fun submitList(list: List<Spot>) = differ.submitList(list)
 
     override fun getItemViewType(position: Int) = viewType
 
@@ -49,34 +64,23 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     }
 
     override fun onBindViewHolder(holder: SpotViewHolder, position: Int) {
+        val spot = differ.currentList[position]
+
         when (holder) {
             is ContentsViewHolder -> {
-                if (position == spotList.size - 1) {
-                    holder.onBind(spotList[position], true)
+                if (position == differ.currentList.size - 1) {
+                    holder.onBind(spot, true)
                 } else {
-                    holder.onBind(spotList[position], spotList[position + 1].title)
+                    holder.onBind(spot, differ.currentList[position + 1].title)
                 }
             }
             is RouteViewHolder -> {
-                holder.onBind(spotList[position], position, itemCount - 1)
+                holder.onBind(spot, position, itemCount - 1)
             }
         }
     }
 
-    override fun getItemCount() = spotList.size
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setItems(items: List<Spot>) {
-        spotList = items
-        notifyDataSetChanged()
-    }
-
-    // MVVM을 위한 코드
-    @BindingAdapter("bind:spotList")
-    fun bindSpotList(recyclerView: RecyclerView, items: ObservableArrayList<Spot>) {
-        val adapter = recyclerView.adapter as? DailyContentsAdapter
-        adapter?.setItems(items)
-    }
+    override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         open fun onBind(data: Spot, isLastSpot: Boolean) {}

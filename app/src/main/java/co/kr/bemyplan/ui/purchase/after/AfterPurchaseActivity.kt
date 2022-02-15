@@ -74,7 +74,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // Observer
         viewModel.post.observe(this) {
-            // fragment 생성
+            // fragment 생
             initFragment(0)
             // 마커 생성
             initMarker(it.spots)
@@ -92,6 +92,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
+    // 더미데이터인지, 진짜데이터인지 확인
     private fun checkData(postId: Int) {
         if (postId == -1) {
             viewModel.initDummy()
@@ -106,13 +107,17 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
+    // fragment 그리기
     private fun initFragment(index: Int) {
         viewModel.setDailySpot(binding.viewModel!!.post.value!!.spots[index])
         val fragment = DailyContentsFragment()
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fcv_daily_context, fragment).commit()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fcv_daily_context, fragment)
+            .commit()
     }
 
+    // 작성자 정보 다음 뷰로 전송
     private fun initUserButton(data: Post?) {
         val intent = Intent(this, ListActivity::class.java)
         intent.putExtra("from", "user")
@@ -122,6 +127,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         finish()
     }
 
+    // 일차별 버튼 초기화
     private fun initChips(data: List<List<Spot>>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
         for (i in data.indices) {
@@ -154,6 +160,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
+    // 툴바를 제외한 acitiviy에 제목이 보이지 않으면 제목이 툴바에서 보이고, 제목이 보이면 툴바에서 제목이 보이지 않도록 설정
     private fun setTopTitle() {
         val rect = Rect()
         binding.svDailyContents.getHitRect(rect)
@@ -166,6 +173,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
+    // 카카오맵 초기화
     private fun initMap() {
         mapView = MapView(this)
 
@@ -177,6 +185,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.mapView.addView(mapView)
     }
 
+    // 카카오맵의 핀 초기화
     private fun initMarker(data: List<List<Spot>>) {
         markers = mutableListOf()
         for (i in data.indices) {

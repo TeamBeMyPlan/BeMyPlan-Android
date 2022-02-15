@@ -25,6 +25,7 @@ class AfterPurchaseViewModel: ViewModel() {
     val dailySpots: LiveData<List<Spot>>
         get() = _dailySpots
 
+    // 서버 통신
     fun initNetwork(postId: Int) {
         val call = ApiService.afterPostService.getPost(postId)
         call.enqueue(object : Callback<ResponseAfterPost> {
@@ -52,15 +53,12 @@ class AfterPurchaseViewModel: ViewModel() {
         _post.value = dummy
     }
 
-    init {
+    init { //TODO 여기서 무엇을 해야할 지 모르겠습니다
         Log.i("ViewModel", "ViewModel created!")
     }
 
+    // 일차별 장소들 초기화
     fun setDailySpot(dailySpots: List<Spot>) {
         _dailySpots.value = dailySpots
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }

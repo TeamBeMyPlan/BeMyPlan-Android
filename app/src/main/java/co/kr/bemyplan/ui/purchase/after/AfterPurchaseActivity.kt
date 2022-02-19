@@ -68,6 +68,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // 카카오맵 초기화
         initMap()
+        // kakaomap 터치 이벤트
+        initTouchListener()
 
         // 더미데이터, 진짜데이터 구분
         checkData(postId)
@@ -100,8 +102,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
             // fragment 보이기
             initFragment(0)
-            // kakaomap 터치 이벤트
-            initTouchListener()
         } else { // network 연결
             viewModel.initNetwork(postId)
         }

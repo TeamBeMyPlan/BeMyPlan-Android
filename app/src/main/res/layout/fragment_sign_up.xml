@@ -5,7 +5,8 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="co.kr.bemyplan.ui.login.viewmodel.LoginViewModel" />
@@ -74,7 +75,8 @@
                 android:layout_marginTop="20dp"
                 android:background="@{(viewModel.isDuplicated || !viewModel.isValid) ? @drawable/rectangle_border_red_radius_5 : @drawable/rectangle_border_grey_radius_5}"
                 android:fontFamily="@font/spoqa_han_sans_neo_medium"
-                android:hint="@string/text_nickname_word_count_limit"
+                android:hint="@string/text_nickname_warning"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLength="20"
                 android:maxLines="1"
@@ -90,12 +92,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:visibility="@{(viewModel.isDuplicated || !viewModel.isValid) ? View.VISIBLE : View.INVISIBLE}"
-                android:text="@{viewModel.isDuplicated ? @string/text_duplicated : @string/text_invalid}"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:text="@{viewModel.isDuplicated ? @string/text_duplicated : @string/text_invalid}"
                 android:textColor="@color/red_c8094e"
                 android:textSize="12sp"
+                android:visibility="@{(viewModel.isDuplicated || !viewModel.isValid) ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_nickname" />
+
+            <TextView
+                android:id="@+id/tv_nickname_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:includeFontPadding="false"
+                android:text="@{viewModel.nickname.length() + `/15`}"
+                android:textColor="@color/grey_919bab"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_nickname" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -318,8 +333,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            android:background="@{!viewModel.nickname.isEmpty() &amp;&amp; viewModel.isAllAgree &amp;&amp; viewModel.isValid ? @color/blue_0077b0 : @color/grey_cbd0d7}"
-            android:clickable="@{!viewModel.nickname.isEmpty() &amp;&amp; viewModel.isAllAgree &amp;&amp; viewModel.isValid ? true : false}"
+            android:background="@{viewModel.nickname.length() >= 2 &amp;&amp; viewModel.isAllAgree &amp;&amp; viewModel.isValid ? @color/blue_0077b0 : @color/grey_cbd0d7}"
+            android:clickable="@{viewModel.nickname.length() >= 2 &amp;&amp; viewModel.isAllAgree &amp;&amp; viewModel.isValid ? true : false}"
             android:onClick="@{() -> viewModel.clickSignUp()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHeight_max="80dp"

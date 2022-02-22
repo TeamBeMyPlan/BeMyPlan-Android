@@ -2,6 +2,7 @@ package co.kr.bemyplan.ui.login
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,6 +44,8 @@ class SignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeNickname()
         showSignUpDialog()
+        clickTermsDetail()
+        clickInfoDetail()
         clickExit()
         closeKeyboard()
     }
@@ -81,6 +84,19 @@ class SignUpFragment : Fragment() {
                     }
                 }
             })
+        }
+    }
+
+    private fun clickTermsDetail() {
+        binding.layoutAgreeTermsDetail.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.term_url)))
+            startActivity(intent)
+        }
+    }
+
+    private fun clickInfoDetail() {
+        binding.layoutAgreeInfoDetail.setOnClickListener {
+
         }
     }
 

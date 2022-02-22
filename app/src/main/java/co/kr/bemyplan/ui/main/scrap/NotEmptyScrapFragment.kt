@@ -80,7 +80,7 @@ class NotEmptyScrapFragment : Fragment() {
     }
 
     private fun openBottomSheetDialog() {
-        binding.ivOrder.setOnClickListener {
+        binding.layoutOrder.setOnClickListener {
             val bottomSheetDialogFragment = SortFragment()
             bottomSheetDialogFragment.show(childFragmentManager, bottomSheetDialogFragment.tag)
         }

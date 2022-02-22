@@ -9,7 +9,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.ItemListContentBinding
 
-class ListAdapter(val itemClick: (ContentModel) -> Unit) :
+class ListAdapter(private val itemClick: (ContentModel) -> Unit) :
     RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 

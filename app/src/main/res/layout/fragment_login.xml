@@ -18,11 +18,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/img_logo_eg"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/layout_kakao"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.33" />
+            app:layout_constraintVertical_bias="0.61" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_kakao"
@@ -103,7 +103,7 @@
             android:id="@+id/tv_guest_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="104dp"
+            android:layout_marginBottom="70dp"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:paddingHorizontal="18dp"
             android:paddingTop="10dp"

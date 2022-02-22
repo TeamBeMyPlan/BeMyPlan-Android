@@ -29,26 +29,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_scrap"
+            android:padding="3dp"
+            app:layout_constraintTop_toTopOf="@id/iv_photo"
+            app:layout_constraintEnd_toEndOf="@id/iv_photo"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="9dp">
+
         <ImageView
             android:id="@+id/iv_scrap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
             android:src="@{model.isScraped ? @drawable/icn_scrap_white : @drawable/icn_not_scrap_white}"
-            app:layout_constraintEnd_toEndOf="@id/iv_photo"
-            app:layout_constraintTop_toTopOf="@id/iv_photo" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
             android:id="@+id/iv_free"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
+            android:layout_marginEnd="3dp"
             android:src="@drawable/icn_free"
             android:visibility="@{(model.price == 0 &amp;&amp; model.price != null) ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@id/iv_scrap"
-            app:layout_constraintEnd_toStartOf="@id/iv_scrap"
-            app:layout_constraintTop_toTopOf="@id/iv_scrap" />
+            app:layout_constraintBottom_toBottomOf="@id/layout_scrap"
+            app:layout_constraintEnd_toStartOf="@id/layout_scrap"
+            app:layout_constraintTop_toTopOf="@id/layout_scrap" />
 
         <TextView
             android:id="@+id/tv_author"

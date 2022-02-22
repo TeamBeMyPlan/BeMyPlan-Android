@@ -37,7 +37,7 @@
     <string name="text_essential">[필수]</string>
     <string name="text_agree_terms">이용약관 동의</string>
     <string name="text_agree_info">개인정보 수집 이용 동의</string>
-    <string name="text_nickname_word_count_limit">20자 이내로 입력해주세요.</string>
+    <string name="text_nickname_warning">특수문자는 사용할 수 없습니다.</string>
     <string name="text_start">시작하기</string>
     <string name="text_no">취소</string>
     <string name="text_yes">확인</string>
@@ -58,4 +58,5 @@
     <string name="text_purchase_benefit_sub_5">검색으로 쉽게 안 나오는 팁들을 챙겨가세요</string>
     <string name="text_purchase_benefit_sub_6">어떻게 이동했고, 몇 분이 걸렸는지 확인해보세요</string>
     <string name="text_purchase_example"><u>구매한 여행 일정 예시</u></string>
+    <string name="term_url">https://boggy-snowstorm-fdb.notion.site/a69b7abcdb9f42399825f4ff25343bfd</string>
 </resources>

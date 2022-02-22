@@ -37,7 +37,7 @@
     <string name="text_essential">[필수]</string>
     <string name="text_agree_terms">이용약관 동의</string>
     <string name="text_agree_info">개인정보 수집 이용 동의</string>
-    <string name="text_nickname_warning">특수문자는 사용할 수 없습니다.</string>
+    <string name="text_nickname_warning">특수문자는 사용할 수 없습니다(최소 2자).</string>
     <string name="text_start">시작하기</string>
     <string name="text_no">취소</string>
     <string name="text_yes">확인</string>

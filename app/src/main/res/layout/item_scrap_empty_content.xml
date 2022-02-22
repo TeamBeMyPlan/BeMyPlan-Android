@@ -34,6 +34,8 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:gravity="top"
+            android:lineHeight="20sp"
             android:maxLines="2"
             android:text="@{model.title}"
             android:textColor="@color/grey_313740"

@@ -99,6 +99,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_nickname" />
 
+            <TextView
+                android:id="@+id/tv_nickname_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:includeFontPadding="false"
+                android:text="@{viewModel.nickname.length() + `/20`}"
+                android:textColor="@color/grey_919bab"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_nickname" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_all_terms"
                 android:layout_width="match_parent"

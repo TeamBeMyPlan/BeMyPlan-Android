@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -130,6 +131,17 @@ class SignUpFragment : Fragment() {
                     requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
             }
+        }
+
+        binding.etNickname.setOnEditorActionListener { textView, action, keyEvent ->
+            var handled = false
+            if (action == EditorInfo.IME_ACTION_DONE) {
+                val inputMethodManager: InputMethodManager =
+                    requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+                handled = true
+            }
+            handled
         }
     }
 }

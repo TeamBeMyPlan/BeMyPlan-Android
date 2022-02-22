@@ -5,7 +5,8 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="co.kr.bemyplan.ui.login.viewmodel.LoginViewModel" />
@@ -91,11 +92,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:visibility="@{(viewModel.isDuplicated || !viewModel.isValid) ? View.VISIBLE : View.INVISIBLE}"
-                android:text="@{viewModel.isDuplicated ? @string/text_duplicated : @string/text_invalid}"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:text="@{viewModel.isDuplicated ? @string/text_duplicated : @string/text_invalid}"
                 android:textColor="@color/red_c8094e"
                 android:textSize="12sp"
+                android:visibility="@{(viewModel.isDuplicated || !viewModel.isValid) ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_nickname" />
 

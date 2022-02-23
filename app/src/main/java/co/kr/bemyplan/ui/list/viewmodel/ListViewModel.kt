@@ -11,6 +11,7 @@ import co.kr.bemyplan.data.repository.list.new.NewListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.EmptyScrapListRepositoryImpl
+import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import kotlinx.coroutines.launch
 
@@ -150,6 +151,19 @@ class ListViewModel : ViewModel() {
                 Log.e("mlog: ListViewModel::getEmptyScrapList error handling", e.code().toString())
             } catch (t: Throwable) {
                 Log.e("mlog: ListViewModel::getEmptyScrapList error handling", t.message.toString())
+            }
+        }
+    }
+
+    fun postScrap(postId: Int) {
+        val postScrapRepositoryImpl = PostScrapRepositoryImpl()
+        viewModelScope.launch {
+            kotlin.runCatching {
+                postScrapRepositoryImpl.postScrap(postId)
+            }.onSuccess {
+                Log.d("mlog: postScrap", "success")
+            }.onFailure {
+                Log.d("mlog: postScrap", "fail")
             }
         }
     }

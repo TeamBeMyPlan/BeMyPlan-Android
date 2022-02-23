@@ -120,7 +120,7 @@ class ListActivity : AppCompatActivity() {
     }
 
     private fun clickBack() {
-        binding.ivBack.setOnClickListener {
+        binding.layoutBack.setOnClickListener {
             finish()
         }
     }

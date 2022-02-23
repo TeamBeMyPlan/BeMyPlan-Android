@@ -8,27 +8,41 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapContentBinding
 
-class ScrapAdapter(val itemClick: (ContentModel) -> Unit) :
+class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val scrapClick: (Int) -> Unit) :
     RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder>() {
     var itemList: List<ContentModel> = listOf()
 
     class ScrapViewHolder(
         private val binding: ItemScrapContentBinding,
-        private val itemClick: (ContentModel) -> Unit
+        private val itemClick: (ContentModel) -> Unit,
+        private val scrapClick: (Int) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
+            contentModel.isScraped = true
             binding.model = contentModel
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
 
             clickItem(contentModel)
-//            clickScrap()
+            clickScrap(contentModel)
+        }
+
+        fun reDrawView(contentModel: ContentModel) {
+            binding.model = contentModel
         }
 
         private fun clickItem(contentModel: ContentModel) {
             binding.root.setOnClickListener {
                 itemClick(contentModel)
+            }
+        }
+
+        private fun clickScrap(contentModel: ContentModel) {
+            binding.layoutScrap.setOnClickListener {
+                scrapClick(contentModel.postId)
+                contentModel.isScraped = !contentModel.isScraped
+                reDrawView(contentModel)
             }
         }
     }
@@ -40,7 +54,7 @@ class ScrapAdapter(val itemClick: (ContentModel) -> Unit) :
             parent,
             false
         )
-        return ScrapViewHolder(binding, itemClick)
+        return ScrapViewHolder(binding, itemClick, scrapClick)
     }
 
     override fun onBindViewHolder(holder: ScrapViewHolder, position: Int) {

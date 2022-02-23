@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">BeMyPlan</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="home_introduce">내 취향에 맞는\n여행 일정을 찾아보세요</string>
@@ -59,4 +58,5 @@
     <string name="text_purchase_benefit_sub_6">어떻게 이동했고, 몇 분이 걸렸는지 확인해보세요</string>
     <string name="text_purchase_example"><u>구매한 여행 일정 예시</u></string>
     <string name="term_url">https://boggy-snowstorm-fdb.notion.site/a69b7abcdb9f42399825f4ff25343bfd</string>
+    <string name="price_format">%,2d</string>
 </resources>

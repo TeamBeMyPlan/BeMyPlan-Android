@@ -947,7 +947,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                android:text="@{Integer.toString(infoModel.price)+`원`}"
+                android:text="@{@string/price_format(infoModel.price)+`원`}"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"

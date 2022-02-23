@@ -99,8 +99,8 @@ class ListActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        listAdapter = ListAdapter {
-            if(it.isPurchased) {
+        listAdapter = ListAdapter({
+            if (it.isPurchased) {
                 val intent = Intent(this, AfterPurchaseActivity::class.java)
                 intent.putExtra("postId", it.postId)
                 intent.putExtra("isScraped", it.isScraped)
@@ -114,7 +114,9 @@ class ListActivity : AppCompatActivity() {
                 Log.d("mlog: putExtra에서 postId", it.postId.toString())
                 startActivity(intent)
             }
-        }
+        }, {
+            viewModel.postScrap(it)
+        })
         listAdapter.itemList = listItem
         binding.rvLinearContent.adapter = listAdapter
     }

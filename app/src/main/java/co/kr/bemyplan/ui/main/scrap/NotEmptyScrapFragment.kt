@@ -62,7 +62,7 @@ class NotEmptyScrapFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        scrapAdapter = ScrapAdapter {
+        scrapAdapter = ScrapAdapter({
             if (it.isPurchased) {
                 val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
                 intent.putExtra("postId", it.postId)
@@ -74,7 +74,9 @@ class NotEmptyScrapFragment : Fragment() {
                 intent.putExtra("isScraped", true)
                 startActivity(intent)
             }
-        }
+        }, {
+            viewModel.postScrap(it)
+        })
         scrapAdapter.itemList = listItem
         binding.rvContent.adapter = scrapAdapter
     }

@@ -46,7 +46,6 @@ class BeforeChargingFragment : Fragment() {
         initRecyclerView()
         initNestedScrollView()
         clickBack()
-        clickScrap()
         clickNickname()
         clickPurchase()
         showExample()
@@ -146,14 +145,6 @@ class BeforeChargingFragment : Fragment() {
     private fun clickBack() {
         binding.layoutBack.setOnClickListener {
             requireActivity().finish()
-        }
-    }
-
-    private fun clickScrap() {
-        binding.layoutScrap.setOnClickListener {
-            binding.ivScrap.apply {
-                isSelected = !isSelected
-            }
         }
     }
 

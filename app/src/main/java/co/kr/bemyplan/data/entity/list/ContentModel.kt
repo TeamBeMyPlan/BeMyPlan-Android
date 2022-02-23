@@ -12,6 +12,6 @@ data class ContentModel(
     @SerializedName("is_purchased")
     val isPurchased: Boolean,
     @SerializedName("is_scraped")
-    val isScraped: Boolean,
+    var isScraped: Boolean,
     val price: Int?,
 )

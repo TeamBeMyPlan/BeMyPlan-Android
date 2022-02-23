@@ -55,9 +55,7 @@ class BeforeChargingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = postScrapRepositoryImpl.postScrap(postId)
-                if (_isScraped.value != null) {
-                    _isScraped.value = !_isScraped.value!!
-                }
+                _isScraped.value = response.data.scrapped
             } catch (e: retrofit2.HttpException) {
                 Log.e(
                     "mlog: BeforeChargingViewModel::postScrap error handling",

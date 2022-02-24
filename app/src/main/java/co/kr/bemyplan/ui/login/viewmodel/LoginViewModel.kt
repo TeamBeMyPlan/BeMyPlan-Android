@@ -1,11 +1,11 @@
 package co.kr.bemyplan.ui.login.viewmodel
 
 import android.util.Log
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.data.entity.login.UserInfoModel
 import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
@@ -15,6 +15,7 @@ import co.kr.bemyplan.util.SingleLiveEvent
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.util.regex.Pattern
 
 class LoginViewModel : ViewModel() {
     // 카카오로그인
@@ -22,6 +23,7 @@ class LoginViewModel : ViewModel() {
     private val loginRepositoryImpl = LoginRepositoryImpl()
 
     var nickname = MutableLiveData<String>("")
+    var email = MutableLiveData<String>("")
 
     private var _socialToken = MutableLiveData<String>()
     val socialToken: LiveData<String> get() = _socialToken
@@ -44,13 +46,27 @@ class LoginViewModel : ViewModel() {
     private var _isInfoAgree = MutableLiveData<Boolean>(false)
     val isInfoAgree: LiveData<Boolean> get() = _isInfoAgree
 
-    // 중복여부
-    private var _isDuplicated = MutableLiveData<Boolean?>(null)
-    val isDuplicated: LiveData<Boolean?> get() = _isDuplicated
+    // 닉네임 중복여부
+    private var _isDuplicatedNickname = MutableLiveData<Boolean?>(null)
+    val isDuplicatedNickname: LiveData<Boolean?> get() = _isDuplicatedNickname
 
-    // 문법적으로 유효여부
-    private var _isValid = MutableLiveData<Boolean>(false)
-    val isValid: LiveData<Boolean> get() = _isValid
+    // 닉네임 문법적 유효여부
+    private var _isValidNickname = MutableLiveData<Boolean>(false)
+    val isValidNickname: LiveData<Boolean> get() = _isValidNickname
+
+    // 이메일 중복여부
+    private var _isDuplicatedEmail = MutableLiveData<Boolean?>(null)
+    val isDuplicatedEmail get() = _isDuplicatedEmail
+
+    // 이메일 문법적 유효여부
+    private var _isValidEmail = MutableLiveData<Boolean>(true)
+    val isValidEmail: LiveData<Boolean> get() = _isValidEmail
+
+    private val _nicknamePermission = SingleLiveEvent<Boolean>()
+    val nicknamePermission: LiveData<Boolean> get() = _nicknamePermission
+
+    private val _emailPermission = SingleLiveEvent<Boolean>()
+    val emailPermission: LiveData<Boolean> get() = _emailPermission
 
     private val _signUpPermission = SingleLiveEvent<Boolean>()
     val signUpPermission: LiveData<Boolean> get() = _signUpPermission
@@ -117,37 +133,85 @@ class LoginViewModel : ViewModel() {
         _isAllAgree.value = isTermsAgree.value!! && isInfoAgree.value!!
     }
 
-    fun setIsDuplicatedNull() {
-        _isDuplicated.value = null
+    fun setIsDuplicatedNicknameNull() {
+        _isDuplicatedNickname.value = null
     }
 
-    fun checkIsDuplicated() {
-        viewModelScope.launch {
-            try {
-                val response =
-                    loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
-                _isDuplicated.value = response.data.duplicated
-                Log.d("mlog: LoginViewModel::isDuplicated.value", isDuplicated.value.toString())
+    fun setIsDuplicatedEmailNull() {
+        _isDuplicatedEmail.value = null
+    }
 
-                if (!isDuplicated.value!! && isValid.value!!) {
-                    _signUpPermission.call()
+//    fun checkIsDuplicated() {
+//        viewModelScope.launch {
+//            try {
+//                val response =
+//                    loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+//                _isDuplicated.value = response.data.duplicated
+//                Log.d("mlog: LoginViewModel::isDuplicated.value", isDuplicated.value.toString())
+//
+//                if (!isDuplicated.value!! && isValid.value!!) {
+//                    _signUpPermission.call()
+//                }
+//            } catch (e: retrofit2.HttpException) {
+//                Log.e("mlog: HttpException", e.code().toString())
+//            } catch (t: Throwable) {
+//                Log.e("mlog: Throwable", t.message.toString())
+//            }
+//        }
+//    }
+
+    fun checkIsDuplicatedNickname() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+            }.onSuccess {
+                _isDuplicatedNickname.value = it.data.duplicated
+
+                if(!isDuplicatedNickname.value!! && isValidNickname.value!!) {
+                    _nicknamePermission.call()
                 }
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: HttpException", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: Throwable", t.message.toString())
+            }.onFailure {
+                Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
             }
         }
     }
 
-    fun checkIsValid() {
+    fun checkIsValidNickname() {
         val regex = "[가-힣A-Za-z0-9]{0,20}".toRegex()
-        _isValid.value = nickname.value?.matches(regex)
-        Log.d("mlog: isValid.value", isValid.value.toString())
+        _isValidNickname.value = nickname.value?.matches(regex)
+        Log.d("mlog: isValidNickname.value", isValidNickname.value.toString())
     }
 
-    fun clickSignUp() {
-        checkIsDuplicated()
+    fun checkIsDuplicatedEmail() {
+        // test - bemyplan@gmail.com 쓰면 중복이라고 처리함
+        if(email.value == "bemyplan@gmail.com") {
+            _isDuplicatedEmail.value = true
+        } else {
+            _isDuplicatedEmail.value = false
+        }
+
+        if(!isDuplicatedEmail.value!! && isValidEmail.value!!) {
+            _emailPermission.call()
+        }
+    }
+
+    fun checkIsValidEmail() {
+        val pattern: Pattern = Patterns.EMAIL_ADDRESS
+        _isValidEmail.value = pattern.matcher(email.value.toString()).matches()
+        Log.d("mlog: isValidEmail.value", isValidEmail.value.toString())
+    }
+
+    fun clickNicknameNext() {
+        checkIsDuplicatedNickname()
+    }
+
+    fun clickEmailNext() {
+        checkIsDuplicatedEmail()
+    }
+
+    fun clickTermsNext() {
+//        signUp()
+        _signUpPermission.call()
     }
 
     fun signUp() {

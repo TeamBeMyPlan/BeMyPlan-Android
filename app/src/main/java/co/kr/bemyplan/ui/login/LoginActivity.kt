@@ -9,7 +9,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentByTag("signUpFragment")
         if(fragment != null && fragment.isVisible) {
-            showExitDialog()
+            if(fragment.childFragmentManager.backStackEntryCount == 0) {
+                showExitDialog()
+            } else {
+                fragment.childFragmentManager.popBackStackImmediate()
+            }
         } else {
             super.onBackPressed()
         }

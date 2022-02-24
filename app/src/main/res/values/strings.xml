@@ -30,18 +30,24 @@
     <string name="text_guest_mode"><u>둘러보기</u></string>
     <string name="text_google_login">Google 계정으로 로그인</string>
     <string name="text_kakao_login">카카오 로그인</string>
-    <string name="text_sign_up_nickname_title">닉네임을 알려주세요</string>
-    <string name="text_sign_up_title_description">설정된 닉네임은 수정이 불가합니다.</string>
+    <string name="text_sign_up_nickname_title">닉네임을 알려주세요.</string>
+    <string name="text_sign_up_nickname_description">설정된 닉네임은 수정이 불가합니다.</string>
+    <string name="text_sign_up_email_title">이메일을 알려주세요.</string>
+    <string name="text_sign_up_email_description">설정된 이메일은 수정이 불가합니다.</string>
     <string name="text_all_agree">약관 전체 동의</string>
     <string name="text_essential">[필수]</string>
     <string name="text_agree_terms">이용약관 동의</string>
     <string name="text_agree_info">개인정보 수집 이용 동의</string>
-    <string name="text_nickname_warning">특수문자는 사용할 수 없습니다(최소 2자).</string>
+    <string name="text_nickname_hint">특수문자는 사용할 수 없습니다</string>
+    <string name="text_email_hint">이메일 입력</string>
     <string name="text_start">시작하기</string>
+    <string name="text_next">다음</string>
     <string name="text_no">취소</string>
     <string name="text_yes">확인</string>
-    <string name="text_invalid">특수문자를 사용할 수 없습니다.</string>
-    <string name="text_duplicated">중복된 닉네임입니다.</string>
+    <string name="text_invalid_nickname">특수문자를 사용할 수 없습니다.</string>
+    <string name="text_duplicated_nickname">중복된 닉네임입니다.</string>
+    <string name="text_invalid_email">이메일 형식이 올바르지 않습니다.</string>
+    <string name="text_duplicated_email">이미 가입된 이메일 주소입니다.</string>
     <string name="text_keep_login">닉네임은 수정할 수 없습니다.\n이대로 가입을 진행할까요?</string>
     <string name="text_purchase_benefit_subtitle">*구매 전에는 일부 사진과 글만 공개해요</string>
     <string name="text_purchase_benefit_main_1">장소를 표시한 지도</string>
@@ -59,4 +65,5 @@
     <string name="text_purchase_example"><u>구매한 여행 일정 예시</u></string>
     <string name="term_url">https://boggy-snowstorm-fdb.notion.site/a69b7abcdb9f42399825f4ff25343bfd</string>
     <string name="price_format">%,2d</string>
+    <string name="text_sign_up_terms_title">이용약관 동의가 필요해요.</string>
 </resources>

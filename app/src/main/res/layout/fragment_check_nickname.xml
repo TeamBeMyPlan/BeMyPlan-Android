@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="co.kr.bemyplan.ui.login.viewmodel.LoginViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.login.signup.CheckNicknameFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="11dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_clear"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="11dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/layout_back">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_weight="0.33"
+                android:background="@color/grey_313740" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_weight="0.67"
+                android:background="@color/grey_e8eaed" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_body"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingHorizontal="24dp"
+            app:layout_constraintBottom_toTopOf="@id/layout_next"
+            app:layout_constraintTop_toBottomOf="@id/layout_indicator">
+
+            <TextView
+                android:id="@+id/tv_nickname_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                android:includeFontPadding="false"
+                android:text="@string/text_sign_up_nickname_title"
+                android:textColor="@color/grey_313740"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_nickname_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:includeFontPadding="false"
+                android:text="@string/text_sign_up_nickname_description"
+                android:textColor="@color/grey_313740"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_nickname_title" />
+
+            <EditText
+                android:id="@+id/et_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@{(viewModel.isDuplicatedNickname || !viewModel.isValidNickname) ? @drawable/rectangle_border_red_radius_5 : @drawable/rectangle_border_grey_radius_5}"
+                android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                android:hint="@string/text_nickname_hint"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLength="15"
+                android:maxLines="1"
+                android:paddingHorizontal="13dp"
+                android:paddingVertical="15dp"
+                android:text="@={viewModel.nickname}"
+                android:textColorHint="@color/grey_cbd0d7"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/tv_nickname_description" />
+
+            <TextView
+                android:id="@+id/tv_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:text="@{viewModel.isDuplicatedNickname ? @string/text_duplicated_nickname : @string/text_invalid_nickname}"
+                android:textColor="@color/red_c8094e"
+                android:textSize="12sp"
+                android:visibility="@{(viewModel.isDuplicatedNickname || !viewModel.isValidNickname) ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_nickname" />
+
+            <TextView
+                android:id="@+id/tv_nickname_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:includeFontPadding="false"
+                android:text="@{viewModel.nickname.length() + `/15`}"
+                android:textColor="@color/grey_919bab"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_nickname" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_next"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@{viewModel.nickname.length() >= 2 &amp;&amp; viewModel.isValidNickname ? @color/blue_0077b0 : @color/grey_cbd0d7}"
+            android:clickable="@{viewModel.nickname.length() >= 2 &amp;&amp; viewModel.isValidNickname ? true : false}"
+            android:onClick="@{() -> viewModel.clickNicknameNext()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_max="80dp"
+            app:layout_constraintHeight_min="66dp"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintTop_toBottomOf="@id/layout_body"
+            app:layout_constraintVertical_bias="1">
+
+            <TextView
+                android:id="@+id/tv_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                android:text="@string/text_next"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

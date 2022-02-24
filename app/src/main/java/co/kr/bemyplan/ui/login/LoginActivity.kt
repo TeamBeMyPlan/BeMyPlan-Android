@@ -1,15 +1,19 @@
 package co.kr.bemyplan.ui.login
 
+import androidx.activity.viewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityLoginBinding
 import co.kr.bemyplan.ui.base.BaseActivity
+import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.util.CustomDialog
 
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
+    private val viewModel by viewModels<LoginViewModel>()
+
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentByTag("signUpFragment")
-        if(fragment != null && fragment.isVisible) {
-            if(fragment.childFragmentManager.backStackEntryCount == 0) {
+        if (fragment != null && fragment.isVisible) {
+            if (fragment.childFragmentManager.backStackEntryCount == 0) {
                 showExitDialog()
             } else {
                 fragment.childFragmentManager.popBackStackImmediate()

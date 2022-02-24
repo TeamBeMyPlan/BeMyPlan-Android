@@ -167,8 +167,9 @@ class LoginViewModel : ViewModel() {
             }.onSuccess {
                 _isDuplicatedNickname.value = it.data.duplicated
 
-                if(!isDuplicatedNickname.value!! && isValidNickname.value!!) {
-                    _nicknamePermission.call()
+                if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
+                    _nicknamePermission.value = true
+//                    _nicknamePermission.call()
                 }
             }.onFailure {
                 Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
@@ -184,14 +185,15 @@ class LoginViewModel : ViewModel() {
 
     fun checkIsDuplicatedEmail() {
         // test - bemyplan@gmail.com 쓰면 중복이라고 처리함
-        if(email.value == "bemyplan@gmail.com") {
+        if (email.value == "bemyplan@gmail.com") {
             _isDuplicatedEmail.value = true
         } else {
             _isDuplicatedEmail.value = false
         }
 
-        if(!isDuplicatedEmail.value!! && isValidEmail.value!!) {
-            _emailPermission.call()
+        if (!isDuplicatedEmail.value!! && isValidEmail.value!!) {
+            _emailPermission.value = true
+//            _emailPermission.call()
         }
     }
 
@@ -210,8 +212,14 @@ class LoginViewModel : ViewModel() {
     }
 
     fun clickTermsNext() {
-//        signUp()
-        _signUpPermission.call()
+        Log.d("mlog: nickname", nicknamePermission.value.toString())
+        Log.d("mlog: email", emailPermission.value.toString())
+        Log.d("mlog: terms", isAllAgree.value.toString())
+        if (nicknamePermission.value == true && emailPermission.value == true && isAllAgree.value == true) {
+            _signUpPermission.value = true
+//            _signUpPermission.call()
+//            signUp()
+        }
     }
 
     fun signUp() {

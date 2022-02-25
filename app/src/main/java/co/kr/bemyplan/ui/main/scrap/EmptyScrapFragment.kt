@@ -56,7 +56,7 @@ class EmptyScrapFragment : Fragment() {
             intent.putExtra("postId", it.postId)
             startActivity(intent)
         }
-        scrapRecommendAdapter.itemList = listItem
+        scrapRecommendAdapter.replaceItem(listItem)
         binding.rvRecommend.adapter = scrapRecommendAdapter
     }
 }

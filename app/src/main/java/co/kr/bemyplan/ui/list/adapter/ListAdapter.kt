@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.list.ContentModel
@@ -14,7 +16,7 @@ class ListAdapter(
     private val scrapClick: (Int) -> Unit
 ) :
     RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
-    var itemList: List<ContentModel> = listOf()
+    private val asyncDiffer = AsyncListDiffer(this, diffCallback)
 
     class ListViewHolder(
         private val binding: ItemListContentBinding,
@@ -66,10 +68,26 @@ class ListAdapter(
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.bind(itemList[position])
+        holder.bind(asyncDiffer.currentList[position])
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return asyncDiffer.currentList.size
+    }
+
+    fun replaceItem(itemList: List<ContentModel>) {
+        asyncDiffer.submitList(itemList)
+    }
+
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<ContentModel>() {
+            override fun areItemsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
+                return oldItem.postId == newItem.postId
+            }
+
+            override fun areContentsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }

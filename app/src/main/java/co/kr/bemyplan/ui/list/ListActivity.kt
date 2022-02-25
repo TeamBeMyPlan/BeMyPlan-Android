@@ -117,7 +117,7 @@ class ListActivity : AppCompatActivity() {
         }, {
             viewModel.postScrap(it)
         })
-        listAdapter.itemList = listItem
+        listAdapter.replaceItem(listItem)
         binding.rvLinearContent.adapter = listAdapter
     }
 

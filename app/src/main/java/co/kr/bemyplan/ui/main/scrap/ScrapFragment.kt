@@ -42,12 +42,12 @@ class ScrapFragment : Fragment() {
             when (it.size) {
                 0 -> {
                     val transaction = childFragmentManager.beginTransaction()
-                    transaction.add(R.id.fcv_scrap, EmptyScrapFragment())
+                    transaction.replace(R.id.fcv_scrap, EmptyScrapFragment())
                         .commit()
                 }
                 else -> {
                     val transaction = childFragmentManager.beginTransaction()
-                    transaction.add(R.id.fcv_scrap, NotEmptyScrapFragment())
+                    transaction.replace(R.id.fcv_scrap, NotEmptyScrapFragment())
                         .commit()
                 }
             }

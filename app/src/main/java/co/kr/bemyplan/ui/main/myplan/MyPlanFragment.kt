@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
-import co.kr.bemyplan.ui.main.MainActivity
 import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter
 import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 import co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel
@@ -68,7 +68,9 @@ class MyPlanFragment : Fragment() {
 
     private fun lookingAroundEvent() {
         binding.tvLookingAround.setOnClickListener {
-            (activity as MainActivity).moveHome()
+//            Navigation Component로 변경함에 따른 주석처리
+//            (activity as MainActivity).moveHome()
+            Navigation.findNavController(binding.root).navigate(R.id.action_fragment_my_plan_to_fragment_home)
         }
     }
 

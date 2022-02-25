@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_home">
+
+    <fragment
+        android:id="@+id/fragment_home"
+        android:name="co.kr.bemyplan.ui.main.home.HomeFragment"
+        android:label="home_fragment"
+        tools:layout="@layout/fragment_home" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_location"
+        android:name="co.kr.bemyplan.ui.main.location.LocationFragment"
+        android:label="location_fragment"
+        tools:layout="@layout/fragment_location" />
+
+    <fragment
+        android:id="@+id/fragment_scrap"
+        android:name="co.kr.bemyplan.ui.main.scrap.ScrapFragment"
+        android:label="scrap_fragment"
+        tools:layout="@layout/fragment_scrap" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_my_plan"
+        android:name="co.kr.bemyplan.ui.main.myplan.MyPlanFragment"
+        android:label="my_plan_fragment"
+        tools:layout="@layout/fragment_my_plan" >
+        <action
+            android:id="@+id/action_fragment_my_plan_to_fragment_home"
+            app:destination="@id/fragment_home" />
+    </fragment>
+
+</navigation>

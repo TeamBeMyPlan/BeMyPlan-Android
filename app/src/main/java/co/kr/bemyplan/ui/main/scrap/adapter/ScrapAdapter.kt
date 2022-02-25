@@ -30,7 +30,7 @@ class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val sc
             clickScrap(contentModel)
         }
 
-        fun reDrawView(contentModel: ContentModel) {
+        private fun reDrawView(contentModel: ContentModel) {
             binding.model = contentModel
         }
 

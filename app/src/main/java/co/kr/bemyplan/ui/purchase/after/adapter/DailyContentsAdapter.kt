@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -39,7 +40,11 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     private val differ = AsyncListDiffer(this, differCallback)
 
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
-    fun submitList(list: List<Spot>) = differ.submitList(list)
+    fun submitList(list: List<Spot>) {
+        differ.submitList(list, Runnable {
+            if (list.size >= 5) notifyItemChanged(4)
+        })
+    }
 
     override fun getItemViewType(position: Int) = viewType
 
@@ -75,6 +80,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                 }
             }
             is RouteViewHolder -> {
+                Log.d("hoooni", spot.title)
                 holder.onBind(spot, position, itemCount - 1)
             }
         }

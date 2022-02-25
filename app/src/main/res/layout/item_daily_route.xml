@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View" />
-
         <variable
             name="spot"
             type="co.kr.bemyplan.data.entity.purchase.after.Spot" />

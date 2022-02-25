@@ -3,6 +3,7 @@ package co.kr.bemyplan.ui.purchase.after
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +54,6 @@ class DailyContentsFragment : Fragment() {
 
             if (it.size > 5) { // 장소들이 5개 초과인 경우에 더보기, 닫기 버튼 추가
                 routeAdapter.submitList(it.subList(0, 5))
-                initMoreBtn(it)
                 binding.clLookMore.setOnClickListener { _ -> initMoreBtn(it) }
                 binding.clLookClose.setOnClickListener { _ -> initCloseBtn(it) }
             }

@@ -77,7 +77,7 @@ class NotEmptyScrapFragment : Fragment() {
         }, {
             viewModel.postScrap(it)
         })
-        scrapAdapter.itemList = listItem
+        scrapAdapter.replaceItem(listItem)
         binding.rvContent.adapter = scrapAdapter
     }
 

@@ -36,16 +36,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/iv_settings"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="13dp"
                 android:layout_marginEnd="11dp"
-                android:src="@drawable/ic_icn_settings"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_icn_settings"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -76,6 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:fontFamily="@font/spoqa_han_sans_neo_medium"
+                    tools:text="다운타운베이비"
                     android:text="@{viewModel.nickname}"
                     android:textColor="@color/grey_313740"
                     android:textSize="14sp"

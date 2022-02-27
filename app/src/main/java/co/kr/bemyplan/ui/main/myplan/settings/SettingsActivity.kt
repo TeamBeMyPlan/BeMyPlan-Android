@@ -20,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 뒤로가기
-        binding.ivBack.setOnClickListener {
+        binding.clBack.setOnClickListener {
             finish()
         }
 
@@ -40,12 +40,12 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // 로그아웃
-        binding.tvLogout.setOnClickListener {
+        binding.clLogout.setOnClickListener {
             showLogoutDialog()
         }
 
         // 회원탈퇴
-        binding.tvWithdrawal.setOnClickListener {
+        binding.clWithdrawal.setOnClickListener {
             val intent = Intent(this, WithdrawalActivity::class.java)
             startActivity(intent)
         }

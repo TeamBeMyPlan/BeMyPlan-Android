@@ -118,7 +118,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         }
 
         private fun copyButton() {
-            binding.ivCopy.setOnClickListener {
+            binding.clAddress.setOnClickListener {
                 val clipboard =
                     mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("CODE", binding.tvAddress.text)

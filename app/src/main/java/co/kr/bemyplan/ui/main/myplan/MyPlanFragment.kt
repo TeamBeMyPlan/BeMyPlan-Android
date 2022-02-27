@@ -75,7 +75,7 @@ class MyPlanFragment : Fragment() {
     }
 
     private fun initSettingsButton() {
-        binding.ivSettings.setOnClickListener {
+        binding.clSettings.setOnClickListener {
             val intent = Intent(activity, SettingsActivity::class.java)
             startActivity(intent)
         }

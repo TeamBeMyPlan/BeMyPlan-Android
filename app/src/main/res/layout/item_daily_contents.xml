@@ -37,37 +37,48 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_address"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_address"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="제주특별자치도 제주시 애월읍 유수암리 산138"
-            android:textColor="@color/grey_919bab"
-            android:fontFamily="@font/spoqa_han_sans_neo_regular"
-            android:textSize="14sp"
-            app:text="@{spot.address}"
-            app:layout_constraintTop_toBottomOf="@id/tv_place"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_place"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_copy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:padding="5dp"
-            android:src="@drawable/ic_icn_copy"
-            app:layout_constraintTop_toTopOf="@+id/tv_address"
-            app:layout_constraintBottom_toBottomOf="@id/tv_address"
-            app:layout_constraintStart_toEndOf="@id/tv_address" />
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="5dp"
+                android:text="제주특별자치도 제주시 애월읍 유수암리 산138"
+                android:textColor="@color/grey_919bab"
+                android:fontFamily="@font/spoqa_han_sans_neo_regular"
+                android:textSize="14sp"
+                app:text="@{spot.address}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_icn_copy"
+                app:layout_constraintTop_toTopOf="@+id/tv_address"
+                app:layout_constraintBottom_toBottomOf="@id/tv_address"
+                app:layout_constraintStart_toEndOf="@id/tv_address" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:overScrollMode="never"
-            app:layout_constraintTop_toBottomOf="@+id/tv_address"
+            app:layout_constraintTop_toBottomOf="@+id/cl_address"
             app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.tabs.TabLayout

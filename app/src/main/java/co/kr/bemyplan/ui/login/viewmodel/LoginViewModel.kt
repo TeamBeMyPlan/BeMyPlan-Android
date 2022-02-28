@@ -141,25 +141,6 @@ class LoginViewModel : ViewModel() {
         _isDuplicatedEmail.value = null
     }
 
-//    fun checkIsDuplicated() {
-//        viewModelScope.launch {
-//            try {
-//                val response =
-//                    loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
-//                _isDuplicated.value = response.data.duplicated
-//                Log.d("mlog: LoginViewModel::isDuplicated.value", isDuplicated.value.toString())
-//
-//                if (!isDuplicated.value!! && isValid.value!!) {
-//                    _signUpPermission.call()
-//                }
-//            } catch (e: retrofit2.HttpException) {
-//                Log.e("mlog: HttpException", e.code().toString())
-//            } catch (t: Throwable) {
-//                Log.e("mlog: Throwable", t.message.toString())
-//            }
-//        }
-//    }
-
     fun checkIsDuplicatedNickname() {
         viewModelScope.launch {
             kotlin.runCatching {
@@ -169,7 +150,6 @@ class LoginViewModel : ViewModel() {
 
                 if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
                     _nicknamePermission.value = true
-//                    _nicknamePermission.call()
                 }
             }.onFailure {
                 Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
@@ -193,7 +173,6 @@ class LoginViewModel : ViewModel() {
 
         if (!isDuplicatedEmail.value!! && isValidEmail.value!!) {
             _emailPermission.value = true
-//            _emailPermission.call()
         }
     }
 
@@ -217,8 +196,6 @@ class LoginViewModel : ViewModel() {
         Log.d("mlog: terms", isAllAgree.value.toString())
         if (nicknamePermission.value == true && emailPermission.value == true && isAllAgree.value == true) {
             _signUpPermission.value = true
-//            _signUpPermission.call()
-//            signUp()
         }
     }
 

@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.local.AutoLoginData
+import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel

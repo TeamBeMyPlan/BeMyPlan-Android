@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.local.AutoLoginData
+import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
 import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter

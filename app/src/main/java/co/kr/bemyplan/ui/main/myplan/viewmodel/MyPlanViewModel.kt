@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import kotlinx.coroutines.launch

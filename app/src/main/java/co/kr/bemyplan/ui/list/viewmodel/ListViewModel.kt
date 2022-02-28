@@ -9,6 +9,7 @@ import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.location.LocationListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
+import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
@@ -21,6 +22,7 @@ class ListViewModel @Inject constructor(
     private val latestListRepository: LatestListRepository,
     private val suggestListRepository: SuggestListRepository,
     private val locationListRepository: LocationListRepository,
+    private val userPostListRepository: UserPostListRepository,
     private val scrapListRepository: ScrapRepository
 ) : ViewModel() {
     private var page = 0
@@ -105,10 +107,9 @@ class ListViewModel @Inject constructor(
     }
 
     fun getUserPostList(userId: Int) {
-        val userPostListRepositoryImpl = UserPostListRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = userPostListRepositoryImpl.getUserPostList(
+                val response = userPostListRepository.getUserPostList(
                     userId,
                     page,
                     pageSize,

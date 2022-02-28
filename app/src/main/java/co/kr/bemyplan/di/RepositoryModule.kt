@@ -7,6 +7,8 @@ import co.kr.bemyplan.data.repository.list.location.LocationListRepository
 import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
+import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
@@ -63,5 +65,14 @@ object RepositoryModule {
         locationListService: LocationListService
     ): LocationListRepository {
         return LocationListRepositoryImpl(locationListService)
+    }
+
+    // 유저가 작성한 게시물 리스트 뷰
+    @ViewModelScoped
+    @Provides
+    fun provideUserPostListRepository(
+        userPostListService: UserPostListService
+    ): UserPostListRepository {
+        return UserPostListRepositoryImpl(userPostListService)
     }
 }

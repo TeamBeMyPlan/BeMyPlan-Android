@@ -56,4 +56,11 @@ object RetrofitModule {
     fun provideLocationListService(retrofit: Retrofit): LocationListService {
         return retrofit.create(LocationListService::class.java)
     }
+
+    // 유저가 작성한 게시물 리스트 뷰
+    @Singleton
+    @Provides
+    fun provideUserPostListService(retrofit: Retrofit): UserPostListService {
+        return retrofit.create(UserPostListService::class.java)
+    }
 }

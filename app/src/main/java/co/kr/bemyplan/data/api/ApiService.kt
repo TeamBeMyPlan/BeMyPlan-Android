@@ -36,12 +36,6 @@ object ApiService {
     // 유저가 게시한 포스트 조회
     val userPostListService: UserPostListService = retrofit.create(UserPostListService::class.java)
 
-    // 여행 컨텐츠 구매 전 정보 조회
-    val previewInfoService: PreviewInfoService = retrofit.create(PreviewInfoService::class.java)
-
-    // 여행 컨텐츠 구매 전 리스트 조회
-    val previewListService: PreviewListService = retrofit.create(PreviewListService::class.java)
-
     // 최신 여행 일정 조회
     val homeNewService: HomeNewService = retrofit.create(HomeNewService::class.java)
 

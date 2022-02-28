@@ -1,7 +1,7 @@
 package co.kr.bemyplan.di
 
 import co.kr.bemyplan.BuildConfig
-import co.kr.bemyplan.data.api.PreviewInfoService
+import co.kr.bemyplan.data.api.PreviewService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,8 +10,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@InstallIn(SingletonComponent::class)
 @Module
+@InstallIn(SingletonComponent::class)
 object RetrofitModule {
     @Singleton
     @Provides
@@ -24,7 +24,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun providePreviewInfoService(retrofit: Retrofit): PreviewInfoService {
-        return retrofit.create(PreviewInfoService::class.java)
+    fun providePreviewService(retrofit: Retrofit): PreviewService {
+        return retrofit.create(PreviewService::class.java)
     }
 }

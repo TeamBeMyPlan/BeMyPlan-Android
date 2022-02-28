@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
+import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ListViewModel @Inject constructor(
     private val latestListRepository: LatestListRepository,
+    private val suggestListRepository: SuggestListRepository,
     private val scrapListRepository: ScrapRepository
 ) : ViewModel() {
     private var page = 0
@@ -70,10 +72,9 @@ class ListViewModel @Inject constructor(
     }
 
     fun getSuggestList() {
-        val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
+                val response = suggestListRepository.getSuggestList(page, pageSize)
                 _suggestList.value = response.data.items
                 Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {

@@ -4,6 +4,7 @@ import co.kr.bemyplan.BuildConfig
 import co.kr.bemyplan.data.api.LatestListService
 import co.kr.bemyplan.data.api.PreviewService
 import co.kr.bemyplan.data.api.ScrapListService
+import co.kr.bemyplan.data.api.SuggestListService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,5 +44,12 @@ object RetrofitModule {
     @Provides
     fun provideLatestListService(retrofit: Retrofit): LatestListService {
         return retrofit.create(LatestListService::class.java)
+    }
+
+    // 비마플 추천 여행 일정 리스트 뷰
+    @Singleton
+    @Provides
+    fun provideSuggestListService(retrofit: Retrofit): SuggestListService {
+        return retrofit.create(SuggestListService::class.java)
     }
 }

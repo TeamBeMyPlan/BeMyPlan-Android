@@ -3,8 +3,11 @@ package co.kr.bemyplan.di
 import co.kr.bemyplan.data.api.LatestListService
 import co.kr.bemyplan.data.api.PreviewService
 import co.kr.bemyplan.data.api.ScrapListService
+import co.kr.bemyplan.data.api.SuggestListService
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
+import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
@@ -36,12 +39,21 @@ object RepositoryModule {
         return ScrapRepositoryImpl(scrapListService)
     }
 
-    // 최신 여행 일정 뷰
+    // 최신 여행 일정 리스트 뷰
     @ViewModelScoped
     @Provides
     fun provideLatestListRepository(
         latestListService: LatestListService
     ): LatestListRepository {
         return LatestListRepositoryImpl(latestListService)
+    }
+
+    // 비마플 추천 여행 일정 리스트 뷰
+    @ViewModelScoped
+    @Provides
+    fun provideSuggestListRepository(
+        suggestListService: SuggestListService
+    ): SuggestListRepository {
+        return SuggestListRepositoryImpl(suggestListService)
     }
 }

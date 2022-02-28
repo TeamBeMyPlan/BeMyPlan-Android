@@ -19,7 +19,9 @@ import co.kr.bemyplan.databinding.FragmentOldSignUpBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
 import co.kr.bemyplan.util.CustomDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OldSignUpFragment : Fragment() {
     private var _binding: FragmentOldSignUpBinding? = null
     private val binding get() = _binding!!

@@ -13,8 +13,9 @@ import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance

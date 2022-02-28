@@ -15,7 +15,9 @@ import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentCheckEmailBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CheckEmailFragment : Fragment() {
     private var _binding: FragmentCheckEmailBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")

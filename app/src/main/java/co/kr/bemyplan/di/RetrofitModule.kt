@@ -70,4 +70,11 @@ object RetrofitModule {
     fun provideMyPlanService(retrofit: Retrofit): MyPlanService {
         return retrofit.create(MyPlanService::class.java)
     }
+
+    // 로그인 뷰
+    @Singleton
+    @Provides
+    fun provideLoginService(retrofit: Retrofit): LoginService {
+        return retrofit.create(LoginService::class.java)
+    }
 }

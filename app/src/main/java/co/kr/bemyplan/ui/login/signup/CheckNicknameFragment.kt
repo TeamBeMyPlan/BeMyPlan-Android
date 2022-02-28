@@ -16,7 +16,9 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentCheckNicknameBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.util.CustomDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CheckNicknameFragment : Fragment() {
     private var _binding: FragmentCheckNicknameBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")

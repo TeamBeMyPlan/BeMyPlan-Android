@@ -10,17 +10,22 @@ import co.kr.bemyplan.data.entity.login.UserInfoModel
 import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
+import co.kr.bemyplan.data.repository.login.LoginRepository
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val loginRepository: LoginRepository
+) : ViewModel() {
     // 카카오로그인
     private val userApiClient = UserApiClient.instance
-    private val loginRepositoryImpl = LoginRepositoryImpl()
 
     var nickname = MutableLiveData<String>("")
     var email = MutableLiveData<String>("")
@@ -86,7 +91,7 @@ class LoginViewModel : ViewModel() {
         val requestLogin = RequestLogin(socialToken.value.toString(), socialType.value.toString())
         viewModelScope.launch {
             try {
-                val response = loginRepositoryImpl.postLogin(requestLogin)
+                val response = loginRepository.postLogin(requestLogin)
                 _userInfo.value = response.data
                 _isUser.value = true
             } catch (e: retrofit2.HttpException) {
@@ -144,7 +149,7 @@ class LoginViewModel : ViewModel() {
     fun checkIsDuplicatedNickname() {
         viewModelScope.launch {
             kotlin.runCatching {
-                loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+                loginRepository.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
             }.onSuccess {
                 _isDuplicatedNickname.value = it.data.duplicated
 
@@ -202,7 +207,7 @@ class LoginViewModel : ViewModel() {
     fun signUp() {
         viewModelScope.launch {
             try {
-                val response = loginRepositoryImpl.postSignUp(
+                val response = loginRepository.postSignUp(
                     RequestSignUp(
                         socialToken.value.toString(),
                         socialType.value.toString(),

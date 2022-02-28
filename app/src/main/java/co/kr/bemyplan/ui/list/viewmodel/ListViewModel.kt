@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.latest.NewListRepository
+import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    private val newListRepository: NewListRepository,
+    private val latestListRepository: LatestListRepository,
     private val scrapListRepository: ScrapRepository
 ) : ViewModel() {
     private var page = 0
@@ -27,8 +27,8 @@ class ListViewModel @Inject constructor(
     private var _sort = MutableLiveData<String>("created_at")
     val sort: LiveData<String> get() = _sort
 
-    private var _newList = MutableLiveData<List<ContentModel>>()
-    val newList: LiveData<List<ContentModel>> get() = _newList
+    private var _latestList = MutableLiveData<List<ContentModel>>()
+    val latestList: LiveData<List<ContentModel>> get() = _latestList
 
     private var _suggestList = MutableLiveData<List<ContentModel>>()
     val suggestList: LiveData<List<ContentModel>> get() = _suggestList
@@ -55,16 +55,16 @@ class ListViewModel @Inject constructor(
         Log.d("mlog: sort", sort.value.toString())
     }
 
-    fun getNewList() {
+    fun getLatestList() {
         viewModelScope.launch {
             try {
-                val response = newListRepository.getNewList(page, pageSize)
-                _newList.value = response.data.items
-                Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
+                val response = latestListRepository.getNewList(page, pageSize)
+                _latestList.value = response.data.items
+                Log.d("mlog: ListViewModel.latestList.size", latestList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getNewList error handling", e.code().toString())
+                Log.e("mlog: ListViewModel::getLatestList error handling", e.code().toString())
             } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getNewList error handling", t.message.toString())
+                Log.e("mlog: ListViewModel::getLatestList error handling", t.message.toString())
             }
         }
     }

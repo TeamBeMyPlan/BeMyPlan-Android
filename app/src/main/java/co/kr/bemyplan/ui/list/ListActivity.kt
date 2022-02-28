@@ -50,14 +50,14 @@ class ListActivity : AppCompatActivity() {
             "new" -> {
                 Log.d("mlog: new", "success")
                 binding.layoutSort.visibility = View.GONE
-                viewModel.getNewList()
+                viewModel.getLatestList()
                 binding.tvTitle.text = "최신 등록 여행 일정"
-                viewModel.newList.observe(this) {
+                viewModel.latestList.observe(this) {
                     listItem = it
                     initRecyclerView()
                 }
                 viewModel.sort.observe(this) {
-                    viewModel.getNewList()
+                    viewModel.getLatestList()
                 }
             }
             "suggest" -> {

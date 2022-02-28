@@ -1,15 +1,15 @@
 package co.kr.bemyplan.data.repository.main.scrap
 
-import co.kr.bemyplan.data.api.ListService
+import co.kr.bemyplan.data.api.ScrapListService
 import co.kr.bemyplan.data.entity.main.scrap.ResponseEmptyScrapList
 import co.kr.bemyplan.data.entity.main.scrap.ResponseScrapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ListRepositoryImpl @Inject constructor(
-    private val service: ListService
-) : ListRepository {
+class ScrapRepositoryImpl @Inject constructor(
+    private val service: ScrapListService
+) : ScrapRepository {
     override suspend fun getScrapList(
         page: Int,
         pageSize: Int,

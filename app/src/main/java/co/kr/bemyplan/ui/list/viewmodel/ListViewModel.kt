@@ -11,14 +11,14 @@ import co.kr.bemyplan.data.repository.list.new.NewListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.ListRepository
+import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    private val scrapListRepository: ListRepository
+    private val scrapListRepository: ScrapRepository
 ) : ViewModel() {
     private var page = 0
     private var pageSize = 10

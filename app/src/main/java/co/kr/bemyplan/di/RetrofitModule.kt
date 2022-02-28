@@ -2,7 +2,7 @@ package co.kr.bemyplan.di
 
 import co.kr.bemyplan.BuildConfig
 import co.kr.bemyplan.data.api.PreviewService
-import co.kr.bemyplan.data.api.ListService
+import co.kr.bemyplan.data.api.ScrapListService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,7 +31,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideScrapListService(retrofit: Retrofit): ListService {
-        return retrofit.create(ListService::class.java)
+    fun provideScrapListService(retrofit: Retrofit): ScrapListService {
+        return retrofit.create(ScrapListService::class.java)
     }
 }

@@ -3,7 +3,7 @@ package co.kr.bemyplan.data.repository.main.scrap
 import co.kr.bemyplan.data.entity.main.scrap.ResponseEmptyScrapList
 import co.kr.bemyplan.data.entity.main.scrap.ResponseScrapList
 
-interface ListRepository {
+interface ScrapRepository {
     suspend fun getScrapList(
         page: Int,
         pageSize: Int,

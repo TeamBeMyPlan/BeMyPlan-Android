@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface ListService {
+interface ScrapListService {
     @GET("/api/v1/scrap")
     suspend fun getScrapList(
         @Query("page") page: Int,

@@ -6,10 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.list.ContentModel
-import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
+import co.kr.bemyplan.data.repository.list.location.LocationListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
-import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
@@ -21,6 +20,7 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(
     private val latestListRepository: LatestListRepository,
     private val suggestListRepository: SuggestListRepository,
+    private val locationListRepository: LocationListRepository,
     private val scrapListRepository: ScrapRepository
 ) : ViewModel() {
     private var page = 0
@@ -86,10 +86,9 @@ class ListViewModel @Inject constructor(
     }
 
     fun getLocationList(area_id: Int) {
-        val locationListRepositoryImpl = LocationListRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = locationListRepositoryImpl.getLocationList(
+                val response = locationListRepository.getLocationList(
                     area_id,
                     page,
                     pageSize,

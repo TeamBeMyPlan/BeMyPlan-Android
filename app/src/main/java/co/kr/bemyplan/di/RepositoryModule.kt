@@ -1,11 +1,10 @@
 package co.kr.bemyplan.di
 
-import co.kr.bemyplan.data.api.LatestListService
-import co.kr.bemyplan.data.api.PreviewService
-import co.kr.bemyplan.data.api.ScrapListService
-import co.kr.bemyplan.data.api.SuggestListService
+import co.kr.bemyplan.data.api.*
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.location.LocationListRepository
+import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
@@ -55,5 +54,14 @@ object RepositoryModule {
         suggestListService: SuggestListService
     ): SuggestListRepository {
         return SuggestListRepositoryImpl(suggestListService)
+    }
+
+    // 여행지 리스트 뷰
+    @ViewModelScoped
+    @Provides
+    fun provideLocationListRepository(
+        locationListService: LocationListService
+    ): LocationListRepository {
+        return LocationListRepositoryImpl(locationListService)
     }
 }

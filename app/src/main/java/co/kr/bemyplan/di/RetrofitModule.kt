@@ -1,10 +1,7 @@
 package co.kr.bemyplan.di
 
 import co.kr.bemyplan.BuildConfig
-import co.kr.bemyplan.data.api.LatestListService
-import co.kr.bemyplan.data.api.PreviewService
-import co.kr.bemyplan.data.api.ScrapListService
-import co.kr.bemyplan.data.api.SuggestListService
+import co.kr.bemyplan.data.api.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +29,7 @@ object RetrofitModule {
         return retrofit.create(PreviewService::class.java)
     }
 
-    // 스크랩
+    // 스크랩 뷰
     @Singleton
     @Provides
     fun provideScrapListService(retrofit: Retrofit): ScrapListService {
@@ -51,5 +48,12 @@ object RetrofitModule {
     @Provides
     fun provideSuggestListService(retrofit: Retrofit): SuggestListService {
         return retrofit.create(SuggestListService::class.java)
+    }
+
+    // 여행지 리스트 뷰
+    @Singleton
+    @Provides
+    fun provideLocationListService(retrofit: Retrofit): LocationListService {
+        return retrofit.create(LocationListService::class.java)
     }
 }

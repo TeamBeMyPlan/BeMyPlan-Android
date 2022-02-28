@@ -1,6 +1,7 @@
 package co.kr.bemyplan.di
 
 import co.kr.bemyplan.BuildConfig
+import co.kr.bemyplan.data.api.NewListService
 import co.kr.bemyplan.data.api.PreviewService
 import co.kr.bemyplan.data.api.ScrapListService
 import dagger.Module
@@ -23,15 +24,24 @@ object RetrofitModule {
             .build()
     }
 
+    // 구매 전 여행일정 컨텐츠 뷰
     @Singleton
     @Provides
     fun providePreviewService(retrofit: Retrofit): PreviewService {
         return retrofit.create(PreviewService::class.java)
     }
 
+    // 스크랩
     @Singleton
     @Provides
     fun provideScrapListService(retrofit: Retrofit): ScrapListService {
         return retrofit.create(ScrapListService::class.java)
+    }
+
+    // 최신 여행 일정 리스트 뷰
+    @Singleton
+    @Provides
+    fun provideNewListService(retrofit: Retrofit): NewListService {
+        return retrofit.create(NewListService::class.java)
     }
 }

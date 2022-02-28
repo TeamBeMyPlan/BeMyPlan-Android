@@ -63,4 +63,11 @@ object RetrofitModule {
     fun provideUserPostListService(retrofit: Retrofit): UserPostListService {
         return retrofit.create(UserPostListService::class.java)
     }
+
+    // 마이페이지 뷰
+    @Singleton
+    @Provides
+    fun provideMyPlanService(retrofit: Retrofit): MyPlanService {
+        return retrofit.create(MyPlanService::class.java)
+    }
 }

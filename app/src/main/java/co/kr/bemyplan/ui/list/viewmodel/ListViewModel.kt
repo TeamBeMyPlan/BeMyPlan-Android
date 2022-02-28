@@ -10,7 +10,6 @@ import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.location.LocationListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
-import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

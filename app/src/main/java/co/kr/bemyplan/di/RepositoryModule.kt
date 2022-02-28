@@ -9,6 +9,8 @@ import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
+import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
+import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
@@ -74,5 +76,14 @@ object RepositoryModule {
         userPostListService: UserPostListService
     ): UserPostListRepository {
         return UserPostListRepositoryImpl(userPostListService)
+    }
+
+    // 마이페이지 뷰
+    @ViewModelScoped
+    @Provides
+    fun provideMyPlanRepository(
+        myPlanService: MyPlanService
+    ): MyPlanRepository {
+        return MyPlanRepositoryImpl(myPlanService)
     }
 }

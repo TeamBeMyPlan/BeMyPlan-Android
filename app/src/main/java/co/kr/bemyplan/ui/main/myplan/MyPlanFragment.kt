@@ -18,7 +18,9 @@ import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter
 import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 import co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MyPlanFragment : Fragment() {
     private var _binding: FragmentMyPlanBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")

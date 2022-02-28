@@ -16,7 +16,7 @@ object ApiService {
     val homePopularService: HomePopularService = retrofit.create(HomePopularService::class.java)
 
     // 스크랩한 리스트 조회
-    val scrapListService: ScrapListService = retrofit.create(ScrapListService::class.java)
+    val scrapListService: ListService = retrofit.create(ListService::class.java)
 
     // 최신 여행 리스트 조회
     val newListService: NewListService = retrofit.create(NewListService::class.java)

@@ -10,12 +10,16 @@ import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.new.NewListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.EmptyScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
+import co.kr.bemyplan.data.repository.main.scrap.ListRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ListViewModel : ViewModel() {
+@HiltViewModel
+class ListViewModel @Inject constructor(
+    private val scrapListRepository: ListRepository
+) : ViewModel() {
     private var page = 0
     private var pageSize = 10
 
@@ -121,11 +125,10 @@ class ListViewModel : ViewModel() {
     }
 
     fun getScrapList() {
-        val scrapListRepositoryImpl = ScrapListRepositoryImpl()
         viewModelScope.launch {
             try {
                 val response =
-                    scrapListRepositoryImpl.getScrapList(
+                    scrapListRepository.getScrapList(
                         page,
                         pageSize,
                         sort.value.toString()
@@ -141,10 +144,9 @@ class ListViewModel : ViewModel() {
     }
 
     fun getEmptyScrapList() {
-        val emptyScrapListRepositoryImpl = EmptyScrapListRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = emptyScrapListRepositoryImpl.getEmptyScrapList()
+                val response = scrapListRepository.getEmptyScrapList()
                 _emptyScrapList.value = response.data
                 Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {

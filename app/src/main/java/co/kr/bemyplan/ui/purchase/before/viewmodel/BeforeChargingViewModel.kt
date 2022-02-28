@@ -17,7 +17,7 @@ import javax.inject.Inject
 // PreviewInfoRepository 만 Hilt 적용 해보기
 @HiltViewModel
 class BeforeChargingViewModel @Inject constructor(
-    private val previewRepository: PreviewRepository
+    private val repository: PreviewRepository
 ) : ViewModel() {
 
     enum class Pay(val brand: String) {
@@ -82,7 +82,7 @@ class BeforeChargingViewModel @Inject constructor(
     fun getPreviewInfo() {
         viewModelScope.launch {
             try {
-                val response = previewRepository.getPreviewInfo(postId)
+                val response = repository.getPreviewInfo(postId)
                 _previewInfor.value = response.data
             } catch (e: retrofit2.HttpException) {
                 Log.e(
@@ -101,7 +101,7 @@ class BeforeChargingViewModel @Inject constructor(
     fun getPreviewList() {
         viewModelScope.launch {
             try {
-                val response = previewRepository.getPreviewList(postId)
+                val response = repository.getPreviewList(postId)
                 _previewList.value = response.data
             } catch (e: retrofit2.HttpException) {
                 Log.e(

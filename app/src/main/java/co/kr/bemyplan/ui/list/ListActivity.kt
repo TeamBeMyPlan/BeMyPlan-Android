@@ -15,7 +15,9 @@ import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListBinding
     private val viewModel by viewModels<ListViewModel>()

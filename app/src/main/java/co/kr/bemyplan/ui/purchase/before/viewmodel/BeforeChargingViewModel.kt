@@ -7,17 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
-import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// 우선,
-// PreviewInfoRepository 만 Hilt 적용 해보기
 @HiltViewModel
 class BeforeChargingViewModel @Inject constructor(
-    private val repository: PreviewRepository
+    private val previewRepository: PreviewRepository,
+    private val postScrapRepository: PostScrapRepository
 ) : ViewModel() {
 
     enum class Pay(val brand: String) {
@@ -48,10 +47,9 @@ class BeforeChargingViewModel @Inject constructor(
     }
 
     fun postScrap() {
-        val postScrapRepositoryImpl = PostScrapRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = postScrapRepositoryImpl.postScrap(postId)
+                val response = postScrapRepository.postScrap(postId)
                 _isScraped.value = response.data.scrapped
             } catch (e: retrofit2.HttpException) {
                 Log.e(
@@ -67,12 +65,10 @@ class BeforeChargingViewModel @Inject constructor(
         }
     }
 
-    // TODO
-    fun setIsScraped(flag: Boolean?) {
-        if (flag != null) {
-            _isScraped.value = flag!!
-            Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
-        }
+    // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
+    fun setIsScraped(flag: Boolean) {
+        _isScraped.value = flag
+        Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
     }
 
     fun setPostId(postId: Int) {
@@ -82,7 +78,7 @@ class BeforeChargingViewModel @Inject constructor(
     fun getPreviewInfo() {
         viewModelScope.launch {
             try {
-                val response = repository.getPreviewInfo(postId)
+                val response = previewRepository.getPreviewInfo(postId)
                 _previewInfor.value = response.data
             } catch (e: retrofit2.HttpException) {
                 Log.e(
@@ -101,7 +97,7 @@ class BeforeChargingViewModel @Inject constructor(
     fun getPreviewList() {
         viewModelScope.launch {
             try {
-                val response = repository.getPreviewList(postId)
+                val response = previewRepository.getPreviewList(postId)
                 _previewList.value = response.data
             } catch (e: retrofit2.HttpException) {
                 Log.e(

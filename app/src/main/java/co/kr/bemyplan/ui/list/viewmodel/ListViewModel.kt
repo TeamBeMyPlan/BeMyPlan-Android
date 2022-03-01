@@ -10,8 +10,8 @@ import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.location.LocationListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
-import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +22,8 @@ class ListViewModel @Inject constructor(
     private val suggestListRepository: SuggestListRepository,
     private val locationListRepository: LocationListRepository,
     private val userPostListRepository: UserPostListRepository,
-    private val scrapListRepository: ScrapRepository
+    private val scrapListRepository: ScrapRepository,
+    private val postScrapRepository: PostScrapRepository
 ) : ViewModel() {
     private var page = 0
     private var pageSize = 10
@@ -158,10 +159,9 @@ class ListViewModel @Inject constructor(
     }
 
     fun postScrap(postId: Int) {
-        val postScrapRepositoryImpl = PostScrapRepositoryImpl()
         viewModelScope.launch {
             kotlin.runCatching {
-                postScrapRepositoryImpl.postScrap(postId)
+                postScrapRepository.postScrap(postId)
             }.onSuccess {
                 Log.d("mlog: postScrap", "success")
             }.onFailure {

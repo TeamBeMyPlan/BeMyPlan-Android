@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.repository.main.scrap
+package co.kr.bemyplan.data.repository.scrap
 
 import co.kr.bemyplan.data.entity.main.scrap.ResponseScrap
 

@@ -13,6 +13,8 @@ import co.kr.bemyplan.data.repository.login.LoginRepository
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
@@ -96,5 +98,14 @@ object RepositoryModule {
         loginService: LoginService
     ): LoginRepository {
         return LoginRepositoryImpl(loginService)
+    }
+
+    // 스크랩 버튼 클릭
+    @ViewModelScoped
+    @Provides
+    fun providePostScrapRepository(
+        postScrapService: PostScrapService
+    ): PostScrapRepository {
+        return PostScrapRepositoryImpl(postScrapService)
     }
 }

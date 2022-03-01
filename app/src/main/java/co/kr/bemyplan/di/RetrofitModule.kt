@@ -77,4 +77,11 @@ object RetrofitModule {
     fun provideLoginService(retrofit: Retrofit): LoginService {
         return retrofit.create(LoginService::class.java)
     }
+
+    // 스크랩 버튼 클릭
+    @Singleton
+    @Provides
+    fun providePostScrapService(retrofit: Retrofit): PostScrapService {
+        return retrofit.create(PostScrapService::class.java)
+    }
 }

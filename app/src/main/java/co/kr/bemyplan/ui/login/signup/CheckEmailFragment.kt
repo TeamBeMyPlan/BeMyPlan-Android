@@ -48,8 +48,7 @@ class CheckEmailFragment : Fragment() {
 
     private fun observeEmail() {
         viewModel.email.observe(viewLifecycleOwner) {
-            Log.d("mlog: nickname", viewModel.email.value.toString())
-            viewModel.setIsDuplicatedEmailNull()
+            Log.d("mlog: email", viewModel.email.value.toString())
             viewModel.checkIsValidEmail()
         }
     }

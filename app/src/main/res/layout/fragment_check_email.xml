@@ -99,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@{(viewModel.isDuplicatedEmail || !viewModel.isValidEmail) &amp;&amp; viewModel.email.length() != 0  ? @drawable/rectangle_border_red_radius_5 : @drawable/rectangle_border_grey_radius_5}"
+                android:background="@{!viewModel.isValidEmail &amp;&amp; viewModel.email.length() != 0  ? @drawable/rectangle_border_red_radius_5 : @drawable/rectangle_border_grey_radius_5}"
                 android:fontFamily="@font/spoqa_han_sans_neo_medium"
                 android:hint="@string/text_email_hint"
                 android:imeOptions="actionDone"
@@ -118,10 +118,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                android:text="@{viewModel.isDuplicatedEmail ? @string/text_duplicated_email : @string/text_invalid_email}"
+                android:text="@{!viewModel.isValidEmail ? @string/text_invalid_email : ``}"
                 android:textColor="@color/red_c8094e"
                 android:textSize="12sp"
-                android:visibility="@{(viewModel.isDuplicatedEmail || !viewModel.isValidEmail)  &amp;&amp; viewModel.email.length() != 0 ? View.VISIBLE : View.INVISIBLE}"
+                android:visibility="@{!viewModel.isValidEmail  &amp;&amp; viewModel.email.length() != 0 ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_email" />
 

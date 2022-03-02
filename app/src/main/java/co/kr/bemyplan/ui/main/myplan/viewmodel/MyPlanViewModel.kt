@@ -30,14 +30,14 @@ class MyPlanViewModel @Inject constructor(
 
     fun getMyPlanList() {
         viewModelScope.launch {
-            try {
-                val response = myPlanRepository.getMyPlan(page, pageSize)
-                _myPlan.value = response.data.items
-                Log.d("mlog: MyPlanViewModel.myPlan.size", myPlan.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: MyPlanViewModel::getMyPlan error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: MyPlanViewModel::getMyPlan error handling", t.message.toString())
+            kotlin.runCatching {
+                myPlanRepository.getMyPlan(page, pageSize)
+            }.onSuccess {
+                if(_myPlan.value != it.data.items) {
+                    _myPlan.value = it.data.items
+                }
+            }.onFailure {
+                Log.e("mlog: MyPlanViewModel::getMyPlan error", it.message.toString())
             }
         }
     }

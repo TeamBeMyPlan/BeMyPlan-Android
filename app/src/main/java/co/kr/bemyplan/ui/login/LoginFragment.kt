@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import co.kr.bemyplan.BuildConfig
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
+    private val RC_SIGN_IN = 16
 
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -56,6 +61,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         clickGuestLogin()
         clickKakaoLogin()
         clickGoogleLogin()
+        testForSignUpPage()
     }
 
     private fun clickGuestLogin() {
@@ -72,6 +78,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun clickGoogleLogin() {
         binding.layoutGoogle.setOnClickListener {
+            getGoogleToken()
+        }
+    }
+
+    private fun testForSignUpPage() {
+        // test용으로 비마이플랜 이미지 클릭 시 회원가입 뷰 보여줌
+        binding.ivLogo.setOnClickListener {
             startSignUpFragment()
         }
     }
@@ -89,6 +102,30 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 requireContext(),
                 callback = kakaoLoginCallback
             )
+        }
+    }
+
+    private fun getGoogleToken() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .build()
+        val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // Google Login
+        if(requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                Log.d("mlog: googleLogin", "구글 로그인 성공, account.id = " + account.id + ", account.idToken = " + account.idToken)
+            } catch (e: ApiException) {
+                Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)
+            }
         }
     }
 

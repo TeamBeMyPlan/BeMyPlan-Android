@@ -29,7 +29,4 @@ object ApiService {
 
     // 회원 탈퇴
     val withdrawService: WithdrawService = retrofit.create(WithdrawService::class.java)
-
-    // 스크랩 POST
-    val postScrapService: PostScrapService = retrofit.create(PostScrapService::class.java)
 }

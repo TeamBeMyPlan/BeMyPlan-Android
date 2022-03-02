@@ -59,10 +59,6 @@ class LoginViewModel @Inject constructor(
     private var _isValidNickname = MutableLiveData<Boolean>(false)
     val isValidNickname: LiveData<Boolean> get() = _isValidNickname
 
-    // 이메일 중복여부
-    private var _isDuplicatedEmail = MutableLiveData<Boolean?>(null)
-    val isDuplicatedEmail get() = _isDuplicatedEmail
-
     // 이메일 문법적 유효여부
     private var _isValidEmail = MutableLiveData<Boolean>(true)
     val isValidEmail: LiveData<Boolean> get() = _isValidEmail
@@ -79,7 +75,7 @@ class LoginViewModel @Inject constructor(
     private var _isMember = MutableLiveData<Boolean>()
     val isMember: LiveData<Boolean> get() = _isMember
 
-    fun setSocialToken(token: String) {
+    fun setSocialToken(token: String?) {
         _socialToken.value = token
     }
 
@@ -97,7 +93,8 @@ class LoginViewModel @Inject constructor(
             } catch (e: retrofit2.HttpException) {
                 e.printStackTrace()
                 Log.e("mlog: HttpException", e.code().toString())
-                if (e.code() == 403) {
+                // TODO: 임시 코드, 추후 서버 완료되면 e.code() == 500 삭제할 것
+                if (e.code() == 403 || e.code() == 500) {
                     _isUser.value = false
                 }
             } catch (e: IOException) {
@@ -142,10 +139,6 @@ class LoginViewModel @Inject constructor(
         _isDuplicatedNickname.value = null
     }
 
-    fun setIsDuplicatedEmailNull() {
-        _isDuplicatedEmail.value = null
-    }
-
     fun checkIsDuplicatedNickname() {
         viewModelScope.launch {
             kotlin.runCatching {
@@ -168,19 +161,6 @@ class LoginViewModel @Inject constructor(
         Log.d("mlog: isValidNickname.value", isValidNickname.value.toString())
     }
 
-    fun checkIsDuplicatedEmail() {
-        // test - bemyplan@gmail.com 쓰면 중복이라고 처리함
-        if (email.value == "bemyplan@gmail.com") {
-            _isDuplicatedEmail.value = true
-        } else {
-            _isDuplicatedEmail.value = false
-        }
-
-        if (!isDuplicatedEmail.value!! && isValidEmail.value!!) {
-            _emailPermission.value = true
-        }
-    }
-
     fun checkIsValidEmail() {
         val pattern: Pattern = Patterns.EMAIL_ADDRESS
         _isValidEmail.value = pattern.matcher(email.value.toString()).matches()
@@ -192,13 +172,12 @@ class LoginViewModel @Inject constructor(
     }
 
     fun clickEmailNext() {
-        checkIsDuplicatedEmail()
+        if(isValidEmail.value!!) {
+            _emailPermission.value = true
+        }
     }
 
     fun clickTermsNext() {
-        Log.d("mlog: nickname", nicknamePermission.value.toString())
-        Log.d("mlog: email", emailPermission.value.toString())
-        Log.d("mlog: terms", isAllAgree.value.toString())
         if (nicknamePermission.value == true && emailPermission.value == true && isAllAgree.value == true) {
             _signUpPermission.value = true
         }

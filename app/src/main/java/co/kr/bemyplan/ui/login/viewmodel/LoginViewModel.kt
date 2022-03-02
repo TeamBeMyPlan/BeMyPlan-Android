@@ -178,9 +178,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun clickTermsNext() {
-        Log.d("mlog: nickname", nicknamePermission.value.toString())
-        Log.d("mlog: email", emailPermission.value.toString())
-        Log.d("mlog: terms", isAllAgree.value.toString())
         if (nicknamePermission.value == true && emailPermission.value == true && isAllAgree.value == true) {
             _signUpPermission.value = true
         }

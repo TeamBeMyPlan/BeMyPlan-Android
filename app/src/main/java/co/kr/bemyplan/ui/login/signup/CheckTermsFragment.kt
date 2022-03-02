@@ -59,6 +59,7 @@ class CheckTermsFragment : Fragment() {
 
     private fun startMainActivity() {
         viewModel.signUpPermission.observe(viewLifecycleOwner) {
+            // TODO: 추후 여기서 SignUp API 호출 필요
             val intent = Intent(requireContext(), MainActivity::class.java)
             // TODO: 자동 로그인 설정해두자
             startActivity(intent)

@@ -1,8 +1,7 @@
 package co.kr.bemyplan.data.repository.scrap
 
-import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.api.PostScrapService
-import co.kr.bemyplan.data.entity.main.scrap.ResponseScrap
+import co.kr.bemyplan.data.entity.scrap.ResponseScrap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

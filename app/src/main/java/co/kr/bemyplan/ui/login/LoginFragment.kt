@@ -35,6 +35,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             Log.d("mlog: kakaoLogin", "카카오계정 로그인 성공 ${token.accessToken}")
             viewModel.setSocialToken(token.accessToken)
             viewModel.setSocialType("KAKAO")
+
+            // 이메일 가져오기
+            userApiClient.me { user, error ->
+                if(error != null) {
+                    Log.d("mlog: kakaoLogin", "카카오계정 사용자 정보 가져오기 실패")
+                } else if(user != null) {
+                    Log.d("mlog: kakaoLogin", "카카오계정 사용자 정보 가져오기 성공, 카카오계정 이메일 = ${user.kakaoAccount?.email}")
+                    viewModel.email.value = user.kakaoAccount?.email
+                }
+            }
+
             Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
             Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
             login()

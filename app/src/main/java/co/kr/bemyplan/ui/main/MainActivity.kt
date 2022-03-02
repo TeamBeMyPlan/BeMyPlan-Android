@@ -14,7 +14,9 @@ import co.kr.bemyplan.ui.main.home.HomeFragment
 import co.kr.bemyplan.ui.main.location.LocationFragment
 import co.kr.bemyplan.ui.main.myplan.MyPlanFragment
 import co.kr.bemyplan.ui.main.scrap.ScrapFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 

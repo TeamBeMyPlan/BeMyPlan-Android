@@ -5,12 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.local.AutoLoginData
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
-import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
+import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyPlanViewModel : ViewModel() {
+@HiltViewModel
+class MyPlanViewModel @Inject constructor(
+    private val myPlanRepository: MyPlanRepository
+) : ViewModel() {
     private var page = 0
     private var pageSize = 10
 
@@ -25,10 +29,9 @@ class MyPlanViewModel : ViewModel() {
     }
 
     fun getMyPlanList() {
-        val myPlanRepositoryImpl = MyPlanRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = myPlanRepositoryImpl.getMyPlan(page, pageSize)
+                val response = myPlanRepository.getMyPlan(page, pageSize)
                 _myPlan.value = response.data.items
                 Log.d("mlog: MyPlanViewModel.myPlan.size", myPlan.value?.size.toString())
             } catch (e: retrofit2.HttpException) {

@@ -17,7 +17,9 @@ import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NotEmptyScrapFragment : Fragment() {
     private var _binding: FragmentNotEmptyScrapBinding? = null
     private val binding get() = _binding!!

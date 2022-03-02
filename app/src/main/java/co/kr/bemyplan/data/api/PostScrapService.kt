@@ -1,6 +1,6 @@
 package co.kr.bemyplan.data.api
 
-import co.kr.bemyplan.data.entity.main.scrap.ResponseScrap
+import co.kr.bemyplan.data.entity.scrap.ResponseScrap
 import retrofit2.http.POST
 import retrofit2.http.Path
 

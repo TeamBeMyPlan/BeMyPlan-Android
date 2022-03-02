@@ -6,7 +6,9 @@ import co.kr.bemyplan.databinding.ActivityLoginBinding
 import co.kr.bemyplan.ui.base.BaseActivity
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.util.CustomDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
     private val viewModel by viewModels<LoginViewModel>()
 

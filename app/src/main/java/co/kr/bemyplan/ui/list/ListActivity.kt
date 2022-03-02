@@ -15,7 +15,9 @@ import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListBinding
     private val viewModel by viewModels<ListViewModel>()
@@ -48,14 +50,14 @@ class ListActivity : AppCompatActivity() {
             "new" -> {
                 Log.d("mlog: new", "success")
                 binding.layoutSort.visibility = View.GONE
-                viewModel.getNewList()
+                viewModel.getLatestList()
                 binding.tvTitle.text = "최신 등록 여행 일정"
-                viewModel.newList.observe(this) {
+                viewModel.latestList.observe(this) {
                     listItem = it
                     initRecyclerView()
                 }
                 viewModel.sort.observe(this) {
-                    viewModel.getNewList()
+                    viewModel.getLatestList()
                 }
             }
             "suggest" -> {

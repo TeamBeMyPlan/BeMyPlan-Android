@@ -13,7 +13,9 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentCheckTermsBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CheckTermsFragment : Fragment() {
     private var _binding: FragmentCheckTermsBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")

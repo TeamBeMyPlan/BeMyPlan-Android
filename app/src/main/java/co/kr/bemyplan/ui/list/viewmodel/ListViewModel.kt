@@ -6,24 +6,33 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.list.ContentModel
-import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.new.NewListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.EmptyScrapListRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
+import co.kr.bemyplan.data.repository.list.location.LocationListRepository
+import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
+import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
+import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ListViewModel : ViewModel() {
+@HiltViewModel
+class ListViewModel @Inject constructor(
+    private val latestListRepository: LatestListRepository,
+    private val suggestListRepository: SuggestListRepository,
+    private val locationListRepository: LocationListRepository,
+    private val userPostListRepository: UserPostListRepository,
+    private val scrapListRepository: ScrapRepository,
+    private val postScrapRepository: PostScrapRepository
+) : ViewModel() {
     private var page = 0
     private var pageSize = 10
 
     private var _sort = MutableLiveData<String>("created_at")
     val sort: LiveData<String> get() = _sort
 
-    private var _newList = MutableLiveData<List<ContentModel>>()
-    val newList: LiveData<List<ContentModel>> get() = _newList
+    private var _latestList = MutableLiveData<List<ContentModel>>()
+    val latestList: LiveData<List<ContentModel>> get() = _latestList
 
     private var _suggestList = MutableLiveData<List<ContentModel>>()
     val suggestList: LiveData<List<ContentModel>> get() = _suggestList
@@ -50,26 +59,24 @@ class ListViewModel : ViewModel() {
         Log.d("mlog: sort", sort.value.toString())
     }
 
-    fun getNewList() {
-        val newListRepositoryImpl = NewListRepositoryImpl()
+    fun getLatestList() {
         viewModelScope.launch {
             try {
-                val response = newListRepositoryImpl.getNewList(page, pageSize)
-                _newList.value = response.data.items
-                Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
+                val response = latestListRepository.getNewList(page, pageSize)
+                _latestList.value = response.data.items
+                Log.d("mlog: ListViewModel.latestList.size", latestList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getNewList error handling", e.code().toString())
+                Log.e("mlog: ListViewModel::getLatestList error handling", e.code().toString())
             } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getNewList error handling", t.message.toString())
+                Log.e("mlog: ListViewModel::getLatestList error handling", t.message.toString())
             }
         }
     }
 
     fun getSuggestList() {
-        val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
+                val response = suggestListRepository.getSuggestList(page, pageSize)
                 _suggestList.value = response.data.items
                 Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {
@@ -81,10 +88,9 @@ class ListViewModel : ViewModel() {
     }
 
     fun getLocationList(area_id: Int) {
-        val locationListRepositoryImpl = LocationListRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = locationListRepositoryImpl.getLocationList(
+                val response = locationListRepository.getLocationList(
                     area_id,
                     page,
                     pageSize,
@@ -101,10 +107,9 @@ class ListViewModel : ViewModel() {
     }
 
     fun getUserPostList(userId: Int) {
-        val userPostListRepositoryImpl = UserPostListRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = userPostListRepositoryImpl.getUserPostList(
+                val response = userPostListRepository.getUserPostList(
                     userId,
                     page,
                     pageSize,
@@ -121,11 +126,10 @@ class ListViewModel : ViewModel() {
     }
 
     fun getScrapList() {
-        val scrapListRepositoryImpl = ScrapListRepositoryImpl()
         viewModelScope.launch {
             try {
                 val response =
-                    scrapListRepositoryImpl.getScrapList(
+                    scrapListRepository.getScrapList(
                         page,
                         pageSize,
                         sort.value.toString()
@@ -141,10 +145,9 @@ class ListViewModel : ViewModel() {
     }
 
     fun getEmptyScrapList() {
-        val emptyScrapListRepositoryImpl = EmptyScrapListRepositoryImpl()
         viewModelScope.launch {
             try {
-                val response = emptyScrapListRepositoryImpl.getEmptyScrapList()
+                val response = scrapListRepository.getEmptyScrapList()
                 _emptyScrapList.value = response.data
                 Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
             } catch (e: retrofit2.HttpException) {
@@ -156,10 +159,9 @@ class ListViewModel : ViewModel() {
     }
 
     fun postScrap(postId: Int) {
-        val postScrapRepositoryImpl = PostScrapRepositoryImpl()
         viewModelScope.launch {
             kotlin.runCatching {
-                postScrapRepositoryImpl.postScrap(postId)
+                postScrapRepository.postScrap(postId)
             }.onSuccess {
                 Log.d("mlog: postScrap", "success")
             }.onFailure {

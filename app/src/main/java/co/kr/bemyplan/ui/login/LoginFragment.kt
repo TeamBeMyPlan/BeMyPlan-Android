@@ -1,12 +1,10 @@
 package co.kr.bemyplan.ui.login
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.BuildConfig
@@ -42,7 +40,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     Log.d("mlog: kakaoLogin", "카카오계정 사용자 정보 가져오기 실패")
                 } else if(user != null) {
                     Log.d("mlog: kakaoLogin", "카카오계정 사용자 정보 가져오기 성공, 카카오계정 이메일 = ${user.kakaoAccount?.email}")
-                    viewModel.email.value = user.kakaoAccount?.email
+                    user.kakaoAccount?.email?.let { email -> viewModel.email.value = email }
                 }
             }
 
@@ -63,7 +61,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 )
                 viewModel.setSocialToken(account.idToken)
                 viewModel.setSocialType("GOOGLE")
-                viewModel.email.value = account.email
+                account.email?.let { email -> viewModel.email.value = email }
+                Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
+                Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
                 login()
             } catch (e: ApiException) {
                 Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)

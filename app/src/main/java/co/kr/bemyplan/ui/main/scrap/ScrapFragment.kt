@@ -11,7 +11,9 @@ import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentScrapBinding
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ScrapFragment : Fragment() {
     private var _binding: FragmentScrapBinding? = null
     private val binding get() = _binding!!

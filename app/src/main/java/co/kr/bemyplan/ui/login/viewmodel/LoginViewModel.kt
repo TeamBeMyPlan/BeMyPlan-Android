@@ -10,17 +10,22 @@ import co.kr.bemyplan.data.entity.login.UserInfoModel
 import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
+import co.kr.bemyplan.data.repository.login.LoginRepository
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val loginRepository: LoginRepository
+) : ViewModel() {
     // 카카오로그인
     private val userApiClient = UserApiClient.instance
-    private val loginRepositoryImpl = LoginRepositoryImpl()
 
     var nickname = MutableLiveData<String>("")
     var email = MutableLiveData<String>("")
@@ -86,7 +91,7 @@ class LoginViewModel : ViewModel() {
         val requestLogin = RequestLogin(socialToken.value.toString(), socialType.value.toString())
         viewModelScope.launch {
             try {
-                val response = loginRepositoryImpl.postLogin(requestLogin)
+                val response = loginRepository.postLogin(requestLogin)
                 _userInfo.value = response.data
                 _isUser.value = true
             } catch (e: retrofit2.HttpException) {
@@ -141,35 +146,15 @@ class LoginViewModel : ViewModel() {
         _isDuplicatedEmail.value = null
     }
 
-//    fun checkIsDuplicated() {
-//        viewModelScope.launch {
-//            try {
-//                val response =
-//                    loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
-//                _isDuplicated.value = response.data.duplicated
-//                Log.d("mlog: LoginViewModel::isDuplicated.value", isDuplicated.value.toString())
-//
-//                if (!isDuplicated.value!! && isValid.value!!) {
-//                    _signUpPermission.call()
-//                }
-//            } catch (e: retrofit2.HttpException) {
-//                Log.e("mlog: HttpException", e.code().toString())
-//            } catch (t: Throwable) {
-//                Log.e("mlog: Throwable", t.message.toString())
-//            }
-//        }
-//    }
-
     fun checkIsDuplicatedNickname() {
         viewModelScope.launch {
             kotlin.runCatching {
-                loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+                loginRepository.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
             }.onSuccess {
                 _isDuplicatedNickname.value = it.data.duplicated
 
                 if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
                     _nicknamePermission.value = true
-//                    _nicknamePermission.call()
                 }
             }.onFailure {
                 Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
@@ -193,7 +178,6 @@ class LoginViewModel : ViewModel() {
 
         if (!isDuplicatedEmail.value!! && isValidEmail.value!!) {
             _emailPermission.value = true
-//            _emailPermission.call()
         }
     }
 
@@ -217,15 +201,13 @@ class LoginViewModel : ViewModel() {
         Log.d("mlog: terms", isAllAgree.value.toString())
         if (nicknamePermission.value == true && emailPermission.value == true && isAllAgree.value == true) {
             _signUpPermission.value = true
-//            _signUpPermission.call()
-//            signUp()
         }
     }
 
     fun signUp() {
         viewModelScope.launch {
             try {
-                val response = loginRepositoryImpl.postSignUp(
+                val response = loginRepository.postSignUp(
                     RequestSignUp(
                         socialToken.value.toString(),
                         socialType.value.toString(),

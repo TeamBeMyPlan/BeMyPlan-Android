@@ -6,15 +6,16 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.local.AutoLoginData
+import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance

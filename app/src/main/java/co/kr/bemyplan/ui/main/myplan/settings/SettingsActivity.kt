@@ -5,7 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.local.AutoLoginData
+import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.main.myplan.settings.creator.CreatorProposeActivity
@@ -20,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 뒤로가기
-        binding.ivBack.setOnClickListener {
+        binding.clBack.setOnClickListener {
             finish()
         }
 
@@ -40,12 +40,12 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // 로그아웃
-        binding.tvLogout.setOnClickListener {
+        binding.clLogout.setOnClickListener {
             showLogoutDialog()
         }
 
         // 회원탈퇴
-        binding.tvWithdrawal.setOnClickListener {
+        binding.clWithdrawal.setOnClickListener {
             val intent = Intent(this, WithdrawalActivity::class.java)
             startActivity(intent)
         }

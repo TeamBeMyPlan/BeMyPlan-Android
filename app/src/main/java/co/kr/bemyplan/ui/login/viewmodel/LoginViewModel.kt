@@ -79,7 +79,7 @@ class LoginViewModel @Inject constructor(
     private var _isMember = MutableLiveData<Boolean>()
     val isMember: LiveData<Boolean> get() = _isMember
 
-    fun setSocialToken(token: String) {
+    fun setSocialToken(token: String?) {
         _socialToken.value = token
     }
 
@@ -97,7 +97,8 @@ class LoginViewModel @Inject constructor(
             } catch (e: retrofit2.HttpException) {
                 e.printStackTrace()
                 Log.e("mlog: HttpException", e.code().toString())
-                if (e.code() == 403) {
+                // TODO: 임시 코드, 추후 서버 완료되면 e.code() == 500 삭제할 것
+                if (e.code() == 403 || e.code() == 500) {
                     _isUser.value = false
                 }
             } catch (e: IOException) {

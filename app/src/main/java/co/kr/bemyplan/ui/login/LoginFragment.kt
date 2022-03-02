@@ -1,9 +1,13 @@
 package co.kr.bemyplan.ui.login
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.BuildConfig
 import co.kr.bemyplan.R
@@ -23,35 +27,35 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
-    private val RC_SIGN_IN = 16
 
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
             Log.d("mlog: kakaoLogin", "카카오계정 로그인 실패")
         } else if (token != null) {
             Log.d("mlog: kakaoLogin", "카카오계정 로그인 성공 ${token.accessToken}")
-
             viewModel.setSocialToken(token.accessToken)
             viewModel.setSocialType("KAKAO")
             Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
             Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
-            viewModel.login()
+            login()
+        }
+    }
 
-            viewModel.userInfo.observe(viewLifecycleOwner) {
-                AutoLoginData.setAutoLogin(requireContext(), true, it.accessToken, it.nickname)
-                startMainActivity()
-            }
-
-            viewModel.isUser.observe(viewLifecycleOwner) {
-                when (it) {
-                    true -> {
-                        Log.d("mlog: LoginFragment", "isUser == true, go main")
-                    }
-                    else -> {
-                        Log.d("mlog: LoginFragment", "status code == 403 && isUser == false")
-                        startSignUpFragment()
-                    }
-                }
+    private val startForGoogleLoginResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                Log.d(
+                    "mlog: googleLogin",
+                    "구글 로그인 성공, account.id = " + account.id + ", account.idToken = " + account.idToken + ", account.email = " + account.email
+                )
+                viewModel.setSocialToken(account.idToken)
+                viewModel.setSocialType("GOOGLE")
+                viewModel.email.value = account.email
+                login()
+            } catch (e: ApiException) {
+                Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)
             }
         }
     }
@@ -107,24 +111,32 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun getGoogleToken() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
             .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
             .build()
         val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
         val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        startForGoogleLoginResult.launch(signInIntent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // Google Login
-        if(requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                Log.d("mlog: googleLogin", "구글 로그인 성공, account.id = " + account.id + ", account.idToken = " + account.idToken)
-            } catch (e: ApiException) {
-                Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)
+    private fun login() {
+        viewModel.login()
+
+        viewModel.userInfo.observe(viewLifecycleOwner) {
+            AutoLoginData.setAutoLogin(requireContext(), true, it.accessToken, it.nickname)
+            startMainActivity()
+        }
+
+        viewModel.isUser.observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    Log.d("mlog: LoginFragment", "isUser == true, go main")
+                }
+                else -> {
+                    Log.d("mlog: LoginFragment", "status code == 403 && isUser == false")
+                    startSignUpFragment()
+                }
             }
         }
     }

@@ -15,12 +15,14 @@ import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
+import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListBinding
     private val viewModel by viewModels<ListViewModel>()
+    private val sortViewModel by viewModels<SortViewModel>()
     private lateinit var listAdapter: ListAdapter
     var from: String = ""
     var areaId: Int = -1
@@ -66,24 +68,24 @@ class ListActivity : AppCompatActivity() {
             }
             "location" -> {
                 Log.d("mlog: location", "success")
-                viewModel.getLocationList(areaId)
+                viewModel.getLocationList(areaId, sortViewModel.sort.value.toString())
                 binding.tvTitle.text = locationName
                 viewModel.locationList.observe(this) {
                     listAdapter.replaceItem(it)
                 }
-                viewModel.sort.observe(this) {
-                    viewModel.getLocationList(areaId)
+                sortViewModel.sort.observe(this) {
+                    viewModel.getLocationList(areaId, it)
                 }
             }
             "user" -> {
                 Log.d("mlog: user", "success")
-                viewModel.getUserPostList(userId)
+                viewModel.getUserPostList(userId, sortViewModel.sort.value.toString())
                 binding.tvTitle.text = authorNickname
                 viewModel.userPostList.observe(this) {
                     listAdapter.replaceItem(it)
                 }
-                viewModel.sort.observe(this) {
-                    viewModel.getUserPostList(userId)
+                sortViewModel.sort.observe(this) {
+                    viewModel.getUserPostList(userId, it)
                 }
             }
         }
@@ -120,11 +122,7 @@ class ListActivity : AppCompatActivity() {
         binding.ivOrder.setOnClickListener {
             val bottomSheetDialogFragment = SortFragment()
             bottomSheetDialogFragment.show(supportFragmentManager, bottomSheetDialogFragment.tag)
-            Log.d("mlog: ListActivity에서의 sort", viewModel.sort.value.toString())
-            Log.d(
-                "mlog: viewModel.sort.equals",
-                viewModel.sort.value.equals("created_at").toString()
-            )
+            Log.d("mlog: ListActivity에서의 sort", sortViewModel.sort.value.toString())
         }
     }
 }

@@ -22,14 +22,10 @@ class ListViewModel @Inject constructor(
     private val suggestListRepository: SuggestListRepository,
     private val locationListRepository: LocationListRepository,
     private val userPostListRepository: UserPostListRepository,
-    private val scrapListRepository: ScrapRepository,
     private val postScrapRepository: PostScrapRepository
 ) : ViewModel() {
     private var page = 0
     private var pageSize = 10
-
-    private var _sort = MutableLiveData<String>("created_at")
-    val sort: LiveData<String> get() = _sort
 
     private var _latestList = MutableLiveData<List<ContentModel>>()
     val latestList: LiveData<List<ContentModel>> get() = _latestList
@@ -42,22 +38,6 @@ class ListViewModel @Inject constructor(
 
     private var _userPostList = MutableLiveData<List<ContentModel>>()
     val userPostList: LiveData<List<ContentModel>> get() = _userPostList
-
-    private var _scrapList = MutableLiveData<List<ContentModel>>()
-    val scrapList: LiveData<List<ContentModel>> get() = _scrapList
-
-    private var _emptyScrapList = MutableLiveData<List<ContentModel>>()
-    val emptyScrapList: LiveData<List<ContentModel>> get() = _emptyScrapList
-
-    fun setSort(sortType: Int) {
-        when (sortType) {
-            0 -> _sort.value = "created_at"
-            1 -> _sort.value = "order_count"
-            2 -> _sort.value = "price"
-            else -> _sort.value = ""
-        }
-        Log.d("mlog: sort", sort.value.toString())
-    }
 
     fun getLatestList() {
         viewModelScope.launch {
@@ -87,10 +67,10 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun getLocationList(areaId: Int) {
+    fun getLocationList(areaId: Int, sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                locationListRepository.getLocationList(areaId, page, pageSize, sort.value.toString())
+                locationListRepository.getLocationList(areaId, page, pageSize, sort)
             }.onSuccess {
                 if(_locationList.value != it.data.items) {
                     _locationList.value = it.data.items
@@ -101,44 +81,16 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun getUserPostList(userId: Int) {
+    fun getUserPostList(userId: Int, sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                userPostListRepository.getUserPostList(userId, page, pageSize, sort.value.toString())
+                userPostListRepository.getUserPostList(userId, page, pageSize, sort)
             }.onSuccess {
                 if(_userPostList.value != it.data.items) {
                     _userPostList.value = it.data.items
                 }
             }.onFailure{
                 Log.e("mlog: ListViewModel::getUserPostList error", it.message.toString())
-            }
-        }
-    }
-
-    fun getScrapList() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                scrapListRepository.getScrapList(page, pageSize, sort.value.toString())
-            }.onSuccess {
-                if(_scrapList.value != it.data.items) {
-                    _scrapList.value = it.data.items
-                }
-            }.onFailure {
-                Log.e("mlog: ListViewModel::getScrapList error", it.message.toString())
-            }
-        }
-    }
-
-    fun getEmptyScrapList() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                scrapListRepository.getEmptyScrapList()
-            }.onSuccess {
-                if(_emptyScrapList.value != it.data) {
-                    _emptyScrapList.value = it.data
-                }
-            }.onFailure {
-                Log.e("mlog: ListViewModel::getEmptyScrapList error", it.message.toString())
             }
         }
     }

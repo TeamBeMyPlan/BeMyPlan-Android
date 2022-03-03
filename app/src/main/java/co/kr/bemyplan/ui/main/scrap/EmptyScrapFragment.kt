@@ -22,7 +22,6 @@ class EmptyScrapFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<ListViewModel>()
     private lateinit var scrapRecommendAdapter: ScrapRecommendAdapter
-    private var listItem = listOf<ContentModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

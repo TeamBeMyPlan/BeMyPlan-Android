@@ -28,7 +28,6 @@ class BeforeChargingFragment : Fragment() {
     private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
     private lateinit var contentAdapter: ContentAdapter
-    private var contentItemList = listOf<ContentModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -25,7 +25,6 @@ class NotEmptyScrapFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<ListViewModel>()
     private lateinit var scrapAdapter: ScrapAdapter
-    private var listItem = listOf<ContentModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -183,20 +183,6 @@ class LoginViewModel @Inject constructor(
 
     fun signUp() {
         viewModelScope.launch {
-//            try {
-//                val response = loginRepository.postSignUp(
-//                    RequestSignUp(
-//                        socialToken.value.toString(),
-//                        socialType.value.toString(),
-//                        nickname.value.toString()
-//                    )
-//                )
-//                _userInfo.value = response.data
-//            } catch (e: retrofit2.HttpException) {
-//                Log.e("mlog: LoginViewModel::signUp()", e.message().toString())
-//            } catch (t: Throwable) {
-//                Log.e("mlog: LoginViewModel::signUp", t.message.toString())
-//            }
             kotlin.runCatching {
                 loginRepository.postSignUp(
                     RequestSignUp(

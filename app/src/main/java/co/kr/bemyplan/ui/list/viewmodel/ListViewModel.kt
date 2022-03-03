@@ -61,99 +61,84 @@ class ListViewModel @Inject constructor(
 
     fun getLatestList() {
         viewModelScope.launch {
-            try {
-                val response = latestListRepository.getNewList(page, pageSize)
-                _latestList.value = response.data.items
-                Log.d("mlog: ListViewModel.latestList.size", latestList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getLatestList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getLatestList error handling", t.message.toString())
+            kotlin.runCatching {
+                latestListRepository.getNewList(page, pageSize)
+            }.onSuccess {
+                if(_latestList.value != it.data.items) {
+                    _latestList.value = it.data.items
+                }
+            }.onFailure {
+                Log.e("mlog: ListViewModel::getLatestList error", it.message.toString())
             }
         }
     }
 
     fun getSuggestList() {
         viewModelScope.launch {
-            try {
-                val response = suggestListRepository.getSuggestList(page, pageSize)
-                _suggestList.value = response.data.items
-                Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getSuggestList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getSuggestList error handling", t.message.toString())
+            kotlin.runCatching {
+                suggestListRepository.getSuggestList(page, pageSize)
+            }.onSuccess {
+                if(_suggestList.value != it.data.items) {
+                    _suggestList.value = it.data.items
+                }
+            }.onFailure {
+                Log.e("mlog: ListViewModel::getSuggestList error", it.message.toString())
             }
         }
     }
 
-    fun getLocationList(area_id: Int) {
+    fun getLocationList(areaId: Int) {
         viewModelScope.launch {
-            try {
-                val response = locationListRepository.getLocationList(
-                    area_id,
-                    page,
-                    pageSize,
-                    sort.value.toString()
-                )
-                _locationList.value = response.data.items
-                Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getLocation error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getLocationList error handling", t.message.toString())
+            kotlin.runCatching {
+                locationListRepository.getLocationList(areaId, page, pageSize, sort.value.toString())
+            }.onSuccess {
+                if(_locationList.value != it.data.items) {
+                    _locationList.value = it.data.items
+                }
+            }.onFailure {
+                Log.e("mlog: ListViewModel::getLocationList error", it.message.toString())
             }
         }
     }
 
     fun getUserPostList(userId: Int) {
         viewModelScope.launch {
-            try {
-                val response = userPostListRepository.getUserPostList(
-                    userId,
-                    page,
-                    pageSize,
-                    sort.value.toString()
-                )
-                _userPostList.value = response.data.items
-                Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getUserPostList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getUserPostList error handling", t.message.toString())
+            kotlin.runCatching {
+                userPostListRepository.getUserPostList(userId, page, pageSize, sort.value.toString())
+            }.onSuccess {
+                if(_userPostList.value != it.data.items) {
+                    _userPostList.value = it.data.items
+                }
+            }.onFailure{
+                Log.e("mlog: ListViewModel::getUserPostList error", it.message.toString())
             }
         }
     }
 
     fun getScrapList() {
         viewModelScope.launch {
-            try {
-                val response =
-                    scrapListRepository.getScrapList(
-                        page,
-                        pageSize,
-                        sort.value.toString()
-                    )
-                _scrapList.value = response.data.items
-                Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getScrapList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getScrapList error handling", t.message.toString())
+            kotlin.runCatching {
+                scrapListRepository.getScrapList(page, pageSize, sort.value.toString())
+            }.onSuccess {
+                if(_scrapList.value != it.data.items) {
+                    _scrapList.value = it.data.items
+                }
+            }.onFailure {
+                Log.e("mlog: ListViewModel::getScrapList error", it.message.toString())
             }
         }
     }
 
     fun getEmptyScrapList() {
         viewModelScope.launch {
-            try {
-                val response = scrapListRepository.getEmptyScrapList()
-                _emptyScrapList.value = response.data
-                Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getEmptyScrapList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getEmptyScrapList error handling", t.message.toString())
+            kotlin.runCatching {
+                scrapListRepository.getEmptyScrapList()
+            }.onSuccess {
+                if(_emptyScrapList.value != it.data) {
+                    _emptyScrapList.value = it.data
+                }
+            }.onFailure {
+                Log.e("mlog: ListViewModel::getEmptyScrapList error", it.message.toString())
             }
         }
     }

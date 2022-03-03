@@ -32,8 +32,8 @@ class BeforeChargingViewModel @Inject constructor(
 
     val payWay: LiveData<Pay> get() = _payWay
 
-    private var _previewInfor = MutableLiveData<PreviewInfoModel>()
-    val previewInfor: LiveData<PreviewInfoModel> get() = _previewInfor
+    private var _previewInformation = MutableLiveData<PreviewInfoModel>()
+    val previewInformation: LiveData<PreviewInfoModel> get() = _previewInformation
 
     private var _previewList = MutableLiveData<List<ContentModel>>()
     val previewList: LiveData<List<ContentModel>> get() = _previewList
@@ -48,19 +48,12 @@ class BeforeChargingViewModel @Inject constructor(
 
     fun postScrap() {
         viewModelScope.launch {
-            try {
-                val response = postScrapRepository.postScrap(postId)
-                _isScraped.value = response.data.scrapped
-            } catch (e: retrofit2.HttpException) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::postScrap error handling",
-                    e.code().toString()
-                )
-            } catch (t: Throwable) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::postScrap error handling",
-                    t.message.toString()
-                )
+            kotlin.runCatching {
+                postScrapRepository.postScrap(postId)
+            }.onSuccess {
+                _isScraped.value = it.data.scrapped
+            }.onFailure {
+                Log.e("mlog: BeforeChargingViewModel::postScrap error", it.message.toString())
             }
         }
     }
@@ -77,38 +70,24 @@ class BeforeChargingViewModel @Inject constructor(
 
     fun getPreviewInfo() {
         viewModelScope.launch {
-            try {
-                val response = previewRepository.getPreviewInfo(postId)
-                _previewInfor.value = response.data
-            } catch (e: retrofit2.HttpException) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::getPreviewInfo error handling",
-                    e.code().toString()
-                )
-            } catch (t: Throwable) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::getPreviewInfo error handling",
-                    t.message.toString()
-                )
+            kotlin.runCatching {
+                previewRepository.getPreviewInfo(postId)
+            }.onSuccess {
+                _previewInformation.value = it.data
+            }.onFailure {
+                Log.e("mlog: BeforeChargingViewModel::getPreviewInfo error", it.message.toString())
             }
         }
     }
 
     fun getPreviewList() {
         viewModelScope.launch {
-            try {
-                val response = previewRepository.getPreviewList(postId)
-                _previewList.value = response.data
-            } catch (e: retrofit2.HttpException) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::getPreviewList error handling",
-                    e.code().toString()
-                )
-            } catch (t: Throwable) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::getPreviewList error handling",
-                    t.message.toString()
-                )
+            kotlin.runCatching {
+                previewRepository.getPreviewList(postId)
+            }.onSuccess {
+                _previewList.value = it.data
+            }.onFailure {
+                Log.e("mlog: BeforeChargingViewModel::getPreviewList", it.message.toString())
             }
         }
     }

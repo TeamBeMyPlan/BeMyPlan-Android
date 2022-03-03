@@ -22,7 +22,6 @@ class EmptyScrapFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<ListViewModel>()
     private lateinit var scrapRecommendAdapter: ScrapRecommendAdapter
-    private var listItem = listOf<ContentModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,8 +46,7 @@ class EmptyScrapFragment : Fragment() {
     private fun initList() {
         viewModel.getEmptyScrapList()
         viewModel.emptyScrapList.observe(viewLifecycleOwner) {
-            listItem = it
-            initRecyclerView()
+            scrapRecommendAdapter.replaceItem(it)
         }
     }
 
@@ -58,7 +56,6 @@ class EmptyScrapFragment : Fragment() {
             intent.putExtra("postId", it.postId)
             startActivity(intent)
         }
-        scrapRecommendAdapter.replaceItem(listItem)
         binding.rvRecommend.adapter = scrapRecommendAdapter
     }
 }

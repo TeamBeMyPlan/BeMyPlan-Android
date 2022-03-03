@@ -31,45 +31,5 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fcv_main) as NavHostFragment
         val navController = navHostFragment.findNavController()
         binding.bnv.setupWithNavController(navController)
-
-//        binding.bnv.menu.forEach {
-//            TooltipCompat.setTooltipText(findViewById(it.itemId), null)
-//        }
-    }
-
-    private fun replaceFragment(fragmentType: Int) {
-        val transaction = supportFragmentManager.beginTransaction()
-        when (fragmentType) {
-            HOME_FRAGMENT -> {
-                transaction.replace(R.id.fcv_main, homeFragment)
-            }
-            LOCATION_FRAGMENT -> {
-                transaction.replace(R.id.fcv_main, locationFragment)
-            }
-            SCRAP_FRAGMENT -> {
-                transaction.replace(R.id.fcv_main, scrapFragment)
-            }
-            MY_PLAN_FRAGMENT -> {
-                transaction.replace(R.id.fcv_main, myPlanFragment)
-            }
-        }
-        transaction.commit()
-    }
-
-    fun moveHome() {
-        binding.bnv.selectedItemId = R.id.fragment_home
-        replaceFragment(HOME_FRAGMENT)
-    }
-
-    companion object {
-        const val HOME_FRAGMENT = 0
-        const val LOCATION_FRAGMENT = 1
-        const val SCRAP_FRAGMENT = 2
-        const val MY_PLAN_FRAGMENT = 3
-
-        private val homeFragment = HomeFragment()
-        private val locationFragment = LocationFragment()
-        private val scrapFragment = ScrapFragment()
-        private val myPlanFragment = MyPlanFragment()
     }
 }

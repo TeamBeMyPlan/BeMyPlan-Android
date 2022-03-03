@@ -47,8 +47,7 @@ class EmptyScrapFragment : Fragment() {
     private fun initList() {
         viewModel.getEmptyScrapList()
         viewModel.emptyScrapList.observe(viewLifecycleOwner) {
-            listItem = it
-            initRecyclerView()
+            scrapRecommendAdapter.replaceItem(it)
         }
     }
 
@@ -58,7 +57,6 @@ class EmptyScrapFragment : Fragment() {
             intent.putExtra("postId", it.postId)
             startActivity(intent)
         }
-        scrapRecommendAdapter.replaceItem(listItem)
         binding.rvRecommend.adapter = scrapRecommendAdapter
     }
 }

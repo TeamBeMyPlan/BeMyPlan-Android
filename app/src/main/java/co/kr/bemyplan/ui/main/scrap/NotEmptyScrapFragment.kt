@@ -39,6 +39,7 @@ class NotEmptyScrapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initList()
+        initRecyclerView()
         reloadList()
         openBottomSheetDialog()
     }
@@ -50,8 +51,7 @@ class NotEmptyScrapFragment : Fragment() {
 
     private fun initList() {
         viewModel.scrapList.observe(viewLifecycleOwner) {
-            listItem = it
-            initRecyclerView()
+            scrapAdapter.replaceItem(it)
             Log.d("mlog: NotEmptyScrapFragment.initList", "execute")
         }
     }
@@ -79,7 +79,6 @@ class NotEmptyScrapFragment : Fragment() {
         }, {
             viewModel.postScrap(it)
         })
-        scrapAdapter.replaceItem(listItem)
         binding.rvContent.adapter = scrapAdapter
     }
 

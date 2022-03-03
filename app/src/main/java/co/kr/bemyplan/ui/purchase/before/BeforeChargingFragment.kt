@@ -64,14 +64,12 @@ class BeforeChargingFragment : Fragment() {
 
         viewModel.getPreviewList()
         viewModel.previewList.observe(viewLifecycleOwner) {
-            contentItemList = it
-            initRecyclerView()
+            contentAdapter.replaceItem(it)
         }
     }
 
     private fun initRecyclerView() {
         contentAdapter = ContentAdapter()
-        contentAdapter.itemList = contentItemList
         binding.rvContent.adapter = contentAdapter
     }
 

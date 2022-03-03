@@ -3,13 +3,15 @@ package co.kr.bemyplan.ui.purchase.before.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.databinding.ItemBeforePurchaseContentBinding
 
 class ContentAdapter : RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() {
-    var itemList: List<ContentModel> = listOf()
+    private val asyncDiffer = AsyncListDiffer(this, diffCallback)
 
     class ContentViewHolder(private val binding: ItemBeforePurchaseContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -31,10 +33,26 @@ class ContentAdapter : RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() 
     }
 
     override fun onBindViewHolder(holder: ContentViewHolder, position: Int) {
-        holder.bind(itemList[position])
+        holder.bind(asyncDiffer.currentList[position])
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return asyncDiffer.currentList.size
+    }
+
+    fun replaceItem(itemList: List<ContentModel>) {
+        asyncDiffer.submitList(itemList)
+    }
+
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<ContentModel>() {
+            override fun areItemsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }

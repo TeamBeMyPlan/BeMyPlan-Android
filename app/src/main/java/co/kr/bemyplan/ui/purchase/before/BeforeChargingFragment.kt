@@ -28,7 +28,6 @@ class BeforeChargingFragment : Fragment() {
     private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
     private lateinit var contentAdapter: ContentAdapter
-    private var contentItemList = listOf<ContentModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,20 +57,18 @@ class BeforeChargingFragment : Fragment() {
 
     private fun initList() {
         viewModel.getPreviewInfo()
-        viewModel.previewInfor.observe(viewLifecycleOwner) {
+        viewModel.previewInformation.observe(viewLifecycleOwner) {
             binding.infoModel = it
         }
 
         viewModel.getPreviewList()
         viewModel.previewList.observe(viewLifecycleOwner) {
-            contentItemList = it
-            initRecyclerView()
+            contentAdapter.replaceItem(it)
         }
     }
 
     private fun initRecyclerView() {
         contentAdapter = ContentAdapter()
-        contentAdapter.itemList = contentItemList
         binding.rvContent.adapter = contentAdapter
     }
 
@@ -152,9 +149,9 @@ class BeforeChargingFragment : Fragment() {
         binding.layoutAuthor.setOnClickListener {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "user")
-            intent.putExtra("userId", viewModel.previewInfor.value?.authorId)
-            intent.putExtra("authorNickname", viewModel.previewInfor.value?.author)
-            Log.d("mlog: beforecharging.author_id", viewModel.previewInfor.value?.authorId.toString())
+            intent.putExtra("userId", viewModel.previewInformation.value?.authorId)
+            intent.putExtra("authorNickname", viewModel.previewInformation.value?.author)
+            Log.d("mlog: beforecharging.author_id", viewModel.previewInformation.value?.authorId.toString())
             startActivity(intent)
         }
     }

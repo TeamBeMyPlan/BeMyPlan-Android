@@ -7,18 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
-import co.kr.bemyplan.data.repository.purchase.preview.PreviewInfoRepositoryImpl
-import co.kr.bemyplan.data.repository.purchase.preview.PreviewListRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// 우선,
-// PreviewInfoRepositoryImpl 만 Hilt 적용 해보기
 @HiltViewModel
 class BeforeChargingViewModel @Inject constructor(
-    private val previewInfoRepositoryImpl: PreviewInfoRepositoryImpl
+    private val previewRepository: PreviewRepository,
+    private val postScrapRepository: PostScrapRepository
 ) : ViewModel() {
 
     enum class Pay(val brand: String) {
@@ -34,10 +32,8 @@ class BeforeChargingViewModel @Inject constructor(
 
     val payWay: LiveData<Pay> get() = _payWay
 
-    private val previewListRepositoryImpl = PreviewListRepositoryImpl()
-
-    private var _previewInfor = MutableLiveData<PreviewInfoModel>()
-    val previewInfor: LiveData<PreviewInfoModel> get() = _previewInfor
+    private var _previewInformation = MutableLiveData<PreviewInfoModel>()
+    val previewInformation: LiveData<PreviewInfoModel> get() = _previewInformation
 
     private var _previewList = MutableLiveData<List<ContentModel>>()
     val previewList: LiveData<List<ContentModel>> get() = _previewList
@@ -51,30 +47,21 @@ class BeforeChargingViewModel @Inject constructor(
     }
 
     fun postScrap() {
-        val postScrapRepositoryImpl = PostScrapRepositoryImpl()
         viewModelScope.launch {
-            try {
-                val response = postScrapRepositoryImpl.postScrap(postId)
-                _isScraped.value = response.data.scrapped
-            } catch (e: retrofit2.HttpException) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::postScrap error handling",
-                    e.code().toString()
-                )
-            } catch (t: Throwable) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::postScrap error handling",
-                    t.message.toString()
-                )
+            kotlin.runCatching {
+                postScrapRepository.postScrap(postId)
+            }.onSuccess {
+                _isScraped.value = it.data.scrapped
+            }.onFailure {
+                Log.e("mlog: BeforeChargingViewModel::postScrap error", it.message.toString())
             }
         }
     }
 
-    fun setIsScraped(flag: Boolean?) {
-        if (flag != null) {
-            _isScraped.value = flag
-            Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
-        }
+    // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
+    fun setIsScraped(flag: Boolean) {
+        _isScraped.value = flag
+        Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
     }
 
     fun setPostId(postId: Int) {
@@ -83,38 +70,24 @@ class BeforeChargingViewModel @Inject constructor(
 
     fun getPreviewInfo() {
         viewModelScope.launch {
-            try {
-                val response = previewInfoRepositoryImpl.getPreviewInfo(postId)
-                _previewInfor.value = response.data
-            } catch (e: retrofit2.HttpException) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::getPreviewInfo error handling",
-                    e.code().toString()
-                )
-            } catch (t: Throwable) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::getPreviewInfo error handling",
-                    t.message.toString()
-                )
+            kotlin.runCatching {
+                previewRepository.getPreviewInfo(postId)
+            }.onSuccess {
+                _previewInformation.value = it.data
+            }.onFailure {
+                Log.e("mlog: BeforeChargingViewModel::getPreviewInfo error", it.message.toString())
             }
         }
     }
 
     fun getPreviewList() {
         viewModelScope.launch {
-            try {
-                val response = previewListRepositoryImpl.getPreviewList(postId)
-                _previewList.value = response.data
-            } catch (e: retrofit2.HttpException) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::getPreviewList error handling",
-                    e.code().toString()
-                )
-            } catch (t: Throwable) {
-                Log.e(
-                    "mlog: BeforeChargingViewModel::getPreviewList error handling",
-                    t.message.toString()
-                )
+            kotlin.runCatching {
+                previewRepository.getPreviewList(postId)
+            }.onSuccess {
+                _previewList.value = it.data
+            }.onFailure {
+                Log.e("mlog: BeforeChargingViewModel::getPreviewList", it.message.toString())
             }
         }
     }

@@ -15,12 +15,13 @@ import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListBinding
     private val viewModel by viewModels<ListViewModel>()
     private lateinit var listAdapter: ListAdapter
-    private var listItem = listOf<ContentModel>()
     var from: String = ""
     var areaId: Int = -1
     var userId: Int = -1
@@ -48,14 +49,10 @@ class ListActivity : AppCompatActivity() {
             "new" -> {
                 Log.d("mlog: new", "success")
                 binding.layoutSort.visibility = View.GONE
-                viewModel.getNewList()
+                viewModel.getLatestList()
                 binding.tvTitle.text = "최신 등록 여행 일정"
-                viewModel.newList.observe(this) {
-                    listItem = it
-                    initRecyclerView()
-                }
-                viewModel.sort.observe(this) {
-                    viewModel.getNewList()
+                viewModel.latestList.observe(this) {
+                    listAdapter.replaceItem(it)
                 }
             }
             "suggest" -> {
@@ -64,11 +61,7 @@ class ListActivity : AppCompatActivity() {
                 viewModel.getSuggestList()
                 binding.tvTitle.text = "비마플 추천 여행 일정"
                 viewModel.suggestList.observe(this) {
-                    listItem = it
-                    initRecyclerView()
-                }
-                viewModel.sort.observe(this) {
-                    viewModel.getSuggestList()
+                    listAdapter.replaceItem(it)
                 }
             }
             "location" -> {
@@ -76,8 +69,7 @@ class ListActivity : AppCompatActivity() {
                 viewModel.getLocationList(areaId)
                 binding.tvTitle.text = locationName
                 viewModel.locationList.observe(this) {
-                    listItem = it
-                    initRecyclerView()
+                    listAdapter.replaceItem(it)
                 }
                 viewModel.sort.observe(this) {
                     viewModel.getLocationList(areaId)
@@ -88,8 +80,7 @@ class ListActivity : AppCompatActivity() {
                 viewModel.getUserPostList(userId)
                 binding.tvTitle.text = authorNickname
                 viewModel.userPostList.observe(this) {
-                    listItem = it
-                    initRecyclerView()
+                    listAdapter.replaceItem(it)
                 }
                 viewModel.sort.observe(this) {
                     viewModel.getUserPostList(userId)
@@ -104,7 +95,6 @@ class ListActivity : AppCompatActivity() {
                 val intent = Intent(this, AfterPurchaseActivity::class.java)
                 intent.putExtra("postId", it.postId)
                 intent.putExtra("isScraped", it.isScraped)
-//            intent.putExtra("nickname", it.author)
                 Log.d("mlog: putExtra에서 postId", it.postId.toString())
                 startActivity(intent)
             } else {
@@ -117,7 +107,6 @@ class ListActivity : AppCompatActivity() {
         }, {
             viewModel.postScrap(it)
         })
-        listAdapter.replaceItem(listItem)
         binding.rvLinearContent.adapter = listAdapter
     }
 

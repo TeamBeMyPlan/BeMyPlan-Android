@@ -15,32 +15,11 @@ object ApiService {
     // 인기 여행일정 조회
     val homePopularService: HomePopularService = retrofit.create(HomePopularService::class.java)
 
-    // 스크랩한 리스트 조회
-    val scrapListService: ScrapListService = retrofit.create(ScrapListService::class.java)
-
-    // 최신 여행 리스트 조회
-    val newListService: NewListService = retrofit.create(NewListService::class.java)
-
     // 여행지 리스트 조회
     val locationService: LocationService = retrofit.create(LocationService::class.java)
 
-    // 추천 여행 리스트 조회
-    val suggestListService: SuggestListService = retrofit.create(SuggestListService::class.java)
-
-    // 여행지 여행일정 조회
-    val locationListService: LocationListService = retrofit.create(LocationListService::class.java)
-
     // 구매 후 포스트 조회
     val afterPostService: AfterPostService = retrofit.create(AfterPostService::class.java)
-
-    // 유저가 게시한 포스트 조회
-    val userPostListService: UserPostListService = retrofit.create(UserPostListService::class.java)
-
-    // 여행 컨텐츠 구매 전 정보 조회
-    val previewInfoService: PreviewInfoService = retrofit.create(PreviewInfoService::class.java)
-
-    // 여행 컨텐츠 구매 전 리스트 조회
-    val previewListService: PreviewListService = retrofit.create(PreviewListService::class.java)
 
     // 최신 여행 일정 조회
     val homeNewService: HomeNewService = retrofit.create(HomeNewService::class.java)
@@ -48,19 +27,6 @@ object ApiService {
     // 에디터 추천 여행 일정 조회
     val homeSuggestService: HomeSuggestService = retrofit.create(HomeSuggestService::class.java)
 
-    // 마이페이지 조회
-    val myPlanService: MyPlanService = retrofit.create(MyPlanService::class.java)
-
     // 회원 탈퇴
     val withdrawService: WithdrawService = retrofit.create(WithdrawService::class.java)
-
-    // Empty일 때 스크랩 추천 리스트 조회
-    val emptyScrapListService: EmptyScrapListService =
-        retrofit.create(EmptyScrapListService::class.java)
-
-    // 로그인
-    val loginService: LoginService = retrofit.create(LoginService::class.java)
-
-    // 스크랩 POST
-    val postScrapService: PostScrapService = retrofit.create(PostScrapService::class.java)
 }

@@ -10,17 +10,20 @@ import co.kr.bemyplan.data.entity.login.UserInfoModel
 import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
-import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
+import co.kr.bemyplan.data.repository.login.LoginRepository
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.io.IOException
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val loginRepository: LoginRepository
+) : ViewModel() {
     // 카카오로그인
     private val userApiClient = UserApiClient.instance
-    private val loginRepositoryImpl = LoginRepositoryImpl()
 
     var nickname = MutableLiveData<String>("")
     var email = MutableLiveData<String>("")
@@ -54,10 +57,6 @@ class LoginViewModel : ViewModel() {
     private var _isValidNickname = MutableLiveData<Boolean>(false)
     val isValidNickname: LiveData<Boolean> get() = _isValidNickname
 
-    // 이메일 중복여부
-    private var _isDuplicatedEmail = MutableLiveData<Boolean?>(null)
-    val isDuplicatedEmail get() = _isDuplicatedEmail
-
     // 이메일 문법적 유효여부
     private var _isValidEmail = MutableLiveData<Boolean>(true)
     val isValidEmail: LiveData<Boolean> get() = _isValidEmail
@@ -74,7 +73,7 @@ class LoginViewModel : ViewModel() {
     private var _isMember = MutableLiveData<Boolean>()
     val isMember: LiveData<Boolean> get() = _isMember
 
-    fun setSocialToken(token: String) {
+    fun setSocialToken(token: String?) {
         _socialToken.value = token
     }
 
@@ -85,22 +84,23 @@ class LoginViewModel : ViewModel() {
     fun login() {
         val requestLogin = RequestLogin(socialToken.value.toString(), socialType.value.toString())
         viewModelScope.launch {
-            try {
-                val response = loginRepositoryImpl.postLogin(requestLogin)
-                _userInfo.value = response.data
+            kotlin.runCatching {
+                loginRepository.postLogin(requestLogin)
+            }.onSuccess {
+                _userInfo.value = it.data
                 _isUser.value = true
-            } catch (e: retrofit2.HttpException) {
-                e.printStackTrace()
-                Log.e("mlog: HttpException", e.code().toString())
-                if (e.code() == 403) {
-                    _isUser.value = false
+            }.onFailure {
+                when (it) {
+                    is retrofit2.HttpException -> {
+                        // TODO: 임시 코드, 추후 서버 완료되면 e.code() == 500 삭제할 것
+                        if (it.code() == 403 || it.code() == 500) {
+                            _isUser.value = false
+                        }
+                    }
+                    else -> {
+                        Log.e("mlog: LoginViewModel::login", it.message.toString())
+                    }
                 }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Log.e("mlog: IOException", e.message.toString())
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                Log.e("mlog: Throwable", t.message.toString())
             }
         }
     }
@@ -137,39 +137,15 @@ class LoginViewModel : ViewModel() {
         _isDuplicatedNickname.value = null
     }
 
-    fun setIsDuplicatedEmailNull() {
-        _isDuplicatedEmail.value = null
-    }
-
-//    fun checkIsDuplicated() {
-//        viewModelScope.launch {
-//            try {
-//                val response =
-//                    loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
-//                _isDuplicated.value = response.data.duplicated
-//                Log.d("mlog: LoginViewModel::isDuplicated.value", isDuplicated.value.toString())
-//
-//                if (!isDuplicated.value!! && isValid.value!!) {
-//                    _signUpPermission.call()
-//                }
-//            } catch (e: retrofit2.HttpException) {
-//                Log.e("mlog: HttpException", e.code().toString())
-//            } catch (t: Throwable) {
-//                Log.e("mlog: Throwable", t.message.toString())
-//            }
-//        }
-//    }
-
     fun checkIsDuplicatedNickname() {
         viewModelScope.launch {
             kotlin.runCatching {
-                loginRepositoryImpl.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+                loginRepository.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
             }.onSuccess {
                 _isDuplicatedNickname.value = it.data.duplicated
 
                 if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
                     _nicknamePermission.value = true
-//                    _nicknamePermission.call()
                 }
             }.onFailure {
                 Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
@@ -183,20 +159,6 @@ class LoginViewModel : ViewModel() {
         Log.d("mlog: isValidNickname.value", isValidNickname.value.toString())
     }
 
-    fun checkIsDuplicatedEmail() {
-        // test - bemyplan@gmail.com 쓰면 중복이라고 처리함
-        if (email.value == "bemyplan@gmail.com") {
-            _isDuplicatedEmail.value = true
-        } else {
-            _isDuplicatedEmail.value = false
-        }
-
-        if (!isDuplicatedEmail.value!! && isValidEmail.value!!) {
-            _emailPermission.value = true
-//            _emailPermission.call()
-        }
-    }
-
     fun checkIsValidEmail() {
         val pattern: Pattern = Patterns.EMAIL_ADDRESS
         _isValidEmail.value = pattern.matcher(email.value.toString()).matches()
@@ -208,35 +170,31 @@ class LoginViewModel : ViewModel() {
     }
 
     fun clickEmailNext() {
-        checkIsDuplicatedEmail()
+        if (isValidEmail.value!!) {
+            _emailPermission.value = true
+        }
     }
 
     fun clickTermsNext() {
-        Log.d("mlog: nickname", nicknamePermission.value.toString())
-        Log.d("mlog: email", emailPermission.value.toString())
-        Log.d("mlog: terms", isAllAgree.value.toString())
         if (nicknamePermission.value == true && emailPermission.value == true && isAllAgree.value == true) {
             _signUpPermission.value = true
-//            _signUpPermission.call()
-//            signUp()
         }
     }
 
     fun signUp() {
         viewModelScope.launch {
-            try {
-                val response = loginRepositoryImpl.postSignUp(
+            kotlin.runCatching {
+                loginRepository.postSignUp(
                     RequestSignUp(
                         socialToken.value.toString(),
                         socialType.value.toString(),
                         nickname.value.toString()
                     )
                 )
-                _userInfo.value = response.data
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: LoginViewModel::signUp()", e.message().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: LoginViewModel::signUp", t.message.toString())
+            }.onSuccess {
+                _userInfo.value = it.data
+            }.onFailure {
+                Log.e("mlog: LoginViewModel::signUp", it.message.toString())
             }
         }
     }

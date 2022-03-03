@@ -13,7 +13,9 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentCheckTermsBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CheckTermsFragment : Fragment() {
     private var _binding: FragmentCheckTermsBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")
@@ -57,6 +59,7 @@ class CheckTermsFragment : Fragment() {
 
     private fun startMainActivity() {
         viewModel.signUpPermission.observe(viewLifecycleOwner) {
+            // TODO: 추후 여기서 SignUp API 호출 필요
             val intent = Intent(requireContext(), MainActivity::class.java)
             // TODO: 자동 로그인 설정해두자
             startActivity(intent)

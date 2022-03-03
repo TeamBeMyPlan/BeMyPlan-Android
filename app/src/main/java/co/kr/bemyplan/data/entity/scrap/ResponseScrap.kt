@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.entity.main.scrap
+package co.kr.bemyplan.data.entity.scrap
 
 data class ResponseScrap(
     val data: Data

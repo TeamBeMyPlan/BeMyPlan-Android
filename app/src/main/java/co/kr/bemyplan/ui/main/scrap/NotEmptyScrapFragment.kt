@@ -17,13 +17,14 @@ import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NotEmptyScrapFragment : Fragment() {
     private var _binding: FragmentNotEmptyScrapBinding? = null
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<ListViewModel>()
     private lateinit var scrapAdapter: ScrapAdapter
-    private var listItem = listOf<ContentModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +38,7 @@ class NotEmptyScrapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initList()
+        initRecyclerView()
         reloadList()
         openBottomSheetDialog()
     }
@@ -48,8 +50,7 @@ class NotEmptyScrapFragment : Fragment() {
 
     private fun initList() {
         viewModel.scrapList.observe(viewLifecycleOwner) {
-            listItem = it
-            initRecyclerView()
+            scrapAdapter.replaceItem(it)
             Log.d("mlog: NotEmptyScrapFragment.initList", "execute")
         }
     }
@@ -77,7 +78,6 @@ class NotEmptyScrapFragment : Fragment() {
         }, {
             viewModel.postScrap(it)
         })
-        scrapAdapter.replaceItem(listItem)
         binding.rvContent.adapter = scrapAdapter
     }
 

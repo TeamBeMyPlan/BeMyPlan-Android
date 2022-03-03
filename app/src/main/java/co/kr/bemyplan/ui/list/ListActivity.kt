@@ -54,9 +54,6 @@ class ListActivity : AppCompatActivity() {
                 viewModel.latestList.observe(this) {
                     listAdapter.replaceItem(it)
                 }
-                viewModel.sort.observe(this) {
-                    viewModel.getLatestList()
-                }
             }
             "suggest" -> {
                 Log.d("mlog: suggest", "success")
@@ -65,9 +62,6 @@ class ListActivity : AppCompatActivity() {
                 binding.tvTitle.text = "비마플 추천 여행 일정"
                 viewModel.suggestList.observe(this) {
                     listAdapter.replaceItem(it)
-                }
-                viewModel.sort.observe(this) {
-                    viewModel.getSuggestList()
                 }
             }
             "location" -> {

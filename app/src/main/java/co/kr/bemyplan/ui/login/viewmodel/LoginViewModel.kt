@@ -11,12 +11,10 @@ import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
 import co.kr.bemyplan.data.repository.login.LoginRepository
-import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.io.IOException
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -86,23 +84,23 @@ class LoginViewModel @Inject constructor(
     fun login() {
         val requestLogin = RequestLogin(socialToken.value.toString(), socialType.value.toString())
         viewModelScope.launch {
-            try {
-                val response = loginRepository.postLogin(requestLogin)
-                _userInfo.value = response.data
+            kotlin.runCatching {
+                loginRepository.postLogin(requestLogin)
+            }.onSuccess {
+                _userInfo.value = it.data
                 _isUser.value = true
-            } catch (e: retrofit2.HttpException) {
-                e.printStackTrace()
-                Log.e("mlog: HttpException", e.code().toString())
-                // TODO: 임시 코드, 추후 서버 완료되면 e.code() == 500 삭제할 것
-                if (e.code() == 403 || e.code() == 500) {
-                    _isUser.value = false
+            }.onFailure {
+                when (it) {
+                    is retrofit2.HttpException -> {
+                        // TODO: 임시 코드, 추후 서버 완료되면 e.code() == 500 삭제할 것
+                        if (it.code() == 403 || it.code() == 500) {
+                            _isUser.value = false
+                        }
+                    }
+                    else -> {
+                        Log.e("mlog: LoginViewModel::login", it.message.toString())
+                    }
                 }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Log.e("mlog: IOException", e.message.toString())
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                Log.e("mlog: Throwable", t.message.toString())
             }
         }
     }
@@ -172,7 +170,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun clickEmailNext() {
-        if(isValidEmail.value!!) {
+        if (isValidEmail.value!!) {
             _emailPermission.value = true
         }
     }
@@ -185,19 +183,32 @@ class LoginViewModel @Inject constructor(
 
     fun signUp() {
         viewModelScope.launch {
-            try {
-                val response = loginRepository.postSignUp(
+//            try {
+//                val response = loginRepository.postSignUp(
+//                    RequestSignUp(
+//                        socialToken.value.toString(),
+//                        socialType.value.toString(),
+//                        nickname.value.toString()
+//                    )
+//                )
+//                _userInfo.value = response.data
+//            } catch (e: retrofit2.HttpException) {
+//                Log.e("mlog: LoginViewModel::signUp()", e.message().toString())
+//            } catch (t: Throwable) {
+//                Log.e("mlog: LoginViewModel::signUp", t.message.toString())
+//            }
+            kotlin.runCatching {
+                loginRepository.postSignUp(
                     RequestSignUp(
                         socialToken.value.toString(),
                         socialType.value.toString(),
                         nickname.value.toString()
                     )
                 )
-                _userInfo.value = response.data
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: LoginViewModel::signUp()", e.message().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: LoginViewModel::signUp", t.message.toString())
+            }.onSuccess {
+                _userInfo.value = it.data
+            }.onFailure {
+                Log.e("mlog: LoginViewModel::signUp", it.message.toString())
             }
         }
     }

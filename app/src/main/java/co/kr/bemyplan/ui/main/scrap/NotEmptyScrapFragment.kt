@@ -10,20 +10,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.FragmentNotEmptyScrapBinding
-import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
+import co.kr.bemyplan.ui.main.scrap.viewmodel.ScrapViewModel
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
+import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class NotEmptyScrapFragment : Fragment() {
     private var _binding: FragmentNotEmptyScrapBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by activityViewModels<ListViewModel>()
+    private val viewModel by activityViewModels<ScrapViewModel>()
+    private val sortViewModel by activityViewModels<SortViewModel>()
     private lateinit var scrapAdapter: ScrapAdapter
 
     override fun onCreateView(
@@ -56,9 +57,9 @@ class NotEmptyScrapFragment : Fragment() {
     }
 
     private fun reloadList() {
-        viewModel.sort.observe(viewLifecycleOwner) {
-            viewModel.getScrapList()
-            Log.d("mlog: viewModel.sort.value", viewModel.sort.value.toString())
+        sortViewModel.sort.observe(viewLifecycleOwner) {
+            viewModel.getScrapList(it)
+            Log.d("mlog: viewModel.sort.value", it)
         }
     }
 

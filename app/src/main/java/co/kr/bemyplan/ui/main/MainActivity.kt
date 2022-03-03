@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.main
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.forEach
@@ -14,11 +15,13 @@ import co.kr.bemyplan.ui.main.home.HomeFragment
 import co.kr.bemyplan.ui.main.location.LocationFragment
 import co.kr.bemyplan.ui.main.myplan.MyPlanFragment
 import co.kr.bemyplan.ui.main.scrap.ScrapFragment
+import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val sortViewModel by viewModels<SortViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

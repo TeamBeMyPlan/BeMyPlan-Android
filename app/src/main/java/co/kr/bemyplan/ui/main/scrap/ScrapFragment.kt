@@ -7,17 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentScrapBinding
-import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
+import co.kr.bemyplan.ui.main.scrap.viewmodel.ScrapViewModel
+import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ScrapFragment : Fragment() {
     private var _binding: FragmentScrapBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<ListViewModel>()
+    private val viewModel by viewModels<ScrapViewModel>()
+    private val sortViewModel by activityViewModels<SortViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +41,7 @@ class ScrapFragment : Fragment() {
     }
 
     private fun initFragmentContainerView() {
-        viewModel.getScrapList()
+        viewModel.getScrapList(sortViewModel.sort.value.toString())
         viewModel.scrapList.observe(viewLifecycleOwner) {
             Log.d("mlog: ScrapFragment.initFragmentContainerView", "execute")
             when (it.size) {

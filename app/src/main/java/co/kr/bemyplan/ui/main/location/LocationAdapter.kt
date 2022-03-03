@@ -31,12 +31,10 @@ class LocationAdapter(val itemClick: (ResponseLocationData.LocationData) -> Unit
 
     override fun onBindViewHolder(holder: LocationAdapter.LocationViewHolder, position: Int) {
         holder.onBind(locationList[position])
-        holder.itemView.setOnClickListener{
-
-        }
     }
 
     override fun getItemCount(): Int {
+        Log.d("yongminlog", "여행지뷰 아이템 개수 ${locationList.size}")
         return locationList.size
     }
 

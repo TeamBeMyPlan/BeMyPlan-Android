@@ -30,14 +30,15 @@ class HomeViewModel: ViewModel() {
                 if(response.isSuccessful){
                     val data = response.body()
                     if(data!=null){
-                        _suggest.value=data.data.items
-                        Log.d("yongminSuggestServer", "최신일정서버통신성공!")
-                    }else{Log.d("yongminSuggestServer", "최신일정서버통신실패1")}
-                }else{Log.d("yongminSuggestServer", "최신일정서버통신실패2")}
+                        if(_suggest.value!=data.data.items)
+                            _suggest.value=data.data.items
+                        Log.d("yongminSuggestServer", "추천일정서버통신성공!")
+                    }else{Log.d("yongminSuggestServer", "추천일정서버통신실패1")}
+                }else{Log.d("yongminSuggestServer", "추천일정서버통신실패2")}
             }
 
             override fun onFailure(call: Call<ResponseHomeData>, t: Throwable) {
-                Log.d("yongminSuggestServer", "최신일정서버통신실패3")
+                Log.d("yongminSuggestServer", "추천일정서버통신실패3")
             }
         })
     }
@@ -52,7 +53,8 @@ class HomeViewModel: ViewModel() {
                 if(response.isSuccessful){
                     val data = response.body()
                     if(data!=null){
-                        _new.value=data.data.items
+                        if(_new.value!=data.data.items)
+                            _new.value=data.data.items
                         Log.d("yongminNewServer", "최신일정서버통신성공!")
                     }else{Log.d("yongminNewServer", "최신일정서버통신실패1")}
                 }else{Log.d("yongminNewServer", "최신일정서버통신실패2")}
@@ -74,11 +76,12 @@ class HomeViewModel: ViewModel() {
                 if(response.isSuccessful){
                     val data = response.body()
                     if(data!=null){
-                        _popular.value = data.data
-                        Log.d("yongminServer", "서버통신성공!")
-                    } else{Log.d("yongminServer", "서버통신실패1")}
+                        if(_popular.value!=data.data)
+                            _popular.value = data.data
+                        Log.d("yongminServer", "인기일정서버통신성공!")
+                    } else{Log.d("yongminServer", "인기일정서버통신실패1")}
                 }
-                else{Log.d("yongminServer", "서버통신실패2") }
+                else{Log.d("yongminServer", "인기일정서버통신실패2") }
             }
 
             override fun onFailure(call: Call<ResponseHomePopularData>, t: Throwable) {

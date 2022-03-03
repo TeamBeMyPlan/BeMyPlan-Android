@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import androidx.viewpager2.widget.CompositePageTransformer
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
@@ -21,6 +23,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
     private lateinit var recentAdapter: HomeAdapter
     private lateinit var editorAdapter: HomeAdapter
+    private lateinit var snapHelper: LinearSnapHelper
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val homeViewModel: HomeViewModel by viewModels()
@@ -30,6 +33,10 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
+
+//        snapHelper = LinearSnapHelper()
+//        snapHelper.attachToRecyclerView(binding.rvEditorSuggest)
+//        snapHelper.attachToRecyclerView(binding.rvRecent)
 
         initAdapterRecent()
         initAdapterEditor()

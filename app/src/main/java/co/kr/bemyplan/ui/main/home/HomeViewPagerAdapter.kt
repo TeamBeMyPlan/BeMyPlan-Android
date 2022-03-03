@@ -56,6 +56,9 @@ class HomeViewPagerAdapter(
         holder.onBind(planList[position])
     }
 
-    override fun getItemCount(): Int = planList.size
+    override fun getItemCount(): Int {
+        Log.d("yongminAdapter", "인기일정개수 ${planList.size}")
+        return planList.size
+    }
 
 }

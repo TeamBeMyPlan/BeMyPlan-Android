@@ -13,6 +13,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -47,7 +48,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
-    private lateinit var viewModel: AfterPurchaseViewModel
+    private val viewModel by viewModels<AfterPurchaseViewModel>()
 
     private lateinit var mapView: MapView
     private val eventListener = MarkerEventListener(this)
@@ -61,7 +62,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
 
         // viewmodel 설정
-        viewModel = ViewModelProvider(this)[AfterPurchaseViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -78,7 +78,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // Observer
         viewModel.post.observe(this) {
-            // fragment 생
+            // fragment 생성
             initFragment(0)
             // 마커 생성
             initMarker(it.spots)
@@ -105,7 +105,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             // fragment 보이기
             initFragment(0)
         } else { // network 연결
-            viewModel.initNetwork(postId)
+            viewModel.getPost(postId)
         }
     }
 

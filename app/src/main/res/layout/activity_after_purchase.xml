@@ -5,6 +5,9 @@
 
     <data>
         <variable
+            name="post"
+            type="co.kr.bemyplan.data.entity.purchase.after.Post" />
+        <variable
             name="viewModel"
             type="co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel" />
     </data>

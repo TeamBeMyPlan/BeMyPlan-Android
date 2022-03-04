@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 Properties properties = new Properties()
@@ -92,9 +93,12 @@ dependencies {
     implementation 'com.kakao.sdk:v2-user:2.8.4'
     // Google Login
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // Coroutine
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
     // nested scroll view

@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +13,7 @@ import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.databinding.ActivitySplashBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding : ActivitySplashBinding
     override fun onCreate(savedInstanceState: Bundle?) {

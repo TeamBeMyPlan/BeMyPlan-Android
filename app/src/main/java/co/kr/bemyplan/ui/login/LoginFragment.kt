@@ -14,6 +14,7 @@ import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
+import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -27,9 +28,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private val userApiClient = UserApiClient.instance
 
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-        if (error != null) {
-            Log.d("mlog: kakaoLogin", "카카오계정 로그인 실패")
-        } else if (token != null) {
+        if (token != null) {
             Log.d("mlog: kakaoLogin", "카카오계정 로그인 성공 ${token.accessToken}")
             viewModel.setSocialToken(token.accessToken)
             viewModel.setSocialType("KAKAO")
@@ -47,6 +46,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
             Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
             login()
+        } else {
+            requireContext().shortToast("다시 로그인해주세요")
         }
     }
 
@@ -68,6 +69,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             } catch (e: ApiException) {
                 Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)
             }
+        } else {
+            requireContext().shortToast("다시 로그인해주세요")
         }
     }
 

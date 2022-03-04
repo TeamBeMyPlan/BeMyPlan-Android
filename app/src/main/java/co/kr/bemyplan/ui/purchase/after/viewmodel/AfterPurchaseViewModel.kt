@@ -10,10 +10,12 @@ import co.kr.bemyplan.data.entity.purchase.after.Post
 import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@HiltViewModel
 class AfterPurchaseViewModel: ViewModel() {
     // post 들고오기
     private var _post = MutableLiveData<Post>()

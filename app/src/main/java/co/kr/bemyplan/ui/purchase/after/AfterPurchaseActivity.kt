@@ -32,6 +32,7 @@ import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
+import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.CalloutBalloonAdapter
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -41,6 +42,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
 
+@AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")

@@ -12,6 +12,7 @@ import co.kr.bemyplan.databinding.ItemLocationBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.properties.Delegates
 
 class LocationViewModel:ViewModel() {
     private val _location = MutableLiveData<List<ResponseLocationData.LocationData>>()
@@ -29,8 +30,9 @@ class LocationViewModel:ViewModel() {
                 if(response.isSuccessful){
                     val data = response.body()
                     if(data!=null){
-                        _location.value=data.data
-                        Log.d("yongminServer", "서버통신성공!")
+                        if(_location.value!=data.data)
+                            _location.value=data.data
+                        Log.d("yongminServer", "여행지뷰 서버통신성공!")
                     } else{Log.d("yongminServer", "서버통신실패1")}
                 }else{Log.d("yongminServer", "서버통신실패2")}
             }
@@ -38,7 +40,6 @@ class LocationViewModel:ViewModel() {
             override fun onFailure(call: Call<ResponseLocationData>, t: Throwable) {
                 Log.d("yongminServer", "서버통신실패3")
             }
-
         })
     }
 }

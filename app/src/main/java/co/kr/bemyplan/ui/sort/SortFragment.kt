@@ -8,9 +8,13 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.DialogSortBinding
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
+import co.kr.bemyplan.ui.main.scrap.viewmodel.ScrapViewModel
+import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -18,14 +22,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class SortFragment : BottomSheetDialogFragment() {
     private var _binding: DialogSortBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by activityViewModels<ListViewModel>()
+    private val viewModel by activityViewModels<SortViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.dialog_sort, container, false)
-        Log.d("mlog: SortFragment에서의 sort", viewModel.sort.value.toString())
         Log.d("mlog: requireActivity() 의 클래스명", requireActivity().localClassName)
         return binding.root
     }

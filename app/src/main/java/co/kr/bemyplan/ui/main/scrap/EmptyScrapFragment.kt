@@ -9,18 +9,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.FragmentEmptyScrapBinding
-import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapRecommendAdapter
+import co.kr.bemyplan.ui.main.scrap.viewmodel.ScrapViewModel
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EmptyScrapFragment : Fragment() {
     private var _binding: FragmentEmptyScrapBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<ListViewModel>()
+    private val viewModel by viewModels<ScrapViewModel>()
     private lateinit var scrapRecommendAdapter: ScrapRecommendAdapter
-    private var listItem = listOf<ContentModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,8 +45,7 @@ class EmptyScrapFragment : Fragment() {
     private fun initList() {
         viewModel.getEmptyScrapList()
         viewModel.emptyScrapList.observe(viewLifecycleOwner) {
-            listItem = it
-            initRecyclerView()
+            scrapRecommendAdapter.replaceItem(it)
         }
     }
 
@@ -56,7 +55,6 @@ class EmptyScrapFragment : Fragment() {
             intent.putExtra("postId", it.postId)
             startActivity(intent)
         }
-        scrapRecommendAdapter.replaceItem(listItem)
         binding.rvRecommend.adapter = scrapRecommendAdapter
     }
 }

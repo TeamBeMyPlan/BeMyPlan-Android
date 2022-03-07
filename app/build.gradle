@@ -3,12 +3,14 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def kakao_map_app_key = properties.get('kakao_map_app_key')
 def kakao_app_key = properties.get('kakao_app_key')
+def google_client_id = properties.get('google_client_id')
 def base_url = properties.get('base_url')
 
 android {
@@ -26,6 +28,9 @@ android {
         // KakaoMap AppKey
         buildConfigField ("String", "KAKAO_APP_KEY", properties.get('kakao_app_key'))
         manifestPlaceholders = [KAKAO_MAP_APP_KEY: kakao_map_app_key]
+
+        // Google client id
+        buildConfigField ("String", "GOOGLE_CLIENT_ID", properties.get('google_client_id'))
 
         // BaseUrl
         buildConfigField ("String", "BASE_URL", properties.get('base_url'))
@@ -85,10 +90,15 @@ dependencies {
     implementation files('libs/libDaumMapAndroid.jar')
 
     // Kakao Login
-    implementation "com.kakao.sdk:v2-user:2.8.4"
+    implementation 'com.kakao.sdk:v2-user:2.8.4'
+    // Google Login
+    implementation 'com.google.android.gms:play-services-auth:20.1.0'
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // Coroutine
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
     // nested scroll view

@@ -11,7 +11,9 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentSignUpBinding
 import co.kr.bemyplan.ui.login.signup.CheckNicknameFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")

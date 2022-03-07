@@ -6,24 +6,29 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.list.ContentModel
-import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.new.NewListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.EmptyScrapListRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.PostScrapRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
+import co.kr.bemyplan.data.repository.list.location.LocationListRepository
+import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
+import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
+import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ListViewModel : ViewModel() {
+@HiltViewModel
+class ListViewModel @Inject constructor(
+    private val latestListRepository: LatestListRepository,
+    private val suggestListRepository: SuggestListRepository,
+    private val locationListRepository: LocationListRepository,
+    private val userPostListRepository: UserPostListRepository,
+    private val postScrapRepository: PostScrapRepository
+) : ViewModel() {
     private var page = 0
     private var pageSize = 10
 
-    private var _sort = MutableLiveData<String>("created_at")
-    val sort: LiveData<String> get() = _sort
-
-    private var _newList = MutableLiveData<List<ContentModel>>()
-    val newList: LiveData<List<ContentModel>> get() = _newList
+    private var _latestList = MutableLiveData<List<ContentModel>>()
+    val latestList: LiveData<List<ContentModel>> get() = _latestList
 
     private var _suggestList = MutableLiveData<List<ContentModel>>()
     val suggestList: LiveData<List<ContentModel>> get() = _suggestList
@@ -34,132 +39,66 @@ class ListViewModel : ViewModel() {
     private var _userPostList = MutableLiveData<List<ContentModel>>()
     val userPostList: LiveData<List<ContentModel>> get() = _userPostList
 
-    private var _scrapList = MutableLiveData<List<ContentModel>>()
-    val scrapList: LiveData<List<ContentModel>> get() = _scrapList
-
-    private var _emptyScrapList = MutableLiveData<List<ContentModel>>()
-    val emptyScrapList: LiveData<List<ContentModel>> get() = _emptyScrapList
-
-    fun setSort(sortType: Int) {
-        when (sortType) {
-            0 -> _sort.value = "created_at"
-            1 -> _sort.value = "order_count"
-            2 -> _sort.value = "price"
-            else -> _sort.value = ""
-        }
-        Log.d("mlog: sort", sort.value.toString())
-    }
-
-    fun getNewList() {
-        val newListRepositoryImpl = NewListRepositoryImpl()
+    fun getLatestList() {
         viewModelScope.launch {
-            try {
-                val response = newListRepositoryImpl.getNewList(page, pageSize)
-                _newList.value = response.data.items
-                Log.d("mlog: ListViewModel.newList.size", newList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getNewList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getNewList error handling", t.message.toString())
+            kotlin.runCatching {
+                latestListRepository.getNewList(page, pageSize)
+            }.onSuccess {
+                if(_latestList.value != it.data.items) {
+                    _latestList.value = it.data.items
+                }
+            }.onFailure {
+                Log.e("mlog: ListViewModel::getLatestList error", it.message.toString())
             }
         }
     }
 
     fun getSuggestList() {
-        val suggestListRepositoryImpl = SuggestListRepositoryImpl()
         viewModelScope.launch {
-            try {
-                val response = suggestListRepositoryImpl.getSuggestList(page, pageSize)
-                _suggestList.value = response.data.items
-                Log.d("mlog: ListViewModel.suggestList.size", suggestList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getSuggestList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getSuggestList error handling", t.message.toString())
+            kotlin.runCatching {
+                suggestListRepository.getSuggestList(page, pageSize)
+            }.onSuccess {
+                if(_suggestList.value != it.data.items) {
+                    _suggestList.value = it.data.items
+                }
+            }.onFailure {
+                Log.e("mlog: ListViewModel::getSuggestList error", it.message.toString())
             }
         }
     }
 
-    fun getLocationList(area_id: Int) {
-        val locationListRepositoryImpl = LocationListRepositoryImpl()
+    fun getLocationList(areaId: Int, sort: String) {
         viewModelScope.launch {
-            try {
-                val response = locationListRepositoryImpl.getLocationList(
-                    area_id,
-                    page,
-                    pageSize,
-                    sort.value.toString()
-                )
-                _locationList.value = response.data.items
-                Log.d("mlog: ListViewModel.locationList.size", locationList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getLocation error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getLocationList error handling", t.message.toString())
+            kotlin.runCatching {
+                locationListRepository.getLocationList(areaId, page, pageSize, sort)
+            }.onSuccess {
+                if(_locationList.value != it.data.items) {
+                    _locationList.value = it.data.items
+                }
+            }.onFailure {
+                Log.e("mlog: ListViewModel::getLocationList error", it.message.toString())
             }
         }
     }
 
-    fun getUserPostList(userId: Int) {
-        val userPostListRepositoryImpl = UserPostListRepositoryImpl()
+    fun getUserPostList(userId: Int, sort: String) {
         viewModelScope.launch {
-            try {
-                val response = userPostListRepositoryImpl.getUserPostList(
-                    userId,
-                    page,
-                    pageSize,
-                    sort.value.toString()
-                )
-                _userPostList.value = response.data.items
-                Log.d("mlog: ListViewModel.userPostList.size", userPostList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getUserPostList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getUserPostList error handling", t.message.toString())
-            }
-        }
-    }
-
-    fun getScrapList() {
-        val scrapListRepositoryImpl = ScrapListRepositoryImpl()
-        viewModelScope.launch {
-            try {
-                val response =
-                    scrapListRepositoryImpl.getScrapList(
-                        page,
-                        pageSize,
-                        sort.value.toString()
-                    )
-                _scrapList.value = response.data.items
-                Log.d("mlog: ScrapViewModel.scrapList.size", scrapList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getScrapList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getScrapList error handling", t.message.toString())
-            }
-        }
-    }
-
-    fun getEmptyScrapList() {
-        val emptyScrapListRepositoryImpl = EmptyScrapListRepositoryImpl()
-        viewModelScope.launch {
-            try {
-                val response = emptyScrapListRepositoryImpl.getEmptyScrapList()
-                _emptyScrapList.value = response.data
-                Log.d("mlog: EmptyScrapList.size", emptyScrapList.value?.size.toString())
-            } catch (e: retrofit2.HttpException) {
-                Log.e("mlog: ListViewModel::getEmptyScrapList error handling", e.code().toString())
-            } catch (t: Throwable) {
-                Log.e("mlog: ListViewModel::getEmptyScrapList error handling", t.message.toString())
+            kotlin.runCatching {
+                userPostListRepository.getUserPostList(userId, page, pageSize, sort)
+            }.onSuccess {
+                if(_userPostList.value != it.data.items) {
+                    _userPostList.value = it.data.items
+                }
+            }.onFailure{
+                Log.e("mlog: ListViewModel::getUserPostList error", it.message.toString())
             }
         }
     }
 
     fun postScrap(postId: Int) {
-        val postScrapRepositoryImpl = PostScrapRepositoryImpl()
         viewModelScope.launch {
             kotlin.runCatching {
-                postScrapRepositoryImpl.postScrap(postId)
+                postScrapRepository.postScrap(postId)
             }.onSuccess {
                 Log.d("mlog: postScrap", "success")
             }.onFailure {

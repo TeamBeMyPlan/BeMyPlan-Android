@@ -10,7 +10,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="18dp"
         tools:context=".ui.main.scrap.NotEmptyScrapFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,6 +37,7 @@
             android:id="@+id/nsv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:paddingHorizontal="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_order">
 

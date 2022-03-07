@@ -26,7 +26,6 @@ class LocationFragment : Fragment() {
         _binding = FragmentLocationBinding.inflate(layoutInflater)
         locationViewModel.initLocationNetwork()
         initAdapter()
-
         return binding.root
     }
 
@@ -50,6 +49,7 @@ class LocationFragment : Fragment() {
 
         locationViewModel.location.observe(viewLifecycleOwner) {
             locationAdapter.locationList.addAll(it)
+            Log.d("yongminlog", "viewmodel에서 받아오는 데이터${it}")
             locationAdapter.notifyDataSetChanged()
         }
     }

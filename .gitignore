@@ -285,4 +285,4 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,kotlin,windows,macos
 
-google-services.json
+/app/google-services.json

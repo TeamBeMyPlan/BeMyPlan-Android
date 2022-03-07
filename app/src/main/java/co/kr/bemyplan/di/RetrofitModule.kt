@@ -1,6 +1,7 @@
 package co.kr.bemyplan.di
 
 import co.kr.bemyplan.BuildConfig
+import co.kr.bemyplan.data.api.AfterPostService
 import co.kr.bemyplan.data.api.PreviewInfoService
 import dagger.Module
 import dagger.Provides
@@ -26,5 +27,11 @@ object RetrofitModule {
     @Provides
     fun providePreviewInfoService(retrofit: Retrofit): PreviewInfoService {
         return retrofit.create(PreviewInfoService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun afterPostService(retrofit: Retrofit): AfterPostService {
+        return retrofit.create(AfterPostService::class.java)
     }
 }

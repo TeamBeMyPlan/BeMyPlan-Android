@@ -80,7 +80,6 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                 }
             }
             is RouteViewHolder -> {
-                Log.d("hoooni", spot.title)
                 holder.onBind(spot, position, itemCount - 1)
             }
         }

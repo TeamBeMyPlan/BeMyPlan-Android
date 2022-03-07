@@ -171,7 +171,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             binding.tvTopTitle.visibility = View.INVISIBLE
         } else {
             // view가 안 보이는 경우
-            binding.tvTitle.visibility = View.VISIBLE
+            binding.tvTopTitle.visibility = View.VISIBLE
         }
     }
 

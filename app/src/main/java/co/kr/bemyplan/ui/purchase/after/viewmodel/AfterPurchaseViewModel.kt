@@ -38,7 +38,7 @@ class AfterPurchaseViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = afterPurchaseRepositoryImpl.getAfterPost(postId)
-                _post.value = response.data
+                _post.value = response.data!!
             } catch (e: retrofit2.HttpException) {
                 Log.e(
                     "mlog: AfterPurchaseViewModel::getPost error handling",

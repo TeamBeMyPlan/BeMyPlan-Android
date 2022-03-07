@@ -7,7 +7,7 @@ import retrofit2.http.Path
 
 interface AfterPostService {
     @GET("api/v1/post/{post_id}")
-    fun getPost(
+    suspend fun getPost(
         @Path("post_id") post_id: Int,
-    ): Call<ResponseAfterPost>
+    ): ResponseAfterPost
 }

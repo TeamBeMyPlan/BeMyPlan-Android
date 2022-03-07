@@ -84,4 +84,10 @@ object RetrofitModule {
     fun providePostScrapService(retrofit: Retrofit): PostScrapService {
         return retrofit.create(PostScrapService::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun afterPostService(retrofit: Retrofit): AfterPostService {
+        return retrofit.create(AfterPostService::class.java)
+    }
 }

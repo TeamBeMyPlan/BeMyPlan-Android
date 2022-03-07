@@ -1,20 +1,22 @@
 package co.kr.bemyplan.ui.purchase.after.viewmodel
 
 import android.util.Log
-import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import co.kr.bemyplan.data.api.ApiService
+import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.purchase.after.Post
-import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
+import co.kr.bemyplan.data.repository.purchase.after.AfterPurchaseRepositoryImpl
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AfterPurchaseViewModel: ViewModel() {
+@HiltViewModel
+class AfterPurchaseViewModel @Inject constructor(
+    private val afterPurchaseRepositoryImpl: AfterPurchaseRepositoryImpl
+): ViewModel() {
     // post 들고오기
     private var _post = MutableLiveData<Post>()
     val post: LiveData<Post>
@@ -26,25 +28,41 @@ class AfterPurchaseViewModel: ViewModel() {
         get() = _dailySpots
 
     // 서버 통신
-    fun initNetwork(postId: Int) {
-        val call = ApiService.afterPostService.getPost(postId)
-        call.enqueue(object : Callback<ResponseAfterPost> {
-            override fun onResponse(
-                call: Call<ResponseAfterPost>,
-                response: Response<ResponseAfterPost>
-            ) {
-                if (response.isSuccessful) {
-                    val data = response.body()?.data
-                    data?.let {
-                        _post.value = it
-                    }
-                }
+    fun getPost(postId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = afterPurchaseRepositoryImpl.getAfterPost(postId)
+                _post.value = response.data!!
+            } catch (e: retrofit2.HttpException) {
+                Log.e(
+                    "mlog: AfterPurchaseViewModel::getPost error handling",
+                    e.code().toString()
+                )
+            } catch (t: Throwable) {
+                Log.e(
+                    "mlog: AfterPurchaseViewModel::getPost error handling",
+                    t.message.toString()
+                )
             }
-
-            override fun onFailure(call: Call<ResponseAfterPost>, t: Throwable) {
-                Log.d("NetworkTest", "error: $t")
-            }
-        })
+        }
+//        val call = ApiService.afterPostService.getPost(postId)
+//        call.enqueue(object : Callback<ResponseAfterPost> {
+//            override fun onResponse(
+//                call: Call<ResponseAfterPost>,
+//                response: Response<ResponseAfterPost>
+//            ) {
+//                if (response.isSuccessful) {
+//                    val data = response.body()?.data
+//                    data?.let {
+//                        _post.value = it
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ResponseAfterPost>, t: Throwable) {
+//                Log.d("NetworkTest", "error: $t")
+//            }
+//        })
     }
 
     // 더미데이터 생성

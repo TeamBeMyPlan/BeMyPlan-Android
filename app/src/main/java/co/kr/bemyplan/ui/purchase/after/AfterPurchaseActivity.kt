@@ -3,49 +3,37 @@ package co.kr.bemyplan.ui.purchase.after
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.purchase.after.Post
-import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.ui.list.ListActivity
-import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
+import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.CalloutBalloonAdapter
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.lang.Exception
 
+@AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
-    private lateinit var viewModel: AfterPurchaseViewModel
+    private val viewModel by viewModels<AfterPurchaseViewModel>()
 
     private lateinit var mapView: MapView
     private val eventListener = MarkerEventListener(this)
@@ -59,7 +47,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
 
         // viewmodel 설정
-        viewModel = ViewModelProvider(this)[AfterPurchaseViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -76,7 +63,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // Observer
         viewModel.post.observe(this) {
-            // fragment 생
+            // fragment 생성
             initFragment(0)
             // 마커 생성
             initMarker(it.spots)
@@ -103,7 +90,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             // fragment 보이기
             initFragment(0)
         } else { // network 연결
-            viewModel.initNetwork(postId)
+            viewModel.getPost(postId)
         }
     }
 
@@ -169,7 +156,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             binding.tvTopTitle.visibility = View.INVISIBLE
         } else {
             // view가 안 보이는 경우
-            binding.tvTitle.visibility = View.VISIBLE
+            binding.tvTopTitle.visibility = View.VISIBLE
         }
     }
 

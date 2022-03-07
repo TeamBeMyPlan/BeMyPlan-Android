@@ -1,22 +1,16 @@
 package co.kr.bemyplan.ui.purchase.after.viewmodel
 
 import android.util.Log
-import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.purchase.after.Post
-import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.data.repository.purchase.after.AfterPurchaseRepositoryImpl
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel

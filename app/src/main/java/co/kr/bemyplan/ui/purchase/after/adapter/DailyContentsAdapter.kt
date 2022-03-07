@@ -1,15 +1,11 @@
 package co.kr.bemyplan.ui.purchase.after.adapter
 
-import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.databinding.BindingAdapter
-import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -19,7 +15,6 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
-import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
 

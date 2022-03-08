@@ -41,9 +41,7 @@ class HomeFragment : Fragment() {
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
-
         clickMore()
-
         return binding.root
     }
 

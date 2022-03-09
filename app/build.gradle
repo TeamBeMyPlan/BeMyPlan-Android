@@ -14,12 +14,12 @@ def google_client_id = properties.get('google_client_id')
 def base_url = properties.get('base_url')
 
 android {
-    compileSdk 32
+    compileSdk 31
 
     defaultConfig {
         applicationId "co.kr.bemyplan"
         minSdk 24
-        targetSdk 32
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 

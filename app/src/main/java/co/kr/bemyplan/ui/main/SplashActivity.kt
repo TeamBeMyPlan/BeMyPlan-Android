@@ -12,6 +12,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.databinding.ActivitySplashBinding
 import co.kr.bemyplan.ui.login.LoginActivity
+import co.kr.bemyplan.ui.onboarding.OnboardingActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -41,7 +42,7 @@ class SplashActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, OnboardingActivity::class.java)
             startActivity(intent)
             finish()
         }

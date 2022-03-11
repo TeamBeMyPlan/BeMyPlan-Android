@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.local.AutoLoginData
+import co.kr.bemyplan.data.local.OnBoardingData
 import co.kr.bemyplan.databinding.ActivitySplashBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.onboarding.OnboardingActivity
@@ -30,10 +32,23 @@ class SplashActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             val fadeAnim : Animation = AnimationUtils.loadAnimation(this, R.anim.splash_animation)
             binding.imageView.startAnimation(fadeAnim)
-            checkAutoLogin()
+            checkOnBoarding()
         }, 1500L)
 
         setContentView(binding.root)
+    }
+
+    private fun checkOnBoarding(){
+        if(OnBoardingData.getOnBoarding(this)){
+            checkAutoLogin()
+            Log.d("onboardingtest", "gotoAutoLogin")
+        }
+        else{
+            val intent = Intent(this, OnboardingActivity::class.java)
+            startActivity(intent)
+            Log.d("onboardingtest", "gotoOnBoarding")
+            finish()
+        }
     }
 
     private fun checkAutoLogin() {
@@ -42,7 +57,7 @@ class SplashActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
-            val intent = Intent(this, OnboardingActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }

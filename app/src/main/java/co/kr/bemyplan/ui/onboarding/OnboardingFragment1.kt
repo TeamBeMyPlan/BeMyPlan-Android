@@ -20,7 +20,7 @@ class OnboardingFragment1 : Fragment() {
         val display = activity?.applicationContext?.resources?.displayMetrics
         val deviceWidth = display?.widthPixels
 
-        val ratio: Double = 321/360.0
+        val ratio: Double = 213/360.0
         val pageWidth = ratio*deviceWidth!!
         val padding = ((deviceWidth-pageWidth)/2).toInt()
         binding.ivOnboarding.setPadding(padding, 0, padding, 0)

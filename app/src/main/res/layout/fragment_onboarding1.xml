@@ -6,72 +6,78 @@
     android:layout_height="match_parent"
     tools:context=".ui.onboarding.OnboardingFragment1" >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_main"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_dots"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:src="@drawable/ic_dots_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-            android:includeFontPadding="false"
-            android:text="@string/onboarding_search_plan"
-            android:textColor="@color/grey_313740"
-            android:textSize="18sp"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_dots" />
-
-        <ImageView
-            android:id="@+id/iv_onboarding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:src="@drawable/onboarding1"
-            android:layout_marginBottom="42dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_bottom"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/grey_cbd0d7"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_marginTop="64dp"
+        android:fontFamily="@font/spoqa_han_sans_neo_bold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/onboarding_search_plan"
+        android:textColor="@color/grey_313740"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/btn_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_start"
-            android:fontFamily="@font/spoqa_han_sans_neo_bold"
-            android:includeFontPadding="false"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:layout_marginVertical="29dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/iv_dots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="34dp"
+        android:src="@drawable/ic_dots_1"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_pass"
+        app:layout_constraintEnd_toStartOf="@+id/tv_next"
+        app:layout_constraintStart_toEndOf="@+id/tv_pass"
+        app:layout_constraintTop_toTopOf="@+id/tv_pass" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/iv_onboarding"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="44dp"
+        android:src="@drawable/onboarding1"
+        app:layout_constraintBottom_toTopOf="@id/tv_pass"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/text_pass"
+        android:fontFamily="@font/spoqa_han_sans_neo_bold"
+        android:includeFontPadding="false"
+        android:textSize="16sp"
+        android:textColor="@color/grey_919bab"
+        android:paddingHorizontal="22dp"
+        android:paddingTop="13dp"
+        android:paddingBottom="17dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:text="@string/text_next"
+        android:fontFamily="@font/spoqa_han_sans_neo_bold"
+        android:includeFontPadding="false"
+        android:textSize="16sp"
+        android:textColor="@color/blue_0077b0"
+        android:paddingHorizontal="36dp"
+        android:paddingTop="13dp"
+        android:paddingBottom="17dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_dots"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_dots" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

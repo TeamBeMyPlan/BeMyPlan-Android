@@ -48,6 +48,7 @@
     <string name="text_next">다음</string>
     <string name="text_no">취소</string>
     <string name="text_yes">확인</string>
+    <string name="text_pass">건너뛰기</string>
     <string name="text_invalid_nickname">특수문자를 사용할 수 없습니다.</string>
     <string name="text_duplicated_nickname">중복된 닉네임입니다.</string>
     <string name="text_invalid_email">이메일 형식이 올바르지 않습니다.</string>

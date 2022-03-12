@@ -1,83 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.onboarding.OnboardingFragment1" >
+<layout>
+    <data>
+        <variable
+            name="handlers"
+            type="co.kr.bemyplan.ui.onboarding.OnboardingActivity" />
+    </data>
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:fontFamily="@font/spoqa_han_sans_neo_bold"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="@string/onboarding_search_plan"
-        android:textColor="@color/grey_313740"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_f4f5f7"
+        tools:context=".ui.onboarding.OnboardingFragment1">
 
-    <ImageView
-        android:id="@+id/iv_dots"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="34dp"
-        android:src="@drawable/ic_dots_1"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_pass"
-        app:layout_constraintEnd_toStartOf="@+id/tv_next"
-        app:layout_constraintStart_toEndOf="@+id/tv_pass"
-        app:layout_constraintTop_toTopOf="@+id/tv_pass" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/onboarding_search_plan"
+            android:textColor="@color/grey_313740"
+            android:textSize="18sp"
+            android:layout_marginTop="64dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_onboarding"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="44dp"
-        android:src="@drawable/onboarding1"
-        app:layout_constraintBottom_toTopOf="@id/tv_pass"
+        <ImageView
+            android:id="@+id/iv_onboarding"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="44dp"
+            android:layout_marginBottom="70dp"
+            android:src="@drawable/img_onboarding_01"
+            app:layout_constraintBottom_toTopOf="@+id/iv_dots"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        app:layout_constraintVertical_bias="0.0" />
+        <ImageView
+            android:id="@+id/iv_dots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginBottom="44dp"
+            android:src="@drawable/ic_dots_1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_next"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_pass" />
 
-    <TextView
-        android:id="@+id/tv_pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="40dp"
-        android:text="@string/text_pass"
-        android:fontFamily="@font/spoqa_han_sans_neo_bold"
-        android:includeFontPadding="false"
-        android:textSize="16sp"
-        android:textColor="@color/grey_919bab"
-        android:paddingHorizontal="22dp"
-        android:paddingTop="13dp"
-        android:paddingBottom="17dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/tv_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="23dp"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="22dp"
+            android:paddingTop="13dp"
+            android:paddingBottom="17dp"
+            android:text="@string/text_pass"
+            android:textColor="@color/grey_919bab"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:text="@string/text_next"
-        android:fontFamily="@font/spoqa_han_sans_neo_bold"
-        android:includeFontPadding="false"
-        android:textSize="16sp"
-        android:textColor="@color/blue_0077b0"
-        android:paddingHorizontal="36dp"
-        android:paddingTop="13dp"
-        android:paddingBottom="17dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_dots"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_dots" />
+        <TextView
+            android:id="@+id/tv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="23dp"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="36dp"
+            android:paddingTop="13dp"
+            android:paddingBottom="17dp"
+            android:text="@string/text_next"
+            android:textColor="@color/blue_0077b0"
+            android:textSize="16sp"
+            android:onClick="@{()->handlers.next()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

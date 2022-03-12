@@ -2,6 +2,7 @@ package co.kr.bemyplan.ui.onboarding
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,19 @@ class OnboardingFragment3 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentOnboarding3Binding.inflate(layoutInflater)
-        binding.layoutBottom.setOnClickListener{
+        val display = activity?.applicationContext?.resources?.displayMetrics
+        val deviceWidth = display?.widthPixels
+        val deviceHeight = display?.heightPixels
+
+        val ivWidthRatio: Double = 230/360.0
+        val ivHeightRatio : Double = 498/760.0
+        val pageWidth = ivWidthRatio*deviceWidth!!
+        val pageHeight = ivHeightRatio*deviceHeight!!
+        binding.ivOnboarding.layoutParams.width = pageWidth.toInt()
+        binding.ivOnboarding.layoutParams.height = pageHeight.toInt()
+
+        binding.tvStart.setOnClickListener{
+            Log.d("onboardinglog", "스타트 클릭")
             OnBoardingData.setOnBoarding(requireContext(), true)
             checkAutoLogin()
         }
@@ -29,7 +42,7 @@ class OnboardingFragment3 : Fragment() {
     }
 
     private fun checkAutoLogin() {
-        if(AutoLoginData.getAutoLogin(requireContext())) {
+        if (AutoLoginData.getAutoLogin(requireContext())) {
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
@@ -39,6 +52,13 @@ class OnboardingFragment3 : Fragment() {
             requireActivity().finish()
         }
     }
+
+//    fun startt(){
+//        Log.d("onboardinglog", "스타트 클릭되었습니다.")
+//        OnBoardingData.setOnBoarding(requireContext(), true)
+//        checkAutoLogin()
+//    }
+
 
     override fun onDestroyView() {
         _binding = null

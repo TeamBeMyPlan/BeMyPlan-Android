@@ -18,6 +18,16 @@ class OnboardingFragment2 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentOnboarding2Binding.inflate(layoutInflater)
+        val display = activity?.applicationContext?.resources?.displayMetrics
+        val deviceWidth = display?.widthPixels
+        val deviceHeight = display?.heightPixels
+
+        val ivWidthRatio: Double = 230/360.0
+        val ivHeightRatio : Double = 498/760.0
+        val pageWidth = ivWidthRatio*deviceWidth!!
+        val pageHeight = ivHeightRatio*deviceHeight!!
+        binding.ivOnboarding.layoutParams.width = pageWidth.toInt()
+        binding.ivOnboarding.layoutParams.height = pageHeight.toInt()
         return binding.root
     }
 

@@ -21,8 +21,9 @@ class OnboardingActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.vpOnboarding.adapter = ViewpagerFragmentAdapter(this)
     }
+
     fun next(){
-        var current = binding.vpOnboarding.currentItem
+        val current = binding.vpOnboarding.currentItem
         binding.vpOnboarding.setCurrentItem(current+1, true)
         Log.d("next", "버튼이 눌렸습니다.")
     }

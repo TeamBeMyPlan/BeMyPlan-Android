@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.onboarding
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,15 @@ class OnboardingFragment1 : Fragment() {
         val pageWidth = ratio*deviceWidth!!
         val padding = ((deviceWidth-pageWidth)/2).toInt()
         binding.ivOnboarding.setPadding(padding, 0, padding, 0)
+
+        binding.tvNext.setOnClickListener{
+            OnboardingActivity().next()
+            Log.d("onboardinglog", "클릭됨")
+        }
+        //혹은 데이터 바인딩으로
+        //binding.onboarding = OnboardingActivity()
+        //이러고 xml에서 android:onclick = @{onboarding::next}
+
         return binding.root
     }
 

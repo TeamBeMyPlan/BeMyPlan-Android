@@ -3,6 +3,8 @@ package co.kr.bemyplan.ui.onboarding
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.data.local.OnBoardingData
@@ -18,5 +20,10 @@ class OnboardingActivity : AppCompatActivity() {
         binding= ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.vpOnboarding.adapter = ViewpagerFragmentAdapter(this)
+    }
+    fun next(){
+        var current = binding.vpOnboarding.currentItem
+        binding.vpOnboarding.setCurrentItem(current+1, true)
+        Log.d("next", "버튼이 눌렸습니다.")
     }
 }

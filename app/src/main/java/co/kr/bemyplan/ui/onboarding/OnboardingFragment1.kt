@@ -27,7 +27,7 @@ class OnboardingFragment1 : Fragment() {
         binding.ivOnboarding.setPadding(padding, 0, padding, 0)
 
         binding.tvNext.setOnClickListener{
-            OnboardingActivity().next()
+            (activity as OnboardingActivity).next()
             Log.d("onboardinglog", "클릭됨")
         }
         //혹은 데이터 바인딩으로

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import co.kr.bemyplan.R
-import co.kr.bemyplan.databinding.FragmentOnboarding1Binding
+import co.kr.bemyplan.application.MainApplication
 import co.kr.bemyplan.databinding.FragmentOnboarding2Binding
 
 class OnboardingFragment2 : Fragment() {
@@ -18,6 +18,26 @@ class OnboardingFragment2 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentOnboarding2Binding.inflate(layoutInflater)
+        val display = activity?.applicationContext?.resources?.displayMetrics
+        val deviceWidth = display?.widthPixels
+        val deviceHeight = display?.heightPixels
+
+        val ivWidthRatio: Double = 230/360.0
+        val ivHeightRatio : Double = 498/760.0
+        val pageWidth = ivWidthRatio*deviceWidth!!
+        val pageHeight = ivHeightRatio*deviceHeight!!
+        binding.ivOnboarding.layoutParams.width = pageWidth.toInt()
+        binding.ivOnboarding.layoutParams.height = pageHeight.toInt()
+
+        binding.tvNext.setOnClickListener{
+            (activity as OnboardingActivity).next()
+        }
+
+        binding.tvPass.setOnClickListener{
+            MainApplication.prefs.setOnBoarding(true)
+            (activity as OnboardingActivity).checkAutoLogin()
+        }
+
         return binding.root
     }
 

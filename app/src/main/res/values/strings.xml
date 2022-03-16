@@ -16,6 +16,8 @@
     <string name="charging_charge">결제하기</string>
     <string name="charging_completed">결제가 완료되었습니다!</string>
     <string name="charging_goto_content">콘텐츠 보러가기</string>
+    <string name="charging_popup_1"><b>"앱 출시 기념 0원 이벤트"</b>" 중입니다."</string>
+    <string name="charging_popup_2">무료로 여행 일정을 확인해보세요!</string>
 
     <string name="onboarding_search_plan">여행 취향이 비슷한 크리에이터의\n여행 일정을 찾아보세요.</string>
     <string name="onboarding_check_preview">미리보기로 원하는\n여행인지 확인하세요.</string>

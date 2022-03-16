@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.purchase.before
 
 import android.os.Bundle
+import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentChargingBinding
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
+import co.kr.bemyplan.util.CustomDialog
 
 class ChargingFragment : Fragment() {
 
@@ -60,13 +62,28 @@ class ChargingFragment : Fragment() {
     }
 
     private fun clickPay() {
+        val dialog = CustomDialog(requireContext(), "", "")
+
         binding.tvPayBtn.setOnClickListener {
-            val zeroEventDialog = ZeroEventDialog()
-            val transaction = parentFragmentManager.beginTransaction()
-            val beforeChargingFragment = BeforeChargingFragment()
-            zeroEventDialog.show(parentFragmentManager, "ZeroEventDialogFragment")
-            transaction.remove(beforeChargingFragment)
-            transaction.commit()
+            dialog.showConfirmDialog(R.layout.dialog_yes_zero_event)
+            dialog.setOnClickedListener(object:CustomDialog.ButtonClickListener{
+                override fun onClicked(num: Int) {
+                    if(num==1){
+                        val transaction = parentFragmentManager.beginTransaction()
+                        val beforeChargingFragment = BeforeChargingFragment()
+                        val chargedFragment = ChargedFragment()
+                        transaction.replace(R.id.fragment_container_charging, chargedFragment)
+                        transaction.remove(beforeChargingFragment)
+                        transaction.commit()
+                    }
+                }
+            })
+//            val zeroEventDialog = ZeroEventDialog()
+//            val transaction = parentFragmentManager.beginTransaction()
+//            val beforeChargingFragment = BeforeChargingFragment()
+//            zeroEventDialog.show(parentFragmentManager, "ZeroEventDialogFragment")
+//            transaction.remove(beforeChargingFragment)
+//            transaction.commit()
         }
     }
 

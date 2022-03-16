@@ -10,8 +10,8 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
+import co.kr.bemyplan.application.MainApplication
 import co.kr.bemyplan.data.local.AutoLoginData
-import co.kr.bemyplan.data.local.OnBoardingData
 import co.kr.bemyplan.databinding.ActivitySplashBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.onboarding.OnboardingActivity
@@ -39,21 +39,14 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkOnBoarding(){
-        if(OnBoardingData.getOnBoarding(this)){
+        if(MainApplication.prefs.getOnBoarding()){
             checkAutoLogin()
-            Log.d("onboardingtest", "gotoAutoLogin")
         }
         else{
             val intent = Intent(this, OnboardingActivity::class.java)
             startActivity(intent)
-            Log.d("onboardingtest", "gotoOnBoarding")
             finish()
         }
-
-        val intent = Intent(this, OnboardingActivity::class.java)
-        startActivity(intent)
-        Log.d("onboardingtest", "gotoOnBoarding")
-        finish()
     }
 
     private fun checkAutoLogin() {

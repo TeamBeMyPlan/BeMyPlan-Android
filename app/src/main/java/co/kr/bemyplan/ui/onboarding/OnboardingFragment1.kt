@@ -6,8 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import co.kr.bemyplan.data.local.AutoLoginData
-import co.kr.bemyplan.data.local.OnBoardingData
+import co.kr.bemyplan.application.MainApplication
 import co.kr.bemyplan.databinding.FragmentOnboarding1Binding
 
 class OnboardingFragment1 : Fragment() {
@@ -35,8 +34,7 @@ class OnboardingFragment1 : Fragment() {
         }
 
         binding.tvPass.setOnClickListener{
-            OnBoardingData.setOnBoarding(requireContext(), true)
-            Log.d("logincheck", "${AutoLoginData.getAutoLogin(requireContext())}")
+            MainApplication.prefs.setOnBoarding(true)
             (activity as OnboardingActivity).checkAutoLogin()
         }
 

@@ -39,16 +39,16 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkOnBoarding(){
-//        if(OnBoardingData.getOnBoarding(this)){
-//            checkAutoLogin()
-//            Log.d("onboardingtest", "gotoAutoLogin")
-//        }
-//        else{
-//            val intent = Intent(this, OnboardingActivity::class.java)
-//            startActivity(intent)
-//            Log.d("onboardingtest", "gotoOnBoarding")
-//            finish()
-//        }
+        if(OnBoardingData.getOnBoarding(this)){
+            checkAutoLogin()
+            Log.d("onboardingtest", "gotoAutoLogin")
+        }
+        else{
+            val intent = Intent(this, OnboardingActivity::class.java)
+            startActivity(intent)
+            Log.d("onboardingtest", "gotoOnBoarding")
+            finish()
+        }
 
         val intent = Intent(this, OnboardingActivity::class.java)
         startActivity(intent)

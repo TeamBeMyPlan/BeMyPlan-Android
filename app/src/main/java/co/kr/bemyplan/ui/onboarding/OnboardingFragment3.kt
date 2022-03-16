@@ -36,29 +36,31 @@ class OnboardingFragment3 : Fragment() {
         binding.tvStart.setOnClickListener{
             Log.d("onboardinglog", "스타트 클릭")
             OnBoardingData.setOnBoarding(requireContext(), true)
+            Log.d("logincheck", "${AutoLoginData.getAutoLogin(requireContext())}")
             checkAutoLogin()
         }
+
+        binding.tvPass.setOnClickListener{
+            (activity as OnboardingActivity).checkAutoLogin()
+            OnBoardingData.setOnBoarding(requireContext(), true)
+        }
+
         return binding.root
     }
 
-    private fun checkAutoLogin() {
+    fun checkAutoLogin() {
         if (AutoLoginData.getAutoLogin(requireContext())) {
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
-            requireActivity().finish()
+            Log.d("logincheck", "${AutoLoginData.getAutoLogin(requireContext())}")
+            activity?.finish()
         } else {
             val intent = Intent(requireContext(), LoginActivity::class.java)
             startActivity(intent)
-            requireActivity().finish()
+            Log.d("logincheck", "${AutoLoginData.getAutoLogin(requireContext())}")
+            activity?.finish()
         }
     }
-
-//    fun startt(){
-//        Log.d("onboardinglog", "스타트 클릭되었습니다.")
-//        OnBoardingData.setOnBoarding(requireContext(), true)
-//        checkAutoLogin()
-//    }
-
 
     override fun onDestroyView() {
         _binding = null

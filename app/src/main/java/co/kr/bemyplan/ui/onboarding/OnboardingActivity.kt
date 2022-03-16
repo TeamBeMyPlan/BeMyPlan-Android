@@ -24,8 +24,23 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     fun next(){
-//        var current = binding.vpOnboarding.currentItem
+        var current = binding.vpOnboarding.currentItem
         Log.d("onboardinglog", "클릭되었습니다")
-//        binding.vpOnboarding.setCurrentItem(current+1, true)
+        binding.vpOnboarding.setCurrentItem(current+1, true)
     }
+
+    fun checkAutoLogin() {
+        if (AutoLoginData.getAutoLogin(this)) {
+            val intent = Intent(this, MainActivity::class.java)
+            Log.d("autologincheck", "메인 액티비티로")
+            startActivity(intent)
+            finish()
+        } else {
+            val intent = Intent(this, LoginActivity::class.java)
+            Log.d("autologincheck", "로그인 액티비티로")
+            startActivity(intent)
+            finish()
+        }
+    }
+
 }

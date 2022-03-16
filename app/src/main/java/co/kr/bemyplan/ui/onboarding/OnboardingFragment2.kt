@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.local.OnBoardingData
 import co.kr.bemyplan.databinding.FragmentOnboarding1Binding
 import co.kr.bemyplan.databinding.FragmentOnboarding2Binding
 
@@ -28,6 +29,16 @@ class OnboardingFragment2 : Fragment() {
         val pageHeight = ivHeightRatio*deviceHeight!!
         binding.ivOnboarding.layoutParams.width = pageWidth.toInt()
         binding.ivOnboarding.layoutParams.height = pageHeight.toInt()
+
+        binding.tvNext.setOnClickListener{
+            (activity as OnboardingActivity).next()
+        }
+
+        binding.tvPass.setOnClickListener{
+            OnBoardingData.setOnBoarding(requireContext(), true)
+            (activity as OnboardingActivity).checkAutoLogin()
+        }
+
         return binding.root
     }
 

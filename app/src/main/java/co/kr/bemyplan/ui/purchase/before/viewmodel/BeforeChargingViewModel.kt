@@ -34,10 +34,10 @@ class BeforeChargingViewModel @Inject constructor(
     private var _postId = -1
     val postId get() = _postId
 
-    private val _payWay = MutableLiveData<Pay>(Pay.NULL)
     private var _isScraped = MutableLiveData<Boolean>()
     val isScraped: LiveData<Boolean> get() = _isScraped
 
+    private val _payWay = MutableLiveData<Pay>(Pay.NULL)
     val payWay: LiveData<Pay> get() = _payWay
 
     private var _previewInformation = MutableLiveData<PreviewInfoModel>()
@@ -52,6 +52,9 @@ class BeforeChargingViewModel @Inject constructor(
             Pay.NAVER -> _payWay.value = Pay.NAVER
             Pay.TOSS -> _payWay.value = Pay.TOSS
         }
+        fb.logEvent("clickPaymentMethod", Bundle().apply {
+            putString("source", payWay.value.toString())
+        })
     }
 
     fun postScrap() {

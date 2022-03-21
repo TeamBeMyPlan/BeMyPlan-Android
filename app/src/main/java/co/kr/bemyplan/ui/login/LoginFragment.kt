@@ -35,10 +35,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
             // 이메일 가져오기
             userApiClient.me { user, error ->
-                if(error != null) {
+                if (error != null) {
                     Log.d("mlog: kakaoLogin", "카카오계정 사용자 정보 가져오기 실패")
-                } else if(user != null) {
-                    Log.d("mlog: kakaoLogin", "카카오계정 사용자 정보 가져오기 성공, 카카오계정 이메일 = ${user.kakaoAccount?.email}")
+                } else if (user != null) {
+                    Log.d(
+                        "mlog: kakaoLogin",
+                        "카카오계정 사용자 정보 가져오기 성공, 카카오계정 이메일 = ${user.kakaoAccount?.email}"
+                    )
                     user.kakaoAccount?.email?.let { email -> viewModel.email.value = email }
                 }
             }
@@ -51,28 +54,32 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         }
     }
 
-    private val startForGoogleLoginResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if(it.resultCode == Activity.RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                Log.d(
-                    "mlog: googleLogin",
-                    "구글 로그인 성공, account.id = " + account.id + ", account.idToken = " + account.idToken + ", account.email = " + account.email
-                )
-                viewModel.setSocialToken(account.idToken)
-                viewModel.setSocialType("GOOGLE")
-                account.email?.let { email -> viewModel.email.value = email }
-                Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
-                Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
-                login()
-            } catch (e: ApiException) {
-                Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)
+    private val startForGoogleLoginResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                try {
+                    val account = task.getResult(ApiException::class.java)
+                    Log.d(
+                        "mlog: googleLogin",
+                        "구글 로그인 성공, account.id = " + account.id + ", account.idToken = " + account.idToken + ", account.email = " + account.email
+                    )
+                    viewModel.setSocialToken(account.idToken)
+                    viewModel.setSocialType("GOOGLE")
+                    account.email?.let { email -> viewModel.email.value = email }
+                    Log.d(
+                        "mlog: LoginFragment::socialToken",
+                        viewModel.socialToken.value.toString()
+                    )
+                    Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
+                    login()
+                } catch (e: ApiException) {
+                    Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)
+                }
+            } else {
+                requireContext().shortToast("다시 로그인해주세요")
             }
-        } else {
-            requireContext().shortToast("다시 로그인해주세요")
         }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,6 +91,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun clickGuestLogin() {
         binding.tvGuestLogin.setOnClickListener {
+            // Firebase Event Log
+            val bundle = Bundle()
+            bundle.putString("source", "Guest")
+            viewModel.fb.logEvent("signin", bundle)
+
             startMainActivity()
         }
     }

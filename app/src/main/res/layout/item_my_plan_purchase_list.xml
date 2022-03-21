@@ -27,6 +27,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:id="@+id/layout_scrap"
+            app:layout_constraintEnd_toEndOf="@id/iv_my_plan_spot"
+            app:layout_constraintTop_toTopOf="@id/iv_my_plan_spot"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp">
+
+            <ImageView
+                android:id="@+id/iv_scrap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@{model.isScrapped ? @drawable/icn_scrap_white : @drawable/icn_not_scrap_white}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

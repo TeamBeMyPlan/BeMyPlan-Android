@@ -7,13 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPlanViewModel @Inject constructor(
-    private val myPlanRepository: MyPlanRepository
+    private val myPlanRepository: MyPlanRepository,
+    private val postScrapRepository: PostScrapRepository
 ) : ViewModel() {
     private var page = 0
     private var pageSize = 10
@@ -38,6 +40,18 @@ class MyPlanViewModel @Inject constructor(
                 }
             }.onFailure {
                 Log.e("mlog: MyPlanViewModel::getMyPlan error", it.message.toString())
+            }
+        }
+    }
+
+    fun postScrap(postId: Int) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                postScrapRepository.postScrap(postId)
+            }.onSuccess {
+                Log.d("mlog: postScrap", "success")
+            }.onFailure {
+                Log.d("mlog: postScrap", "fail")
             }
         }
     }

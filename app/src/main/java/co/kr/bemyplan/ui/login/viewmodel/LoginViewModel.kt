@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.login.viewmodel
 
+import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
@@ -10,8 +11,11 @@ import co.kr.bemyplan.data.entity.login.UserInfoModel
 import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.data.repository.login.LoginRepository
 import co.kr.bemyplan.util.SingleLiveEvent
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,6 +26,10 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository
 ) : ViewModel() {
+    val fb = Firebase.analytics.apply {
+        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
+    }
+
     // 카카오로그인
     private val userApiClient = UserApiClient.instance
 
@@ -87,6 +95,11 @@ class LoginViewModel @Inject constructor(
             kotlin.runCatching {
                 loginRepository.postLogin(requestLogin)
             }.onSuccess {
+                // FB LOG
+                fb.logEvent("signin", Bundle().apply {
+                    putString("source", socialType.value)
+                })
+
                 _userInfo.value = it.data
                 _isUser.value = true
             }.onFailure {
@@ -192,6 +205,11 @@ class LoginViewModel @Inject constructor(
                     )
                 )
             }.onSuccess {
+                // FB LOG
+                fb.logEvent("signUpComplete", Bundle().apply {
+                    putString("source", socialType.value)
+                })
+
                 _userInfo.value = it.data
             }.onFailure {
                 Log.e("mlog: LoginViewModel::signUp", it.message.toString())

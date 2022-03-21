@@ -1,17 +1,21 @@
 package co.kr.bemyplan.ui.list.viewmodel
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.list.ContentModel
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.location.LocationListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +28,10 @@ class ListViewModel @Inject constructor(
     private val userPostListRepository: UserPostListRepository,
     private val postScrapRepository: PostScrapRepository
 ) : ViewModel() {
+    private val fb = Firebase.analytics.apply {
+        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
+    }
+
     private var page = 0
     private var pageSize = 10
 
@@ -44,7 +52,7 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 latestListRepository.getNewList(page, pageSize)
             }.onSuccess {
-                if(_latestList.value != it.data.items) {
+                if (_latestList.value != it.data.items) {
                     _latestList.value = it.data.items
                 }
             }.onFailure {
@@ -58,7 +66,7 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 suggestListRepository.getSuggestList(page, pageSize)
             }.onSuccess {
-                if(_suggestList.value != it.data.items) {
+                if (_suggestList.value != it.data.items) {
                     _suggestList.value = it.data.items
                 }
             }.onFailure {
@@ -72,7 +80,7 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 locationListRepository.getLocationList(areaId, page, pageSize, sort)
             }.onSuccess {
-                if(_locationList.value != it.data.items) {
+                if (_locationList.value != it.data.items) {
                     _locationList.value = it.data.items
                 }
             }.onFailure {
@@ -86,10 +94,10 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 userPostListRepository.getUserPostList(userId, page, pageSize, sort)
             }.onSuccess {
-                if(_userPostList.value != it.data.items) {
+                if (_userPostList.value != it.data.items) {
                     _userPostList.value = it.data.items
                 }
-            }.onFailure{
+            }.onFailure {
                 Log.e("mlog: ListViewModel::getUserPostList error", it.message.toString())
             }
         }
@@ -100,6 +108,20 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 postScrapRepository.postScrap(postId)
             }.onSuccess {
+                when (it.data.scrapped) {
+                    true -> {
+                        fb.logEvent("scrapTravelPlan", Bundle().apply {
+                            putString("source", "ListView")
+                            putInt("postIdx", postId)
+                        })
+                    }
+                    false -> {
+                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
+                            putString("source", "ListView")
+                            putInt("postIdx", postId)
+                        })
+                    }
+                }
                 Log.d("mlog: postScrap", "success")
             }.onFailure {
                 Log.d("mlog: postScrap", "fail")

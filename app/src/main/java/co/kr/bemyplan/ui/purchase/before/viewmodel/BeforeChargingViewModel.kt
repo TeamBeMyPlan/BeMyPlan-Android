@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.purchase.before.viewmodel
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,8 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,6 +25,10 @@ class BeforeChargingViewModel @Inject constructor(
 
     enum class Pay(val brand: String) {
         NAVER("네이버페이"), KAKAO("카카오페이"), TOSS("토스"), NULL("null")
+    }
+
+    private val fb = Firebase.analytics.apply {
+        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
     }
 
     private var _postId = -1
@@ -51,6 +59,20 @@ class BeforeChargingViewModel @Inject constructor(
             kotlin.runCatching {
                 postScrapRepository.postScrap(postId)
             }.onSuccess {
+                when(it.data.scrapped) {
+                    true -> {
+                        fb.logEvent("scrapTravelPlan", Bundle().apply {
+                            putString("source", "BeforeChargingView")
+                            putInt("postIdx", postId)
+                        })
+                    }
+                    false -> {
+                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
+                            putString("source", "BeforeChargingView")
+                            putInt("postIdx", postId)
+                        })
+                    }
+                }
                 _isScraped.value = it.data.scrapped
             }.onFailure {
                 Log.e("mlog: BeforeChargingViewModel::postScrap error", it.message.toString())

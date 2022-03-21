@@ -5,23 +5,33 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
 import co.kr.bemyplan.application.MainApplication
 import co.kr.bemyplan.data.local.AutoLoginData
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.databinding.ActivitySplashBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.onboarding.OnboardingActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding : ActivitySplashBinding
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
+
+        // firebase event logging
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
+        firebaseAnalytics.logEvent("appFirstOpen", null)
 
         val display = this.resources.displayMetrics
         val deviceWidth = display.widthPixels

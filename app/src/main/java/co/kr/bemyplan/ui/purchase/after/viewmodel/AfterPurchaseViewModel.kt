@@ -45,24 +45,6 @@ class AfterPurchaseViewModel @Inject constructor(
                 )
             }
         }
-//        val call = ApiService.afterPostService.getPost(postId)
-//        call.enqueue(object : Callback<ResponseAfterPost> {
-//            override fun onResponse(
-//                call: Call<ResponseAfterPost>,
-//                response: Response<ResponseAfterPost>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val data = response.body()?.data
-//                    data?.let {
-//                        _post.value = it
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ResponseAfterPost>, t: Throwable) {
-//                Log.d("NetworkTest", "error: $t")
-//            }
-//        })
     }
 
     // 더미데이터 생성
@@ -71,7 +53,7 @@ class AfterPurchaseViewModel @Inject constructor(
         _post.value = dummy
     }
 
-    init { //TODO 여기서 무엇을 해야할 지 모르겠습니다
+    init {
         Log.i("ViewModel", "ViewModel created!")
     }
 

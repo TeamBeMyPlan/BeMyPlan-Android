@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -100,7 +101,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.isLastSpot = false
             initViewPagerAdapter(data)
             initTabLayout()
-            copyButton()
+            binding.clAddress.setOnClickListener { copyButton() }
         }
 
         override fun onBind(data: Spot, isLastSpot: Boolean) {
@@ -108,17 +109,15 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.spot = data
             initViewPagerAdapter(data)
             initTabLayout()
-            copyButton()
+            binding.clAddress.setOnClickListener { copyButton() }
         }
 
         private fun copyButton() {
-            binding.clAddress.setOnClickListener {
-                val clipboard =
-                    mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("CODE", binding.tvAddress.text)
-                clipboard.setPrimaryClip(clip)
-                mContext.shortToast("주소를 복사했습니다")
-            }
+            val clipboard =
+                mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("address", binding.tvAddress.text)
+            clipboard.setPrimaryClip(clip)
+            mContext.shortToast("주소를 복사했습니다")
         }
 
         private fun initViewPagerAdapter(data: Spot) {

@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
-                android:text="제주특별자치도 제주시 애월읍 유수암리 산138"
+                tools:text="제주특별자치도 제주시 애월읍 유수암리 산138"
                 android:textColor="@color/grey_919bab"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
                 android:textSize="14sp"

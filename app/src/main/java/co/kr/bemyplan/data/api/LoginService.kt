@@ -10,7 +10,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface LoginService {
-    @POST("api/v1/auth/login")
+    @POST("api/v1/login")
     suspend fun postLogin(
         @Body body: RequestLogin
     ): ResponseLogin
@@ -20,7 +20,7 @@ interface LoginService {
         @Body body: RequestDuplicatedNickname
     ): ResponseDuplicatedNickname
 
-    @POST("api/v1/auth/signup")
+    @POST("api/v1/signup")
     suspend fun postSignUp(
         @Body body: RequestSignUp
     ): ResponseSignUp

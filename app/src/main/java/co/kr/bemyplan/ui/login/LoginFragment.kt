@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.BuildConfig
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.local.AutoLoginData
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
@@ -21,9 +22,12 @@ import com.google.android.gms.common.api.ApiException
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
+    @Inject
+    lateinit var dataStore: BeMyPlanDataStore
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
 
@@ -150,7 +154,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         viewModel.login()
 
         viewModel.userInfo.observe(viewLifecycleOwner) {
-            AutoLoginData.setAutoLogin(requireContext(), true, it.accessToken, it.nickname)
+            dataStore.sessionId = it.sessionId
+            dataStore.userId = it.userId
+//            TODO: Test 후 삭제요망
+//            AutoLoginData.setAutoLogin(requireContext(), true, it.sessionId, it.userId)
             startMainActivity()
         }
 

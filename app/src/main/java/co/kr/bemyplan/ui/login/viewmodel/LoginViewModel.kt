@@ -105,8 +105,7 @@ class LoginViewModel @Inject constructor(
             }.onFailure {
                 when (it) {
                     is retrofit2.HttpException -> {
-                        // TODO: 임시 코드, 추후 서버 완료되면 e.code() == 500 삭제할 것
-                        if (it.code() == 403 || it.code() == 500) {
+                        if (it.code() == 404) {
                             _isUser.value = false
                         }
                     }
@@ -151,18 +150,22 @@ class LoginViewModel @Inject constructor(
     }
 
     fun checkIsDuplicatedNickname() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                loginRepository.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
-            }.onSuccess {
-                _isDuplicatedNickname.value = it.data.duplicated
-
-                if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
-                    _nicknamePermission.value = true
-                }
-            }.onFailure {
-                Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
-            }
+//        viewModelScope.launch {
+//            kotlin.runCatching {
+//                loginRepository.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+//            }.onSuccess {
+//                _isDuplicatedNickname.value = it.data.duplicated
+//
+//                if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
+//                    _nicknamePermission.value = true
+//                }
+//            }.onFailure {
+//                Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
+//            }
+//        }
+        // TODO: 회원가입 로직 중 닉네임 중복검사 기능 현재 없어서 이렇게 씀 . . . 추후 고쳐봄세
+        if(isValidNickname.value!!) {
+            _nicknamePermission.value = true
         }
     }
 
@@ -201,7 +204,8 @@ class LoginViewModel @Inject constructor(
                     RequestSignUp(
                         socialToken.value.toString(),
                         socialType.value.toString(),
-                        nickname.value.toString()
+                        nickname.value.toString(),
+                        email.toString()
                     )
                 )
             }.onSuccess {

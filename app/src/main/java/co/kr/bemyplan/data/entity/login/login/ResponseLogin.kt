@@ -4,6 +4,6 @@ import co.kr.bemyplan.data.entity.login.UserInfoModel
 
 data class ResponseLogin(
     val data: UserInfoModel,
-    val statusCode: Int,
+    val resultCode: String,
     val message: String
 )

@@ -13,11 +13,11 @@ object AutoLoginData {
         return getSharedPreference(context).getBoolean(AUTO_LOGIN, false)
     }
 
-    fun getAccessToken(context: Context): String {
+    fun getSessionId(context: Context): String {
         return getSharedPreference(context).getString(SESSION_ID, "") ?: ""
     }
 
-    fun getNickname(context: Context): String {
+    fun getUserId(context: Context): String {
         return getSharedPreference(context).getString(USER_ID, "") ?: ""
     }
 

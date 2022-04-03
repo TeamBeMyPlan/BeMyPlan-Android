@@ -20,7 +20,7 @@ interface LoginService {
         @Body body: RequestDuplicatedNickname
     ): ResponseDuplicatedNickname
 
-    @POST("api/v1/auth/signup")
+    @POST("api/v1/signup")
     suspend fun postSignUp(
         @Body body: RequestSignUp
     ): ResponseSignUp

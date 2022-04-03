@@ -150,18 +150,22 @@ class LoginViewModel @Inject constructor(
     }
 
     fun checkIsDuplicatedNickname() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                loginRepository.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
-            }.onSuccess {
-                _isDuplicatedNickname.value = it.data.duplicated
-
-                if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
-                    _nicknamePermission.value = true
-                }
-            }.onFailure {
-                Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
-            }
+//        viewModelScope.launch {
+//            kotlin.runCatching {
+//                loginRepository.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+//            }.onSuccess {
+//                _isDuplicatedNickname.value = it.data.duplicated
+//
+//                if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
+//                    _nicknamePermission.value = true
+//                }
+//            }.onFailure {
+//                Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
+//            }
+//        }
+        // TODO: 회원가입 로직 중 닉네임 중복검사 기능 현재 없어서 이렇게 씀 . . . 추후 고쳐봄세
+        if(isValidNickname.value!!) {
+            _nicknamePermission.value = true
         }
     }
 
@@ -200,7 +204,8 @@ class LoginViewModel @Inject constructor(
                     RequestSignUp(
                         socialToken.value.toString(),
                         socialType.value.toString(),
-                        nickname.value.toString()
+                        nickname.value.toString(),
+                        email.toString()
                     )
                 )
             }.onSuccess {

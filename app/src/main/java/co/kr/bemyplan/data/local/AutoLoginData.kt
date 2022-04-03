@@ -6,26 +6,26 @@ import android.content.SharedPreferences
 object AutoLoginData {
     private const val STORAGE_KEY = "USER_AUTH"
     private const val AUTO_LOGIN = "AUTO_LOGIN"
-    private const val ACCESS_TOKEN = "ACCESS_TOKEN"
-    private const val NICKNAME = "NICKNAME"
+    private const val SESSION_ID = "SESSION_ID"
+    private const val USER_ID = "0"
 
     fun getAutoLogin(context: Context): Boolean {
         return getSharedPreference(context).getBoolean(AUTO_LOGIN, false)
     }
 
     fun getAccessToken(context: Context): String {
-        return getSharedPreference(context).getString(ACCESS_TOKEN, "") ?: ""
+        return getSharedPreference(context).getString(SESSION_ID, "") ?: ""
     }
 
     fun getNickname(context: Context): String {
-        return getSharedPreference(context).getString(NICKNAME, "") ?: ""
+        return getSharedPreference(context).getString(USER_ID, "") ?: ""
     }
 
-    fun setAutoLogin(context: Context, value: Boolean, accessToken: String, nickname: String) {
+    fun setAutoLogin(context: Context, value: Boolean, sessionId: String, userId: Int) {
         getSharedPreference(context).edit()
             .putBoolean(AUTO_LOGIN, value)
-            .putString(ACCESS_TOKEN, accessToken)
-            .putString(NICKNAME, nickname)
+            .putString(SESSION_ID, sessionId)
+            .putInt(USER_ID, userId)
             .apply()
     }
 

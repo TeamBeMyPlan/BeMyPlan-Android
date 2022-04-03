@@ -105,8 +105,7 @@ class LoginViewModel @Inject constructor(
             }.onFailure {
                 when (it) {
                     is retrofit2.HttpException -> {
-                        // TODO: 임시 코드, 추후 서버 완료되면 e.code() == 500 삭제할 것
-                        if (it.code() == 403 || it.code() == 500) {
+                        if (it.code() == 404) {
                             _isUser.value = false
                         }
                     }

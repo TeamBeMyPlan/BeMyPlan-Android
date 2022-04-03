@@ -150,7 +150,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         viewModel.login()
 
         viewModel.userInfo.observe(viewLifecycleOwner) {
-            AutoLoginData.setAutoLogin(requireContext(), true, it.accessToken, it.nickname)
+            AutoLoginData.setAutoLogin(requireContext(), true, it.sessionId, it.userId)
             startMainActivity()
         }
 

@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.purchase.after.Post
-import co.kr.bemyplan.data.entity.purchase.after.Spot
+import co.kr.bemyplan.data.entity.purchase.after.PlanDetailResponse
+import co.kr.bemyplan.data.entity.purchase.after.SpotDetailResponse
 import co.kr.bemyplan.data.repository.purchase.after.AfterPurchaseRepositoryImpl
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,13 +18,13 @@ class AfterPurchaseViewModel @Inject constructor(
     private val afterPurchaseRepositoryImpl: AfterPurchaseRepositoryImpl
 ): ViewModel() {
     // post 들고오기
-    private var _post = MutableLiveData<Post>()
-    val post: LiveData<Post>
+    private var _post = MutableLiveData<PlanDetailResponse>()
+    val post: LiveData<PlanDetailResponse>
         get() = _post
 
     // 일차별 spot
-    private var _dailySpots = MutableLiveData<List<Spot>>()
-    val dailySpots: LiveData<List<Spot>>
+    private var _dailySpots = MutableLiveData<List<SpotDetailResponse>>()
+    val dailySpots: LiveData<List<SpotDetailResponse>>
         get() = _dailySpots
 
     // 서버 통신
@@ -58,7 +58,7 @@ class AfterPurchaseViewModel @Inject constructor(
     }
 
     // 일차별 장소들 초기화
-    fun setDailySpot(dailySpots: List<Spot>) {
+    fun setDailySpot(dailySpots: List<SpotDetailResponse>) {
         _dailySpots.value = dailySpots
     }
 }

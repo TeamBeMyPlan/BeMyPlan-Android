@@ -33,9 +33,9 @@ class LocationFragment : Fragment() {
         locationAdapter = LocationAdapter (itemClick = {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "location")
-            intent.putExtra("areaId", it.id)
-            intent.putExtra("locationName", it.name)
-            Log.d("mlog: areaId", it.id.toString())
+            intent.putExtra("areaId", it.name)
+            intent.putExtra("locationName", it.region)
+            Log.d("mlog: areaId", it.name.toString())
             startActivity(intent)
         }, myContext = requireContext())
 

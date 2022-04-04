@@ -17,7 +17,6 @@ import kotlin.properties.Delegates
 class LocationViewModel:ViewModel() {
     private val _location = MutableLiveData<List<ResponseLocationData.LocationData>>()
     val location : LiveData<List<ResponseLocationData.LocationData>> get() = _location
-    //private val binding = ItemLocationBinding.inflate(LayoutInflater.from(A))
 
     fun initLocationNetwork(){
         val call : Call<ResponseLocationData> = ApiService.locationService.getLocationData()
@@ -38,7 +37,8 @@ class LocationViewModel:ViewModel() {
             }
 
             override fun onFailure(call: Call<ResponseLocationData>, t: Throwable) {
-                Log.d("yongminServer", "서버통신실패3")
+                Log.d("yongminServer", "여행지서버통신실패3")
+                Log.d("yongminServer", "${t.message}")
             }
         })
     }

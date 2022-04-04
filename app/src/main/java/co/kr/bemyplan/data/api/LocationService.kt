@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface LocationService {
-    @GET("/api/v1/area")
+    @GET("/api/v1/plan/regions")
     fun getLocationData() : Call<ResponseLocationData>
 }

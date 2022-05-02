@@ -9,7 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.BuildConfig
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
@@ -18,11 +17,18 @@ import co.kr.bemyplan.ui.main.MainActivity
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.*
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
@@ -68,6 +74,42 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                         "mlog: googleLogin",
                         "구글 로그인 성공, account.id = " + account.id + ", account.idToken = " + account.idToken + ", account.email = " + account.email
                     )
+                    // account.idToken -> accessToken 변환 과정
+                    val authCode = account.serverAuthCode ?: ""
+                    Log.d("mlog: authCode", "구글 로그인 성공, authCode = $authCode")
+                    Log.d("mlog: google_client_secret", "구글 클라이언트 시크릿 = ${BuildConfig.GOOGLE_CLIENT_SECRET}")
+
+                    val client = OkHttpClient()
+                    val requestBody: RequestBody = FormBody.Builder()
+                        .add("grant_type", "authorization_code")
+                        .add("client_id", BuildConfig.GOOGLE_WEB_CLIENT_ID)
+                        .add("client_secret", BuildConfig.GOOGLE_CLIENT_SECRET)
+                        .add("redirect_uri", "")
+                        .add("code", authCode)
+                        .build()
+
+                    val request = Request.Builder()
+                        .url("https://www.googleapis.com/oauth2/v4/token")
+                        .post(requestBody)
+                        .build()
+
+                    client.newCall(request).enqueue(object: Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            Log.e("mlog", e.toString());
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            try {
+                                val jsonObject = JSONObject(response.body()?.string() ?: "");
+                                val message = jsonObject.toString(5);
+                                Log.i("mlog", message);
+                            } catch (e: JSONException) {
+                                e.printStackTrace();
+                            }
+                        }
+                    })
+                    // account.idToken -> accessToken 변환 과정
+
                     viewModel.setSocialToken(account.idToken)
                     viewModel.setSocialType("GOOGLE")
                     account.email?.let { email -> viewModel.email.value = email }
@@ -81,6 +123,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)
                 }
             } else {
+                if (it.resultCode == Activity.RESULT_CANCELED) {
+                    try {
+                        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                        Log.e("mlog", task.exception.toString())
+                    } catch (e: ApiException) {
+                        Log.e("mlog: canceled", e.toString())
+                    }
+                }
                 requireContext().shortToast("다시 로그인해주세요")
             }
         }
@@ -117,6 +167,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun testForSignUpPage() {
+        // TODO: 나중에 꼭 !! 지우세요
         // test용으로 비마이플랜 이미지 클릭 시 회원가입 뷰 보여줌
         binding.ivLogo.setOnClickListener {
             startSignUpFragment()
@@ -141,8 +192,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun getGoogleToken() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestScopes(Scope(Scopes.DRIVE_APPFOLDER))
             .requestEmail()
-            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .requestIdToken(BuildConfig.GOOGLE_WEB_CLIENT_ID)
+            .requestServerAuthCode(BuildConfig.GOOGLE_WEB_CLIENT_ID)
             .build()
         val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 

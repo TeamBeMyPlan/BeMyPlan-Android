@@ -29,8 +29,10 @@ android {
         buildConfigField ("String", "KAKAO_APP_KEY", properties.get('kakao_app_key'))
         manifestPlaceholders = [KAKAO_MAP_APP_KEY: kakao_map_app_key]
 
-        // Google client id
+        // Google client
         buildConfigField ("String", "GOOGLE_CLIENT_ID", properties.get('google_client_id'))
+        buildConfigField ("String", "GOOGLE_WEB_CLIENT_ID", properties.get('google_web_client_id'))
+        buildConfigField ("String", "GOOGLE_CLIENT_SECRET", properties.get('google_client_secret'))
 
         // BaseUrl
         buildConfigField ("String", "BASE_URL", properties.get('base_url'))

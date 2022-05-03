@@ -2,25 +2,26 @@ package co.kr.bemyplan.data.api
 
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.login.ResponseLogin
-import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.check.ResponseDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
 import co.kr.bemyplan.data.entity.login.signup.ResponseSignUp
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface LoginService {
-    @POST("api/v1/login")
+    @POST("/v1/login")
     suspend fun postLogin(
         @Body body: RequestLogin
     ): ResponseLogin
 
-    @POST("api/v1/auth/check/nickname")
+    @GET("/v1/user/name/check")
     suspend fun postDuplicatedNickname(
-        @Body body: RequestDuplicatedNickname
+        @Query("nickname") nickname: String
     ): ResponseDuplicatedNickname
 
-    @POST("api/v1/signup")
+    @POST("/v1/signup")
     suspend fun postSignUp(
         @Body body: RequestSignUp
     ): ResponseSignUp

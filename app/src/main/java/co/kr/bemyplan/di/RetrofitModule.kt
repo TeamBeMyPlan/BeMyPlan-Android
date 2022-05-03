@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -35,6 +36,7 @@ object RetrofitModule {
             .build()
     }
 
+    @BeMyPlanRetrofit
     @Singleton
     @Provides
     fun provideRetrofit(
@@ -46,4 +48,25 @@ object RetrofitModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
+    @GoogleRetrofit
+    @Singleton
+    @Provides
+    fun provideGoogleLogin(
+        client: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://www.googleapis.com")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 }
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class BeMyPlanRetrofit
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class GoogleRetrofit

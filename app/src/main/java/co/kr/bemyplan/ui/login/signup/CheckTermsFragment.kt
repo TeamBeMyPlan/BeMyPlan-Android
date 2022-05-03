@@ -23,7 +23,7 @@ class CheckTermsFragment : Fragment() {
     private val binding get() = _binding ?: error("binding not initialized")
     private val viewModel by activityViewModels<LoginViewModel>()
     @Inject
-    private lateinit var dataStore: BeMyPlanDataStore
+    lateinit var dataStore: BeMyPlanDataStore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

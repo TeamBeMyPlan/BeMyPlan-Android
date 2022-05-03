@@ -32,7 +32,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
     @Inject
-    private lateinit var dataStore: BeMyPlanDataStore
+    lateinit var dataStore: BeMyPlanDataStore
 
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, _ ->
         if (token != null) {

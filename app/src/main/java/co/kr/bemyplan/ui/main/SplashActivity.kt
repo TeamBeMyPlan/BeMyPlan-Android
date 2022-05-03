@@ -20,6 +20,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -67,6 +68,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun checkAutoLogin() {
         if(dataStore.sessionId != "") {
+            Timber.tag("sessionId").i(dataStore.sessionId)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         } else {

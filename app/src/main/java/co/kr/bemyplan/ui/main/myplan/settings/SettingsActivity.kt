@@ -12,12 +12,14 @@ import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.main.myplan.settings.creator.CreatorProposeActivity
 import co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity
 import co.kr.bemyplan.util.CustomDialog
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
     @Inject
-    private lateinit var dataStore: BeMyPlanDataStore
+    lateinit var dataStore: BeMyPlanDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

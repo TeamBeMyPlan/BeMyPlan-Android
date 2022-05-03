@@ -10,7 +10,7 @@ import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.login.GoogleLoginRepositoryImpl
-import co.kr.bemyplan.data.repository.login.LoginRepository
+import co.kr.bemyplan.domain.repository.LoginRepository
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
@@ -18,8 +18,6 @@ import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
-import co.kr.bemyplan.data.repository.purchase.after.AfterPurchaseRepository
-import co.kr.bemyplan.data.repository.purchase.after.AfterPurchaseRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.domain.repository.GoogleLoginRepository
@@ -100,9 +98,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideLoginRepository(
-        loginService: LoginService
+        loginService: LoginService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): LoginRepository {
-        return LoginRepositoryImpl(loginService)
+        return LoginRepositoryImpl(loginService, coroutineDispatcher)
     }
 
     // 구글 로그인

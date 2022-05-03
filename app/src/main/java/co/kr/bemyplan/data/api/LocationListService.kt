@@ -7,11 +7,10 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LocationListService {
-    @GET("api/v1/area/{area_id}")
+    @GET("/v1/plans")
     suspend fun getLocationList(
-        @Path("area_id") area_id: Int,
-        @Query("page") page: Int,
-        @Query("pageSize") pageSize: Int,
-        @Query("sort") sort: String
+        @Query("region") region: String,
+        @Query("size") size: Int,
+        @Query("sort", encoded = true) sort: String
     ): ResponseLocationList
 }

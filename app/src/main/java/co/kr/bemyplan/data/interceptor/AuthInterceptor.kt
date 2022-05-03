@@ -11,11 +11,19 @@ class AuthInterceptor @Inject constructor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
+        val sessionId = localStorage.sessionId
+        val visitOption = if (sessionId != "") MEMBERSHIP else GUEST
         val authRequest =
             originalRequest.newBuilder()
-                .addHeader("Authorization", localStorage.sessionId)
+                .addHeader("Authorization", sessionId)
+                .addHeader("Visit-Option", visitOption)
                 .build()
         val response = chain.proceed(authRequest)
         return response
+    }
+
+    companion object {
+        const val MEMBERSHIP = "MEMBERSHIP"
+        const val GUEST = "GUEST"
     }
 }

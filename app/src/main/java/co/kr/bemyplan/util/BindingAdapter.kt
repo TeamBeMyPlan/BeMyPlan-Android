@@ -19,6 +19,7 @@ object BindingAdapter {
             Glide.with(view.context)
                 .load(src)
                 .placeholder(R.drawable.rectangle_grey_radius_5)
+                .error(R.drawable.rectangle_grey_radius_5)
                 .into(view)
         }
     }

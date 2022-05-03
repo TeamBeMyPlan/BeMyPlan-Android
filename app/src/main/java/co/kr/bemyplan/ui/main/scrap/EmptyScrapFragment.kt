@@ -25,7 +25,7 @@ class EmptyScrapFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding =
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_empty_scrap, container, false)
         return binding.root
@@ -52,7 +52,7 @@ class EmptyScrapFragment : Fragment() {
     private fun initRecyclerView() {
         scrapRecommendAdapter = ScrapRecommendAdapter {
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
-            intent.putExtra("postId", it.postId)
+            intent.putExtra("postId", it.planId)
             startActivity(intent)
         }
         binding.rvRecommend.adapter = scrapRecommendAdapter

@@ -18,6 +18,7 @@ import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class NotEmptyScrapFragment : Fragment() {
@@ -30,7 +31,7 @@ class NotEmptyScrapFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_not_empty_scrap, container, false)
         return binding.root
@@ -52,26 +53,26 @@ class NotEmptyScrapFragment : Fragment() {
     private fun initList() {
         viewModel.scrapList.observe(viewLifecycleOwner) {
             scrapAdapter.replaceItem(it)
-            Log.d("mlog: NotEmptyScrapFragment.initList", "execute")
+            Timber.tag("mlog: NotEmptyScrapFragment.initList").d("execute")
         }
     }
 
     private fun reloadList() {
         sortViewModel.sort.observe(viewLifecycleOwner) {
             viewModel.getScrapList(it)
-            Log.d("mlog: viewModel.sort.value", it)
+            Timber.tag("mlog: viewModel.sort.value").d(it)
         }
     }
 
     private fun initRecyclerView() {
         scrapAdapter = ScrapAdapter({
-            if (it.isPurchased) {
+            if (it.orderStatus) {
                 val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-                intent.putExtra("postId", it.postId)
+                intent.putExtra("postId", it.planId)
                 startActivity(intent)
             } else {
                 val intent = Intent(requireContext(), PurchaseActivity::class.java)
-                intent.putExtra("postId", it.postId)
+                intent.putExtra("postId", it.planId)
                 // TODO : 언젠가는 고쳐야 함
                 intent.putExtra("isScraped", true)
                 startActivity(intent)

@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentSignUpBinding
 import co.kr.bemyplan.ui.login.signup.CheckNicknameFragment
@@ -38,8 +40,12 @@ class SignUpFragment : Fragment() {
     }
 
     private fun initFragmentContainerView() {
-        val transaction = childFragmentManager.beginTransaction()
-        transaction.add(R.id.fcv_sign_up, CheckNicknameFragment())
-            .commit()
+        childFragmentManager.commit {
+            add<CheckNicknameFragment>(R.id.fcv_sign_up, CHECK_NICKNAME_FRAGMENT)
+        }
+    }
+
+    companion object {
+        const val CHECK_NICKNAME_FRAGMENT = "CheckNicknameFragment"
     }
 }

@@ -9,9 +9,9 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def kakao_map_app_key = properties.get('kakao_map_app_key')
-def kakao_app_key = properties.get('kakao_app_key')
-def google_client_id = properties.get('google_client_id')
-def base_url = properties.get('base_url')
+//def kakao_app_key = properties.get('kakao_app_key')
+//def google_client_id = properties.get('google_client_id')
+//def base_url = properties.get('base_url')
 
 android {
     compileSdk 31
@@ -64,21 +64,22 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    //noinspection GradleDynamicVersion
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    //gravitysnaphelper
+    // GravitySnapHelper
     implementation 'com.github.rubensousa:gravitysnaphelper:2.2.2'
 
     // retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    kapt 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    kapt 'com.github.bumptech.glide:compiler:4.13.0'
 
     // Chip
     implementation 'com.google.android.material:material:1.5.0'
@@ -87,8 +88,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
 
     // NavigationComponent
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
 
     // KakaoMap
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -97,7 +98,7 @@ dependencies {
     // Kakao Login
     implementation 'com.kakao.sdk:v2-user:2.8.4'
     // Google Login
-    implementation 'com.google.android.gms:play-services-auth:20.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
@@ -112,4 +113,7 @@ dependencies {
     // Hilt
     implementation 'com.google.dagger:hilt-android:2.40'
     kapt 'com.google.dagger:hilt-android-compiler:2.40'
+
+    // Timber
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 }

@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
@@ -94,22 +95,34 @@ class ListActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         listAdapter = ListAdapter({
             if (it.orderStatus) {
-                val intent = Intent(this, AfterPurchaseActivity::class.java)
-                intent.putExtra("postId", it.planId)
-                intent.putExtra("scrapStatus", it.scrapStatus)
+                val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
+                    putExtra("postId", it.planId)
+                    putExtra("scrapStatus", it.scrapStatus)
+                }
                 Timber.tag("mlog: putExtra에서 postId").d(it.planId.toString())
                 startActivity(intent)
             } else {
-                val intent = Intent(this, PurchaseActivity::class.java)
-                intent.putExtra("postId", it.planId)
-                intent.putExtra("scrapStatus", it.scrapStatus)
+                val intent = Intent(this, PurchaseActivity::class.java).apply {
+                    putExtra("postId", it.planId)
+                    putExtra("scrapStatus", it.scrapStatus)
+                }
                 Timber.tag("mlog: putExtra에서 postId").d(it.planId.toString())
                 startActivity(intent)
             }
         }, {
             viewModel.postScrap(it)
         })
-        binding.rvLinearContent.adapter = listAdapter
+        with(binding) {
+            rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if(!rvLinearContent.canScrollVertically(1)) {
+                        viewModel.getMoreLocationList(region, sortViewModel.sort.value.toString())
+                    }
+                }
+            })
+            rvLinearContent.adapter = listAdapter
+        }
     }
 
     private fun clickBack() {

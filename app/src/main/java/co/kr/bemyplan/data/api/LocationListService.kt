@@ -13,4 +13,12 @@ interface LocationListService {
         @Query("size") size: Int,
         @Query("sort", encoded = true) sort: String
     ): ResponseLocationList
+
+    @GET("/v1/plans")
+    suspend fun getMoreLocationList(
+        @Query("region") region: String,
+        @Query("size") size: Int,
+        @Query("sort", encoded = true) sort: String,
+        @Query("lastPlanId") lastPlanId: Int
+    ): ResponseLocationList
 }

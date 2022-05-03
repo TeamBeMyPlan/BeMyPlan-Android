@@ -1,7 +1,7 @@
 package co.kr.bemyplan.data.repository.list.location
 
 import co.kr.bemyplan.data.api.LocationListService
-import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.domain.model.list.PlanList
 import co.kr.bemyplan.domain.repository.LocationListRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -15,9 +15,20 @@ class LocationListRepositoryImpl @Inject constructor(
         region: String,
         size: Int,
         sort: String
-    ): List<ContentModel> {
+    ): PlanList {
         return withContext(coroutineDispatcher) {
-            service.getLocationList(region, size, sort).data.contents
+            service.getLocationList(region, size, sort).data
+        }
+    }
+
+    override suspend fun getMoreLocationList(
+        region: String,
+        size: Int,
+        sort: String,
+        lastPlanId: Int
+    ): PlanList {
+        return withContext(coroutineDispatcher) {
+            service.getMoreLocationList(region, size, sort, lastPlanId).data
         }
     }
 }

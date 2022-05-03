@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="24dp"
                 android:paddingVertical="6dp"
-                app:layout_constraintBottom_toTopOf="@id/nsv"
+                app:layout_constraintBottom_toTopOf="@id/rv_linear_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -80,30 +80,15 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/nsv"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_linear_content"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:overScrollMode="never"
+                android:paddingHorizontal="24dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_sort">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_linear_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:overScrollMode="never"
-                        android:paddingHorizontal="24dp"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.core.widget.NestedScrollView>
+                app:layout_constraintTop_toBottomOf="@id/layout_sort" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

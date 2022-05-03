@@ -1,7 +1,6 @@
 package co.kr.bemyplan.ui.list.viewmodel
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,6 +46,9 @@ class ListViewModel @Inject constructor(
     private var _userPostList = MutableLiveData<List<ContentModel>>()
     val userPostList: LiveData<List<ContentModel>> get() = _userPostList
 
+    private var _lastPlanId = MutableLiveData<Int>()
+    val lastPlanId: LiveData<Int> get() = _lastPlanId
+
     fun getLatestList() {
         viewModelScope.launch {
             kotlin.runCatching {
@@ -80,10 +82,33 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 // TODO - 무한스크롤 구현 이후에는 size = 10 으로 고정할 것
                 locationListRepository.getLocationList(region, size = 2, sort)
-            }.onSuccess { list ->
-                _locationList.value = list
+            }.onSuccess { response ->
+                _locationList.value = response.contents
+                _lastPlanId.value = response.nextCursor
             }.onFailure { error ->
                 Timber.tag("mlog: ListViewModel::getLocationList error").e(error)
+            }
+        }
+    }
+
+    fun getMoreLocationList(region: String, sort: String) {
+        viewModelScope.launch {
+            lastPlanId.value?.let { lastPlanIdValue ->
+                if (lastPlanIdValue != -1) {
+                    kotlin.runCatching {
+                        locationListRepository.getMoreLocationList(
+                            region,
+                            size = 2,
+                            sort,
+                            lastPlanIdValue
+                        )
+                    }.onSuccess { response ->
+                        _locationList.value =
+                            _locationList.value?.toMutableList()
+                                ?.apply { addAll(response.contents) }
+                        _lastPlanId.value = response.nextCursor
+                    }
+                }
             }
         }
     }

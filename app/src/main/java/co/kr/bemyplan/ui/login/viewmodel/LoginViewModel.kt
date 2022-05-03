@@ -224,7 +224,7 @@ class LoginViewModel @Inject constructor(
                         socialToken.value.toString(),
                         socialType.value.toString(),
                         nickname.value.toString(),
-                        email.toString()
+                        email.value.toString()
                     )
                 )
             }.onSuccess {
@@ -232,7 +232,6 @@ class LoginViewModel @Inject constructor(
                 fb.logEvent("signUpComplete", Bundle().apply {
                     putString("source", socialType.value)
                 })
-
                 _userInfo.value = it.data
             }.onFailure {
                 Timber.e(it.message.toString())

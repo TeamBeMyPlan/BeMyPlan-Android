@@ -17,7 +17,7 @@ class LoginRepositoryImpl @Inject constructor(
     private val coroutineDispatcher: CoroutineDispatcher
 ) : LoginRepository {
     override suspend fun postLogin(requestLogin: RequestLogin): ResponseLogin {
-        return withContext(Dispatchers.IO) {
+        return withContext(coroutineDispatcher) {
             service.postLogin(requestLogin)
         }
     }
@@ -29,7 +29,7 @@ class LoginRepositoryImpl @Inject constructor(
     }
 
     override suspend fun postSignUp(requestSignUp: RequestSignUp): ResponseSignUp {
-        return withContext(Dispatchers.IO) {
+        return withContext(coroutineDispatcher) {
             service.postSignUp(requestSignUp)
         }
     }

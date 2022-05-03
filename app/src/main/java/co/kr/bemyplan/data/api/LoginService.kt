@@ -21,7 +21,7 @@ interface LoginService {
         @Query("nickname") nickname: String
     ): ResponseDuplicatedNickname
 
-    @POST("api/v1/signup")
+    @POST("/v1/signup")
     suspend fun postSignUp(
         @Body body: RequestSignUp
     ): ResponseSignUp

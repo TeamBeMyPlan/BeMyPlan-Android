@@ -19,11 +19,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckTermsFragment : Fragment() {
-    @Inject
-    lateinit var dataStore: BeMyPlanDataStore
     private var _binding: FragmentCheckTermsBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")
     private val viewModel by activityViewModels<LoginViewModel>()
+    @Inject
+    private lateinit var dataStore: BeMyPlanDataStore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

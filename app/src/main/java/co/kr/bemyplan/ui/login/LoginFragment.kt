@@ -29,10 +29,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
-    @Inject
-    lateinit var dataStore: BeMyPlanDataStore
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
+    @Inject
+    private lateinit var dataStore: BeMyPlanDataStore
 
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, _ ->
         if (token != null) {

@@ -77,11 +77,11 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun getLocationList(region: String, sort: String) {
+    fun fetchLocationList(region: String, sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
                 // TODO - 무한스크롤 구현 이후에는 size = 10 으로 고정할 것
-                locationListRepository.getLocationList(region, size = 2, sort)
+                locationListRepository.fetchLocationList(region, size = 2, sort)
             }.onSuccess { response ->
                 _locationList.value = response.contents
                 _lastPlanId.value = response.nextCursor
@@ -91,12 +91,12 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun getMoreLocationList(region: String, sort: String) {
+    fun fetchMoreLocationList(region: String, sort: String) {
         viewModelScope.launch {
             lastPlanId.value?.let { lastPlanIdValue ->
                 if (lastPlanIdValue != -1) {
                     kotlin.runCatching {
-                        locationListRepository.getMoreLocationList(
+                        locationListRepository.fetchMoreLocationList(
                             region,
                             size = 2,
                             sort,

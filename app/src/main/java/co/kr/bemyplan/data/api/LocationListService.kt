@@ -6,14 +6,14 @@ import retrofit2.http.Query
 
 interface LocationListService {
     @GET("/v1/plans")
-    suspend fun getLocationList(
+    suspend fun fetchLocationList(
         @Query("region") region: String,
         @Query("size") size: Int,
         @Query("sort", encoded = true) sort: String
     ): ResponseLocationList
 
     @GET("/v1/plans")
-    suspend fun getMoreLocationList(
+    suspend fun fetchMoreLocationList(
         @Query("region") region: String,
         @Query("size") size: Int,
         @Query("sort", encoded = true) sort: String,

@@ -1,7 +1,6 @@
 package co.kr.bemyplan.ui.purchase.before
 
 import android.os.Bundle
-import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -72,7 +71,7 @@ class ChargingFragment : Fragment() {
                 setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
             }
             fb.logEvent("clickPaymentButton", Bundle().apply {
-                putInt("postIdx", viewModel.postId)
+                putInt("postIdx", viewModel.planId)
             })
 
             dialog.showConfirmDialog(R.layout.dialog_yes_zero_event)

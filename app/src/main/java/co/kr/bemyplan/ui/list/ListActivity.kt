@@ -2,7 +2,6 @@ package co.kr.bemyplan.ui.list
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -69,13 +68,13 @@ class ListActivity : AppCompatActivity() {
             }
             "location" -> {
                 Timber.tag("location").i("success")
-                viewModel.getLocationList(region, sortViewModel.sort.value.toString())
+                viewModel.fetchLocationList(region, sortViewModel.sort.value.toString())
                 binding.tvTitle.text = locationName
                 viewModel.locationList.observe(this) { list ->
                     listAdapter.replaceItem(list)
                 }
                 sortViewModel.sort.observe(this) { sort ->
-                    viewModel.getLocationList(region, sort)
+                    viewModel.fetchLocationList(region, sort)
                 }
             }
             "user" -> {
@@ -117,7 +116,7 @@ class ListActivity : AppCompatActivity() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if(!rvLinearContent.canScrollVertically(1)) {
-                        viewModel.getMoreLocationList(region, sortViewModel.sort.value.toString())
+                        viewModel.fetchMoreLocationList(region, sortViewModel.sort.value.toString())
                     }
                 }
             })

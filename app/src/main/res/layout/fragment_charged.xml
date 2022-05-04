@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <data>
+
         <variable
             name="viewModel"
             type="co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel" />
@@ -97,21 +99,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_content"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="30dp"
-            android:paddingStart="20dp"
-            android:paddingTop="22dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="27dp"
-            android:background="@drawable/rectangle_border_grey_radius_5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_empty_grey">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/rectangle_border_grey_radius_5"
+                android:paddingStart="20dp"
+                android:paddingTop="22dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="27dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_empty_grey">
 
 
                 <ImageView
@@ -130,11 +132,11 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
-                    android:text="@{viewModel.previewInformation.author}"
                     android:textColor="@color/grey_5d687a"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/iv_content"
                     app:layout_constraintTop_toTopOf="@+id/iv_content" />
+                <!--            android:text="@{viewModel.previewInfo.author}"-->
 
                 <TextView
                     android:id="@+id/tv_content_title"
@@ -147,7 +149,7 @@
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
                     android:maxLines="1"
-                    android:text="@{viewModel.previewInformation.title}"
+                    android:text="@{viewModel.previewInfo.title}"
                     android:textColor="@color/black_1a1e23"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_content"
@@ -183,12 +185,12 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
-                    android:text="@{Integer.toString(viewModel.previewInformation.price) + `원`}"
                     android:textColor="@color/blue_0077b0"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"
                     app:layout_constraintEnd_toEndOf="@+id/view_line"
                     app:layout_constraintTop_toTopOf="@+id/tv_cost_title" />
+                <!--            android:text="@{Integer.toString(viewModel.previewInfo.price) + `원`}"-->
 
                 <TextView
                     android:id="@+id/tv_way_title"

@@ -14,7 +14,7 @@ import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
-import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
+import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
@@ -35,9 +35,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun providePreviewRepository(
-        previewService: PreviewService
+        previewService: PreviewService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): PreviewRepository {
-        return PreviewRepositoryImpl(previewService)
+        return PreviewRepositoryImpl(previewService, coroutineDispatcher)
     }
 
     // 스크랩 뷰

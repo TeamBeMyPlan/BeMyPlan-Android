@@ -11,24 +11,24 @@ class LocationListRepositoryImpl @Inject constructor(
     private val service: LocationListService,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : LocationListRepository {
-    override suspend fun getLocationList(
+    override suspend fun fetchLocationList(
         region: String,
         size: Int,
         sort: String
     ): PlanList {
         return withContext(coroutineDispatcher) {
-            service.getLocationList(region, size, sort).data
+            service.fetchLocationList(region, size, sort).data
         }
     }
 
-    override suspend fun getMoreLocationList(
+    override suspend fun fetchMoreLocationList(
         region: String,
         size: Int,
         sort: String,
         lastPlanId: Int
     ): PlanList {
         return withContext(coroutineDispatcher) {
-            service.getMoreLocationList(region, size, sort, lastPlanId).data
+            service.fetchMoreLocationList(region, size, sort, lastPlanId).data
         }
     }
 }

@@ -3,8 +3,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="home_introduce">내 취향에 맞는\n여행 일정을 찾아보세요</string>
-    <string name="home_recent_title">최신 여행 일정</string>
-    <string name="home_editor_suggest_title">에디터 추천 여행 일정</string>
+    <string name="home_recent_title">최신 등록 여행 일정</string>
+    <string name="home_editor_suggest_title">비마플 추천 여행 일정</string>
 
     <string name="location_title">어디로 떠나세요?</string>
     <string name="charging_title">결제</string>

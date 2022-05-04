@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.databinding.ItemBeforePurchaseContentBinding
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
 

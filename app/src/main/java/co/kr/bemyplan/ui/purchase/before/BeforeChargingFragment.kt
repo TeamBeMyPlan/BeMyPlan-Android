@@ -14,7 +14,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
@@ -57,15 +56,6 @@ class BeforeChargingFragment : Fragment() {
     }
 
     private fun initList() {
-//        viewModel.getPreviewInfo()
-//        viewModel.previewInformation.observe(viewLifecycleOwner) {
-//            binding.infoModel = it
-//        }
-//
-//        viewModel.getPreviewList()
-//        viewModel.previewList.observe(viewLifecycleOwner) {
-//            contentAdapter.replaceItem(it)
-//        }
         viewModel.fetchPreviewPlan()
         viewModel.previewInfo.observe(viewLifecycleOwner) { previewInfo ->
             binding.info = previewInfo
@@ -157,12 +147,12 @@ class BeforeChargingFragment : Fragment() {
         binding.layoutAuthor.setOnClickListener {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "user")
-            intent.putExtra("userId", viewModel.previewInformation.value?.authorId)
-            intent.putExtra("authorNickname", viewModel.previewInformation.value?.author)
-            Log.d(
-                "mlog: beforecharging.author_id",
-                viewModel.previewInformation.value?.authorId.toString()
-            )
+//            intent.putExtra("userId", viewModel.previewInformation.value?.authorId)
+//            intent.putExtra("authorNickname", viewModel.previewInformation.value?.author)
+//            Log.d(
+//                "mlog: beforecharging.author_id",
+//                viewModel.previewInformation.value?.authorId.toString()
+//            )
             startActivity(intent)
         }
     }

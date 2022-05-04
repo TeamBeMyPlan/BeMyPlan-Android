@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.purchase.before.ContentModel
-import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
@@ -42,12 +40,6 @@ class BeforeChargingViewModel @Inject constructor(
 
     private val _payWay = MutableLiveData<Pay>(Pay.NULL)
     val payWay: LiveData<Pay> get() = _payWay
-
-    private var _previewInformation = MutableLiveData<PreviewInfoModel>()
-    val previewInformation: LiveData<PreviewInfoModel> get() = _previewInformation
-
-    private var _previewList = MutableLiveData<List<ContentModel>>()
-    val previewList: LiveData<List<ContentModel>> get() = _previewList
 
     private var _previewInfo = MutableLiveData<PreviewInfo>()
     val previewInfo: LiveData<PreviewInfo> get() = _previewInfo
@@ -100,30 +92,6 @@ class BeforeChargingViewModel @Inject constructor(
 
     fun setPlanId(postId: Int) {
         _planId = postId
-    }
-
-    fun getPreviewInfo() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                previewRepository.getPreviewInfo(planId)
-            }.onSuccess {
-                _previewInformation.value = it.data
-            }.onFailure {
-                Log.e("mlog: BeforeChargingViewModel::getPreviewInfo error", it.message.toString())
-            }
-        }
-    }
-
-    fun getPreviewList() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                previewRepository.getPreviewList(planId)
-            }.onSuccess {
-                _previewList.value = it.data
-            }.onFailure {
-                Log.e("mlog: BeforeChargingViewModel::getPreviewList", it.message.toString())
-            }
-        }
     }
 
     fun fetchPreviewPlan() {

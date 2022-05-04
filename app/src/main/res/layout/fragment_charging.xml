@@ -94,11 +94,11 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/spoqa_han_sans_neo_regular"
                     android:includeFontPadding="false"
-                    android:text="@{viewModel.previewInformation.author}"
                     android:textColor="@color/grey_5d687a"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/iv_content"
                     app:layout_constraintTop_toTopOf="@+id/iv_content" />
+                <!--                android:text="@{viewModel.previewInfo.author}"-->
 
                 <TextView
                     android:id="@+id/tv_content_title"
@@ -111,7 +111,7 @@
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
                     android:maxLines="1"
-                    android:text="@{viewModel.previewInformation.title}"
+                    android:text="@{viewModel.previewInfo.title}"
                     android:textColor="@color/black_1a1e23"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_content"
@@ -151,12 +151,12 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
-                    android:text="@{@string/price_format(viewModel.previewInformation.price) + `원`}"
                     android:textColor="@color/blue_0077b0"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"
                     app:layout_constraintEnd_toEndOf="@id/view_line"
                     app:layout_constraintTop_toTopOf="@+id/tv_cost_title" />
+                <!--                android:text="@{@string/price_format(viewModel.previewInfo.price) + `원`}"-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

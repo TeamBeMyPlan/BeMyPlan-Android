@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.list.ContentModel
+import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
@@ -14,6 +14,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +44,7 @@ class ScrapViewModel @Inject constructor(
                     _scrapList.value = it.data.items
                 }
             }.onFailure {
-                Log.e("mlog: ListViewModel::getScrapList error", it.message.toString())
+                Timber.tag("mlog: ListViewModel::getScrapList error").e(it.message.toString())
             }
         }
     }
@@ -57,7 +58,7 @@ class ScrapViewModel @Inject constructor(
                     _emptyScrapList.value = it.data
                 }
             }.onFailure {
-                Log.e("mlog: ListViewModel::getEmptyScrapList error", it.message.toString())
+                Timber.tag("mlog: ListViewModel::getEmptyScrapList error").e(it.message.toString())
             }
         }
     }
@@ -67,7 +68,7 @@ class ScrapViewModel @Inject constructor(
             kotlin.runCatching {
                 postScrapRepository.postScrap(postId)
             }.onSuccess {
-                when(it.data.scrapped) {
+                when (it.data.scrapped) {
                     true -> {
                         fb.logEvent("scrapTravelPlan", Bundle().apply {
                             putString("source", "ScrapView")
@@ -81,9 +82,9 @@ class ScrapViewModel @Inject constructor(
                         })
                     }
                 }
-                Log.d("mlog: postScrap", "success")
+                Timber.tag("mlog: postScrap").d("success")
             }.onFailure {
-                Log.d("mlog: postScrap", "fail")
+                Timber.tag("mlog: postScrap").d("fail")
             }
         }
     }

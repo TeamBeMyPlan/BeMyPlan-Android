@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.list.ContentModel
+import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.databinding.ItemListContentBinding
+import timber.log.Timber
 
 class ListAdapter(
     private val itemClick: (ContentModel) -> Unit,
@@ -29,10 +30,7 @@ class ListAdapter(
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
 
-            Log.d(
-                "mlog: price & itemId",
-                contentModel.price.toString() + "," + contentModel.postId.toString()
-            )
+            Timber.d(contentModel.price.toString() + "," + contentModel.planId.toString())
 
             clickItem(contentModel)
             clickScrap(contentModel)
@@ -50,8 +48,8 @@ class ListAdapter(
 
         private fun clickScrap(contentModel: ContentModel) {
             binding.layoutScrap.setOnClickListener {
-                scrapClick(contentModel.postId)
-                contentModel.isScraped = !contentModel.isScraped
+                scrapClick(contentModel.planId)
+                contentModel.scrapStatus = !contentModel.scrapStatus
                 reDrawView(contentModel)
             }
         }
@@ -82,7 +80,7 @@ class ListAdapter(
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<ContentModel>() {
             override fun areItemsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
-                return oldItem.postId == newItem.postId
+                return oldItem.planId == newItem.planId
             }
 
             override fun areContentsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {

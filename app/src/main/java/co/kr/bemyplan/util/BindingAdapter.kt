@@ -5,7 +5,7 @@ import androidx.databinding.BindingAdapter
 import co.kr.bemyplan.R
 import com.bumptech.glide.Glide
 
-object BindingAdapter1 {
+object BindingAdapter {
     @JvmStatic
     @BindingAdapter("setImage")
     fun setImage(view: ImageView, src: Int) {
@@ -19,6 +19,7 @@ object BindingAdapter1 {
             Glide.with(view.context)
                 .load(src)
                 .placeholder(R.drawable.rectangle_grey_radius_5)
+                .error(R.drawable.rectangle_grey_radius_5)
                 .into(view)
         }
     }

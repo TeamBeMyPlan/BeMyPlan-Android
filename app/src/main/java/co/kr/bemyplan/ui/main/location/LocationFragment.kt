@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.ui.list.ListActivity
+import timber.log.Timber
 
 class LocationFragment : Fragment() {
 
@@ -22,7 +23,7 @@ class LocationFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLocationBinding.inflate(layoutInflater)
         locationViewModel.initLocationNetwork()
         initAdapter()
@@ -33,9 +34,9 @@ class LocationFragment : Fragment() {
         locationAdapter = LocationAdapter (itemClick = {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "location")
-            intent.putExtra("areaId", it.name)
-            intent.putExtra("locationName", it.region)
-            Log.d("mlog: areaId", it.name.toString())
+            intent.putExtra("region", it.region)
+            intent.putExtra("locationName", it.name)
+            Timber.tag("mlog: locationName").d(it.name)
             startActivity(intent)
         }, myContext = requireContext())
 
@@ -49,7 +50,7 @@ class LocationFragment : Fragment() {
 
         locationViewModel.location.observe(viewLifecycleOwner) {
             locationAdapter.locationList.addAll(it)
-            Log.d("yongminlog", "viewmodel에서 받아오는 데이터${it}")
+            Timber.tag("yongminlog").d("viewmodel에서 받아오는 데이터 $it")
             locationAdapter.notifyDataSetChanged()
         }
     }

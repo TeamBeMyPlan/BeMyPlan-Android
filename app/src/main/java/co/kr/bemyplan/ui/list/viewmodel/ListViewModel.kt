@@ -1,23 +1,22 @@
 package co.kr.bemyplan.ui.list.viewmodel
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.list.ContentModel
+import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
-import co.kr.bemyplan.data.repository.list.location.LocationListRepository
+import co.kr.bemyplan.domain.repository.LocationListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
-import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,6 +46,9 @@ class ListViewModel @Inject constructor(
     private var _userPostList = MutableLiveData<List<ContentModel>>()
     val userPostList: LiveData<List<ContentModel>> get() = _userPostList
 
+    private var _lastPlanId = MutableLiveData<Int>()
+    val lastPlanId: LiveData<Int> get() = _lastPlanId
+
     fun getLatestList() {
         viewModelScope.launch {
             kotlin.runCatching {
@@ -56,7 +58,7 @@ class ListViewModel @Inject constructor(
                     _latestList.value = it.data.items
                 }
             }.onFailure {
-                Log.e("mlog: ListViewModel::getLatestList error", it.message.toString())
+                Timber.tag("mlog: ListViewModel::getLatestList error").e(it.message.toString())
             }
         }
     }
@@ -70,21 +72,43 @@ class ListViewModel @Inject constructor(
                     _suggestList.value = it.data.items
                 }
             }.onFailure {
-                Log.e("mlog: ListViewModel::getSuggestList error", it.message.toString())
+                Timber.tag("mlog: ListViewModel::getSuggestList error").e(it.message.toString())
             }
         }
     }
 
-    fun getLocationList(areaId: Int, sort: String) {
+    fun getLocationList(region: String, sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                locationListRepository.getLocationList(areaId, page, pageSize, sort)
-            }.onSuccess {
-                if (_locationList.value != it.data.items) {
-                    _locationList.value = it.data.items
+                // TODO - 무한스크롤 구현 이후에는 size = 10 으로 고정할 것
+                locationListRepository.getLocationList(region, size = 2, sort)
+            }.onSuccess { response ->
+                _locationList.value = response.contents
+                _lastPlanId.value = response.nextCursor
+            }.onFailure { error ->
+                Timber.tag("mlog: ListViewModel::getLocationList error").e(error)
+            }
+        }
+    }
+
+    fun getMoreLocationList(region: String, sort: String) {
+        viewModelScope.launch {
+            lastPlanId.value?.let { lastPlanIdValue ->
+                if (lastPlanIdValue != -1) {
+                    kotlin.runCatching {
+                        locationListRepository.getMoreLocationList(
+                            region,
+                            size = 2,
+                            sort,
+                            lastPlanIdValue
+                        )
+                    }.onSuccess { response ->
+                        _locationList.value =
+                            _locationList.value?.toMutableList()
+                                ?.apply { addAll(response.contents) }
+                        _lastPlanId.value = response.nextCursor
+                    }
                 }
-            }.onFailure {
-                Log.e("mlog: ListViewModel::getLocationList error", it.message.toString())
             }
         }
     }
@@ -98,7 +122,7 @@ class ListViewModel @Inject constructor(
                     _userPostList.value = it.data.items
                 }
             }.onFailure {
-                Log.e("mlog: ListViewModel::getUserPostList error", it.message.toString())
+                Timber.tag("mlog: ListViewModel::getUserPostList error").e(it.message.toString())
             }
         }
     }
@@ -122,10 +146,14 @@ class ListViewModel @Inject constructor(
                         })
                     }
                 }
-                Log.d("mlog: postScrap", "success")
+                Timber.tag("mlog: postScrap").d("success")
             }.onFailure {
-                Log.d("mlog: postScrap", "fail")
+                Timber.tag("mlog: postScrap").d("fail")
             }
         }
+    }
+
+    companion object {
+        const val size = 10
     }
 }

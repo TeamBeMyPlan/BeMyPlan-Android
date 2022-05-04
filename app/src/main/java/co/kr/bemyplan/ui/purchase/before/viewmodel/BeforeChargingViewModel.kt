@@ -9,12 +9,15 @@ import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.data.entity.purchase.before.PreviewInfoModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
+import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
+import co.kr.bemyplan.domain.model.purchase.before.PreviewInfo
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,8 +34,8 @@ class BeforeChargingViewModel @Inject constructor(
         setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
     }
 
-    private var _postId = -1
-    val postId get() = _postId
+    private var _planId = -1
+    val planId get() = _planId
 
     private var _isScraped = MutableLiveData<Boolean>()
     val isScraped: LiveData<Boolean> get() = _isScraped
@@ -45,6 +48,12 @@ class BeforeChargingViewModel @Inject constructor(
 
     private var _previewList = MutableLiveData<List<ContentModel>>()
     val previewList: LiveData<List<ContentModel>> get() = _previewList
+
+    private var _previewInfo = MutableLiveData<PreviewInfo>()
+    val previewInfo: LiveData<PreviewInfo> get() = _previewInfo
+
+    private var _previewContents = MutableLiveData<List<PreviewContents>>()
+    val previewContents: LiveData<List<PreviewContents>> get() = _previewContents
 
     fun selectPay(way: Pay) {
         when (way) {
@@ -60,19 +69,19 @@ class BeforeChargingViewModel @Inject constructor(
     fun postScrap() {
         viewModelScope.launch {
             kotlin.runCatching {
-                postScrapRepository.postScrap(postId)
+                postScrapRepository.postScrap(planId)
             }.onSuccess {
-                when(it.data.scrapped) {
+                when (it.data.scrapped) {
                     true -> {
                         fb.logEvent("scrapTravelPlan", Bundle().apply {
                             putString("source", "BeforeChargingView")
-                            putInt("postIdx", postId)
+                            putInt("postIdx", planId)
                         })
                     }
                     false -> {
                         fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
                             putString("source", "BeforeChargingView")
-                            putInt("postIdx", postId)
+                            putInt("postIdx", planId)
                         })
                     }
                 }
@@ -89,14 +98,14 @@ class BeforeChargingViewModel @Inject constructor(
         Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
     }
 
-    fun setPostId(postId: Int) {
-        _postId = postId
+    fun setPlanId(postId: Int) {
+        _planId = postId
     }
 
     fun getPreviewInfo() {
         viewModelScope.launch {
             kotlin.runCatching {
-                previewRepository.getPreviewInfo(postId)
+                previewRepository.getPreviewInfo(planId)
             }.onSuccess {
                 _previewInformation.value = it.data
             }.onFailure {
@@ -108,11 +117,24 @@ class BeforeChargingViewModel @Inject constructor(
     fun getPreviewList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                previewRepository.getPreviewList(postId)
+                previewRepository.getPreviewList(planId)
             }.onSuccess {
                 _previewList.value = it.data
             }.onFailure {
                 Log.e("mlog: BeforeChargingViewModel::getPreviewList", it.message.toString())
+            }
+        }
+    }
+
+    fun fetchPreviewPlan() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                previewRepository.fetchPreviewPlan(planId)
+            }.onSuccess { previewPlan ->
+                _previewInfo.value = previewPlan.previewInfo
+                _previewContents.value = previewPlan.previewContents
+            }.onFailure { error ->
+                Timber.tag("fetchPreviewPlan").e(error)
             }
         }
     }

@@ -9,9 +9,9 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def kakao_map_app_key = properties.get('kakao_map_app_key')
-//def kakao_app_key = properties.get('kakao_app_key')
-//def google_client_id = properties.get('google_client_id')
-//def base_url = properties.get('base_url')
+def kakao_app_key = properties.get('kakao_app_key')
+def google_client_id = properties.get('google_client_id')
+def base_url = properties.get('base_url')
 
 android {
     compileSdk 31

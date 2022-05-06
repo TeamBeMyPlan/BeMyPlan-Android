@@ -42,7 +42,7 @@ class MyPlanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setNickname(AutoLoginData.getNickname(requireContext()))
+//        viewModel.setNickname(AutoLoginData.getNickname(requireContext()))
     }
 
     private fun initList() {
@@ -59,11 +59,13 @@ class MyPlanFragment : Fragment() {
 
     private fun initAdapter() {
         binding.rvMyPlanPurchase.layoutManager = GridLayoutManager(requireContext(), 2)
-        purchaseTourAdapter = MyPlanAdapter {
+        purchaseTourAdapter = MyPlanAdapter({
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
             intent.putExtra("postId", it.postId)
             startActivity(intent)
-        }
+        }, {
+            viewModel.postScrap(it.postId)
+        })
         purchaseTourAdapter.setItems(listItem)
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
     }

@@ -2,13 +2,12 @@ package co.kr.bemyplan.ui.list
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.list.ContentModel
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
@@ -17,6 +16,7 @@ import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ListActivity : AppCompatActivity() {
@@ -25,7 +25,7 @@ class ListActivity : AppCompatActivity() {
     private val sortViewModel by viewModels<SortViewModel>()
     private lateinit var listAdapter: ListAdapter
     var from: String = ""
-    var areaId: Int = -1
+    var region: String = ""
     var userId: Int = -1
     var authorNickname: String = ""
     var locationName: String = ""
@@ -34,12 +34,12 @@ class ListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
         from = intent.getStringExtra("from") ?: ""
-        areaId = intent.getIntExtra("areaId", -1)
+        region = intent.getStringExtra("region") ?: ""
         userId = intent.getIntExtra("userId", -1)
         locationName = intent.getStringExtra("locationName") ?: ""
         authorNickname = intent.getStringExtra("authorNickname") ?: ""
-        Log.d("mlog: ListActivity.userId", userId.toString())
-        Log.d("mlog: ListActivity.userId", authorNickname.toString())
+        Timber.tag("mlog: ListActivity.userId").d(userId.toString())
+        Timber.tag("mlog: ListActivity.userId").d(authorNickname)
         initList(from)
         initRecyclerView()
         clickBack()
@@ -49,7 +49,7 @@ class ListActivity : AppCompatActivity() {
     private fun initList(from: String?) {
         when (from) {
             "new" -> {
-                Log.d("mlog: new", "success")
+                Timber.tag("mlog: new").d("success")
                 binding.layoutSort.visibility = View.GONE
                 viewModel.getLatestList()
                 binding.tvTitle.text = "최신 등록 여행 일정"
@@ -58,7 +58,7 @@ class ListActivity : AppCompatActivity() {
                 }
             }
             "suggest" -> {
-                Log.d("mlog: suggest", "success")
+                Timber.tag("mlog: suggest").d("success")
                 binding.layoutSort.visibility = View.GONE
                 viewModel.getSuggestList()
                 binding.tvTitle.text = "비마플 추천 여행 일정"
@@ -67,18 +67,18 @@ class ListActivity : AppCompatActivity() {
                 }
             }
             "location" -> {
-                Log.d("mlog: location", "success")
-                viewModel.getLocationList(areaId, sortViewModel.sort.value.toString())
+                Timber.tag("location").i("success")
+                viewModel.fetchLocationList(region, sortViewModel.sort.value.toString())
                 binding.tvTitle.text = locationName
-                viewModel.locationList.observe(this) {
-                    listAdapter.replaceItem(it)
+                viewModel.locationList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
                 }
-                sortViewModel.sort.observe(this) {
-                    viewModel.getLocationList(areaId, it)
+                sortViewModel.sort.observe(this) { sort ->
+                    viewModel.fetchLocationList(region, sort)
                 }
             }
             "user" -> {
-                Log.d("mlog: user", "success")
+                Timber.tag("mlog: user").d("success")
                 viewModel.getUserPostList(userId, sortViewModel.sort.value.toString())
                 binding.tvTitle.text = authorNickname
                 viewModel.userPostList.observe(this) {
@@ -93,23 +93,35 @@ class ListActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         listAdapter = ListAdapter({
-            if (it.isPurchased) {
-                val intent = Intent(this, AfterPurchaseActivity::class.java)
-                intent.putExtra("postId", it.postId)
-                intent.putExtra("isScraped", it.isScraped)
-                Log.d("mlog: putExtra에서 postId", it.postId.toString())
+            if (it.orderStatus) {
+                val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
+                    putExtra("postId", it.planId)
+                    putExtra("scrapStatus", it.scrapStatus)
+                }
+                Timber.tag("mlog: putExtra에서 postId").d(it.planId.toString())
                 startActivity(intent)
             } else {
-                val intent = Intent(this, PurchaseActivity::class.java)
-                intent.putExtra("postId", it.postId)
-                intent.putExtra("isScraped", it.isScraped)
-                Log.d("mlog: putExtra에서 postId", it.postId.toString())
+                val intent = Intent(this, PurchaseActivity::class.java).apply {
+                    putExtra("postId", it.planId)
+                    putExtra("scrapStatus", it.scrapStatus)
+                }
+                Timber.tag("mlog: putExtra에서 postId").d(it.planId.toString())
                 startActivity(intent)
             }
         }, {
             viewModel.postScrap(it)
         })
-        binding.rvLinearContent.adapter = listAdapter
+        with(binding) {
+            rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if(!rvLinearContent.canScrollVertically(1)) {
+                        viewModel.fetchMoreLocationList(region, sortViewModel.sort.value.toString())
+                    }
+                }
+            })
+            rvLinearContent.adapter = listAdapter
+        }
     }
 
     private fun clickBack() {
@@ -122,7 +134,7 @@ class ListActivity : AppCompatActivity() {
         binding.ivOrder.setOnClickListener {
             val bottomSheetDialogFragment = SortFragment()
             bottomSheetDialogFragment.show(supportFragmentManager, bottomSheetDialogFragment.tag)
-            Log.d("mlog: ListActivity에서의 sort", sortViewModel.sort.value.toString())
+            Timber.tag("mlog: ListActivity에서의 sort").d(sortViewModel.sort.value.toString())
         }
     }
 }

@@ -1,28 +1,34 @@
 package co.kr.bemyplan.data.repository.list.location
 
-import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.api.LocationListService
-import co.kr.bemyplan.data.entity.list.ResponseLocationList
-import kotlinx.coroutines.Dispatchers
+import co.kr.bemyplan.domain.model.list.PlanList
+import co.kr.bemyplan.domain.repository.LocationListRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LocationListRepositoryImpl @Inject constructor(
-    private val service: LocationListService
+    private val service: LocationListService,
+    private val coroutineDispatcher: CoroutineDispatcher
 ) : LocationListRepository {
-    override suspend fun getLocationList(
-        area_id: Int,
-        page: Int,
-        pageSize: Int,
+    override suspend fun fetchLocationList(
+        region: String,
+        size: Int,
         sort: String
-    ): ResponseLocationList {
-        return withContext(Dispatchers.IO) {
-            service.getLocationList(
-                area_id,
-                page,
-                pageSize,
-                sort
-            )
+    ): PlanList {
+        return withContext(coroutineDispatcher) {
+            service.fetchLocationList(region, size, sort).data
+        }
+    }
+
+    override suspend fun fetchMoreLocationList(
+        region: String,
+        size: Int,
+        sort: String,
+        lastPlanId: Int
+    ): PlanList {
+        return withContext(coroutineDispatcher) {
+            service.fetchMoreLocationList(region, size, sort, lastPlanId).data
         }
     }
 }

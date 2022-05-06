@@ -1,7 +1,6 @@
 package co.kr.bemyplan.ui.purchase.before
 
 import android.os.Bundle
-import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +8,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.databinding.FragmentChargingBinding
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import co.kr.bemyplan.util.CustomDialog
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 class ChargingFragment : Fragment() {
 
@@ -44,19 +46,19 @@ class ChargingFragment : Fragment() {
     }
 
     private fun clickKakaoPay() {
-        binding.tvKakaopay.setOnClickListener{
+        binding.tvKakaopay.setOnClickListener {
             viewModel.selectPay(BeforeChargingViewModel.Pay.KAKAO)
         }
     }
 
     private fun clickToss() {
-        binding.tvToss.setOnClickListener{
+        binding.tvToss.setOnClickListener {
             viewModel.selectPay(BeforeChargingViewModel.Pay.TOSS)
         }
     }
 
     private fun clickNaverPay() {
-        binding.tvNaverpay.setOnClickListener{
+        binding.tvNaverpay.setOnClickListener {
             viewModel.selectPay(BeforeChargingViewModel.Pay.NAVER)
         }
     }
@@ -65,10 +67,17 @@ class ChargingFragment : Fragment() {
         val dialog = CustomDialog(requireContext(), "", "")
 
         binding.tvPayBtn.setOnClickListener {
+            val fb = Firebase.analytics.apply {
+                setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
+            }
+            fb.logEvent("clickPaymentButton", Bundle().apply {
+                putInt("postIdx", viewModel.planId)
+            })
+
             dialog.showConfirmDialog(R.layout.dialog_yes_zero_event)
-            dialog.setOnClickedListener(object:CustomDialog.ButtonClickListener{
+            dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
                 override fun onClicked(num: Int) {
-                    if(num==1){
+                    if (num == 1) {
                         val transaction = parentFragmentManager.beginTransaction()
                         val beforeChargingFragment = BeforeChargingFragment()
                         val chargedFragment = ChargedFragment()

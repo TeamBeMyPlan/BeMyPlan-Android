@@ -3,27 +3,30 @@ package co.kr.bemyplan.di
 import co.kr.bemyplan.data.api.*
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.location.LocationListRepository
 import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
-import co.kr.bemyplan.data.repository.login.LoginRepository
+import co.kr.bemyplan.data.repository.login.GoogleLoginRepositoryImpl
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
-import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepository
+import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
+import co.kr.bemyplan.domain.repository.GoogleLoginRepository
+import co.kr.bemyplan.domain.repository.LocationListRepository
+import co.kr.bemyplan.domain.repository.LoginRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -32,9 +35,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun providePreviewRepository(
-        previewService: PreviewService
+        previewService: PreviewService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): PreviewRepository {
-        return PreviewRepositoryImpl(previewService)
+        return PreviewRepositoryImpl(previewService, coroutineDispatcher)
     }
 
     // 스크랩 뷰
@@ -68,9 +72,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideLocationListRepository(
-        locationListService: LocationListService
+        locationListService: LocationListService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): LocationListRepository {
-        return LocationListRepositoryImpl(locationListService)
+        return LocationListRepositoryImpl(locationListService, coroutineDispatcher)
     }
 
     // 유저가 작성한 게시물 리스트 뷰
@@ -95,9 +100,20 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideLoginRepository(
-        loginService: LoginService
+        loginService: LoginService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): LoginRepository {
-        return LoginRepositoryImpl(loginService)
+        return LoginRepositoryImpl(loginService, coroutineDispatcher)
+    }
+
+    // 구글 로그인
+    @ViewModelScoped
+    @Provides
+    fun provideGoogleSignInRepository(
+        googleLoginService: GoogleLoginService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): GoogleLoginRepository {
+        return GoogleLoginRepositoryImpl(googleLoginService, coroutineDispatcher)
     }
 
     // 스크랩 버튼 클릭
@@ -108,4 +124,13 @@ object RepositoryModule {
     ): PostScrapRepository {
         return PostScrapRepositoryImpl(postScrapService)
     }
+
+    // ?? 뭐지 왜 없는데 됐었지...?
+//    @ViewModelScoped
+//    @Provides
+//    fun provideAfterPurchaseRepository(
+//        afterPostService: AfterPostService
+//    ): AfterPurchaseRepository {
+//        return AfterPurchaseRepositoryImpl(afterPostService)
+//    }
 }

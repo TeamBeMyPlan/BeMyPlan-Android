@@ -1,19 +1,22 @@
 package co.kr.bemyplan.ui.list.viewmodel
 
-import android.util.Log
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.list.ContentModel
+import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
-import co.kr.bemyplan.data.repository.list.location.LocationListRepository
+import co.kr.bemyplan.domain.repository.LocationListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
-import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +27,10 @@ class ListViewModel @Inject constructor(
     private val userPostListRepository: UserPostListRepository,
     private val postScrapRepository: PostScrapRepository
 ) : ViewModel() {
+    private val fb = Firebase.analytics.apply {
+        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
+    }
+
     private var page = 0
     private var pageSize = 10
 
@@ -39,16 +46,19 @@ class ListViewModel @Inject constructor(
     private var _userPostList = MutableLiveData<List<ContentModel>>()
     val userPostList: LiveData<List<ContentModel>> get() = _userPostList
 
+    private var _lastPlanId = MutableLiveData<Int>()
+    val lastPlanId: LiveData<Int> get() = _lastPlanId
+
     fun getLatestList() {
         viewModelScope.launch {
             kotlin.runCatching {
                 latestListRepository.getNewList(page, pageSize)
             }.onSuccess {
-                if(_latestList.value != it.data.items) {
+                if (_latestList.value != it.data.items) {
                     _latestList.value = it.data.items
                 }
             }.onFailure {
-                Log.e("mlog: ListViewModel::getLatestList error", it.message.toString())
+                Timber.tag("mlog: ListViewModel::getLatestList error").e(it.message.toString())
             }
         }
     }
@@ -58,25 +68,47 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 suggestListRepository.getSuggestList(page, pageSize)
             }.onSuccess {
-                if(_suggestList.value != it.data.items) {
+                if (_suggestList.value != it.data.items) {
                     _suggestList.value = it.data.items
                 }
             }.onFailure {
-                Log.e("mlog: ListViewModel::getSuggestList error", it.message.toString())
+                Timber.tag("mlog: ListViewModel::getSuggestList error").e(it.message.toString())
             }
         }
     }
 
-    fun getLocationList(areaId: Int, sort: String) {
+    fun fetchLocationList(region: String, sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                locationListRepository.getLocationList(areaId, page, pageSize, sort)
-            }.onSuccess {
-                if(_locationList.value != it.data.items) {
-                    _locationList.value = it.data.items
+                // TODO - 무한스크롤 구현 이후에는 size = 10 으로 고정할 것
+                locationListRepository.fetchLocationList(region, size = 2, sort)
+            }.onSuccess { response ->
+                _locationList.value = response.contents
+                _lastPlanId.value = response.nextCursor
+            }.onFailure { error ->
+                Timber.tag("mlog: ListViewModel::getLocationList error").e(error)
+            }
+        }
+    }
+
+    fun fetchMoreLocationList(region: String, sort: String) {
+        viewModelScope.launch {
+            lastPlanId.value?.let { lastPlanIdValue ->
+                if (lastPlanIdValue != -1) {
+                    kotlin.runCatching {
+                        locationListRepository.fetchMoreLocationList(
+                            region,
+                            size = 2,
+                            sort,
+                            lastPlanIdValue
+                        )
+                    }.onSuccess { response ->
+                        _locationList.value =
+                            _locationList.value?.toMutableList()
+                                ?.apply { addAll(response.contents) }
+                        _lastPlanId.value = response.nextCursor
+                    }
                 }
-            }.onFailure {
-                Log.e("mlog: ListViewModel::getLocationList error", it.message.toString())
             }
         }
     }
@@ -86,11 +118,11 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 userPostListRepository.getUserPostList(userId, page, pageSize, sort)
             }.onSuccess {
-                if(_userPostList.value != it.data.items) {
+                if (_userPostList.value != it.data.items) {
                     _userPostList.value = it.data.items
                 }
-            }.onFailure{
-                Log.e("mlog: ListViewModel::getUserPostList error", it.message.toString())
+            }.onFailure {
+                Timber.tag("mlog: ListViewModel::getUserPostList error").e(it.message.toString())
             }
         }
     }
@@ -100,10 +132,28 @@ class ListViewModel @Inject constructor(
             kotlin.runCatching {
                 postScrapRepository.postScrap(postId)
             }.onSuccess {
-                Log.d("mlog: postScrap", "success")
+                when (it.data.scrapped) {
+                    true -> {
+                        fb.logEvent("scrapTravelPlan", Bundle().apply {
+                            putString("source", "ListView")
+                            putInt("postIdx", postId)
+                        })
+                    }
+                    false -> {
+                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
+                            putString("source", "ListView")
+                            putInt("postIdx", postId)
+                        })
+                    }
+                }
+                Timber.tag("mlog: postScrap").d("success")
             }.onFailure {
-                Log.d("mlog: postScrap", "fail")
+                Timber.tag("mlog: postScrap").d("fail")
             }
         }
+    }
+
+    companion object {
+        const val size = 10
     }
 }

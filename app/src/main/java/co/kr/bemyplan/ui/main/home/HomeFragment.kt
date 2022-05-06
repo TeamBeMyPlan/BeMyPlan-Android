@@ -3,20 +3,20 @@ package co.kr.bemyplan.ui.main.home
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
+import androidx.recyclerview.widget.*
 import androidx.viewpager2.widget.CompositePageTransformer
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.util.ZoomOutPageTransformer
+import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 
 class HomeFragment : Fragment() {
 
@@ -33,16 +33,22 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
-
-//        snapHelper = LinearSnapHelper()
-//        snapHelper.attachToRecyclerView(binding.rvEditorSuggest)
-//        snapHelper.attachToRecyclerView(binding.rvRecent)
-
         initAdapterRecent()
         initAdapterEditor()
         initAdapterPopular()
         clickMore()
         return binding.root
+    }
+
+    private fun findCenterView(layoutManager: LinearLayoutManager) : View? {
+        val llm : LinearLayoutManager = layoutManager
+        if(llm.findFirstCompletelyVisibleItemPosition() == 0){
+            return llm.getChildAt(0)
+        }
+        else if(llm.findLastCompletelyVisibleItemPosition() == layoutManager.itemCount -1){
+            return llm.getChildAt(layoutManager.itemCount-1)
+        }
+        else return null
     }
 
     override fun onDestroyView() {
@@ -64,6 +70,10 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         })
         binding.rvRecent.adapter = recentAdapter
+//        binding.rvRecent.layoutManager = LinearLayoutManager(requireContext())
+//        val lm = binding.rvRecent.layoutManager
+        val gravitySnapHelper = GravitySnapHelper(Gravity.START)
+        gravitySnapHelper.attachToRecyclerView(binding.rvRecent)
 
         homeViewModel.new.observe(viewLifecycleOwner) {
             recentAdapter.planList.addAll(it)

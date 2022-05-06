@@ -3,20 +3,22 @@ package co.kr.bemyplan.ui.login.signup
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentCheckNicknameBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.util.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class CheckNicknameFragment : Fragment() {
@@ -27,8 +29,13 @@ class CheckNicknameFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_check_nickname, container, false)
+    ): View {
+        _binding = DataBindingUtil.inflate(
+            layoutInflater,
+            R.layout.fragment_check_nickname,
+            container,
+            false
+        )
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
@@ -49,7 +56,7 @@ class CheckNicknameFragment : Fragment() {
 
     private fun observeNickname() {
         viewModel.nickname.observe(viewLifecycleOwner) {
-            Log.d("mlog: nickname", viewModel.nickname.value.toString())
+            Timber.d(viewModel.nickname.value.toString())
             viewModel.setIsDuplicatedNicknameNull()
             viewModel.checkIsValidNickname()
         }
@@ -68,9 +75,9 @@ class CheckNicknameFragment : Fragment() {
         dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
-                    parentFragmentManager.beginTransaction()
-                        .remove(this@CheckNicknameFragment)
-                        .commit()
+                    parentFragmentManager.commit {
+                        remove(this@CheckNicknameFragment)
+                    }
                     parentFragmentManager.popBackStack()
                 }
             }
@@ -85,10 +92,10 @@ class CheckNicknameFragment : Fragment() {
             dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
                 override fun onClicked(num: Int) {
                     if (num == 1) {
-                        val transaction = parentFragmentManager.beginTransaction()
-                        transaction.replace(R.id.fcv_sign_up, CheckEmailFragment())
-                            .addToBackStack(null)
-                            .commit()
+                        parentFragmentManager.commit {
+                            replace<CheckEmailFragment>(R.id.fcv_sign_up, CHECK_EMAIL_FRAGMENT)
+                            addToBackStack(CHECK_EMAIL_FRAGMENT)
+                        }
                     }
                 }
             })
@@ -115,5 +122,9 @@ class CheckNicknameFragment : Fragment() {
             }
             handled
         }
+    }
+
+    companion object {
+        const val CHECK_EMAIL_FRAGMENT = "CheckEmailFragment"
     }
 }

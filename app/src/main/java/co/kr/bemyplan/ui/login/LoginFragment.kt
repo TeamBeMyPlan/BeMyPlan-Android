@@ -7,9 +7,11 @@ import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import co.kr.bemyplan.BuildConfig
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.AutoLoginData
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
@@ -21,58 +23,73 @@ import com.google.android.gms.common.api.ApiException
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
+    @Inject
+    lateinit var dataStore: BeMyPlanDataStore
 
-    private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+    private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, _ ->
         if (token != null) {
-            Log.d("mlog: kakaoLogin", "카카오계정 로그인 성공 ${token.accessToken}")
+            Timber.i("카카오계정 로그인 성공 " + token.accessToken)
             viewModel.setSocialToken(token.accessToken)
-            viewModel.setSocialType("KAKAO")
-
-            // 이메일 가져오기
+            viewModel.setSocialType(KAKAO)
             userApiClient.me { user, error ->
-                if(error != null) {
-                    Log.d("mlog: kakaoLogin", "카카오계정 사용자 정보 가져오기 실패")
-                } else if(user != null) {
-                    Log.d("mlog: kakaoLogin", "카카오계정 사용자 정보 가져오기 성공, 카카오계정 이메일 = ${user.kakaoAccount?.email}")
+                if (error != null) {
+                    Timber.e("카카오계정 사용자 정보 가져오기 실패")
+                } else if (user != null) {
+                    Timber.i("카카오계정 사용자 정보 가져오기 성공, 카카오계정 이메일 = " + user.kakaoAccount?.email)
                     user.kakaoAccount?.email?.let { email -> viewModel.email.value = email }
                 }
             }
-
-            Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
-            Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
             login()
         } else {
+            Timber.e(token.toString())
             requireContext().shortToast("다시 로그인해주세요")
         }
     }
 
-    private val startForGoogleLoginResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if(it.resultCode == Activity.RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                Log.d(
-                    "mlog: googleLogin",
-                    "구글 로그인 성공, account.id = " + account.id + ", account.idToken = " + account.idToken + ", account.email = " + account.email
-                )
-                viewModel.setSocialToken(account.idToken)
-                viewModel.setSocialType("GOOGLE")
-                account.email?.let { email -> viewModel.email.value = email }
-                Log.d("mlog: LoginFragment::socialToken", viewModel.socialToken.value.toString())
-                Log.d("mlog: LoginFragment::socialType", viewModel.socialType.value.toString())
-                login()
-            } catch (e: ApiException) {
-                Log.w("mlog: googleLogin", "구글 로그인 실패: " + e.message)
+    private val googleLoginLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
+            if (it.resultCode == Activity.RESULT_OK) {
+                kotlin.runCatching {
+                    GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                }.onSuccess { task ->
+                    val account = task.getResult(ApiException::class.java)
+                    val authCode = account.serverAuthCode ?: ""
+                    viewModel.getAccessToken(
+                        "authorization_code",
+                        BuildConfig.GOOGLE_WEB_CLIENT_ID,
+                        BuildConfig.GOOGLE_CLIENT_SECRET,
+                        "",
+                        authCode
+                    )
+                    viewModel.socialToken.observe(viewLifecycleOwner) {
+                        viewModel.setSocialType(GOOGLE)
+                        account.email?.let { email -> viewModel.email.value = email }
+                        login()
+                    }
+                }.onFailure { error ->
+                    Timber.e(error)
+                }
+            } else {
+                if (it.resultCode == Activity.RESULT_CANCELED) {
+                    kotlin.runCatching {
+                        GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                    }.onSuccess { task ->
+                        Timber.e(task.exception.toString())
+                    }.onFailure { error ->
+                        Timber.e(error)
+                    }
+                }
+                requireContext().shortToast("다시 로그인해주세요")
             }
-        } else {
-            requireContext().shortToast("다시 로그인해주세요")
         }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,6 +101,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun clickGuestLogin() {
         binding.tvGuestLogin.setOnClickListener {
+            // Firebase Event Log
+            val bundle = Bundle()
+            bundle.putString("source", "Guest")
+            viewModel.fb.logEvent("signin", bundle)
+
             startMainActivity()
         }
     }
@@ -101,6 +123,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun testForSignUpPage() {
+        // TODO: 나중에 꼭 !! 지우세요
         // test용으로 비마이플랜 이미지 클릭 시 회원가입 뷰 보여줌
         binding.ivLogo.setOnClickListener {
             startSignUpFragment()
@@ -109,13 +132,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun getKakaoToken() {
         if (userApiClient.isKakaoTalkLoginAvailable(requireContext())) {
-            Log.d("mlog: kakaoLogin", "카카오톡으로 로그인 가능")
+            Timber.i("카카오톡으로 로그인 가능")
             userApiClient.loginWithKakaoTalk(
                 requireContext(),
                 callback = kakaoLoginCallback
             )
         } else {
-            Log.d("mlog: kakaoLogin", "카카오톡으로 로그인 불가능")
+            Timber.i("카카오톡으로 로그인 불가능")
             userApiClient.loginWithKakaoAccount(
                 requireContext(),
                 callback = kakaoLoginCallback
@@ -126,29 +149,29 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun getGoogleToken() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
-            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .requestServerAuthCode(BuildConfig.GOOGLE_WEB_CLIENT_ID)
             .build()
         val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
-
         val signInIntent = googleSignInClient.signInIntent
-        startForGoogleLoginResult.launch(signInIntent)
+        googleLoginLauncher.launch(signInIntent)
     }
 
     private fun login() {
         viewModel.login()
 
         viewModel.userInfo.observe(viewLifecycleOwner) {
-            AutoLoginData.setAutoLogin(requireContext(), true, it.accessToken, it.nickname)
+            dataStore.sessionId = it.sessionId
+            dataStore.userId = it.userId
             startMainActivity()
         }
 
         viewModel.isUser.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
-                    Log.d("mlog: LoginFragment", "isUser == true, go main")
+                    Timber.i("비마이플랜 로그인 성공")
                 }
                 else -> {
-                    Log.d("mlog: LoginFragment", "status code == 403 && isUser == false")
+                    Timber.d("비마이플랜 로그인 실패, 회원가입으로 이동")
                     startSignUpFragment()
                 }
             }
@@ -156,15 +179,21 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun startSignUpFragment() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fcv_login, SignUpFragment(), "signUpFragment")
-            .addToBackStack(null)
-            .commit()
+        parentFragmentManager.commit {
+            replace<SignUpFragment>(R.id.fcv_login, SIGN_UP_FRAGMENT)
+            addToBackStack(SIGN_UP_FRAGMENT)
+        }
     }
 
     private fun startMainActivity() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
+    }
+
+    companion object {
+        const val KAKAO = "KAKAO"
+        const val GOOGLE = "GOOGLE"
+        const val SIGN_UP_FRAGMENT = "SignUpFragment"
     }
 }

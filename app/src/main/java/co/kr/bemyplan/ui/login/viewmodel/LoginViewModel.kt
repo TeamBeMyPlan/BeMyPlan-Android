@@ -1,5 +1,6 @@
 package co.kr.bemyplan.ui.login.viewmodel
 
+import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
@@ -7,23 +8,28 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.login.UserInfoModel
-import co.kr.bemyplan.data.entity.login.check.RequestDuplicatedNickname
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
-import co.kr.bemyplan.data.repository.login.LoginRepository
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.domain.repository.LoginRepository
+import co.kr.bemyplan.domain.repository.GoogleLoginRepository
 import co.kr.bemyplan.util.SingleLiveEvent
-import com.kakao.sdk.user.UserApiClient
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    private val googleLoginRepository: GoogleLoginRepository
 ) : ViewModel() {
-    // 카카오로그인
-    private val userApiClient = UserApiClient.instance
+    val fb = Firebase.analytics.apply {
+        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
+    }
 
     var nickname = MutableLiveData<String>("")
     var email = MutableLiveData<String>("")
@@ -73,12 +79,32 @@ class LoginViewModel @Inject constructor(
     private var _isMember = MutableLiveData<Boolean>()
     val isMember: LiveData<Boolean> get() = _isMember
 
-    fun setSocialToken(token: String?) {
+    fun setSocialToken(token: String) {
         _socialToken.value = token
     }
 
     fun setSocialType(type: String) {
         _socialType.value = type
+    }
+
+    fun getAccessToken(
+        grantType: String, clientId: String, clientSecret: String, redirectUri: String, code: String
+    ) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                googleLoginRepository.postGoogleLogin(
+                    grantType,
+                    clientId,
+                    clientSecret,
+                    redirectUri,
+                    code
+                )
+            }.onSuccess { token ->
+                _socialToken.value = token
+            }.onFailure { error ->
+                Timber.e(error)
+            }
+        }
     }
 
     fun login() {
@@ -87,18 +113,22 @@ class LoginViewModel @Inject constructor(
             kotlin.runCatching {
                 loginRepository.postLogin(requestLogin)
             }.onSuccess {
+                // FB LOG
+                fb.logEvent("signin", Bundle().apply {
+                    putString("source", socialType.value)
+                })
+
                 _userInfo.value = it.data
                 _isUser.value = true
-            }.onFailure {
-                when (it) {
+            }.onFailure {  exception ->
+                when (exception) {
                     is retrofit2.HttpException -> {
-                        // TODO: 임시 코드, 추후 서버 완료되면 e.code() == 500 삭제할 것
-                        if (it.code() == 403 || it.code() == 500) {
+                        if (exception.code() == 404) {
                             _isUser.value = false
                         }
                     }
                     else -> {
-                        Log.e("mlog: LoginViewModel::login", it.message.toString())
+                        Timber.e(exception)
                     }
                 }
             }
@@ -106,9 +136,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun setAllAgree() {
-        Log.d("mlog: setAllAgree()", "executed")
+        Timber.tag("mlog: setAllAgree()").d("executed")
         _isAllAgree.value = !_isAllAgree.value!!
-        Log.d("mlog: isAllAgree.value", isAllAgree.value.toString())
+        Timber.tag("mlog: isAllAgree.value").d(isAllAgree.value.toString())
         when (_isAllAgree.value!!) {
             true -> {
                 _isTermsAgree.value = true
@@ -119,8 +149,8 @@ class LoginViewModel @Inject constructor(
                 _isInfoAgree.value = false
             }
         }
-        Log.d("mlog: isTermsAgree.value", isTermsAgree.value.toString())
-        Log.d("mlog: isInfoAgree.value", isInfoAgree.value.toString())
+        Timber.tag("mlog: isTermsAgree.value").d(isTermsAgree.value.toString())
+        Timber.tag("mlog: isInfoAgree.value").d(isInfoAgree.value.toString())
     }
 
     fun setTermsAgree() {
@@ -137,18 +167,23 @@ class LoginViewModel @Inject constructor(
         _isDuplicatedNickname.value = null
     }
 
-    fun checkIsDuplicatedNickname() {
+    private fun checkIsDuplicatedNickname() {
         viewModelScope.launch {
             kotlin.runCatching {
-                loginRepository.postDuplicatedNickname(RequestDuplicatedNickname(nickname.value.toString()))
+                loginRepository.postDuplicatedNickname(nickname.value.toString())
             }.onSuccess {
-                _isDuplicatedNickname.value = it.data.duplicated
-
-                if (!isDuplicatedNickname.value!! && isValidNickname.value!!) {
+                _isDuplicatedNickname.value = false
+                if (isDuplicatedNickname.value == false && isValidNickname.value == true) {
                     _nicknamePermission.value = true
                 }
-            }.onFailure {
-                Log.e("mlog: checkIsDuplicatedNickname", it.message.toString())
+            }.onFailure { exception ->
+                when(exception) {
+                    is retrofit2.HttpException -> {
+                        if(exception.code() == 409) {
+                            _isDuplicatedNickname.value = true
+                        }
+                    }
+                }
             }
         }
     }
@@ -156,13 +191,13 @@ class LoginViewModel @Inject constructor(
     fun checkIsValidNickname() {
         val regex = "[가-힣A-Za-z0-9]{0,20}".toRegex()
         _isValidNickname.value = nickname.value?.matches(regex)
-        Log.d("mlog: isValidNickname.value", isValidNickname.value.toString())
+        Timber.tag("mlog: checkIsValidNickname()").d(isValidNickname.value.toString())
     }
 
     fun checkIsValidEmail() {
         val pattern: Pattern = Patterns.EMAIL_ADDRESS
         _isValidEmail.value = pattern.matcher(email.value.toString()).matches()
-        Log.d("mlog: isValidEmail.value", isValidEmail.value.toString())
+        Timber.tag("mlog: checkIsValidEmail").d(isValidEmail.value.toString())
     }
 
     fun clickNicknameNext() {
@@ -188,19 +223,19 @@ class LoginViewModel @Inject constructor(
                     RequestSignUp(
                         socialToken.value.toString(),
                         socialType.value.toString(),
-                        nickname.value.toString()
+                        nickname.value.toString(),
+                        email.value.toString()
                     )
                 )
             }.onSuccess {
+                // FB LOG
+                fb.logEvent("signUpComplete", Bundle().apply {
+                    putString("source", socialType.value)
+                })
                 _userInfo.value = it.data
             }.onFailure {
-                Log.e("mlog: LoginViewModel::signUp", it.message.toString())
+                Timber.e(it.message.toString())
             }
         }
-    }
-
-    companion object {
-        const val KAKAO = "KAKAO"
-        const val GOOGLE = "GOOGLE"
     }
 }

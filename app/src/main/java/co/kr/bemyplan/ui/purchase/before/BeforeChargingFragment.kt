@@ -14,7 +14,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
@@ -25,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class BeforeChargingFragment : Fragment() {
     private var _binding: FragmentBeforeChargingBinding? = null
-    private val binding get() = _binding?:error("Binding이 초기화 되지 않았습니다.")
+    private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
     private lateinit var contentAdapter: ContentAdapter
 
@@ -33,7 +32,8 @@ class BeforeChargingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
@@ -56,14 +56,12 @@ class BeforeChargingFragment : Fragment() {
     }
 
     private fun initList() {
-        viewModel.getPreviewInfo()
-        viewModel.previewInformation.observe(viewLifecycleOwner) {
-            binding.infoModel = it
+        viewModel.fetchPreviewPlan()
+        viewModel.previewInfo.observe(viewLifecycleOwner) { previewInfo ->
+            binding.info = previewInfo
         }
-
-        viewModel.getPreviewList()
-        viewModel.previewList.observe(viewLifecycleOwner) {
-            contentAdapter.replaceItem(it)
+        viewModel.previewContents.observe(viewLifecycleOwner) { previewContents ->
+            contentAdapter.replaceItem(previewContents)
         }
     }
 
@@ -77,7 +75,7 @@ class BeforeChargingFragment : Fragment() {
         binding.nsv.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY < oldScrollY) {
                 // 하단 View 표시하기
-                if(!isVisible) {
+                if (!isVisible) {
                     isVisible = true
                     showLayoutPurchase()
                 }
@@ -90,7 +88,7 @@ class BeforeChargingFragment : Fragment() {
                     showLayoutPurchase()
                 } else {
                     // 하단 View 숨기기
-                    if(isVisible) {
+                    if (isVisible) {
                         isVisible = false
                         hideLayoutPurchase()
                     }
@@ -149,9 +147,12 @@ class BeforeChargingFragment : Fragment() {
         binding.layoutAuthor.setOnClickListener {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "user")
-            intent.putExtra("userId", viewModel.previewInformation.value?.authorId)
-            intent.putExtra("authorNickname", viewModel.previewInformation.value?.author)
-            Log.d("mlog: beforecharging.author_id", viewModel.previewInformation.value?.authorId.toString())
+//            intent.putExtra("userId", viewModel.previewInformation.value?.authorId)
+//            intent.putExtra("authorNickname", viewModel.previewInformation.value?.author)
+//            Log.d(
+//                "mlog: beforecharging.author_id",
+//                viewModel.previewInformation.value?.authorId.toString()
+//            )
             startActivity(intent)
         }
     }
@@ -165,7 +166,7 @@ class BeforeChargingFragment : Fragment() {
     }
 
     private fun clickPurchase() {
-        binding.layoutPurchase.setOnClickListener{
+        binding.layoutPurchase.setOnClickListener {
             val chargingFragment = ChargingFragment()
             val transaction = parentFragmentManager.beginTransaction()
             transaction.add(R.id.fragment_container_charging, chargingFragment)

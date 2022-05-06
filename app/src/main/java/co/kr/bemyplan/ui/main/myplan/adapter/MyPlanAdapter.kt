@@ -9,7 +9,10 @@ import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.ItemMyPlanPurchaseListBinding
 import co.kr.bemyplan.util.clipTo
 
-class MyPlanAdapter(val itemClick: (MyModel) -> Unit) :
+class MyPlanAdapter(
+    private val itemClick: (MyModel) -> Unit,
+    private val scrapClick: (MyModel) -> Unit
+) :
     RecyclerView.Adapter<MyPlanAdapter.ExistMyPlanViewHolder>() {
     private var purchaseTourList = listOf<MyModel>()
 
@@ -19,7 +22,7 @@ class MyPlanAdapter(val itemClick: (MyModel) -> Unit) :
             parent, false
         )
 
-        return ExistMyPlanViewHolder(binding)
+        return ExistMyPlanViewHolder(binding, itemClick, scrapClick)
     }
 
     override fun onBindViewHolder(holder: ExistMyPlanViewHolder, position: Int) {
@@ -34,15 +37,36 @@ class MyPlanAdapter(val itemClick: (MyModel) -> Unit) :
         notifyDataSetChanged()
     }
 
-    inner class ExistMyPlanViewHolder(private val binding: ItemMyPlanPurchaseListBinding) :
+    class ExistMyPlanViewHolder(
+        private val binding: ItemMyPlanPurchaseListBinding,
+        private val itemClick: (MyModel) -> Unit,
+        private val scrapClick: (MyModel) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: MyModel) {
             Log.d("mlog: MyPlanAdapter", data.postId.toString())
             binding.model = data
             binding.ivMyPlanSpot.clipToOutline = true
-            //clipTo(binding.ivMyPlanSpot, data.thumbnailUrl)
+            clickItem(data)
+            clickScrap(data)
+        }
+
+        private fun clickItem(data: MyModel) {
             binding.root.setOnClickListener {
                 itemClick(data)
+            }
+        }
+
+        private fun clickScrap(data: MyModel) {
+            binding.layoutScrap.setOnClickListener {
+                scrapClick(data)
+                // TODO: 추후 null 처리 다시 해야합니다 !! 서버 확인하고서 ~_~
+                if (data.isScrapped != null) {
+                    data.isScrapped = !data.isScrapped!!
+                } else {
+                    data.isScrapped = false
+                }
+                binding.model = data
             }
         }
     }

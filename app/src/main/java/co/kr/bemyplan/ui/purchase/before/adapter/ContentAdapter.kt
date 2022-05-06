@@ -7,16 +7,16 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.purchase.before.ContentModel
 import co.kr.bemyplan.databinding.ItemBeforePurchaseContentBinding
+import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
 
 class ContentAdapter : RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() {
     private val asyncDiffer = AsyncListDiffer(this, diffCallback)
 
     class ContentViewHolder(private val binding: ItemBeforePurchaseContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(contentModel: ContentModel) {
-            binding.model = contentModel
+        fun bind(content: PreviewContents) {
+            binding.content = content
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
         }
@@ -40,17 +40,17 @@ class ContentAdapter : RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() 
         return asyncDiffer.currentList.size
     }
 
-    fun replaceItem(itemList: List<ContentModel>) {
+    fun replaceItem(itemList: List<PreviewContents>) {
         asyncDiffer.submitList(itemList)
     }
 
     companion object {
-        private val diffCallback = object : DiffUtil.ItemCallback<ContentModel>() {
-            override fun areItemsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
+        private val diffCallback = object : DiffUtil.ItemCallback<PreviewContents>() {
+            override fun areItemsTheSame(oldItem: PreviewContents, newItem: PreviewContents): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
+            override fun areContentsTheSame(oldItem: PreviewContents, newItem: PreviewContents): Boolean {
                 return oldItem == newItem
             }
         }

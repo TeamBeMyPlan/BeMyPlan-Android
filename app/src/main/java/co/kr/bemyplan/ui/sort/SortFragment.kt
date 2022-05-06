@@ -53,7 +53,7 @@ class SortFragment : BottomSheetDialogFragment() {
         }
         viewModel.sort.observe(viewLifecycleOwner) {
             when (it) {
-                "created_at" -> {
+                "id,desc" -> {
                     binding.tvLatest.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -76,7 +76,7 @@ class SortFragment : BottomSheetDialogFragment() {
                     binding.ivBestSeller.visibility = View.INVISIBLE
                     binding.ivBestScrapper.visibility = View.INVISIBLE
                 }
-                "order_count" -> {
+                "orderCnt,desc" -> {
                     binding.tvLatest.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -99,7 +99,7 @@ class SortFragment : BottomSheetDialogFragment() {
                     binding.ivBestSeller.visibility = View.VISIBLE
                     binding.ivBestScrapper.visibility = View.INVISIBLE
                 }
-                "price" -> {
+                "createdAt,asc" -> {
                     binding.tvLatest.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),

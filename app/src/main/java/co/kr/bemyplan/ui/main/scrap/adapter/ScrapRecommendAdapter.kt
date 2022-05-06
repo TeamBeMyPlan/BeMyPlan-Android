@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.list.ContentModel
+import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapEmptyContentBinding
 
 class ScrapRecommendAdapter(private val itemClick: (ContentModel) -> Unit) :
@@ -55,7 +55,7 @@ class ScrapRecommendAdapter(private val itemClick: (ContentModel) -> Unit) :
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<ContentModel>() {
             override fun areItemsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
-                return oldItem.postId == newItem.postId
+                return oldItem.planId == newItem.planId
             }
 
             override fun areContentsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {

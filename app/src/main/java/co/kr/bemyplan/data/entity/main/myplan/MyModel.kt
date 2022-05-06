@@ -8,5 +8,6 @@ data class MyModel(
     @SerializedName("thumbnail_url")
     val thumbnailUrl: String,
     val title: String,
-    val author: String
+    val author: String,
+    var isScrapped: Boolean?
 )

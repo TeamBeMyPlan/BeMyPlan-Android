@@ -1,20 +1,30 @@
 package co.kr.bemyplan.ui.main.myplan.viewmodel
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.main.myplan.MyModel
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPlanViewModel @Inject constructor(
-    private val myPlanRepository: MyPlanRepository
+    private val myPlanRepository: MyPlanRepository,
+    private val postScrapRepository: PostScrapRepository
 ) : ViewModel() {
+    private val fb = Firebase.analytics.apply {
+        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
+    }
+
     private var page = 0
     private var pageSize = 10
 
@@ -38,6 +48,32 @@ class MyPlanViewModel @Inject constructor(
                 }
             }.onFailure {
                 Log.e("mlog: MyPlanViewModel::getMyPlan error", it.message.toString())
+            }
+        }
+    }
+
+    fun postScrap(postId: Int) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                postScrapRepository.postScrap(postId)
+            }.onSuccess {
+                when(it.data.scrapped) {
+                    true -> {
+                        fb.logEvent("scrapTravelPlan", Bundle().apply {
+                            putString("source", "BeforeChargingView")
+                            putInt("postIdx", postId)
+                        })
+                    }
+                    false -> {
+                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
+                            putString("source", "BeforeChargingView")
+                            putInt("postIdx", postId)
+                        })
+                    }
+                }
+                Log.d("mlog: postScrap", "success")
+            }.onFailure {
+                Log.d("mlog: postScrap", "fail")
             }
         }
     }

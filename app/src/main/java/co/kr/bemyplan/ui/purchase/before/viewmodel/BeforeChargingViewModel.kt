@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.domain.model.purchase.before.PreviewContent
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
 import co.kr.bemyplan.domain.model.purchase.before.PreviewInfo
 import com.google.firebase.analytics.ktx.analytics
@@ -46,6 +47,9 @@ class BeforeChargingViewModel @Inject constructor(
 
     private var _previewContents = MutableLiveData<List<PreviewContents>>()
     val previewContents: LiveData<List<PreviewContents>> get() = _previewContents
+
+    private var _previewContent = MutableLiveData<List<PreviewContent>>()
+    val previewContent: LiveData<List<PreviewContent>> get() = _previewContent
 
     fun selectPay(way: Pay) {
         when (way) {
@@ -101,6 +105,14 @@ class BeforeChargingViewModel @Inject constructor(
             }.onSuccess { previewPlan ->
                 _previewInfo.value = previewPlan.previewInfo
                 _previewContents.value = previewPlan.previewContents
+                // TODO: 추후 Multi ViewHolder 패턴 사용하는 게 더 깔끔할 것 같음
+                val list = mutableListOf<PreviewContent>()
+                for(i in 0 until previewPlan.previewContents.size step(2)) {
+                    val image = previewPlan.previewContents[i].value
+                    val text = previewPlan.previewContents[i+1].value
+                    list.add(PreviewContent(image, text))
+                }
+                _previewContent.value = list
             }.onFailure { error ->
                 Timber.tag("fetchPreviewPlan").e(error)
             }

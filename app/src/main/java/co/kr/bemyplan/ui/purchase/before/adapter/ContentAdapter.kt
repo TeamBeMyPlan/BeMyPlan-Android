@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemBeforePurchaseContentBinding
+import co.kr.bemyplan.domain.model.purchase.before.PreviewContent
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
 
 class ContentAdapter : RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() {
@@ -15,7 +16,7 @@ class ContentAdapter : RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() 
 
     class ContentViewHolder(private val binding: ItemBeforePurchaseContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(content: PreviewContents) {
+        fun bind(content: PreviewContent) {
             binding.content = content
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
@@ -40,17 +41,23 @@ class ContentAdapter : RecyclerView.Adapter<ContentAdapter.ContentViewHolder>() 
         return asyncDiffer.currentList.size
     }
 
-    fun replaceItem(itemList: List<PreviewContents>) {
+    fun replaceItem(itemList: List<PreviewContent>) {
         asyncDiffer.submitList(itemList)
     }
 
     companion object {
-        private val diffCallback = object : DiffUtil.ItemCallback<PreviewContents>() {
-            override fun areItemsTheSame(oldItem: PreviewContents, newItem: PreviewContents): Boolean {
+        private val diffCallback = object : DiffUtil.ItemCallback<PreviewContent>() {
+            override fun areItemsTheSame(
+                oldItem: PreviewContent,
+                newItem: PreviewContent
+            ): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: PreviewContents, newItem: PreviewContents): Boolean {
+            override fun areContentsTheSame(
+                oldItem: PreviewContent,
+                newItem: PreviewContent
+            ): Boolean {
                 return oldItem == newItem
             }
         }

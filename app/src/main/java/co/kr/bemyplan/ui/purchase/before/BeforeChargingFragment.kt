@@ -60,8 +60,11 @@ class BeforeChargingFragment : Fragment() {
         viewModel.previewInfo.observe(viewLifecycleOwner) { previewInfo ->
             binding.info = previewInfo
         }
-        viewModel.previewContents.observe(viewLifecycleOwner) { previewContents ->
-            contentAdapter.replaceItem(previewContents)
+//        viewModel.previewContents.observe(viewLifecycleOwner) { previewContents ->
+//            contentAdapter.replaceItem(previewContents)
+//        }
+        viewModel.previewContent.observe(viewLifecycleOwner) { previewContent ->
+            contentAdapter.replaceItem(previewContent)
         }
     }
 

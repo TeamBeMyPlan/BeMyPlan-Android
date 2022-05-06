@@ -15,10 +15,11 @@ import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.purchase.after.Post
-import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
+import co.kr.bemyplan.domain.model.purchase.after.Contents
+import co.kr.bemyplan.domain.model.purchase.after.PlanDetail
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
@@ -50,8 +51,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        // post id 받아오기
-        val postId = intent.getIntExtra("postId", -1)
+        // plan id 받아오기
+        val planId = intent.getIntExtra("postId", -1)
+
+//        val userId = intent.getIntExtra("userId", 0)
+//        val userNickname = intent.getStringExtra("nickname")
 
         // 카카오맵 초기화
         initMap()
@@ -59,16 +63,16 @@ class AfterPurchaseActivity : AppCompatActivity() {
         initTouchListener()
 
         // 더미데이터, 진짜데이터 구분
-        checkData(postId)
+        checkData(planId)
 
         // Observer
-        viewModel.post.observe(this) {
+        viewModel.planDetail.observe(this) {
             // fragment 생성
             initFragment(0)
             // 마커 생성
-            initMarker(it.spots)
+            initMarker(listOf(it.contents[0].spots))
             // 일자별 버튼 생성
-            initChips(it.spots)
+            initChips(listOf(it.contents[0].spots))
             // user 버튼 생성
             binding.clWriter.setOnClickListener{ _ -> initUserButton(it) }
         }
@@ -82,21 +86,21 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 더미데이터인지, 진짜데이터인지 확인
-    private fun checkData(postId: Int) {
-        if (postId == -1) {
+    private fun checkData(planId: Int) {
+        if (planId == -1) {
             viewModel.initDummy()
             binding.ivToWriterProfile.isVisible = false
 
             // fragment 보이기
             initFragment(0)
         } else { // network 연결
-            viewModel.getPost(postId)
+            viewModel.fetchPlanDetail(planId)
         }
     }
 
     // fragment 그리기
     private fun initFragment(index: Int) {
-        viewModel.setDailySpot(binding.viewModel!!.post.value!!.spots[index])
+        viewModel.setSpots(binding.viewModel.contents.value!![index].spots)
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
@@ -105,17 +109,17 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 작성자 정보 다음 뷰로 전송
-    private fun initUserButton(data: Post?) {
+    private fun initUserButton(data: PlanDetail) {
         val intent = Intent(this, ListActivity::class.java)
         intent.putExtra("from", "user")
-        intent.putExtra("userId", data?.authorId)
-        intent.putExtra("authorNickname", data?.author)
+        intent.putExtra("userId", data.user.userId)
+        intent.putExtra("nickname", data.user.nickname)
         startActivity(intent)
         finish()
     }
 
     // 일차별 버튼 초기화
-    private fun initChips(data: List<List<Spot>>) {
+    private fun initChips(data: List<List<Spots>>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
         for (i in data.indices) {
             val chip = ItemDayButtonBinding.inflate(layoutInflater)
@@ -173,7 +177,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 카카오맵의 핀 초기화
-    private fun initMarker(data: List<List<Spot>>) {
+    private fun initMarker(data: List<List<Spots>>) {
         markers = mutableListOf()
         for (i in data.indices) {
             /*
@@ -193,7 +197,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 sumLongitude += spot.longitude
 
                 marker.apply {
-                    itemName = spot.title
+                    itemName = spot.name
                     mapPoint = MapPoint.mapPointWithGeoCoord(spot.latitude, spot.longitude)
                     markerType = MapPOIItem.MarkerType.CustomImage
                     customImageResourceId = R.drawable.icn_subpin_select
@@ -215,14 +219,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun setMarker(index: Int, data: List<List<Spot>>) {
+    private fun setMarker(index: Int, data: List<List<Spots>>) {
         mapView.removeAllPOIItems()
         mapPoints = mutableListOf()
         for(i in data.indices) {
             if (index == i) {
                 for (j in data[i].indices) {
                     markers[i][j].apply {
-                        itemName = data[i][j].title
+                        itemName = data[i][j].name
                         mapPoint = MapPoint.mapPointWithGeoCoord(data[i][j].latitude, data[i][j].longitude)
                         markerType = MapPOIItem.MarkerType.CustomImage
                         selectedMarkerType = MapPOIItem.MarkerType.CustomImage
@@ -238,7 +242,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             else {
                 for (j in data[i].indices) {
                     markers[i][j].apply {
-                        itemName = data[i][j].title
+                        itemName = data[i][j].name
                         mapPoint = MapPoint.mapPointWithGeoCoord(data[i][j].latitude, data[i][j].longitude)
                         markerType = MapPOIItem.MarkerType.CustomImage
                         selectedMarkerType = MapPOIItem.MarkerType.CustomImage

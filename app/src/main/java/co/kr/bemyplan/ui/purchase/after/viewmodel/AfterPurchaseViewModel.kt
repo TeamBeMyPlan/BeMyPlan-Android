@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.domain.model.purchase.after.Contents
 import co.kr.bemyplan.domain.model.purchase.after.Images
+import co.kr.bemyplan.domain.model.purchase.after.PlanDetail
 import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.repository.PlanDetailRepository
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
@@ -18,6 +19,11 @@ import javax.inject.Inject
 class AfterPurchaseViewModel @Inject constructor(
     private val planDetailRepository: PlanDetailRepository
 ): ViewModel() {
+    // plan detail 들고오고
+    private var _planDetail = MutableLiveData<PlanDetail>()
+    val planDetail: LiveData<PlanDetail>
+        get() = _planDetail
+
     // contents 들고오기
     private var _contents = MutableLiveData<List<Contents>>()
     val contents: LiveData<List<Contents>>
@@ -39,7 +45,7 @@ class AfterPurchaseViewModel @Inject constructor(
             kotlin.runCatching {
                 planDetailRepository.fetchPlanDetail(planId)
             }.onSuccess { planDetail ->
-                _contents.value = planDetail.contents
+                _planDetail.value = planDetail
             }.onFailure { error ->
                 Timber.tag("fetchPlanDetail").e(error)
             }
@@ -61,4 +67,4 @@ class AfterPurchaseViewModel @Inject constructor(
     fun setImages(images: List<Images>) {
         _images.value = images
     }
-}화
+}

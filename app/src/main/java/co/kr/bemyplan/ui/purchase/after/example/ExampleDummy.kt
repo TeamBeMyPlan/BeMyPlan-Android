@@ -1,12 +1,11 @@
 package co.kr.bemyplan.ui.purchase.after.example
 
-import co.kr.bemyplan.data.entity.purchase.after.Post
-import co.kr.bemyplan.data.entity.purchase.after.Spot
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 
 class ExampleDummy {
     private fun getSpots() = listOf(
             listOf(
-                Spot("우무", "제주 우뭇가사리로 만든 수제 푸딩인데 공항 근처에 있어서 숙소 가기 전에 들렀어요! 전에 왔을 때는 웨이팅이 조금 있었는데 오후 2시쯤에 가니까 사람이 없어서 바로 구매할 수 있었습니다 ㅎㅎ 맛은 커스터드, 초코, 우도땅콩 푸딩 세 개를 구매했는데 다 너무 맛있었어요. 커스터드 맛은 산뜻하고 적당히 단 맛이라면, 초코랑 우도 땅콩 맛은 재료가 많이 들어갔는지 진한 맛이었습니다.\n" +
+                Spots("우무", "제주 우뭇가사리로 만든 수제 푸딩인데 공항 근처에 있어서 숙소 가기 전에 들렀어요! 전에 왔을 때는 웨이팅이 조금 있었는데 오후 2시쯤에 가니까 사람이 없어서 바로 구매할 수 있었습니다 ㅎㅎ 맛은 커스터드, 초코, 우도땅콩 푸딩 세 개를 구매했는데 다 너무 맛있었어요. 커스터드 맛은 산뜻하고 적당히 단 맛이라면, 초코랑 우도 땅콩 맛은 재료가 많이 들어갔는지 진한 맛이었습니다.\n" +
                         "\n" +
                         "인위적인 보존제를 넣지 않아 구입 후 30분 이내로 바로 먹으라고 하는데, 겨울 기준 하루 정도는 실온에 두었다 먹어도 괜찮았어요! 가게 내부 취식이 안되니 정 걱정되시는 분들은 위 주의사항을 유념해서 여행 동선을 조정하시면 좋을 것 같아요.\n" +
                         "\n" +
@@ -63,5 +62,5 @@ class ExampleDummy {
             )
         )
 
-    fun getPost() = Post(-1,"베이비타이거","친구와 함께 퇴사 기념 힐링여행", getSpots(),3)
+    fun getPlan() = Post(-1,"베이비타이거","친구와 함께 퇴사 기념 힐링여행", getSpots(),3)
 }

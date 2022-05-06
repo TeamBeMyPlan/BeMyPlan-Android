@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.purchase.after.PlanDetailResponse
-import co.kr.bemyplan.data.entity.purchase.after.SpotDetailResponse
 import co.kr.bemyplan.data.repository.purchase.after.AfterPurchaseRepositoryImpl
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import dagger.hilt.android.lifecycle.HiltViewModel

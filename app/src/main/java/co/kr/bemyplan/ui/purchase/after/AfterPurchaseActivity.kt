@@ -17,9 +17,8 @@ import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
-import co.kr.bemyplan.domain.model.purchase.after.Contents
 import co.kr.bemyplan.domain.model.purchase.after.PlanDetail
-import co.kr.bemyplan.domain.model.purchase.after.Spots
+import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
@@ -99,12 +98,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
             initFragment(0)
         } else { // network 연결
             viewModel.fetchPlanDetail(planId)
+            viewModel.fetchMoveInfo(planId)
         }
     }
 
     // fragment 그리기
     private fun initFragment(index: Int) {
         viewModel.setSpots(binding.viewModel.contents.value!![index].spots)
+        viewModel.setMoveInfo(index)
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
@@ -123,7 +124,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 일차별 버튼 초기화
-    private fun initChips(data: List<List<Spots>>) {
+    private fun initChips(data: List<List<MergedPlanAndInfo>>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
         for (i in data.indices) {
             val chip = ItemDayButtonBinding.inflate(layoutInflater)
@@ -181,7 +182,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 카카오맵의 핀 초기화
-    private fun initMarker(data: List<List<Spots>>) {
+    private fun initMarker(data: List<List<MergedPlanAndInfo>>) {
         markers = mutableListOf()
         for (i in data.indices) {
             /*
@@ -223,7 +224,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun setMarker(index: Int, data: List<List<Spots>>) {
+    private fun setMarker(index: Int, data: List<List<MergedPlanAndInfo>>) {
         mapView.removeAllPOIItems()
         mapPoints = mutableListOf()
         for(i in data.indices) {

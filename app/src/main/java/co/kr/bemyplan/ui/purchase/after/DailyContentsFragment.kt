@@ -7,19 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
-import co.kr.bemyplan.domain.model.purchase.after.Spots
+import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DailyContentsFragment : Fragment() {
     private lateinit var contentsAdapter: DailyContentsAdapter
     private lateinit var routeAdapter: DailyContentsAdapter
     private var _binding: FragmentDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
-    private lateinit var viewModel: AfterPurchaseViewModel
+    private val viewModel: AfterPurchaseViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,13 +30,26 @@ class DailyContentsFragment : Fragment() {
         _binding = FragmentDailyContentsBinding.inflate(layoutInflater, container, false)
 
         // viewmodel 설정
-        viewModel = ViewModelProvider(requireActivity())[AfterPurchaseViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         initAdapter()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeData()
+    }
+
+    // 데이터 연동
+    private fun observeData() {
+        with(viewModel) {
+            moveInfo.observe(viewLifecycleOwner) {
+                setMergedPlanAndInfo(it.day, it.info, spots.value!!)
+            }
+        }
     }
 
     // 어댑터 연결
@@ -67,14 +82,14 @@ class DailyContentsFragment : Fragment() {
     }
 
     // 더보기 버튼
-    private fun initMoreBtn(items: List<Spots>) {
+    private fun initMoreBtn(items: List<MergedPlanAndInfo>) {
         routeAdapter.submitList(items)
         binding.clLookMore.isVisible = false
         binding.clLookClose.isVisible = true
     }
 
     // 더보기 닫기 버튼
-    private fun initCloseBtn(items: List<Spots>) {
+    private fun initCloseBtn(items: List<MergedPlanAndInfo>) {
         routeAdapter.submitList(items.subList(0, 5))
         binding.clLookMore.isVisible = true
         binding.clLookClose.isVisible = false

@@ -14,7 +14,9 @@ import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
+import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.domain.model.purchase.after.Spots
+import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -24,18 +26,18 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     // item 갱신
-    private val differCallback = object: DiffUtil.ItemCallback<Spots>() {
-        override fun areItemsTheSame(oldItem: Spots, newItem: Spots): Boolean {
+    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, Spots>>() {
+        override fun areItemsTheSame(oldItem: Pair<Infos?, Spots>, newItem: Pair<Infos?, Spots>): Boolean {
             return oldItem == newItem
         }
-        override fun areContentsTheSame(oldItem: Spots, newItem: Spots): Boolean {
+        override fun areContentsTheSame(oldItem: Pair<Infos?, Spots>, newItem: Pair<Infos?, Spots>): Boolean {
             return oldItem == newItem
         }
     }
     private val differ = AsyncListDiffer(this, differCallback)
 
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
-    fun submitList(list: List<Spots>) {
+    fun submitList(list: List<Pair<Infos?, Spots>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
         })
@@ -64,18 +66,18 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     }
 
     override fun onBindViewHolder(holder: SpotViewHolder, position: Int) {
-        val spot = differ.currentList[position]
+        val spots = differ.currentList[position]
 
         when (holder) {
             is ContentsViewHolder -> {
                 if (position == differ.currentList.size - 1) {
-                    holder.onBind(spot, true)
+                    holder.onBind(spots, true)
                 } else {
-                    holder.onBind(spot, differ.currentList[position + 1].name)
+                    holder.onBind(spots, "")
                 }
             }
             is RouteViewHolder -> {
-                holder.onBind(spot, position, itemCount - 1)
+                holder.onBind(spots, position, itemCount - 1)
             }
         }
     }
@@ -83,9 +85,9 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Spots, isLastSpot: Boolean) {}
-        open fun onBind(data: Spots, nextSpot: String) {}
-        open fun onBind(data: Spots, position: Int, lastPosition: Int) {}
+        open fun onBind(data: Pair<Infos?, Spots>, isLastSpot: Boolean) {}
+        open fun onBind(data: Pair<Infos?, Spots>, nextSpot: String) {}
+        open fun onBind(data: Pair<Infos?, Spots>, position: Int) {}
     }
 
     class ContentsViewHolder(
@@ -94,19 +96,19 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-        override fun onBind(data: Spots, nextSpot: String) {
-            binding.spot = data
+        override fun onBind(data: Pair<Infos?, Spots>, nextSpot: String) {
+            binding.spots = data.second
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
-            initViewPagerAdapter(data)
+            initViewPagerAdapter(data, position)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
         }
 
-        override fun onBind(data: Spot, isLastSpot: Boolean) {
+        override fun onBind(data: Pair<Infos?, Spots>, isLastSpot: Boolean) {
             binding.isLastSpot = true
-            binding.spot = data
-            initViewPagerAdapter(data)
+            binding.spots = data.second
+            initViewPagerAdapter(data, position)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
         }
@@ -119,9 +121,9 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             mContext.shortToast("주소를 복사했습니다")
         }
 
-        private fun initViewPagerAdapter(data: Spot) {
+        private fun initViewPagerAdapter(data: Pair<Infos?, Spots>) {
             viewPagerAdapter = PhotoViewPagerAdapter(photoUrl)
-            viewPagerAdapter.setItems(data.photoUrls)
+            viewPagerAdapter.setItems(data.second.images)
             binding.vpPhoto.adapter = viewPagerAdapter
             binding.vpPhoto.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }
@@ -134,21 +136,26 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     }
 
     class RouteViewHolder(private val binding: ItemDailyRouteBinding) : SpotViewHolder(binding) {
-        override fun onBind(data: Spot, position: Int, lastPosition: Int) {
-            binding.spot = data
+        override fun onBind(data: Pair<Infos?, Spots>, position: Int, lastPosition: Int) {
+            binding.spots = data.second
             binding.position = position
             binding.lastPosition = lastPosition
-            chooseImg(data)
+            data.first?.let {
+                chooseImg(it)
+            }
         }
 
-        private fun chooseImg(data: Spot) {
-            if (data.nextSpotMobility == "버스" || data.nextSpotMobility == "지하철") {
+        private fun chooseImg(data: Infos) {
+            if (data.mobility == "PUBLIC") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_public_transport)
-            } else if (data.nextSpotMobility == "택시" || data.nextSpotMobility == "승용차") {
+            } else if (data.mobility == "CAR") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_car)
-            } else if (data.nextSpotMobility == "도보") {
+            } else if (data.mobility == "WALK") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
-            } else {
+            } else if (data.mobility == "BICYCLE") {
+                binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
+            }
+            else {
                 binding.ivTransportation.isVisible = false
             }
         }

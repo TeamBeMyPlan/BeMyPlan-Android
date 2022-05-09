@@ -2,7 +2,6 @@ package co.kr.bemyplan.ui.main.location
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,22 +10,28 @@ import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.ui.list.ListActivity
-import timber.log.Timber
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LocationFragment : Fragment() {
 
     private var _binding: FragmentLocationBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private lateinit var locationAdapter: LocationAdapter
-    private val locationViewModel: LocationViewModel by viewModels()
+    //private val locationViewModel: LocationViewModel by viewModels()
+    private val locationViewModel2: LocationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLocationBinding.inflate(layoutInflater)
-        locationViewModel.initLocationNetwork()
+        locationViewModel2.getLocationData()
         initAdapter()
+        locationViewModel2.locationData.observe(viewLifecycleOwner) {
+            locationAdapter.locationList.addAll(it)
+            locationAdapter.notifyDataSetChanged()
+        }
         return binding.root
     }
 
@@ -36,7 +41,6 @@ class LocationFragment : Fragment() {
             intent.putExtra("from", "location")
             intent.putExtra("region", it.region)
             intent.putExtra("locationName", it.name)
-            Timber.tag("mlog: locationName").d(it.name)
             startActivity(intent)
         }, myContext = requireContext())
 
@@ -47,12 +51,6 @@ class LocationFragment : Fragment() {
         binding.rvLocation.addItemDecoration(HorizontalItemDecorator(resources.getDimensionPixelOffset(
                     R.dimen.margin_6
                 )))
-
-        locationViewModel.location.observe(viewLifecycleOwner) {
-            locationAdapter.locationList.addAll(it)
-            Timber.tag("yongminlog").d("viewmodel에서 받아오는 데이터 $it")
-            locationAdapter.notifyDataSetChanged()
-        }
     }
 
     override fun onDestroyView() {

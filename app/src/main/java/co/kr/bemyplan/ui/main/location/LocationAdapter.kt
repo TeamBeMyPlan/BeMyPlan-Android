@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.main.location
 
 import android.content.Context
+import android.location.Location
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.entity.main.location.ResponseLocationData
 import co.kr.bemyplan.databinding.ItemLocationBinding
+import co.kr.bemyplan.domain.model.main.location.LocationData
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import co.kr.bemyplan.util.clipTo
 
-class LocationAdapter(val itemClick: (ResponseLocationData.LocationData) -> Unit, val myContext : Context) :
+class LocationAdapter(val itemClick: (LocationData) -> Unit, val myContext : Context) :
     RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 
-    val locationList = mutableListOf<ResponseLocationData.LocationData>()
+    val locationList = mutableListOf<LocationData>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -36,8 +38,7 @@ class LocationAdapter(val itemClick: (ResponseLocationData.LocationData) -> Unit
     }
 
     inner class LocationViewHolder(private val binding:ItemLocationBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data: ResponseLocationData.LocationData){
-
+        fun onBind(data: LocationData){
             binding.locationItem=data
             clipTo(binding.ivLocation, data.thumbnailUrl)
             binding.root.setOnClickListener{

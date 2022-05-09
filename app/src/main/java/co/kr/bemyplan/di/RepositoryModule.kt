@@ -10,17 +10,15 @@ import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.login.GoogleLoginRepositoryImpl
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
+import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
-import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
-import co.kr.bemyplan.domain.repository.GoogleLoginRepository
-import co.kr.bemyplan.domain.repository.LocationListRepository
-import co.kr.bemyplan.domain.repository.LoginRepository
+import co.kr.bemyplan.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -123,6 +121,15 @@ object RepositoryModule {
         postScrapService: PostScrapService
     ): PostScrapRepository {
         return PostScrapRepositoryImpl(postScrapService)
+    }
+
+    //여행지뷰
+    @ViewModelScoped
+    @Provides
+    fun provideLocationRepository(
+        locationService : LocationService,
+    ):LocationRepository{
+        return LocationRepositoryImpl(locationService)
     }
 
     // ?? 뭐지 왜 없는데 됐었지...?

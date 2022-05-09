@@ -15,7 +15,6 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -102,7 +101,7 @@ class BeforeChargingViewModel @Inject constructor(
                 _previewInfo.value = previewPlan.previewInfo
                 _previewContents.value = previewPlan.previewContents
             }.onFailure { error ->
-                Timber.tag("fetchPreviewPlan").e(error)
+                //Timber.tag("fetchPreviewPlan").e(error)
             }
         }
     }

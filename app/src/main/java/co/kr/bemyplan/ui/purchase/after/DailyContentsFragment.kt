@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 
@@ -47,7 +47,7 @@ class DailyContentsFragment : Fragment() {
         routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE)
 
         // 뷰모델에서 데이터 받아오기
-        viewModel.dailySpots.observe(viewLifecycleOwner) {
+        viewModel.spots.observe(viewLifecycleOwner) {
             contentsAdapter.submitList(it)
 
             if (it.size > 5) { // 장소들이 5개 초과인 경우에 더보기, 닫기 버튼 추가
@@ -67,14 +67,14 @@ class DailyContentsFragment : Fragment() {
     }
 
     // 더보기 버튼
-    private fun initMoreBtn(items: List<Spot>) {
+    private fun initMoreBtn(items: List<Spots>) {
         routeAdapter.submitList(items)
         binding.clLookMore.isVisible = false
         binding.clLookClose.isVisible = true
     }
 
     // 더보기 닫기 버튼
-    private fun initCloseBtn(items: List<Spot>) {
+    private fun initCloseBtn(items: List<Spots>) {
         routeAdapter.submitList(items.subList(0, 5))
         binding.clLookMore.isVisible = true
         binding.clLookClose.isVisible = false

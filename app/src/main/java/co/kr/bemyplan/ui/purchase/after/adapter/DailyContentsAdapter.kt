@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -13,9 +12,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -25,18 +24,18 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     // item 갱신
-    private val differCallback = object: DiffUtil.ItemCallback<Spot>() {
-        override fun areItemsTheSame(oldItem: Spot, newItem: Spot): Boolean {
+    private val differCallback = object: DiffUtil.ItemCallback<Spots>() {
+        override fun areItemsTheSame(oldItem: Spots, newItem: Spots): Boolean {
             return oldItem == newItem
         }
-        override fun areContentsTheSame(oldItem: Spot, newItem: Spot): Boolean {
+        override fun areContentsTheSame(oldItem: Spots, newItem: Spots): Boolean {
             return oldItem == newItem
         }
     }
     private val differ = AsyncListDiffer(this, differCallback)
 
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
-    fun submitList(list: List<Spot>) {
+    fun submitList(list: List<Spots>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
         })
@@ -72,7 +71,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                 if (position == differ.currentList.size - 1) {
                     holder.onBind(spot, true)
                 } else {
-                    holder.onBind(spot, differ.currentList[position + 1].title)
+                    holder.onBind(spot, differ.currentList[position + 1].name)
                 }
             }
             is RouteViewHolder -> {
@@ -84,9 +83,9 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Spot, isLastSpot: Boolean) {}
-        open fun onBind(data: Spot, nextSpot: String) {}
-        open fun onBind(data: Spot, position: Int, lastPosition: Int) {}
+        open fun onBind(data: Spots, isLastSpot: Boolean) {}
+        open fun onBind(data: Spots, nextSpot: String) {}
+        open fun onBind(data: Spots, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(
@@ -95,7 +94,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-        override fun onBind(data: Spot, nextSpot: String) {
+        override fun onBind(data: Spots, nextSpot: String) {
             binding.spot = data
             binding.nextSpot = nextSpot
             binding.isLastSpot = false

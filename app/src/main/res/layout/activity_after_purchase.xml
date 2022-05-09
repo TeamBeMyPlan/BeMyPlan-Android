@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="post"
-            type="co.kr.bemyplan.data.entity.purchase.after.Post" />
+            name="planDetail"
+            type="co.kr.bemyplan.data.entity.purchase.after.ResponsePlanDetail" />
         <variable
             name="viewModel"
             type="co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel" />
@@ -55,7 +55,7 @@
                 android:singleLine="true"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
                 tools:text="감성을 느낄 수 있는 힐링여행"
-                android:text="@{viewModel.post.title}"
+                android:text="@{viewModel.planDetail.title}"
                 android:textColor="@color/grey_313740"
                 android:textSize="18sp"
                 android:visibility="invisible"
@@ -100,7 +100,7 @@
                         android:textColor="@color/grey_5d687a"
                         android:fontFamily="@font/spoqa_han_sans_neo_regular"
                         android:textSize="14sp"
-                        app:text="@{viewModel.post.author}"
+                        app:text="@{viewModel.author}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -128,7 +128,7 @@
                     android:maxEms="15"
                     android:maxLines="2"
                     tools:text="감성을 느낄 수 있는 힐링 여행"
-                    android:text="@{viewModel.post.title}"
+                    android:text="@{viewModel.planDetail.title}"
                     android:textColor="@color/grey_313740"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:textSize="20sp"

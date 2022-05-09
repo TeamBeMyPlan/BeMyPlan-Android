@@ -53,6 +53,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // plan id 받아오기
         val planId = intent.getIntExtra("postId", -1)
+        viewModel.setPlanId(planId)
+
+//        val author = intent.getStringExtra("author")
+//        viewModel.setAuthor(requireNotNull(author))
 
 //        val userId = intent.getIntExtra("userId", 0)
 //        val userNickname = intent.getStringExtra("nickname")

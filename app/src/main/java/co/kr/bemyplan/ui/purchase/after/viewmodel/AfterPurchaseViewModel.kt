@@ -39,6 +39,16 @@ class AfterPurchaseViewModel @Inject constructor(
     val images: LiveData<List<Images>>
         get() = _images
 
+    // 제목
+    private val _author = MutableLiveData<String>()
+    val author: LiveData<String>
+        get() = _author
+
+    // plan id
+    private val _planId = MutableLiveData<Int>(-1)
+    val planId: LiveData<Int>
+        get() = _planId
+
     // 서버 통신
     fun fetchPlanDetail(planId: Int) {
         viewModelScope.launch {
@@ -66,5 +76,13 @@ class AfterPurchaseViewModel @Inject constructor(
     // 장소별 사진들 초기화
     fun setImages(images: List<Images>) {
         _images.value = images
+    }
+
+    fun setAuthor(author: String) {
+        _author.value = author
+    }
+
+    fun setPlanId(planId: Int) {
+        _planId.value = planId
     }
 }

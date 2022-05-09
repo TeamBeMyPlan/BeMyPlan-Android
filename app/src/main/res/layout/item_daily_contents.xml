@@ -6,8 +6,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="spot"
-            type="co.kr.bemyplan.data.entity.purchase.after.Spot" />
+            name="spots"
+            type="co.kr.bemyplan.data.entity.purchase.after.ResponsePlanDetail" />
 
         <variable
             name="next_spot"
@@ -33,7 +33,7 @@
             android:textColor="@color/grey_313740"
             android:fontFamily="@font/spoqa_han_sans_neo_bold"
             android:textSize="20sp"
-            app:text="@{spot.title}"
+            app:text="@{spots.data.contents}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

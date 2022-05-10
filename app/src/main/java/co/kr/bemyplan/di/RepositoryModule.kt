@@ -128,8 +128,9 @@ object RepositoryModule {
     @Provides
     fun provideLocationRepository(
         locationService : LocationService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ):LocationRepository{
-        return LocationRepositoryImpl(locationService)
+        return LocationRepositoryImpl(locationService, coroutineDispatcher)
     }
 
     // ?? 뭐지 왜 없는데 됐었지...?

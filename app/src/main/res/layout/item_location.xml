@@ -6,7 +6,7 @@
     <data>
         <variable
             name="locationItem"
-            type="co.kr.bemyplan.data.entity.main.location.ResponseLocationData.LocationData" />
+            type="co.kr.bemyplan.domain.model.main.location.LocationData" />
         <import type="android.view.View"/>
     </data>
 

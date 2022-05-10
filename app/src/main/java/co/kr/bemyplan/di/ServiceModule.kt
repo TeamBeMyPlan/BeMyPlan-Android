@@ -85,4 +85,11 @@ object ServiceModule {
     fun provideAfterPostService(@BeMyPlanRetrofit retrofit: Retrofit): AfterPostService {
         return retrofit.create(AfterPostService::class.java)
     }
+
+    //여행지뷰
+    @Singleton
+    @Provides
+    fun provideLocationService(@BeMyPlanRetrofit retrofit: Retrofit):LocationService {
+        return retrofit.create(LocationService::class.java)
+    }
 }

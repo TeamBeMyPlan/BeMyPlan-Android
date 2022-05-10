@@ -18,19 +18,17 @@ class LocationFragment : Fragment() {
     private var _binding: FragmentLocationBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private lateinit var locationAdapter: LocationAdapter
-    //private val locationViewModel: LocationViewModel by viewModels()
-    private val locationViewModel2: LocationViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLocationBinding.inflate(layoutInflater)
-        locationViewModel2.getLocationData()
+        locationViewModel.getLocationData()
         initAdapter()
-        locationViewModel2.locationData.observe(viewLifecycleOwner) {
-            locationAdapter.locationList.addAll(it)
-            locationAdapter.notifyDataSetChanged()
+        locationViewModel.locationData.observe(viewLifecycleOwner) {
+            locationAdapter.submitList(it)
         }
         return binding.root
     }

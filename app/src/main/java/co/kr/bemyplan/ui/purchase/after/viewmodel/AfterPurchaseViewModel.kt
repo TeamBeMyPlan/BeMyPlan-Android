@@ -73,6 +73,10 @@ class AfterPurchaseViewModel @Inject constructor(
     val mergedPlanAndInfo: LiveData<MergedPlanAndInfo>
         get() = _mergedPlanAndInfo
 
+    private val _addressName = MutableLiveData<String>()
+    val addressName: LiveData<String>
+        get() = _addressName
+
     // 서버 통신
     fun fetchPlanDetail(planId: Int) {
         viewModelScope.launch {
@@ -150,5 +154,9 @@ class AfterPurchaseViewModel @Inject constructor(
 
     fun setMergedPlanAndInfo(index: Int) {
         _mergedPlanAndInfo.value = mergedPlanAndInfoList.value?.get(index)
+    }
+
+    fun setAddressName(name: String) {
+        _addressName.value = name
     }
 }

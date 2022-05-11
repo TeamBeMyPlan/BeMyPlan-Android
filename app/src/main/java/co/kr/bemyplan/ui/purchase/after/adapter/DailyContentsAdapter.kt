@@ -3,6 +3,7 @@ package co.kr.bemyplan.ui.purchase.after.adapter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -18,8 +19,12 @@ import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
+import com.kakao.sdk.common.model.ApplicationInfo
+import timber.log.Timber
+import java.util.*
 
-class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null) :
+
+class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null, var address: ((Double, Double) -> String)? = null) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
@@ -50,7 +55,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                 LayoutInflater.from(parent.context),
                 parent, false
             )
-            ContentsViewHolder(binding, parent.context, photoUrl)
+            ContentsViewHolder(binding, parent.context, photoUrl, address)
         }
         TYPE_ROUTE -> {
             val binding = ItemDailyRouteBinding.inflate(
@@ -92,7 +97,8 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     class ContentsViewHolder(
         private val binding: ItemDailyContentsBinding,
         private val mContext: Context,
-        private val photoUrl: ((String) -> Unit)?
+        private val photoUrl: ((String) -> Unit)?,
+        private val address: ((Double, Double) -> String)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
         override fun onBind(data: Pair<Infos?, Spots>, nextSpot: String) {
@@ -100,6 +106,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.infos = data.first
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
+            binding.tvAddress.text = address?.invoke(data.second.latitude, data.second.longitude)
             data.first?.let { setMobilityToKorean(it) }
             if (data.second.tip.isEmpty()) {
                 binding.isTipAvailable = false
@@ -113,6 +120,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
+            binding.tvAddress.text = address?.invoke(data.second.latitude, data.second.longitude)
             data.first?.let { setMobilityToKorean(it) }
             if (data.second.tip.isEmpty()) {
                 binding.isTipAvailable = false

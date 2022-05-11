@@ -62,7 +62,6 @@
                 android:textColor="@color/grey_919bab"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
                 android:textSize="14sp"
-                app:text="@{spots.name}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

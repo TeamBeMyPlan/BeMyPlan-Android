@@ -97,8 +97,13 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
         override fun onBind(data: Pair<Infos?, Spots>, nextSpot: String) {
             binding.spots = data.second
+            binding.infos = data.first
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
+            data.first?.let { setMobilityToKorean(it) }
+            if (data.second.tip.isEmpty()) {
+                binding.isTipAvailable = false
+            }
             initViewPagerAdapter(data)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
@@ -107,6 +112,11 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         override fun onBind(data: Pair<Infos?, Spots>, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
+            binding.infos = data.first
+            data.first?.let { setMobilityToKorean(it) }
+            if (data.second.tip.isEmpty()) {
+                binding.isTipAvailable = false
+            }
             initViewPagerAdapter(data)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
@@ -118,6 +128,21 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             val clip = ClipData.newPlainText("address", binding.tvAddress.text)
             clipboard.setPrimaryClip(clip)
             mContext.shortToast("주소를 복사했습니다")
+        }
+
+        private fun setMobilityToKorean(data: Infos) {
+            if (data.mobility == "PUBLIC") {
+                binding.tvMoving.text = "대중교통"
+            } else if (data.mobility == "CAR") {
+                binding.tvMoving.text = "차량"
+            } else if (data.mobility == "WALK") {
+                binding.tvMoving.text = "도보"
+            } else if (data.mobility == "BICYCLE") {
+                binding.tvMoving.text = "자전거"
+            }
+            else {
+                binding.tvMoving.text = ""
+            }
         }
 
         private fun initViewPagerAdapter(data: Pair<Infos?, Spots>) {
@@ -137,6 +162,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     class RouteViewHolder(private val binding: ItemDailyRouteBinding) : SpotViewHolder(binding) {
         override fun onBind(data: Pair<Infos?, Spots>, position: Int, lastPosition: Int) {
             binding.spots = data.second
+            binding.infos = data.first
             binding.position = position
             binding.lastPosition = lastPosition
             data.first?.let {

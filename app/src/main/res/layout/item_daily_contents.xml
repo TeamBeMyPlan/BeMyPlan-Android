@@ -18,6 +18,10 @@
             type="java.lang.String" />
 
         <variable
+            name="is_tip_available"
+            type="java.lang.Boolean" />
+
+        <variable
             name="is_last_spot"
             type="java.lang.Boolean" />
     </data>
@@ -100,6 +104,18 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
+            android:id="@+id/tv_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/grey_313740"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:textSize="20sp"
+            android:text="솔직 후기"
+            app:layout_constraintTop_toBottomOf="@id/vp_photo"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
             android:id="@+id/tv_context"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,7 +127,33 @@
 \n용머리해안 코스 산방굴사 코스가 나뉘어져 있으니 미리 검색해보고 가시면 좋아요. 각각 용머리해안이 보이는 경치 코스와 산방굴사가 있는 코스인데 유료입장이에요. 근데 날씨 영향을 많이 받아서 아쉬워요 저희가 갔을때는 날이 흐려서 산방산에서 용머리 해안 경치가 잘 안보여서 산방굴사 코스를 선택할 수 밖에 없었어요 ,, 그리고 산방산 구경 후 용머리해안에 가보고 싶었는데 날씨 문제로 입장이 제한됐어요 .
 \n\n그래서 산방산에 가고싶은 분들은 여행일정 중 맑은날에 가시는걸 추천드려요 ! 마음처럼 되지는 않겠지만 오늘 날씨 진짜 좋은데 ? 싶으면 다음날 일정이랑 체인지를 해서라도 맑은날에 방문하시는게 베스트 일듯 해요"
             app:text="@{spots.review}"
-            app:layout_constraintTop_toBottomOf="@id/vp_photo"
+            app:layout_constraintTop_toBottomOf="@id/tv_review"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/grey_313740"
+            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+            android:textSize="20sp"
+            android:text="꿀팁"
+            android:visibility="@{is_tip_available ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/tv_context"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_honey_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/grey_313740"
+            android:fontFamily="@font/spoqa_han_sans_neo_regular"
+            android:textSize="14sp"
+            tools:text="산방산에 가고싶은 분들은 여행일정 중 맑은날에 가시는걸 추천드려요! 마음처럼 되지는 않겠지만 오늘 날씨 진짜 좋은데 ? 싶으면 다음날 일정이랑 체인지를 해서라도 맑은날에 방문하시는게 베스트 일듯 해요."
+            app:text="@{spots.tip}"
+            app:layout_constraintTop_toBottomOf="@id/tv_tip"
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,18 +161,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
+            android:paddingHorizontal="12dp"
             android:background="@drawable/grey_empty_box"
             android:paddingVertical="10dp"
             android:visibility="@{is_last_spot ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toBottomOf="@id/tv_context"
+            app:layout_constraintTop_toBottomOf="@id/tv_honey_tips"
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/tv_place_route"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="산방산 → 난드르바당라라라라라라라랄라라라라라라라라라라라라라라라라라"
                 android:maxEms="20"
+                android:gravity="center"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
@@ -138,22 +182,34 @@
                 android:textSize="12sp"
                 app:text="@{spots.name + `→` + next_spot + ` `}"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintEnd_toStartOf="@id/tv_moving_time"
+                app:layout_constraintEnd_toStartOf="@id/tv_moving"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_moving"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:paddingHorizontal="5dp"
+                android:text="도보"
+                android:textColor="@color/blue_0077b0"
+                android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toStartOf="@id/tv_moving_time"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_moving_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="도보 3분"
+                android:layout_marginHorizontal="5dp"
+                android:text="3분"
                 android:textColor="@color/blue_0077b0"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
                 android:textSize="12sp"
-                app:text="@{infos.mobility + ` ` + infos.spentMinute}"
+                app:text="@{@string/text_minute(infos.spentMinute)}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_place_route"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

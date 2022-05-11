@@ -130,7 +130,6 @@ class AfterPurchaseViewModel @Inject constructor(
 
     fun setInfos(index: Int) {
         _infos.value = moveInfoList.value?.get(index)?.infos
-        Timber.tag("mdb1217").d(infos.value.toString())
     }
 
     fun setMergedPlanAndInfoList(planDetail: PlanDetail, listMoveInfo: List<MoveInfo>) {

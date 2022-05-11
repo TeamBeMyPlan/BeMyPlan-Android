@@ -80,9 +80,17 @@ object ServiceModule {
         return retrofit.create(PostScrapService::class.java)
     }
 
+    // 상세한 일정
     @Singleton
     @Provides
-    fun provideAfterPostService(@BeMyPlanRetrofit retrofit: Retrofit): AfterPostService {
-        return retrofit.create(AfterPostService::class.java)
+    fun providePlanDetailService(@BeMyPlanRetrofit retrofit: Retrofit): PlanDetailService {
+        return retrofit.create(PlanDetailService::class.java)
+    }
+
+    // 상세한 일정
+    @Singleton
+    @Provides
+    fun provideMoveInfoService(@BeMyPlanRetrofit retrofit: Retrofit): MoveInfoService {
+        return retrofit.create(MoveInfoService::class.java)
     }
 }

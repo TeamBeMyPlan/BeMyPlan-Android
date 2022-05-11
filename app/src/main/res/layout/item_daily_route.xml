@@ -90,7 +90,7 @@
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:textSize="12sp"
             android:visibility="@{last_position == position ? View.GONE : View.VISIBLE}"
-            app:text="@{infos.spentMinute}"
+            app:text="@{@string/text_minute(infos.spentMinute)}"
             app:layout_constraintStart_toEndOf="@id/iv_transportation"
             app:layout_constraintTop_toTopOf="@id/iv_transportation"
             app:layout_constraintBottom_toBottomOf="@id/iv_transportation" />

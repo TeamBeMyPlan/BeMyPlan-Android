@@ -77,7 +77,7 @@ class AfterPurchaseViewModel @Inject constructor(
     fun fetchPlanDetail(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                planDetailRepository.fetchPlanDetail(planId)
+                planDetailRepository.fetchPlanDetail(1)
             }.onSuccess { planDetail ->
                 _planDetail.value = planDetail
                 _contents.value = planDetail.contents
@@ -90,9 +90,10 @@ class AfterPurchaseViewModel @Inject constructor(
     fun fetchMoveInfo(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                moveInfoRepository.fetchMoveInfo(planId)
-            }.onSuccess { moveInfo ->
-                _moveInfoList.value = moveInfo
+                moveInfoRepository.fetchMoveInfo(1)
+            }.onSuccess { moveInfoList ->
+                _moveInfoList.value = moveInfoList
+                fetchPlanDetail(1)
             }.onFailure { error ->
                 Timber.tag("fetchMoveInfo").e(error)
             }
@@ -101,8 +102,8 @@ class AfterPurchaseViewModel @Inject constructor(
 
     // 더미데이터 생성
     fun initDummy() {
-        val dummy = ExampleDummy().getPlan()
-        _contents.value = dummy
+//        val dummy = ExampleDummy().getPlan()
+//        _contents.value = dummy
     }
 
     // 일차별 장소들 초기화
@@ -128,7 +129,8 @@ class AfterPurchaseViewModel @Inject constructor(
     }
 
     fun setInfos(index: Int) {
-        _infos.value = moveInfo.value?.info
+        _infos.value = moveInfoList.value?.get(index)?.infos
+        Timber.tag("mdb1217").d(infos.value.toString())
     }
 
     fun setMergedPlanAndInfoList(planDetail: PlanDetail, listMoveInfo: List<MoveInfo>) {
@@ -140,7 +142,7 @@ class AfterPurchaseViewModel @Inject constructor(
                 if(j == dailySpots.size - 1)
                     pairList.add(Pair(null, dailySpots[j]))
                 else
-                    pairList.add(Pair(listMoveInfo[i].info[j], dailySpots[j]))
+                    pairList.add(Pair(listMoveInfo[i].infos[j], dailySpots[j]))
             }
             bigList.add(MergedPlanAndInfo(i + 1, pairList.toList()))
         }

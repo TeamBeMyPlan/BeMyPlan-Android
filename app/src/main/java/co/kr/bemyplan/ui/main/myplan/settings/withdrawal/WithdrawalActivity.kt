@@ -19,7 +19,6 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.main.myplan.RequestWithdraw
 import co.kr.bemyplan.data.entity.main.myplan.ResponseWithdraw
-import co.kr.bemyplan.data.entity.purchase.after.ResponseAfterPost
 import co.kr.bemyplan.databinding.ActivityWithdrawalBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.util.CustomDialog
@@ -44,7 +43,7 @@ class WithdrawalActivity : AppCompatActivity() {
         initTouchListener()
     }
 
-    private val watcherListener = object: TextWatcher {
+    private val watcherListener = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
@@ -59,7 +58,7 @@ class WithdrawalActivity : AppCompatActivity() {
 
     private fun toggleButtonClickable() {
         binding.tvNextButton.isClickable = false
-        if(binding.etWithdrawal.text.toString().isNotEmpty()) {
+        if (binding.etWithdrawal.text.toString().isNotEmpty()) {
             binding.tvNextButton.isClickable = true
             binding.tvNextButton.setOnClickListener {
                 showWithdrawalDialog()
@@ -69,10 +68,9 @@ class WithdrawalActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceAsColor")
     private fun buttonEvent(statement: Boolean) {
-        if(statement) {
+        if (statement) {
             binding.tvNextButton.setBackgroundResource(R.drawable.rectangle_blue_radius_5)
-        }
-        else {
+        } else {
             binding.tvNextButton.setBackgroundResource(R.drawable.rectangle_grey_radius_5)
         }
     }
@@ -80,9 +78,9 @@ class WithdrawalActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun initTouchListener() {
         binding.etWithdrawal.setOnTouchListener { view, event ->
-            if(binding.etWithdrawal.hasFocus()) {
+            if (binding.etWithdrawal.hasFocus()) {
                 view.parent.requestDisallowInterceptTouchEvent(true)
-                when(event.action) {
+                when (event.action) {
                     MotionEvent.ACTION_SCROLL -> {
                         view.parent.requestDisallowInterceptTouchEvent(false)
                         true
@@ -111,7 +109,7 @@ class WithdrawalActivity : AppCompatActivity() {
         val content = "탈퇴 완료되었습니다."
         val dialog = CustomDialog(this, "탈퇴하기", content)
         dialog.showConfirmDialog(R.layout.dialog_yes)
-        dialog.setOnClickedListener(object: CustomDialog.ButtonClickListener {
+        dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
                     val intent = Intent(this@WithdrawalActivity, LoginActivity::class.java)

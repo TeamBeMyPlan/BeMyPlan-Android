@@ -68,10 +68,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // 더미데이터, 진짜데이터 구분
         checkData(planId)
 
+
         // Observer
         viewModel.mergedPlanAndInfoList.observe(this) {
-            viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
-
             // fragment 생성
             initFragment(0)
             // 마커 생성
@@ -81,6 +80,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
 
         viewModel.planDetail.observe(this) {
+            viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
             // writer 버튼 생성
             binding.clWriter.setOnClickListener { _ -> initUserButton(it) }
         }
@@ -102,7 +102,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
             // fragment 보이기
             initFragment(0)
         } else { // network 연결
-            viewModel.fetchPlanDetail(planId)
             viewModel.fetchMoveInfo(planId)
         }
     }

@@ -14,13 +14,12 @@ import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
-import co.kr.bemyplan.domain.repository.PreviewRepository
+import co.kr.bemyplan.data.repository.purchase.after.PlanDetailRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.after.moveInfo.MoveInfoRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
-import co.kr.bemyplan.domain.repository.GoogleLoginRepository
-import co.kr.bemyplan.domain.repository.LocationListRepository
-import co.kr.bemyplan.domain.repository.LoginRepository
+import co.kr.bemyplan.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -125,12 +124,23 @@ object RepositoryModule {
         return PostScrapRepositoryImpl(postScrapService)
     }
 
-    // ?? 뭐지 왜 없는데 됐었지...?
-//    @ViewModelScoped
-//    @Provides
-//    fun provideAfterPurchaseRepository(
-//        afterPostService: AfterPostService
-//    ): AfterPurchaseRepository {
-//        return AfterPurchaseRepositoryImpl(afterPostService)
-//    }
+    // 상세한 일정
+    @ViewModelScoped
+    @Provides
+    fun providePlanDetailRepository(
+        planDetailService: PlanDetailService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): PlanDetailRepository {
+        return PlanDetailRepositoryImpl(planDetailService, coroutineDispatcher)
+    }
+
+    // moveInfo 정보
+    @ViewModelScoped
+    @Provides
+    fun provideMoveInfoRepository(
+        moveInfoService: MoveInfoService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): MoveInfoRepository {
+        return MoveInfoRepositoryImpl(moveInfoService, coroutineDispatcher)
+    }
 }

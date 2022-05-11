@@ -49,6 +49,7 @@ class DailyContentsFragment : Fragment() {
 
         // 뷰모델에서 데이터 받아오기
         viewModel.mergedPlanAndInfo.observe(viewLifecycleOwner) {
+            viewModel.setInfos(it.day - 1)
             contentsAdapter.submitList(it.infos)
 
             if (it.infos.size > 5) { // 장소들이 5개 초과인 경우에 더보기, 닫기 버튼 추가

@@ -31,8 +31,8 @@ class AfterPurchaseViewModel @Inject constructor(
         get() = _contents
 
     // 일차별 spot
-    private var _spots = MutableLiveData<List<MergedPlanAndInfo>>()
-    val spots: LiveData<List<MergedPlanAndInfo>>
+    private var _spots = MutableLiveData<List<Spots>>()
+    val spots: LiveData<List<Spots>>
         get() = _spots
 
     // spot마다 사진들
@@ -65,6 +65,10 @@ class AfterPurchaseViewModel @Inject constructor(
         get() = _infos
 
     // mergedPlanAndInfo
+    private val _mergedPlanAndInfoList = MutableLiveData<List<MergedPlanAndInfo>>()
+    val mergedPlanAndInfoList: LiveData<List<MergedPlanAndInfo>>
+        get() = _mergedPlanAndInfoList
+
     private val _mergedPlanAndInfo = MutableLiveData<MergedPlanAndInfo>()
     val mergedPlanAndInfo: LiveData<MergedPlanAndInfo>
         get() = _mergedPlanAndInfo
@@ -76,6 +80,7 @@ class AfterPurchaseViewModel @Inject constructor(
                 planDetailRepository.fetchPlanDetail(planId)
             }.onSuccess { planDetail ->
                 _planDetail.value = planDetail
+                _contents.value = planDetail.contents
             }.onFailure { error ->
                 Timber.tag("fetchPlanDetail").e(error)
             }
@@ -101,8 +106,8 @@ class AfterPurchaseViewModel @Inject constructor(
     }
 
     // 일차별 장소들 초기화
-    fun setSpots(spots: List<MergedPlanAndInfo>) {
-        _spots.value = spots
+    fun setSpots(index: Int) {
+        _spots.value = contents.value?.get(index)?.spots
     }
 
     // 장소별 사진들 초기화
@@ -122,14 +127,27 @@ class AfterPurchaseViewModel @Inject constructor(
         _moveInfo.value = moveInfoList.value?.get(index)
     }
 
-    fun setMergedPlanAndInfo(day: Int, listInfos: List<Infos>, listSpots: List<Spots>) {
-        val pairList = mutableListOf<Pair<Infos?, Spots>>()
-        for(i in listSpots.indices) {
-            if(i == listSpots.size - 1)
-                pairList.add(Pair(null, listSpots[i]))
-            else
-                pairList.add(Pair(listInfos[i], listSpots[i]))
+    fun setInfos(index: Int) {
+        _infos.value = moveInfo.value?.info
+    }
+
+    fun setMergedPlanAndInfoList(planDetail: PlanDetail, listMoveInfo: List<MoveInfo>) {
+        val bigList = mutableListOf<MergedPlanAndInfo>()
+        for(i in planDetail.contents.indices) {
+            val pairList = mutableListOf<Pair<Infos?, Spots>>()
+            val dailySpots = planDetail.contents[i].spots
+            for(j in dailySpots.indices) {
+                if(j == dailySpots.size - 1)
+                    pairList.add(Pair(null, dailySpots[j]))
+                else
+                    pairList.add(Pair(listMoveInfo[i].info[j], dailySpots[j]))
+            }
+            bigList.add(MergedPlanAndInfo(i + 1, pairList.toList()))
         }
-        _mergedPlanAndInfo.value = MergedPlanAndInfo(day, pairList.toList())
+        _mergedPlanAndInfoList.value = bigList
+    }
+
+    fun setMergedPlanAndInfo(index: Int) {
+        _mergedPlanAndInfo.value = mergedPlanAndInfoList.value?.get(index)
     }
 }

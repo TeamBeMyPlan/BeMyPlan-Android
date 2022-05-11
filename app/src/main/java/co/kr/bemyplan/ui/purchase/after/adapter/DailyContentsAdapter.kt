@@ -14,7 +14,6 @@ import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
-import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
@@ -87,7 +86,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         open fun onBind(data: Pair<Infos?, Spots>, isLastSpot: Boolean) {}
         open fun onBind(data: Pair<Infos?, Spots>, nextSpot: String) {}
-        open fun onBind(data: Pair<Infos?, Spots>, position: Int) {}
+        open fun onBind(data: Pair<Infos?, Spots>, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(
@@ -100,7 +99,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.spots = data.second
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
-            initViewPagerAdapter(data, position)
+            initViewPagerAdapter(data)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
         }
@@ -108,7 +107,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         override fun onBind(data: Pair<Infos?, Spots>, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
-            initViewPagerAdapter(data, position)
+            initViewPagerAdapter(data)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
         }

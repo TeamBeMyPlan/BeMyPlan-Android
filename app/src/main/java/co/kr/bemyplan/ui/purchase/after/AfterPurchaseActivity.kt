@@ -69,15 +69,20 @@ class AfterPurchaseActivity : AppCompatActivity() {
         checkData(planId)
 
         // Observer
-        viewModel.planDetail.observe(this) {
+        viewModel.mergedPlanAndInfoList.observe(this) {
+            viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
+
             // fragment 생성
             initFragment(0)
             // 마커 생성
-            initMarker(listOf(it.contents[0].spots))
+            initMarker(it)
             // 일자별 버튼 생성
-            initChips(listOf(it.contents[0].spots))
-            // user 버튼 생성
-            binding.clWriter.setOnClickListener{ _ -> initUserButton(it) }
+            initChips(it)
+        }
+
+        viewModel.planDetail.observe(this) {
+            // writer 버튼 생성
+            binding.clWriter.setOnClickListener { _ -> initUserButton(it) }
         }
 
         // back button
@@ -104,8 +109,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // fragment 그리기
     private fun initFragment(index: Int) {
-        viewModel.setSpots(binding.viewModel.contents.value!![index].spots)
+        viewModel.setSpots(index)
         viewModel.setMoveInfo(index)
+        viewModel.setMergedPlanAndInfo(index)
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
@@ -124,7 +130,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 일차별 버튼 초기화
-    private fun initChips(data: List<List<MergedPlanAndInfo>>) {
+    private fun initChips(data: List<MergedPlanAndInfo>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
         for (i in data.indices) {
             val chip = ItemDayButtonBinding.inflate(layoutInflater)
@@ -182,7 +188,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 카카오맵의 핀 초기화
-    private fun initMarker(data: List<List<MergedPlanAndInfo>>) {
+    private fun initMarker(data: List<MergedPlanAndInfo>) {
         markers = mutableListOf()
         for (i in data.indices) {
             /*
@@ -195,9 +201,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
             val markerList = mutableListOf<MapPOIItem>()
 
-            for (j in data[i].indices) {
+            for (j in data[i].infos.indices) {
                 val marker = MapPOIItem()
-                val spot = data[i][j]
+                val spot = data[i].infos[j].second
                 sumLatitude += spot.latitude
                 sumLongitude += spot.longitude
 
@@ -224,15 +230,15 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun setMarker(index: Int, data: List<List<MergedPlanAndInfo>>) {
+    private fun setMarker(index: Int, data: List<MergedPlanAndInfo>) {
         mapView.removeAllPOIItems()
         mapPoints = mutableListOf()
         for(i in data.indices) {
             if (index == i) {
-                for (j in data[i].indices) {
+                for (j in data[i].infos.indices) {
                     markers[i][j].apply {
-                        itemName = data[i][j].name
-                        mapPoint = MapPoint.mapPointWithGeoCoord(data[i][j].latitude, data[i][j].longitude)
+                        itemName = data[i].infos[j].second.name
+                        mapPoint = MapPoint.mapPointWithGeoCoord(data[i].infos[j].second.latitude, data[i].infos[j].second.longitude)
                         markerType = MapPOIItem.MarkerType.CustomImage
                         selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                         customImageResourceId = R.drawable.icn_mainpin_select
@@ -245,10 +251,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
             }
             else {
-                for (j in data[i].indices) {
+                for (j in data[i].infos.indices) {
                     markers[i][j].apply {
-                        itemName = data[i][j].name
-                        mapPoint = MapPoint.mapPointWithGeoCoord(data[i][j].latitude, data[i][j].longitude)
+                        itemName = data[i].infos[j].second.name
+                        mapPoint = MapPoint.mapPointWithGeoCoord(data[i].infos[j].second.latitude, data[i].infos[j].second.longitude)
                         markerType = MapPOIItem.MarkerType.CustomImage
                         selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                         customImageResourceId = R.drawable.icn_subpin_select

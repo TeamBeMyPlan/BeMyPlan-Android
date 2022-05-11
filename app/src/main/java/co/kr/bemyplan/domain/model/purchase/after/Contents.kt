@@ -1,5 +1,5 @@
 package co.kr.bemyplan.domain.model.purchase.after
 
 data class Contents(
-    val spots: List<MergedPlanAndInfo>
+    val spots: List<Spots>
 )

@@ -18,10 +18,9 @@ import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
-import timber.log.Timber
 
 
-class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null, var address: ((Double, Double) -> String)? = null) :
+class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null, var addressList: ((List<String>) -> Unit)? = null) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
@@ -37,11 +36,25 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     }
     private val differ = AsyncListDiffer(this, differCallback)
 
+    private val differAddressCallback = object: DiffUtil.ItemCallback<String>() {
+        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
+        }
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
+        }
+    }
+    private val differAddress = AsyncListDiffer(this, differAddressCallback)
+
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
     fun submitList(list: List<Pair<Infos?, Spots>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
         })
+    }
+
+    fun submitAddressList(list: List<String>) {
+
     }
 
     override fun getItemViewType(position: Int) = viewType
@@ -52,7 +65,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                 LayoutInflater.from(parent.context),
                 parent, false
             )
-            ContentsViewHolder(binding, parent.context, photoUrl, address)
+            ContentsViewHolder(binding, parent.context, photoUrl, addressList)
         }
         TYPE_ROUTE -> {
             val binding = ItemDailyRouteBinding.inflate(
@@ -95,7 +108,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         private val binding: ItemDailyContentsBinding,
         private val mContext: Context,
         private val photoUrl: ((String) -> Unit)?,
-        private val address: ((Double, Double) -> String)?
+        private val addressList: ((List<String>) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
         override fun onBind(data: Pair<Infos?, Spots>, nextSpot: String) {
@@ -103,7 +116,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.infos = data.first
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
-            binding.tvAddress.text = address?.invoke(data.second.latitude, data.second.longitude)
+            binding.tvAddress.text = addressList
             data.first?.let { setMobilityToKorean(it) }
             binding.isTipAvailable = data.second.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
@@ -115,8 +128,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
-            binding.tvAddress.text = address?.invoke(data.second.latitude, data.second.longitude)
-            data.first?.let { setMobilityToKorean(it) }
+            binding.tvAddress.text = data.first?.let { setMobilityToKorean(it) }
             binding.isTipAvailable = data.second.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()

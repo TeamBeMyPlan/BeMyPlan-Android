@@ -3,6 +3,8 @@ package co.kr.bemyplan.ui.purchase.after
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
@@ -18,14 +20,13 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
-import net.daum.mf.map.api.CalloutBalloonAdapter
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
+import net.daum.mf.map.api.*
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -59,6 +60,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val authorNickname = intent.getStringExtra("authorNickname") ?: ""
         val authorUserId = intent.getIntExtra("authorUserId", -1)
         viewModel.setAuthor(authorNickname, authorUserId)
+        Timber.tag("mdb1217").d(authorNickname)
 
         // 카카오맵 초기화
         initMap()
@@ -111,11 +113,43 @@ class AfterPurchaseActivity : AppCompatActivity() {
         viewModel.setSpots(index)
         viewModel.setMoveInfo(index)
         viewModel.setMergedPlanAndInfo(index)
+        viewModel.setAddressNameList(setAddressFromKakao())
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fcv_daily_context, fragment)
             .commit()
+    }
+
+    private fun setAddressFromKakao(): MutableList<String> {
+        val spotList = viewModel.spots.value!!
+        val addressList = mutableListOf<String>()
+        for (spot in spotList) {
+            val ai: ApplicationInfo = packageManager.getApplicationInfo(
+                packageName,
+                PackageManager.GET_META_DATA
+            )
+            if (ai.metaData != null) {
+                val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
+                MapReverseGeoCoder(metaData, MapPoint.mapPointWithGeoCoord(spot.latitude, spot.longitude),
+                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                        override fun onReverseGeoCoderFoundAddress(
+                            p0: MapReverseGeoCoder?,
+                            p1: String?
+                        ) {
+                            if (p1 != null) {
+                                addressList.add(p1)
+                            }
+                        }
+
+                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                            TODO("Not yet implemented")
+                        }
+                    },
+                    this)
+            }
+        }
+        return addressList
     }
 
     // 작성자 정보 다음 뷰로 전송

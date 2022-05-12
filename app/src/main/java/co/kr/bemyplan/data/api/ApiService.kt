@@ -15,9 +15,6 @@ object ApiService {
     // 인기 여행일정 조회
     val homePopularService: HomePopularService = retrofit.create(HomePopularService::class.java)
 
-    // 여행지 리스트 조회
-    val locationService: LocationService = retrofit.create(LocationService::class.java)
-
     // 최신 여행 일정 조회
     val homeNewService: HomeNewService = retrofit.create(HomeNewService::class.java)
 

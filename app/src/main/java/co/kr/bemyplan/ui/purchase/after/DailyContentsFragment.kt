@@ -51,33 +51,10 @@ class DailyContentsFragment : Fragment() {
             val intent = Intent(requireContext(), ImageViewActivity::class.java)
             intent.putExtra("photoUrl", photoUrl)
             requireActivity().startActivity(intent)
-        }, address = { latitude, longitude ->
-            val ai: ApplicationInfo = requireActivity().packageManager.getApplicationInfo(
-                requireActivity().packageName,
-                PackageManager.GET_META_DATA
-            )
-            var addressName = ""
-            if (ai.metaData != null) {
-                val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-                MapReverseGeoCoder(metaData, MapPoint.mapPointWithGeoCoord(latitude, longitude),
-                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                        override fun onReverseGeoCoderFoundAddress(
-                            p0: MapReverseGeoCoder?,
-                            p1: String?
-                        ) {
-                            if (p1 != null) {
-                                addressName = p1
-                            }
-                        }
-
-                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                            TODO("Not yet implemented")
-                        }
-                    },
-                    requireActivity())
-            }
-            addressName
-        })
+        }, address = { address: String ->
+            viewModeladdress
+        }
+        )
         routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE)
 
         // 뷰모델에서 데이터 받아오기

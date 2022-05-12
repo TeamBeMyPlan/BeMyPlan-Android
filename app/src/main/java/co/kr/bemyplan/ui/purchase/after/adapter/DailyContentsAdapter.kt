@@ -3,7 +3,6 @@ package co.kr.bemyplan.ui.purchase.after.adapter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -19,9 +18,6 @@ import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
-import com.kakao.sdk.common.model.ApplicationInfo
-import timber.log.Timber
-import java.util.*
 
 
 class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null, var address: ((Double, Double) -> String)? = null) :
@@ -77,7 +73,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                 if (position == differ.currentList.size - 1) {
                     holder.onBind(spots, true)
                 } else {
-                    holder.onBind(spots, "")
+                    holder.onBind(spots, differ.currentList[position + 1].second.name)
                 }
             }
             is RouteViewHolder -> {

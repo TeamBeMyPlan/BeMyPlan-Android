@@ -169,10 +169,10 @@
 
             <TextView
                 android:id="@+id/tv_place_route"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="산방산 → 난드르바당라라라라라라라랄라라라라라라라라라라라라라라라라라"
-                android:maxEms="20"
+                android:text="산방산 → 난드르바당"
+                android:maxEms="18"
                 android:gravity="center"
                 android:ellipsize="end"
                 android:singleLine="true"
@@ -195,6 +195,7 @@
                 android:textColor="@color/blue_0077b0"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
                 android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@id/tv_place_route"
                 app:layout_constraintEnd_toStartOf="@id/tv_moving_time"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -202,12 +203,13 @@
                 android:id="@+id/tv_moving_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
+                android:layout_marginEnd="5dp"
                 android:text="3분"
                 android:textColor="@color/blue_0077b0"
                 android:fontFamily="@font/spoqa_han_sans_neo_bold"
                 android:textSize="12sp"
                 app:text="@{@string/text_minute(infos.spentMinute)}"
+                app:layout_constraintStart_toEndOf="@id/tv_moving"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

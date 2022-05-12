@@ -73,6 +73,11 @@ class AfterPurchaseViewModel @Inject constructor(
     val mergedPlanAndInfo: LiveData<MergedPlanAndInfo>
         get() = _mergedPlanAndInfo
 
+    // 장소의 주소
+    private val _addressNameList = MutableLiveData<List<String>>()
+    val addressNameList: LiveData<List<String>>
+        get() = _addressNameList
+
     private val _addressName = MutableLiveData<String>()
     val addressName: LiveData<String>
         get() = _addressName
@@ -138,11 +143,11 @@ class AfterPurchaseViewModel @Inject constructor(
 
     fun setMergedPlanAndInfoList(planDetail: PlanDetail, listMoveInfo: List<MoveInfo>) {
         val bigList = mutableListOf<MergedPlanAndInfo>()
-        for(i in planDetail.contents.indices) {
+        for (i in planDetail.contents.indices) {
             val pairList = mutableListOf<Pair<Infos?, Spots>>()
             val dailySpots = planDetail.contents[i].spots
-            for(j in dailySpots.indices) {
-                if(j == dailySpots.size - 1)
+            for (j in dailySpots.indices) {
+                if (j == dailySpots.size - 1)
                     pairList.add(Pair(null, dailySpots[j]))
                 else
                     pairList.add(Pair(listMoveInfo[i].infos[j], dailySpots[j]))
@@ -154,6 +159,10 @@ class AfterPurchaseViewModel @Inject constructor(
 
     fun setMergedPlanAndInfo(index: Int) {
         _mergedPlanAndInfo.value = mergedPlanAndInfoList.value?.get(index)
+    }
+
+    fun setAddressNameList(addressList: List<String>) {
+        _addressNameList.value = addressList
     }
 
     fun setAddressName(name: String) {

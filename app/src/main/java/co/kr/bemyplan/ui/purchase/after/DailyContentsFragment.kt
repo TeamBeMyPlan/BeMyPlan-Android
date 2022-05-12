@@ -67,7 +67,6 @@ class DailyContentsFragment : Fragment() {
                         ) {
                             if (p1 != null) {
                                 addressName = p1
-                                viewModel.setAddressName(addressName)
                             }
                         }
 
@@ -99,7 +98,7 @@ class DailyContentsFragment : Fragment() {
         }
 
         viewModel.addressNameList.observe(viewLifecycleOwner) {
-            contentsAdapter. = viewModel.addressName
+            //contentsAdapter.
         }
 
         binding.rvDailyContents.adapter = contentsAdapter

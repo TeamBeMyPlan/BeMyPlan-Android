@@ -51,8 +51,8 @@ class ListActivity : AppCompatActivity() {
                 binding.layoutSort.visibility = View.GONE
                 viewModel.fetchLatestList()
                 binding.tvTitle.text = "최신 등록 여행 일정"
-                viewModel.latestList.observe(this) {
-                    listAdapter.replaceItem(it)
+                viewModel.latestList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
                 }
             }
             "suggest" -> {
@@ -60,8 +60,8 @@ class ListActivity : AppCompatActivity() {
                 binding.layoutSort.visibility = View.GONE
                 viewModel.fetchSuggestList()
                 binding.tvTitle.text = "비마플 추천 여행 일정"
-                viewModel.suggestList.observe(this) {
-                    listAdapter.replaceItem(it)
+                viewModel.suggestList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
                 }
             }
             "location" -> {
@@ -77,13 +77,14 @@ class ListActivity : AppCompatActivity() {
             }
             "user" -> {
                 Timber.tag("mlog: user").d("success")
-                viewModel.getUserPostList(authorUserId, sortViewModel.sort.value.toString())
+                viewModel.setAuthorUserId(authorUserId)
+                viewModel.fetchUserPlanList(sortViewModel.sort.value.toString())
                 binding.tvTitle.text = authorNickname
-                viewModel.userPostList.observe(this) {
-                    listAdapter.replaceItem(it)
+                viewModel.userPostList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
                 }
-                sortViewModel.sort.observe(this) {
-                    viewModel.getUserPostList(authorUserId, it)
+                sortViewModel.sort.observe(this) { sort ->
+                    viewModel.fetchUserPlanList(sort)
                 }
             }
         }
@@ -130,7 +131,7 @@ class ListActivity : AppCompatActivity() {
                                 )
                             }
                             "user" -> {
-
+                                viewModel.fetchMoreUserPlanList(sortViewModel.sort.value.toString())
                             }
                         }
                     }

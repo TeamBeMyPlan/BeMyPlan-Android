@@ -1,11 +1,10 @@
 package co.kr.bemyplan.di
 
 import co.kr.bemyplan.data.api.*
-import co.kr.bemyplan.data.repository.list.latest.LatestListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
-import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.LatestListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.LocationListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.SuggestListRepositoryImpl
+import co.kr.bemyplan.data.repository.list.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.login.GoogleLoginRepositoryImpl
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
@@ -79,9 +78,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideUserPostListRepository(
-        userPostListService: UserPostListService
+        userPlanListService: UserPlanListService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): UserPostListRepository {
-        return UserPostListRepositoryImpl(userPostListService)
+        return UserPostListRepositoryImpl(userPlanListService, coroutineDispatcher)
     }
 
     // 마이페이지 뷰

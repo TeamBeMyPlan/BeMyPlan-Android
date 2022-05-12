@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.domain.repository.LatestListRepository
 import co.kr.bemyplan.domain.repository.LocationListRepository
 import co.kr.bemyplan.domain.repository.SuggestListRepository
-import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.domain.repository.UserPostListRepository
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +34,9 @@ class ListViewModel @Inject constructor(
     private var page = 0
     private var pageSize = 10
 
+    private var _authorUserId = -1
+    val authorUserId get() = _authorUserId
+
     private var _latestList = MutableLiveData<List<ContentModel>>()
     val latestList: LiveData<List<ContentModel>> get() = _latestList
 
@@ -47,6 +50,10 @@ class ListViewModel @Inject constructor(
     val userPostList: LiveData<List<ContentModel>> get() = _userPostList
 
     private var lastPlanId: Int = -1
+
+    fun setAuthorUserId(userId: Int) {
+        _authorUserId = userId
+    }
 
     fun fetchLatestList() {
         viewModelScope.launch {
@@ -140,16 +147,32 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun getUserPostList(userId: Int, sort: String) {
+    fun fetchUserPlanList(sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                userPostListRepository.getUserPostList(userId, page, pageSize, sort)
-            }.onSuccess {
-                if (_userPostList.value != it.data.items) {
-                    _userPostList.value = it.data.items
-                }
+                userPostListRepository.fetchUserPlanList(size = 1, sort, authorUserId)
+            }.onSuccess { response ->
+                _userPostList.value = response.contents
+                lastPlanId = response.nextCursor
             }.onFailure {
                 Timber.tag("mlog: ListViewModel::getUserPostList error").e(it.message.toString())
+            }
+        }
+    }
+
+    fun fetchMoreUserPlanList(sort: String) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                userPostListRepository.fetchMoreUserPlanList(
+                    size = 1,
+                    sort,
+                    authorUserId,
+                    lastPlanId
+                )
+            }.onSuccess { response ->
+                _userPostList.value =
+                    _userPostList.value?.toMutableList()?.apply { addAll(response.contents) }
+                lastPlanId = response.nextCursor
             }
         }
     }

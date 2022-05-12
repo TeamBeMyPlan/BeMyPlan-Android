@@ -49,8 +49,8 @@ object ServiceModule {
     // 유저가 작성한 게시물 리스트 뷰
     @Singleton
     @Provides
-    fun provideUserPostListService(@BeMyPlanRetrofit retrofit: Retrofit): UserPostListService {
-        return retrofit.create(UserPostListService::class.java)
+    fun provideUserPostListService(@BeMyPlanRetrofit retrofit: Retrofit): UserPlanListService {
+        return retrofit.create(UserPlanListService::class.java)
     }
 
     // 마이페이지 뷰

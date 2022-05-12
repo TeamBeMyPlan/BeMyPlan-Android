@@ -148,14 +148,11 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickNickname() {
         binding.layoutAuthor.setOnClickListener {
-            val intent = Intent(requireContext(), ListActivity::class.java)
-            intent.putExtra("from", "user")
-//            intent.putExtra("userId", viewModel.previewInformation.value?.authorId)
-//            intent.putExtra("authorNickname", viewModel.previewInformation.value?.author)
-//            Log.d(
-//                "mlog: beforecharging.author_id",
-//                viewModel.previewInformation.value?.authorId.toString()
-//            )
+            val intent = Intent(requireContext(), ListActivity::class.java).apply {
+                putExtra("from", "user")
+                putExtra("authorUserId", viewModel.authorUserId)
+                putExtra("authorNickname", viewModel.authorNickname)
+            }
             startActivity(intent)
         }
     }

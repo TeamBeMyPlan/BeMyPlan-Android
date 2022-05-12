@@ -39,6 +39,12 @@ class BeforeChargingViewModel @Inject constructor(
     private var _isScraped = MutableLiveData<Boolean>()
     val isScraped: LiveData<Boolean> get() = _isScraped
 
+    private var _authorNickname = ""
+    val authorNickname get() = _authorNickname
+
+    private var _authorUserId = -1
+    val authorUserId get() = _authorUserId
+
     private val _payWay = MutableLiveData<Pay>(Pay.NULL)
     val payWay: LiveData<Pay> get() = _payWay
 
@@ -50,6 +56,21 @@ class BeforeChargingViewModel @Inject constructor(
 
     private var _previewContent = MutableLiveData<List<PreviewContent>>()
     val previewContent: LiveData<List<PreviewContent>> get() = _previewContent
+
+    // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
+    fun setScrapStatus(flag: Boolean) {
+        _isScraped.value = flag
+        Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
+    }
+
+    fun setPlanId(postId: Int) {
+        _planId = postId
+    }
+
+    fun setAuthor(nickname: String, userId: Int) {
+        _authorNickname = nickname
+        _authorUserId = userId
+    }
 
     fun selectPay(way: Pay) {
         when (way) {
@@ -86,16 +107,6 @@ class BeforeChargingViewModel @Inject constructor(
                 Log.e("mlog: BeforeChargingViewModel::postScrap error", it.message.toString())
             }
         }
-    }
-
-    // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
-    fun setIsScraped(flag: Boolean) {
-        _isScraped.value = flag
-        Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
-    }
-
-    fun setPlanId(postId: Int) {
-        _planId = postId
     }
 
     fun fetchPreviewPlan() {

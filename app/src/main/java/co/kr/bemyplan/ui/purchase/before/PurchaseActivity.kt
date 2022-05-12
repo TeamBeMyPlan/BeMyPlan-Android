@@ -1,7 +1,6 @@
 package co.kr.bemyplan.ui.purchase.before
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.databinding.ActivityPurchaseBinding
@@ -15,12 +14,15 @@ class PurchaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var planId = intent.getIntExtra("postId", -1)
-        var isScraped = intent.getBooleanExtra("isScraped", false)
-        Log.d("mlog: PurchaseActivity::getExtra에서 postId", planId.toString())
-        Log.d("mlog: PurchaseActivity::getExtra에서 isScraped", isScraped.toString())
+        val planId = intent.getIntExtra("planId", -1)
+        val scrapStatus = intent.getBooleanExtra("scrapStatus", false)
+        val authorNickname = intent.getStringExtra("authorNickname") ?: ""
+        val authorUserId = intent.getIntExtra("authorUserId", -1)
+
         viewModel.setPlanId(planId)
-        viewModel.setIsScraped(isScraped)
+        viewModel.setScrapStatus(scrapStatus)
+        viewModel.setAuthor(authorNickname, authorUserId)
+
         binding = ActivityPurchaseBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }

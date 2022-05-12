@@ -9,7 +9,7 @@ import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.repository.LatestListRepository
 import co.kr.bemyplan.domain.repository.LocationListRepository
-import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
+import co.kr.bemyplan.domain.repository.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import com.google.firebase.analytics.ktx.analytics
@@ -79,16 +79,29 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun getSuggestList() {
+    fun fetchSuggestList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                suggestListRepository.getSuggestList(page, pageSize)
-            }.onSuccess {
-                if (_suggestList.value != it.data.items) {
-                    _suggestList.value = it.data.items
-                }
+                suggestListRepository.fetchSuggestList(size = 1)
+            }.onSuccess { response ->
+                _suggestList.value = response.contents
+                lastPlanId = response.nextCursor
             }.onFailure {
-                Timber.tag("mlog: ListViewModel::getSuggestList error").e(it.message.toString())
+                Timber.tag("mlog: ListViewModel::fetchSuggestList error").e(it)
+            }
+        }
+    }
+
+    fun fetchMoreSuggestList() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                suggestListRepository.fetchMoreSuggestList(size = 1, lastPlanId)
+            }.onSuccess { response ->
+                _suggestList.value =
+                    _suggestList.value?.toMutableList()?.apply { addAll(response.contents) }
+                lastPlanId = response.nextCursor
+            }.onFailure {
+                Timber.tag("mlog: ListViewModel::fetchMoreSuggestList error").e(it)
             }
         }
     }

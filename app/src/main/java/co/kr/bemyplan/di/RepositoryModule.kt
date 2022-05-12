@@ -3,7 +3,6 @@ package co.kr.bemyplan.di
 import co.kr.bemyplan.data.api.*
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
-import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepositoryImpl
@@ -60,9 +59,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideSuggestListRepository(
-        suggestListService: SuggestListService
+        suggestListService: SuggestListService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): SuggestListRepository {
-        return SuggestListRepositoryImpl(suggestListService)
+        return SuggestListRepositoryImpl(suggestListService, coroutineDispatcher)
     }
 
     // 여행지 리스트 뷰

@@ -1,14 +1,10 @@
 package co.kr.bemyplan.data.entity.list
 
 import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.domain.model.list.PlanList
 
 data class ResponseSuggestList(
-    val status: Int,
+    val resultCode: String,
     val message: String,
-    val data: Data
-) {
-    data class Data(
-        val items: List<ContentModel>,
-        val totalPage: Int
-    )
-}
+    val data: PlanList
+)

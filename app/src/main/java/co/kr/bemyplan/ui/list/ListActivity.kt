@@ -11,8 +11,8 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
-import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
+import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,7 +60,7 @@ class ListActivity : AppCompatActivity() {
             "suggest" -> {
                 Timber.tag("mlog: suggest").d("success")
                 binding.layoutSort.visibility = View.GONE
-                viewModel.getSuggestList()
+                viewModel.fetchSuggestList()
                 binding.tvTitle.text = "비마플 추천 여행 일정"
                 viewModel.suggestList.observe(this) {
                     listAdapter.replaceItem(it)
@@ -121,7 +121,7 @@ class ListActivity : AppCompatActivity() {
                                 viewModel.fetchMoreLatestList()
                             }
                             "suggest" -> {
-
+                                viewModel.fetchMoreSuggestList()
                             }
                             "location" -> {
                                 viewModel.fetchMoreLocationList(

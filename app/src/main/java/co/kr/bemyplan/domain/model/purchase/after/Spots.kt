@@ -7,6 +7,6 @@ data class Spots(
     val longitude: Double,
     val name: String,
     val review: String,
-    val tip: String,
+    val tip: String?,
     val updatedAt: String
 )

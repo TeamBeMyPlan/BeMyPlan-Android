@@ -18,6 +18,7 @@ import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
+import timber.log.Timber
 
 
 class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null, var address: ((Double, Double) -> String)? = null) :
@@ -104,9 +105,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.isLastSpot = false
             binding.tvAddress.text = address?.invoke(data.second.latitude, data.second.longitude)
             data.first?.let { setMobilityToKorean(it) }
-            if (data.second.tip.isEmpty()) {
-                binding.isTipAvailable = false
-            }
+            binding.isTipAvailable = data.second.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
@@ -118,9 +117,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.infos = data.first
             binding.tvAddress.text = address?.invoke(data.second.latitude, data.second.longitude)
             data.first?.let { setMobilityToKorean(it) }
-            if (data.second.tip.isEmpty()) {
-                binding.isTipAvailable = false
-            }
+            binding.isTipAvailable = data.second.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }

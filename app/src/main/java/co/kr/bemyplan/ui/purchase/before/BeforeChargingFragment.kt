@@ -60,8 +60,11 @@ class BeforeChargingFragment : Fragment() {
         viewModel.previewInfo.observe(viewLifecycleOwner) { previewInfo ->
             binding.info = previewInfo
         }
-        viewModel.previewContents.observe(viewLifecycleOwner) { previewContents ->
-            contentAdapter.replaceItem(previewContents)
+//        viewModel.previewContents.observe(viewLifecycleOwner) { previewContents ->
+//            contentAdapter.replaceItem(previewContents)
+//        }
+        viewModel.previewContent.observe(viewLifecycleOwner) { previewContent ->
+            contentAdapter.replaceItem(previewContent)
         }
     }
 
@@ -145,14 +148,11 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickNickname() {
         binding.layoutAuthor.setOnClickListener {
-            val intent = Intent(requireContext(), ListActivity::class.java)
-            intent.putExtra("from", "user")
-//            intent.putExtra("userId", viewModel.previewInformation.value?.authorId)
-//            intent.putExtra("authorNickname", viewModel.previewInformation.value?.author)
-//            Log.d(
-//                "mlog: beforecharging.author_id",
-//                viewModel.previewInformation.value?.authorId.toString()
-//            )
+            val intent = Intent(requireContext(), ListActivity::class.java).apply {
+                putExtra("from", "user")
+                putExtra("authorUserId", viewModel.authorUserId)
+                putExtra("authorNickname", viewModel.authorNickname)
+            }
             startActivity(intent)
         }
     }

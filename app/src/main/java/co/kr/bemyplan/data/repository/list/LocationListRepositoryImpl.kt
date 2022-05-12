@@ -1,4 +1,4 @@
-package co.kr.bemyplan.data.repository.list.location
+package co.kr.bemyplan.data.repository.list
 
 import co.kr.bemyplan.data.api.LocationListService
 import co.kr.bemyplan.domain.model.list.PlanList

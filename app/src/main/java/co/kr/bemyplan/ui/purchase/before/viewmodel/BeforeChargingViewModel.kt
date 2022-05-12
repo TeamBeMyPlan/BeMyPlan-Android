@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.domain.model.purchase.before.PreviewContent
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
 import co.kr.bemyplan.domain.model.purchase.before.PreviewInfo
 import com.google.firebase.analytics.ktx.analytics
@@ -37,6 +38,12 @@ class BeforeChargingViewModel @Inject constructor(
     private var _isScraped = MutableLiveData<Boolean>()
     val isScraped: LiveData<Boolean> get() = _isScraped
 
+    private var _authorNickname = ""
+    val authorNickname get() = _authorNickname
+
+    private var _authorUserId = -1
+    val authorUserId get() = _authorUserId
+
     private val _payWay = MutableLiveData<Pay>(Pay.NULL)
     val payWay: LiveData<Pay> get() = _payWay
 
@@ -45,6 +52,24 @@ class BeforeChargingViewModel @Inject constructor(
 
     private var _previewContents = MutableLiveData<List<PreviewContents>>()
     val previewContents: LiveData<List<PreviewContents>> get() = _previewContents
+
+    private var _previewContent = MutableLiveData<List<PreviewContent>>()
+    val previewContent: LiveData<List<PreviewContent>> get() = _previewContent
+
+    // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
+    fun setScrapStatus(flag: Boolean) {
+        _isScraped.value = flag
+        Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
+    }
+
+    fun setPlanId(postId: Int) {
+        _planId = postId
+    }
+
+    fun setAuthor(nickname: String, userId: Int) {
+        _authorNickname = nickname
+        _authorUserId = userId
+    }
 
     fun selectPay(way: Pay) {
         when (way) {
@@ -83,16 +108,6 @@ class BeforeChargingViewModel @Inject constructor(
         }
     }
 
-    // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
-    fun setIsScraped(flag: Boolean) {
-        _isScraped.value = flag
-        Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
-    }
-
-    fun setPlanId(postId: Int) {
-        _planId = postId
-    }
-
     fun fetchPreviewPlan() {
         viewModelScope.launch {
             kotlin.runCatching {
@@ -100,6 +115,14 @@ class BeforeChargingViewModel @Inject constructor(
             }.onSuccess { previewPlan ->
                 _previewInfo.value = previewPlan.previewInfo
                 _previewContents.value = previewPlan.previewContents
+                // TODO: 추후 Multi ViewHolder 패턴 사용하는 게 더 깔끔할 것 같음
+                val list = mutableListOf<PreviewContent>()
+                for(i in 0 until previewPlan.previewContents.size step(2)) {
+                    val image = previewPlan.previewContents[i].value
+                    val text = previewPlan.previewContents[i+1].value
+                    list.add(PreviewContent(image, text))
+                }
+                _previewContent.value = list
             }.onFailure { error ->
                 //Timber.tag("fetchPreviewPlan").e(error)
             }

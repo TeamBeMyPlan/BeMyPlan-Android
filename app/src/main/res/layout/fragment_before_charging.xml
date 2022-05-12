@@ -117,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                        android:text="앞 단계에서 닉네임 가져와서 여기 보여주십쇼"
+                        android:text="@{viewModel.authorNickname}"
                         android:textColor="@color/grey_5d687a"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"

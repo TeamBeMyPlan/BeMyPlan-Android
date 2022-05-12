@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
+import co.kr.bemyplan.domain.repository.LatestListRepository
 import co.kr.bemyplan.domain.repository.LocationListRepository
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
 import co.kr.bemyplan.data.repository.list.userpost.UserPostListRepository
@@ -46,19 +46,35 @@ class ListViewModel @Inject constructor(
     private var _userPostList = MutableLiveData<List<ContentModel>>()
     val userPostList: LiveData<List<ContentModel>> get() = _userPostList
 
-    private var _lastPlanId = MutableLiveData<Int>()
-    val lastPlanId: LiveData<Int> get() = _lastPlanId
+    private var lastPlanId: Int = -1
 
-    fun getLatestList() {
+    fun fetchLatestList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                latestListRepository.getNewList(page, pageSize)
-            }.onSuccess {
-                if (_latestList.value != it.data.items) {
-                    _latestList.value = it.data.items
-                }
+                latestListRepository.fetchLatestList(size = 1, "createdAt,desc")
+            }.onSuccess { response ->
+                _latestList.value = response.contents
+                lastPlanId = response.nextCursor
             }.onFailure {
-                Timber.tag("mlog: ListViewModel::getLatestList error").e(it.message.toString())
+                Timber.tag("mlog: ListViewModel::fetchLatestList error").e(it)
+            }
+        }
+    }
+
+    fun fetchMoreLatestList() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                latestListRepository.fetchMoreLatestList(
+                    size = 1,
+                    "createdAt,desc",
+                    lastPlanId
+                )
+            }.onSuccess { response ->
+                _latestList.value =
+                    _latestList.value?.toMutableList()?.apply { addAll(response.contents) }
+                lastPlanId = response.nextCursor
+            }.onFailure {
+                Timber.tag("mlog: ListViewModel::fetchMoreList error").e(it)
             }
         }
     }
@@ -81,10 +97,10 @@ class ListViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 // TODO - 무한스크롤 구현 이후에는 size = 10 으로 고정할 것
-                locationListRepository.fetchLocationList(region, size = 2, sort)
+                locationListRepository.fetchLocationList(region, size = 1, sort)
             }.onSuccess { response ->
                 _locationList.value = response.contents
-                _lastPlanId.value = response.nextCursor
+                lastPlanId = response.nextCursor
             }.onFailure { error ->
                 Timber.tag("mlog: ListViewModel::getLocationList error").e(error)
             }
@@ -93,21 +109,19 @@ class ListViewModel @Inject constructor(
 
     fun fetchMoreLocationList(region: String, sort: String) {
         viewModelScope.launch {
-            lastPlanId.value?.let { lastPlanIdValue ->
-                if (lastPlanIdValue != -1) {
-                    kotlin.runCatching {
-                        locationListRepository.fetchMoreLocationList(
-                            region,
-                            size = 2,
-                            sort,
-                            lastPlanIdValue
-                        )
-                    }.onSuccess { response ->
-                        _locationList.value =
-                            _locationList.value?.toMutableList()
-                                ?.apply { addAll(response.contents) }
-                        _lastPlanId.value = response.nextCursor
-                    }
+            if (lastPlanId != -1) {
+                kotlin.runCatching {
+                    locationListRepository.fetchMoreLocationList(
+                        region,
+                        size = 1,
+                        sort,
+                        lastPlanId
+                    )
+                }.onSuccess { response ->
+                    _locationList.value =
+                        _locationList.value?.toMutableList()
+                            ?.apply { addAll(response.contents) }
+                    lastPlanId = response.nextCursor
                 }
             }
         }

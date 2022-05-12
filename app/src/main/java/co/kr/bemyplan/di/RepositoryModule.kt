@@ -1,7 +1,6 @@
 package co.kr.bemyplan.di
 
 import co.kr.bemyplan.data.api.*
-import co.kr.bemyplan.data.repository.list.latest.LatestListRepository
 import co.kr.bemyplan.data.repository.list.latest.LatestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.location.LocationListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.suggest.SuggestListRepository
@@ -14,13 +13,10 @@ import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
-import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
-import co.kr.bemyplan.domain.repository.GoogleLoginRepository
-import co.kr.bemyplan.domain.repository.LocationListRepository
-import co.kr.bemyplan.domain.repository.LoginRepository
+import co.kr.bemyplan.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,9 +50,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideLatestListRepository(
-        latestListService: LatestListService
+        latestListService: LatestListService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): LatestListRepository {
-        return LatestListRepositoryImpl(latestListService)
+        return LatestListRepositoryImpl(latestListService, coroutineDispatcher)
     }
 
     // 비마플 추천 여행 일정 리스트 뷰

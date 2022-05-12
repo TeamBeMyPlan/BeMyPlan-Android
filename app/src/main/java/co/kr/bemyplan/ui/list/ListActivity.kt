@@ -51,7 +51,7 @@ class ListActivity : AppCompatActivity() {
             "new" -> {
                 Timber.tag("mlog: new").d("success")
                 binding.layoutSort.visibility = View.GONE
-                viewModel.getLatestList()
+                viewModel.fetchLatestList()
                 binding.tvTitle.text = "최신 등록 여행 일정"
                 viewModel.latestList.observe(this) {
                     listAdapter.replaceItem(it)
@@ -115,8 +115,24 @@ class ListActivity : AppCompatActivity() {
             rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if(!rvLinearContent.canScrollVertically(1)) {
-                        viewModel.fetchMoreLocationList(region, sortViewModel.sort.value.toString())
+                    if (!rvLinearContent.canScrollVertically(1)) {
+                        when (from) {
+                            "new" -> {
+                                viewModel.fetchMoreLatestList()
+                            }
+                            "suggest" -> {
+
+                            }
+                            "location" -> {
+                                viewModel.fetchMoreLocationList(
+                                    region,
+                                    sortViewModel.sort.value.toString()
+                                )
+                            }
+                            "user" -> {
+
+                            }
+                        }
                     }
                 }
             })

@@ -1,15 +1,21 @@
 package co.kr.bemyplan.ui.purchase.after.viewmodel
 
+import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.domain.model.purchase.after.*
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.MoveInfo
 import co.kr.bemyplan.domain.repository.MoveInfoRepository
 import co.kr.bemyplan.domain.repository.PlanDetailRepository
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -18,8 +24,14 @@ import javax.inject.Inject
 @HiltViewModel
 class AfterPurchaseViewModel @Inject constructor(
     private val planDetailRepository: PlanDetailRepository,
-    private val moveInfoRepository: MoveInfoRepository
+    private val moveInfoRepository: MoveInfoRepository,
+    private val postScrapRepository: PostScrapRepository
 ): ViewModel() {
+
+    private val fb = Firebase.analytics.apply {
+        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
+    }
+
     // plan detail 들고오고
     private var _planDetail = MutableLiveData<PlanDetail>()
     val planDetail: LiveData<PlanDetail>
@@ -35,19 +47,19 @@ class AfterPurchaseViewModel @Inject constructor(
     val spots: LiveData<List<Spots>>
         get() = _spots
 
-    // spot마다 사진들
-    private var _images = MutableLiveData<List<Images>>()
-    val images: LiveData<List<Images>>
-        get() = _images
+    // 스크랩
+    private var _isScraped = MutableLiveData<Boolean>()
+    val isScraped: LiveData<Boolean>
+        get() = _isScraped
 
-    // 제목
+    // 작성자
     private val _author = MutableLiveData<String>()
     val author: LiveData<String>
         get() = _author
 
     // plan id
-    private val _planId = MutableLiveData<Int>(-1)
-    val planId: LiveData<Int>
+    private var _planId = -1
+    val planId
         get() = _planId
 
     // move info
@@ -109,6 +121,32 @@ class AfterPurchaseViewModel @Inject constructor(
         }
     }
 
+    fun postScrap() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                postScrapRepository.postScrap(planId)
+            }.onSuccess {
+                when (it.data.scrapped) {
+                    true -> {
+                        fb.logEvent("scrapTravelPlan", Bundle().apply {
+                            putString("source", "BeforeChargingView")
+                            putInt("postIdx", planId)
+                        })
+                    }
+                    false -> {
+                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
+                            putString("source", "BeforeChargingView")
+                            putInt("postIdx", planId)
+                        })
+                    }
+                }
+                _isScraped.value = it.data.scrapped
+            }.onFailure { error ->
+                Timber.tag("postScrap").e(error)
+            }
+        }
+    }
+
     // 더미데이터 생성
     fun initDummy() {
 //        val dummy = ExampleDummy().getPlan()
@@ -120,9 +158,8 @@ class AfterPurchaseViewModel @Inject constructor(
         _spots.value = contents.value?.get(index)?.spots
     }
 
-    // 장소별 사진들 초기화
-    fun setImages(images: List<Images>) {
-        _images.value = images
+    fun setIsScraped(flag: Boolean) {
+        _isScraped.value = flag
     }
 
     fun setAuthor(author: String) {
@@ -130,7 +167,7 @@ class AfterPurchaseViewModel @Inject constructor(
     }
 
     fun setPlanId(planId: Int) {
-        _planId.value = planId
+        _planId = planId
     }
 
     fun setMoveInfo(index: Int) {

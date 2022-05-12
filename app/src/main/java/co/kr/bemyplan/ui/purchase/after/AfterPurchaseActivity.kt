@@ -55,6 +55,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val planId = intent.getIntExtra("postId", -1)
         viewModel.setPlanId(planId)
 
+        var isScraped = intent.getBooleanExtra("isScraped", false)
+        viewModel.setIsScraped(isScraped)
+
 //        val author = intent.getStringExtra("author")
 //        viewModel.setAuthor(requireNotNull(author))
 

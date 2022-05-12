@@ -53,9 +53,13 @@ class AfterPurchaseViewModel @Inject constructor(
         get() = _isScraped
 
     // 작성자
-    private val _author = MutableLiveData<String>()
-    val author: LiveData<String>
-        get() = _author
+    private var _authorNickname = ""
+    val authorNickname
+        get() = _authorNickname
+
+    private var _authorUserId = -1
+    val authorUserId
+        get() = _authorUserId
 
     // plan id
     private var _planId = -1
@@ -162,8 +166,9 @@ class AfterPurchaseViewModel @Inject constructor(
         _isScraped.value = flag
     }
 
-    fun setAuthor(author: String) {
-        _author.value = author
+    fun setAuthor(authorNickname: String, authorUserId: Int) {
+        _authorNickname = authorNickname
+        _authorUserId = authorUserId
     }
 
     fun setPlanId(planId: Int) {

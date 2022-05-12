@@ -13,11 +13,19 @@ class AuthInterceptor @Inject constructor(
         val originalRequest = chain.request()
         val sessionId = localStorage.sessionId
         val visitOption = if (sessionId != "") MEMBERSHIP else GUEST
-        val authRequest =
-            originalRequest.newBuilder()
-                .addHeader("Authorization", sessionId)
-                .addHeader("Visit-Option", visitOption)
-                .build()
+        val authRequest = when (sessionId) {
+            "" -> {
+                originalRequest.newBuilder()
+                    .addHeader("Visit-Option", visitOption)
+                    .build()
+            }
+            else -> {
+                originalRequest.newBuilder()
+                    .addHeader("Authorization", sessionId)
+                    .addHeader("Visit-Option", visitOption)
+                    .build()
+            }
+        }
         val response = chain.proceed(authRequest)
         return response
     }

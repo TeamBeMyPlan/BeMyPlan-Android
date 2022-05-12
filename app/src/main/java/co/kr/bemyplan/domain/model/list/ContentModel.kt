@@ -1,7 +1,5 @@
 package co.kr.bemyplan.domain.model.list
 
-import com.google.gson.annotations.SerializedName
-
 data class ContentModel(
     val createdAt: String,
     val updatedAt: String,

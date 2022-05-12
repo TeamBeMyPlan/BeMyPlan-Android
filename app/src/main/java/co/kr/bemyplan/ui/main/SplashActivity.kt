@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
 import co.kr.bemyplan.application.MainApplication
-import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.databinding.ActivitySplashBinding

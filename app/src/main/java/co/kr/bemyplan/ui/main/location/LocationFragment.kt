@@ -2,7 +2,6 @@ package co.kr.bemyplan.ui.main.location
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,9 @@ import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.ui.list.ListActivity
-import timber.log.Timber
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LocationFragment : Fragment() {
 
     private var _binding: FragmentLocationBinding? = null
@@ -25,8 +25,11 @@ class LocationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLocationBinding.inflate(layoutInflater)
-        locationViewModel.initLocationNetwork()
+        locationViewModel.getLocationData()
         initAdapter()
+        locationViewModel.locationData.observe(viewLifecycleOwner) {
+            locationAdapter.submitList(it)
+        }
         return binding.root
     }
 
@@ -36,7 +39,6 @@ class LocationFragment : Fragment() {
             intent.putExtra("from", "location")
             intent.putExtra("region", it.region)
             intent.putExtra("locationName", it.name)
-            Timber.tag("mlog: locationName").d(it.name)
             startActivity(intent)
         }, myContext = requireContext())
 
@@ -47,12 +49,6 @@ class LocationFragment : Fragment() {
         binding.rvLocation.addItemDecoration(HorizontalItemDecorator(resources.getDimensionPixelOffset(
                     R.dimen.margin_6
                 )))
-
-        locationViewModel.location.observe(viewLifecycleOwner) {
-            locationAdapter.locationList.addAll(it)
-            Timber.tag("yongminlog").d("viewmodel에서 받아오는 데이터 $it")
-            locationAdapter.notifyDataSetChanged()
-        }
     }
 
     override fun onDestroyView() {

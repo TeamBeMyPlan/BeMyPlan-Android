@@ -6,7 +6,7 @@
 
         <variable
             name="content"
-            type="co.kr.bemyplan.domain.model.purchase.before.PreviewContents" />
+            type="co.kr.bemyplan.domain.model.purchase.before.PreviewContent" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,8 +20,8 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:background="@drawable/rectangle_radius_5"
-            app:layout_constraintTop_toTopOf="parent" />
-        <!--        app:setImageString="@{content.photoUrls.get(0)}"-->
+            app:layout_constraintTop_toTopOf="parent"
+            app:setImageString="@{content.image}" />
 
         <TextView
             android:id="@+id/tv_description"
@@ -30,10 +30,10 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:lineHeight="22sp"
+            android:text="@{content.text}"
             android:textColor="@color/grey_313740"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/iv_photo" />
-        <!--        android:text="@{model.description.length() > 100 ? model.description.substring(0, 99)+`...` : model.description}"-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

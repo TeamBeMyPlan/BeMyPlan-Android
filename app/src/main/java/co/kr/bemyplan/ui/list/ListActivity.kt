@@ -11,8 +11,8 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
-import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
+import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +26,7 @@ class ListActivity : AppCompatActivity() {
     private lateinit var listAdapter: ListAdapter
     var from: String = ""
     var region: String = ""
-    var userId: Int = -1
+    var authorUserId: Int = -1
     var authorNickname: String = ""
     var locationName: String = ""
 
@@ -35,11 +35,9 @@ class ListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
         from = intent.getStringExtra("from") ?: ""
         region = intent.getStringExtra("region") ?: ""
-        userId = intent.getIntExtra("userId", -1)
+        authorUserId = intent.getIntExtra("userId", -1)
         locationName = intent.getStringExtra("locationName") ?: ""
         authorNickname = intent.getStringExtra("authorNickname") ?: ""
-        Timber.tag("mlog: ListActivity.userId").d(userId.toString())
-        Timber.tag("mlog: ListActivity.userId").d(authorNickname)
         initList(from)
         initRecyclerView()
         clickBack()
@@ -51,19 +49,19 @@ class ListActivity : AppCompatActivity() {
             "new" -> {
                 Timber.tag("mlog: new").d("success")
                 binding.layoutSort.visibility = View.GONE
-                viewModel.getLatestList()
+                viewModel.fetchLatestList()
                 binding.tvTitle.text = "최신 등록 여행 일정"
-                viewModel.latestList.observe(this) {
-                    listAdapter.replaceItem(it)
+                viewModel.latestList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
                 }
             }
             "suggest" -> {
                 Timber.tag("mlog: suggest").d("success")
                 binding.layoutSort.visibility = View.GONE
-                viewModel.getSuggestList()
+                viewModel.fetchSuggestList()
                 binding.tvTitle.text = "비마플 추천 여행 일정"
-                viewModel.suggestList.observe(this) {
-                    listAdapter.replaceItem(it)
+                viewModel.suggestList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
                 }
             }
             "location" -> {
@@ -79,13 +77,14 @@ class ListActivity : AppCompatActivity() {
             }
             "user" -> {
                 Timber.tag("mlog: user").d("success")
-                viewModel.getUserPostList(userId, sortViewModel.sort.value.toString())
+                viewModel.setAuthorUserId(authorUserId)
+                viewModel.fetchUserPlanList(sortViewModel.sort.value.toString())
                 binding.tvTitle.text = authorNickname
-                viewModel.userPostList.observe(this) {
-                    listAdapter.replaceItem(it)
+                viewModel.userPostList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
                 }
-                sortViewModel.sort.observe(this) {
-                    viewModel.getUserPostList(userId, it)
+                sortViewModel.sort.observe(this) { sort ->
+                    viewModel.fetchUserPlanList(sort)
                 }
             }
         }
@@ -95,17 +94,19 @@ class ListActivity : AppCompatActivity() {
         listAdapter = ListAdapter({
             if (it.orderStatus) {
                 val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
-                    putExtra("postId", it.planId)
+                    putExtra("planId", it.planId)
                     putExtra("scrapStatus", it.scrapStatus)
+                    putExtra("authorNickname", it.user.nickname)
+                    putExtra("authorUserId", it.user.userId)
                 }
-                Timber.tag("mlog: putExtra에서 postId").d(it.planId.toString())
                 startActivity(intent)
             } else {
                 val intent = Intent(this, PurchaseActivity::class.java).apply {
-                    putExtra("postId", it.planId)
+                    putExtra("planId", it.planId)
                     putExtra("scrapStatus", it.scrapStatus)
+                    putExtra("authorNickname", it.user.nickname)
+                    putExtra("authorUserId", it.user.userId)
                 }
-                Timber.tag("mlog: putExtra에서 postId").d(it.planId.toString())
                 startActivity(intent)
             }
         }, {
@@ -115,8 +116,24 @@ class ListActivity : AppCompatActivity() {
             rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if(!rvLinearContent.canScrollVertically(1)) {
-                        viewModel.fetchMoreLocationList(region, sortViewModel.sort.value.toString())
+                    if (!rvLinearContent.canScrollVertically(1)) {
+                        when (from) {
+                            "new" -> {
+                                viewModel.fetchMoreLatestList()
+                            }
+                            "suggest" -> {
+                                viewModel.fetchMoreSuggestList()
+                            }
+                            "location" -> {
+                                viewModel.fetchMoreLocationList(
+                                    region,
+                                    sortViewModel.sort.value.toString()
+                                )
+                            }
+                            "user" -> {
+                                viewModel.fetchMoreUserPlanList(sortViewModel.sort.value.toString())
+                            }
+                        }
                     }
                 }
             })

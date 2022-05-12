@@ -125,6 +125,16 @@ object RepositoryModule {
         return PostScrapRepositoryImpl(postScrapService)
     }
 
+    //여행지뷰
+    @ViewModelScoped
+    @Provides
+    fun provideLocationRepository(
+        locationService : LocationService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ):LocationRepository{
+        return LocationRepositoryImpl(locationService, coroutineDispatcher)
+    }
+
     // 상세한 일정
     @ViewModelScoped
     @Provides

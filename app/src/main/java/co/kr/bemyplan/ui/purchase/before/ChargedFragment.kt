@@ -51,9 +51,13 @@ class ChargedFragment : Fragment() {
     }
 
     private fun clickGoToContent() {
-        val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
         binding.tvGotoContentBtn.setOnClickListener {
-            intent.putExtra("postId", viewModel.planId)
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", viewModel.planId)
+                putExtra("scrapStatus", viewModel.scrapStatus.value)
+                putExtra("authorNickname", viewModel.authorNickname)
+                putExtra("authorUserId", viewModel.authorUserId)
+            }
             startActivity(intent)
             requireActivity().finish()
         }

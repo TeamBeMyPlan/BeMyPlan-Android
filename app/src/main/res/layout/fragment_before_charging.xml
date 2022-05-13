@@ -59,7 +59,7 @@
                     android:id="@+id/iv_scrap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@{viewModel.isScraped ? @drawable/icn_scrap : @drawable/icn_not_scrap}"
+                    android:src="@{viewModel.scrapStatus ? @drawable/icn_scrap : @drawable/icn_not_scrap}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

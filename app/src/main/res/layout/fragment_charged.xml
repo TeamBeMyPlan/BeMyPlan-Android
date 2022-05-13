@@ -132,11 +132,11 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
+                    android:text="@{viewModel.authorNickname}"
                     android:textColor="@color/grey_5d687a"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/iv_content"
                     app:layout_constraintTop_toTopOf="@+id/iv_content" />
-                <!--            android:text="@{viewModel.previewInfo.author}"-->
 
                 <TextView
                     android:id="@+id/tv_content_title"

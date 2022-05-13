@@ -92,4 +92,11 @@ object ServiceModule {
     fun provideLocationService(@BeMyPlanRetrofit retrofit: Retrofit):LocationService {
         return retrofit.create(LocationService::class.java)
     }
+
+    // 결제
+    @Singleton
+    @Provides
+    fun providePurchaseService(@BeMyPlanRetrofit retrofit: Retrofit): PurchaseService {
+        return retrofit.create(PurchaseService::class.java)
+    }
 }

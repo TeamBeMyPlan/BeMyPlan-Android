@@ -113,7 +113,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
         viewModel.setSpots(index)
         viewModel.setMoveInfo(index)
         viewModel.setMergedPlanAndInfo(index)
-        viewModel.setAddressNameList(setAddressFromKakao())
+
+        val addressList = setAddressFromKakao()
+        viewModel.setAddressNameList(addressList)
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
@@ -122,23 +124,27 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     private fun setAddressFromKakao(): MutableList<String> {
-        val spotList = viewModel.spots.value!!
+        val spotList = viewModel.mergedPlanAndInfo.value
         val addressList = mutableListOf<String>()
-        for (spot in spotList) {
-            val ai: ApplicationInfo = packageManager.getApplicationInfo(
-                packageName,
-                PackageManager.GET_META_DATA
-            )
-            if (ai.metaData != null) {
-                val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-                MapReverseGeoCoder(metaData, MapPoint.mapPointWithGeoCoord(spot.latitude, spot.longitude),
+        var mapReverseGeoCoder : MapReverseGeoCoder? = null
+
+        val ai: ApplicationInfo = packageManager.getApplicationInfo(
+            packageName,
+            PackageManager.GET_META_DATA
+        )
+        if (ai.metaData != null) {
+            val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
+            if (spotList != null) {
+                mapReverseGeoCoder = MapReverseGeoCoder(
+                    metaData,
+                    MapPoint.mapPointWithGeoCoord(spotList.infos[0].second.latitude, spotList.infos[0].second.longitude),
                     object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
                         override fun onReverseGeoCoderFoundAddress(
                             p0: MapReverseGeoCoder?,
                             p1: String?
                         ) {
                             if (p1 != null) {
-                                addressList.add(p1)
+                                //addressList.add(p1)
                             }
                         }
 
@@ -146,7 +152,19 @@ class AfterPurchaseActivity : AppCompatActivity() {
                             TODO("Not yet implemented")
                         }
                     },
-                    this)
+                    this
+                )
+            }
+            Timber.tag("mdb1217").d(mapReverseGeoCoder.toString())
+        }
+        if (spotList != null) {
+            for (spot in spotList.infos) {
+                Timber.tag("mdb1217").d(mapReverseGeoCoder.toString())
+                val address = mapReverseGeoCoder?.findAddressForMapPointSync(ai.metaData.getString("com.kakao.sdk.AppKey"), MapPoint.mapPointWithGeoCoord(spot.second.latitude, spot.second.longitude))
+                if (address != null) {
+                    addressList.add(address)
+                }
+                Timber.tag("mdb1217").d(address)
             }
         }
         return addressList

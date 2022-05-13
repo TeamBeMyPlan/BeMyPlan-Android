@@ -51,10 +51,7 @@ class DailyContentsFragment : Fragment() {
             val intent = Intent(requireContext(), ImageViewActivity::class.java)
             intent.putExtra("photoUrl", photoUrl)
             requireActivity().startActivity(intent)
-        }, address = { address: String ->
-            viewModeladdress
-        }
-        )
+        })
         routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE)
 
         // 뷰모델에서 데이터 받아오기
@@ -72,6 +69,10 @@ class DailyContentsFragment : Fragment() {
                 binding.clLookMore.isVisible = false
                 binding.clLookClose.isVisible = false
             }
+        }
+
+        viewModel.addressNameList.observe(viewLifecycleOwner) {
+            contentsAdapter.submitAddressList(it)
         }
 
         binding.rvDailyContents.adapter = contentsAdapter

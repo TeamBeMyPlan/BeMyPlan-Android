@@ -20,7 +20,7 @@ import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
 
 
-class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null, var addressList: ((List<String>) -> Unit)? = null) :
+class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
@@ -53,8 +53,9 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         })
     }
 
+    // 리사이클러뷰 서버 통신시에 호출
     fun submitAddressList(list: List<String>) {
-
+        differAddress.submitList(list)
     }
 
     override fun getItemViewType(position: Int) = viewType
@@ -65,7 +66,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                 LayoutInflater.from(parent.context),
                 parent, false
             )
-            ContentsViewHolder(binding, parent.context, photoUrl, addressList)
+            ContentsViewHolder(binding, parent.context, photoUrl)
         }
         TYPE_ROUTE -> {
             val binding = ItemDailyRouteBinding.inflate(
@@ -81,13 +82,14 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
 
     override fun onBindViewHolder(holder: SpotViewHolder, position: Int) {
         val spots = differ.currentList[position]
+        val addressList = differAddress.currentList[position]
 
         when (holder) {
             is ContentsViewHolder -> {
                 if (position == differ.currentList.size - 1) {
-                    holder.onBind(spots, true)
+                    holder.onBind(spots, addressList,true)
                 } else {
-                    holder.onBind(spots, differ.currentList[position + 1].second.name)
+                    holder.onBind(spots, addressList, differ.currentList[position + 1].second.name)
                 }
             }
             is RouteViewHolder -> {
@@ -99,24 +101,23 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Pair<Infos?, Spots>, isLastSpot: Boolean) {}
-        open fun onBind(data: Pair<Infos?, Spots>, nextSpot: String) {}
+        open fun onBind(data: Pair<Infos?, Spots>, address: String, isLastSpot: Boolean) {}
+        open fun onBind(data: Pair<Infos?, Spots>, address: String, nextSpot: String) {}
         open fun onBind(data: Pair<Infos?, Spots>, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(
         private val binding: ItemDailyContentsBinding,
         private val mContext: Context,
-        private val photoUrl: ((String) -> Unit)?,
-        private val addressList: ((List<String>) -> Unit)?
+        private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-        override fun onBind(data: Pair<Infos?, Spots>, nextSpot: String) {
+        override fun onBind(data: Pair<Infos?, Spots>, address: String, nextSpot: String) {
             binding.spots = data.second
             binding.infos = data.first
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
-            binding.tvAddress.text = addressList
+            binding.tvAddress.text = address
             data.first?.let { setMobilityToKorean(it) }
             binding.isTipAvailable = data.second.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
@@ -124,11 +125,11 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.clAddress.setOnClickListener { copyButton() }
         }
 
-        override fun onBind(data: Pair<Infos?, Spots>, isLastSpot: Boolean) {
+        override fun onBind(data: Pair<Infos?, Spots>, address: String, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
-            binding.tvAddress.text = data.first?.let { setMobilityToKorean(it) }
+            binding.tvAddress.text = address
             binding.isTipAvailable = data.second.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()

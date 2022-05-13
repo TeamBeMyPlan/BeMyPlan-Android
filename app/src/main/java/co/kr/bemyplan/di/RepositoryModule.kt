@@ -13,6 +13,7 @@ import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.preview.PurchaseRepositoryImpl
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
 import co.kr.bemyplan.domain.repository.*
@@ -127,11 +128,19 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideLocationRepository(
-        locationService : LocationService,
+        locationService: LocationService,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-    ):LocationRepository{
+    ): LocationRepository {
         return LocationRepositoryImpl(locationService, coroutineDispatcher)
     }
+
+    // 결제
+    @ViewModelScoped
+    @Provides
+    fun providePurchaseRepository(
+        purchaseService: PurchaseService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): PurchaseRepository = PurchaseRepositoryImpl(purchaseService, coroutineDispatcher)
 
     // ?? 뭐지 왜 없는데 됐었지...?
 //    @ViewModelScoped

@@ -7,21 +7,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContent
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
 import co.kr.bemyplan.domain.model.purchase.before.PreviewInfo
+import co.kr.bemyplan.domain.repository.PreviewRepository
+import co.kr.bemyplan.domain.repository.PurchaseRepository
+import co.kr.bemyplan.util.SingleLiveEvent
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class BeforeChargingViewModel @Inject constructor(
     private val previewRepository: PreviewRepository,
-    private val postScrapRepository: PostScrapRepository
+    private val postScrapRepository: PostScrapRepository,
+    private val purchaseRepository: PurchaseRepository
 ) : ViewModel() {
 
     enum class Pay(val brand: String) {
@@ -35,8 +39,8 @@ class BeforeChargingViewModel @Inject constructor(
     private var _planId = -1
     val planId get() = _planId
 
-    private var _isScraped = MutableLiveData<Boolean>()
-    val isScraped: LiveData<Boolean> get() = _isScraped
+    private var _scrapStatus = MutableLiveData<Boolean>()
+    val scrapStatus: LiveData<Boolean> get() = _scrapStatus
 
     private var _authorNickname = ""
     val authorNickname get() = _authorNickname
@@ -44,8 +48,11 @@ class BeforeChargingViewModel @Inject constructor(
     private var _authorUserId = -1
     val authorUserId get() = _authorUserId
 
-    private val _payWay = MutableLiveData<Pay>(Pay.NULL)
+    private var _payWay = MutableLiveData<Pay>(Pay.NULL)
     val payWay: LiveData<Pay> get() = _payWay
+
+    private var _purchaseSuccess = SingleLiveEvent<Boolean>()
+    val purchaseSuccess: LiveData<Boolean> get() = _purchaseSuccess
 
     private var _previewInfo = MutableLiveData<PreviewInfo>()
     val previewInfo: LiveData<PreviewInfo> get() = _previewInfo
@@ -58,8 +65,8 @@ class BeforeChargingViewModel @Inject constructor(
 
     // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
     fun setScrapStatus(flag: Boolean) {
-        _isScraped.value = flag
-        Log.d("mlog: BeforeChargingViewModel::setIsScraped", isScraped.value.toString())
+        _scrapStatus.value = flag
+        Log.d("mlog: BeforeChargingViewModel::setIsScraped", scrapStatus.value.toString())
     }
 
     fun setPlanId(postId: Int) {
@@ -101,7 +108,7 @@ class BeforeChargingViewModel @Inject constructor(
                         })
                     }
                 }
-                _isScraped.value = it.data.scrapped
+                _scrapStatus.value = it.data.scrapped
             }.onFailure {
                 Log.e("mlog: BeforeChargingViewModel::postScrap error", it.message.toString())
             }
@@ -117,14 +124,30 @@ class BeforeChargingViewModel @Inject constructor(
                 _previewContents.value = previewPlan.previewContents
                 // TODO: 추후 Multi ViewHolder 패턴 사용하는 게 더 깔끔할 것 같음
                 val list = mutableListOf<PreviewContent>()
-                for(i in 0 until previewPlan.previewContents.size step(2)) {
+                for (i in 0 until previewPlan.previewContents.size step (2)) {
                     val image = previewPlan.previewContents[i].value
-                    val text = previewPlan.previewContents[i+1].value
+                    val text = previewPlan.previewContents[i + 1].value
                     list.add(PreviewContent(image, text))
                 }
                 _previewContent.value = list
             }.onFailure { error ->
-                //Timber.tag("fetchPreviewPlan").e(error)
+                Timber.tag("fetchPreviewPlan").e(error)
+            }
+        }
+    }
+
+    fun purchasePlan() {
+        if (planId != -1) {
+            viewModelScope.launch {
+                purchaseRepository.purchase(planId)
+                    .onSuccess {
+                        _purchaseSuccess.value = true
+                        Timber.i("$planId 구매 성공")
+                    }
+                    .onFailure { exception ->
+                        _purchaseSuccess.value = false
+                        Timber.e("$planId 구매 실패: $exception")
+                    }
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
@@ -12,6 +13,7 @@ import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.databinding.FragmentChargingBinding
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import co.kr.bemyplan.util.CustomDialog
+import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
@@ -38,6 +40,7 @@ class ChargingFragment : Fragment() {
         clickNaverPay()
         clickPay()
         clickBack()
+        observeLiveData()
     }
 
     override fun onDestroyView() {
@@ -78,12 +81,7 @@ class ChargingFragment : Fragment() {
             dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
                 override fun onClicked(num: Int) {
                     if (num == 1) {
-                        val transaction = parentFragmentManager.beginTransaction()
-                        val beforeChargingFragment = BeforeChargingFragment()
-                        val chargedFragment = ChargedFragment()
-                        transaction.replace(R.id.fragment_container_charging, chargedFragment)
-                        transaction.remove(beforeChargingFragment)
-                        transaction.commit()
+//                        viewModel.purchasePlan()
                     }
                 }
             })
@@ -102,6 +100,24 @@ class ChargingFragment : Fragment() {
                 ?.beginTransaction()
                 ?.remove(this)
                 ?.commit()
+        }
+    }
+
+    private fun observeLiveData() {
+        viewModel.purchaseSuccess.observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    val transaction = parentFragmentManager.beginTransaction()
+                    val beforeChargingFragment = BeforeChargingFragment()
+                    val chargedFragment = ChargedFragment()
+                    transaction.replace(R.id.fragment_container_charging, chargedFragment)
+                    transaction.remove(beforeChargingFragment)
+                    transaction.commit()
+                }
+                false -> {
+                    requireContext().shortToast("문제가 발생했습니다. 다시 시도해주세요.")
+                }
+            }
         }
     }
 }

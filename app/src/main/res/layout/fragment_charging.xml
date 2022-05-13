@@ -94,11 +94,11 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/spoqa_han_sans_neo_regular"
                     android:includeFontPadding="false"
+                    android:text="@{viewModel.authorNickname}"
                     android:textColor="@color/grey_5d687a"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/iv_content"
                     app:layout_constraintTop_toTopOf="@+id/iv_content" />
-                <!--                android:text="@{viewModel.previewInfo.author}"-->
 
                 <TextView
                     android:id="@+id/tv_content_title"
@@ -153,10 +153,11 @@
                     android:includeFontPadding="false"
                     android:textColor="@color/blue_0077b0"
                     android:textSize="14sp"
+                    android:text="서버님 데이터 주세요"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"
                     app:layout_constraintEnd_toEndOf="@id/view_line"
                     app:layout_constraintTop_toTopOf="@+id/tv_cost_title" />
-                <!--                android:text="@{@string/price_format(viewModel.previewInfo.price) + `원`}"-->
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -242,8 +243,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_toss"
-                app:layout_constraintTop_toBottomOf="@id/tv_toss"
-                tools:layout_editor_absoluteY="71dp" />
+                app:layout_constraintTop_toBottomOf="@id/tv_toss" />
 
             <TextView
                 android:id="@+id/tv_pay_btn"

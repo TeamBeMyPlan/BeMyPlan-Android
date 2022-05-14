@@ -24,6 +24,7 @@ import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
+import com.kakao.sdk.common.KakaoSdk.appKey
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.*
 import timber.log.Timber
@@ -39,6 +40,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
+    private var addressNow: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,48 +125,41 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun setAddressFromKakao(): MutableList<String> {
-        val spotList = viewModel.mergedPlanAndInfo.value
-        val addressList = mutableListOf<String>()
-        var mapReverseGeoCoder : MapReverseGeoCoder? = null
-
+    private fun getAddressFromGeoCode(mapPoint: MapPoint?) {
         val ai: ApplicationInfo = packageManager.getApplicationInfo(
             packageName,
             PackageManager.GET_META_DATA
         )
         if (ai.metaData != null) {
             val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-            if (spotList != null) {
-                mapReverseGeoCoder = MapReverseGeoCoder(
-                    metaData,
-                    MapPoint.mapPointWithGeoCoord(spotList.infos[0].second.latitude, spotList.infos[0].second.longitude),
-                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                        override fun onReverseGeoCoderFoundAddress(
-                            p0: MapReverseGeoCoder?,
-                            p1: String?
-                        ) {
-                            if (p1 != null) {
-                                //addressList.add(p1)
-                            }
-                        }
-
-                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                            TODO("Not yet implemented")
-                        }
-                    },
-                    this
-                )
+            mapPoint?.let {
+                val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
+                val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
+                        // 주소 받아오기 성공 - address: 현재 주소
+                        Timber.tag("mdb12177").d(address)
+                        addressNow = address
+                    }
+                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                        // 주소 받아오기 실패
+                        Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                    }
+                }, this)
+                //temp.startFindingAddress()
+                val sss = temp.findAddressForMapPointSync(metaData, currentMapPoint)
+                Timber.tag("mdb121777").d(sss)
             }
-            Timber.tag("mdb1217").d(mapReverseGeoCoder.toString())
         }
+    }
+
+    private fun setAddressFromKakao(): MutableList<String> {
+        val spotList = viewModel.mergedPlanAndInfo.value
+        val addressList = mutableListOf<String>()
         if (spotList != null) {
             for (spot in spotList.infos) {
-                Timber.tag("mdb1217").d(mapReverseGeoCoder.toString())
-                val address = mapReverseGeoCoder?.findAddressForMapPointSync(ai.metaData.getString("com.kakao.sdk.AppKey"), MapPoint.mapPointWithGeoCoord(spot.second.latitude, spot.second.longitude))
-                if (address != null) {
-                    addressList.add(address)
-                }
-                Timber.tag("mdb1217").d(address)
+                getAddressFromGeoCode(MapPoint.mapPointWithGeoCoord(spot.second.latitude, spot.second.longitude))
+                Timber.tag("mdb1217").d(addressNow)
+                addressList.add(addressNow)
             }
         }
         return addressList

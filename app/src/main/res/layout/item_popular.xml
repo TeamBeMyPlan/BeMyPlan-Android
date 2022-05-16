@@ -6,7 +6,7 @@
     <data>
         <variable
             name="popularityItem"
-            type="co.kr.bemyplan.data.entity.main.home.ResponseHomePopularData.Data" />
+            type="co.kr.bemyplan.domain.model.main.home.HomeDomainData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

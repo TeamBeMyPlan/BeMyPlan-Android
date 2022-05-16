@@ -16,5 +16,4 @@ class LocationRepositoryImpl @Inject constructor(
             locationservice.getLocation().data
         }
     }
-
 }

@@ -4,29 +4,29 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.entity.main.home.ResponseHomeData
 import co.kr.bemyplan.databinding.ItemHomePlanBinding
+import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.util.clipTo
 
 class HomeAdapter(
     val beforePurchase: (Int, Boolean) -> Unit,
     val afterPurchase: (Int) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
-    val planList = mutableListOf<ResponseHomeData.ResponseHomeItems.HomeData>()
+    val planList = mutableListOf<HomeDomainData>()
 
     inner class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data: ResponseHomeData.ResponseHomeItems.HomeData){
+        fun onBind(data: HomeDomainData){
             binding.homeItem = data
             clipTo(binding.ivHomeCommon, data.thumbnailUrl)
             clickItem(data)
         }
 
-        private fun clickItem(data: ResponseHomeData.ResponseHomeItems.HomeData) {
+        private fun clickItem(data: HomeDomainData) {
             binding.root.setOnClickListener {
-                if (data.isPurchased == true) {
-                    afterPurchase(data.postId)
+                if (data.orderStatus == true) {
+                    afterPurchase(data.planId)
                 } else {
-                    beforePurchase(data.postId, data.isScraped)
+                    beforePurchase(data.planId, data.scrapStatus)
                 }
             }
         }

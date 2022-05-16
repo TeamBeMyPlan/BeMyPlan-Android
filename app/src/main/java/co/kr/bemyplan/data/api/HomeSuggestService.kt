@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface HomeSuggestService {
-    @GET("/api/v1/post/suggest")
-    fun getSuggestData(): Call<ResponseHomeData>
+    @GET("/v1/plans/bemyplanPick?size=5&sort=id,desc")
+    suspend fun getSuggestData(): ResponseHomeData
 }

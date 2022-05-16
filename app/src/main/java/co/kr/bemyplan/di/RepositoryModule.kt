@@ -7,6 +7,9 @@ import co.kr.bemyplan.data.repository.list.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.login.GoogleLoginRepositoryImpl
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
+import co.kr.bemyplan.data.repository.main.home.HomeNewRepositoryImpl
+import co.kr.bemyplan.data.repository.main.home.HomePopularRepositoryImpl
+import co.kr.bemyplan.data.repository.main.home.HomeSuggestRepositoryImpl
 import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
@@ -141,6 +144,36 @@ object RepositoryModule {
         purchaseService: PurchaseService,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): PurchaseRepository = PurchaseRepositoryImpl(purchaseService, coroutineDispatcher)
+
+    //홈뷰 인기 일정
+    @ViewModelScoped
+    @Provides
+    fun provideHomePopularRepository(
+        homePopularService: HomePopularService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ) : HomePopularRepository{
+        return HomePopularRepositoryImpl(homePopularService, coroutineDispatcher)
+    }
+
+    //홈뷰 최신 일정
+    @ViewModelScoped
+    @Provides
+    fun provideHomeNewRepository(
+        homeNewService: HomeNewService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ) : HomeNewRepository{
+        return HomeNewRepositoryImpl(homeNewService, coroutineDispatcher)
+    }
+
+    //홈뷰 추천 일정
+    @ViewModelScoped
+    @Provides
+    fun provideHomeSuggestRepository(
+        homeSuggestService: HomeSuggestService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ) : HomeSuggestRepository{
+        return HomeSuggestRepositoryImpl(homeSuggestService, coroutineDispatcher)
+    }
 
     // ?? 뭐지 왜 없는데 됐었지...?
 //    @ViewModelScoped

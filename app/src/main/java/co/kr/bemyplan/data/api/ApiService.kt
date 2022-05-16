@@ -13,16 +13,16 @@ object ApiService {
         .build()
 
     // 인기 여행일정 조회
-    val homePopularService: HomePopularService = retrofit.create(HomePopularService::class.java)
+    //val homePopularService: HomePopularService = retrofit.create(HomePopularService::class.java)
 
     // 구매 후 포스트 조회
     val afterPostService: AfterPostService = retrofit.create(AfterPostService::class.java)
 
     // 최신 여행 일정 조회
-    val homeNewService: HomeNewService = retrofit.create(HomeNewService::class.java)
+    //val homeNewService: HomeNewService = retrofit.create(HomeNewService::class.java)
 
     // 에디터 추천 여행 일정 조회
-    val homeSuggestService: HomeSuggestService = retrofit.create(HomeSuggestService::class.java)
+    //val homeSuggestService: HomeSuggestService = retrofit.create(HomeSuggestService::class.java)
 
     // 회원 탈퇴
     val withdrawService: WithdrawService = retrofit.create(WithdrawService::class.java)

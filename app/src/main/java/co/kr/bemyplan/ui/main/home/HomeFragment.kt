@@ -17,7 +17,9 @@ import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.util.ZoomOutPageTransformer
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
@@ -33,8 +35,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
-        initAdapterRecent()
-        initAdapterEditor()
+        initAdapterNew()
+        initAdapterSuggest()
         initAdapterPopular()
         clickMore()
         return binding.root
@@ -56,8 +58,8 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun initAdapterRecent() {
-        homeViewModel.initNewNetwork()
+    private fun initAdapterNew() {
+        homeViewModel.getNewData()
 
         recentAdapter = HomeAdapter(beforePurchase = { id: Int, scraped : Boolean ->
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
@@ -83,8 +85,8 @@ class HomeFragment : Fragment() {
         recentAdapter.notifyDataSetChanged()
     }
 
-    private fun initAdapterEditor() {
-        homeViewModel.initSuggestNetwork()
+    private fun initAdapterSuggest() {
+        homeViewModel.getSuggestData()
 
         editorAdapter = HomeAdapter(beforePurchase = { id: Int, scraped : Boolean ->
             val intent = Intent(requireContext(), PurchaseActivity::class.java)
@@ -107,7 +109,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initAdapterPopular() {
-        homeViewModel.initPopularNetwork()
+        homeViewModel.getPopularData()
 
         homeViewPagerAdapter = HomeViewPagerAdapter(beforePurchase = { id: Int, scraped : Boolean ->
             val intent = Intent(requireContext(), PurchaseActivity::class.java)

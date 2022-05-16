@@ -5,22 +5,75 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import retrofit2.Call
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.api.ApiService
 import co.kr.bemyplan.data.entity.main.home.ResponseHomeData
-import co.kr.bemyplan.data.entity.main.home.ResponseHomePopularData
+import co.kr.bemyplan.domain.model.main.home.HomeDomainData
+import co.kr.bemyplan.domain.repository.HomeNewRepository
+import co.kr.bemyplan.domain.repository.HomePopularRepository
+import co.kr.bemyplan.domain.repository.HomeSuggestRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class HomeViewModel: ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val homePopularRepository: HomePopularRepository,
+    private val homeNewRepository: HomeNewRepository,
+    private val homeSuggestRepository: HomeSuggestRepository
+) : ViewModel() {
 
-    private val _popular = MutableLiveData<List<ResponseHomePopularData.Data>>()
-    val popular : LiveData<List<ResponseHomePopularData.Data>> get() = _popular
-    private val _new = MutableLiveData<List<ResponseHomeData.ResponseHomeItems.HomeData>>()
-    val new : LiveData<List<ResponseHomeData.ResponseHomeItems.HomeData>> get() = _new
-    private val _suggest = MutableLiveData<List<ResponseHomeData.ResponseHomeItems.HomeData>>()
-    val suggest : LiveData<List<ResponseHomeData.ResponseHomeItems.HomeData>> get() = _suggest
+    private val _popular = MutableLiveData<List<HomeDomainData>>()
+    val popular : LiveData<List<HomeDomainData>> get() = _popular
+    private val _new = MutableLiveData<List<HomeDomainData>>()
+    val new : LiveData<List<HomeDomainData>> get() = _new
+    private val _suggest = MutableLiveData<List<HomeDomainData>>()
+    val suggest : LiveData<List<HomeDomainData>> get() = _suggest
 
-    fun initSuggestNetwork(){
+    fun getPopularData(){
+        viewModelScope.launch {
+            kotlin.runCatching {
+                homePopularRepository.getHomePopularData()
+            }.onSuccess { responsePopularData->
+                if(_popular.value != responsePopularData)
+                    _popular.value = responsePopularData
+            }.onFailure { error ->
+                Log.d("ServerPopular", error.toString())
+            }
+        }
+    }
+
+    fun getNewData(){
+        viewModelScope.launch {
+            kotlin.runCatching {
+                homeNewRepository.getHomeNewData()
+            }.onSuccess { responseNewData->
+                if(_new.value != responseNewData)
+                    _new.value = responseNewData
+            }.onFailure { error ->
+                Log.d("ServerNew", error.toString())
+            }
+        }
+    }
+
+    fun getSuggestData(){
+        viewModelScope.launch {
+            kotlin.runCatching {
+                homeSuggestRepository.getHomeSuggestData()
+            }.onSuccess { responseSuggestData->
+                if(_suggest.value != responseSuggestData)
+                    _suggest.value = responseSuggestData
+            }.onFailure { error ->
+                Log.d("ServerSuggest", error.toString())
+            }
+        }
+    }
+
+
+
+    /*fun initSuggestNetwork(){
         val call : Call<ResponseHomeData> = ApiService.homeSuggestService.getSuggestData()
         call.enqueue(object:Callback<ResponseHomeData>{
             override fun onResponse(
@@ -30,8 +83,8 @@ class HomeViewModel: ViewModel() {
                 if(response.isSuccessful){
                     val data = response.body()
                     if(data!=null){
-                        if(_suggest.value!=data.data.items)
-                            _suggest.value=data.data.items
+                        if(_suggest.value!=data.data.contents)
+                            _suggest.value=data.data.contents
                         Log.d("yongminSuggestServer", "추천일정서버통신성공!")
                     }else{Log.d("yongminSuggestServer", "추천일정서버통신실패1")}
                 }else{Log.d("yongminSuggestServer", "추천일정서버통신실패2")}
@@ -53,8 +106,8 @@ class HomeViewModel: ViewModel() {
                 if(response.isSuccessful){
                     val data = response.body()
                     if(data!=null){
-                        if(_new.value!=data.data.items)
-                            _new.value=data.data.items
+                        if(_new.value!=data.data.contents)
+                            _new.value=data.data.contents
                         Log.d("yongminNewServer", "최신일정서버통신성공!")
                     }else{Log.d("yongminNewServer", "최신일정서버통신실패1")}
                 }else{Log.d("yongminNewServer", "최신일정서버통신실패2")}
@@ -88,6 +141,6 @@ class HomeViewModel: ViewModel() {
                 Log.d("yongminServer", "서버통신실패3")
             }
         })
-    }
+    }*/
 }
 

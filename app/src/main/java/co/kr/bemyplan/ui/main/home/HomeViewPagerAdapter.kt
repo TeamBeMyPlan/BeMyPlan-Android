@@ -1,15 +1,13 @@
 package co.kr.bemyplan.ui.main.home
 
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.main.home.ResponseHomePopularData
 import co.kr.bemyplan.databinding.ItemPopularBinding
-import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
+import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.util.clipTo
 
 class HomeViewPagerAdapter(
@@ -18,11 +16,11 @@ class HomeViewPagerAdapter(
 ) :
     RecyclerView.Adapter<HomeViewPagerAdapter.PagerViewHolder>() {
 
-    val planList = mutableListOf<ResponseHomePopularData.Data>()
+    val planList = mutableListOf<HomeDomainData>()
 
     inner class PagerViewHolder(private val binding: ItemPopularBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind(data: ResponseHomePopularData.Data) {
+        fun onBind(data: HomeDomainData) {
 
             binding.popularityItem = data
             Log.d("yongminPopularImage", "잘 들어오나")
@@ -31,12 +29,12 @@ class HomeViewPagerAdapter(
             clickItem(data)
         }
 
-        private fun clickItem(data: ResponseHomePopularData.Data) {
+        private fun clickItem(data: HomeDomainData) {
             binding.root.setOnClickListener {
-                if (data.isPurchased == true) {
-                    afterPurchase(data.postId)
+                if (data.orderStatus == true) {
+                    afterPurchase(data.planId)
                 } else {
-                    beforePurchase(data.postId, data.isPurchased)
+                    beforePurchase(data.planId, data.orderStatus)
                 }
             }
         }

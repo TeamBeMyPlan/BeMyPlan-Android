@@ -5,7 +5,7 @@
     <data>
         <variable
             name="homeItem"
-            type="co.kr.bemyplan.data.entity.main.home.ResponseHomeData.ResponseHomeItems.HomeData" />
+            type="co.kr.bemyplan.domain.model.main.home.HomeDomainData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

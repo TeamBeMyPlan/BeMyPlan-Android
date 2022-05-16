@@ -99,4 +99,25 @@ object ServiceModule {
     fun providePurchaseService(@BeMyPlanRetrofit retrofit: Retrofit): PurchaseService {
         return retrofit.create(PurchaseService::class.java)
     }
+
+    //홈뷰 인기 일정
+    @Singleton
+    @Provides
+    fun provideHomePopularService(@BeMyPlanRetrofit retrofit: Retrofit):HomePopularService{
+        return retrofit.create(HomePopularService::class.java)
+    }
+
+    //홈뷰 최신 일정
+    @Singleton
+    @Provides
+    fun provideHomeNewService(@BeMyPlanRetrofit retrofit: Retrofit):HomeNewService{
+        return retrofit.create(HomeNewService::class.java)
+    }
+
+    //홈뷰 추천 일정
+    @Singleton
+    @Provides
+    fun provideHomeSuggestService(@BeMyPlanRetrofit retrofit: Retrofit):HomeSuggestService{
+        return retrofit.create(HomeSuggestService::class.java)
+    }
 }

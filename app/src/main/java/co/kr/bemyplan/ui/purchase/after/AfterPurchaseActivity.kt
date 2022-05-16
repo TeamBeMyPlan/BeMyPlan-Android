@@ -26,6 +26,8 @@ import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import com.kakao.sdk.common.KakaoSdk.appKey
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
 import net.daum.mf.map.api.*
 import timber.log.Timber
 
@@ -125,6 +127,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .commit()
     }
 
+    @Synchronized
     private fun getAddressFromGeoCode(mapPoint: MapPoint?) {
         val ai: ApplicationInfo = packageManager.getApplicationInfo(
             packageName,
@@ -137,7 +140,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
                     override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
                         // 주소 받아오기 성공 - address: 현재 주소
-                        Timber.tag("mdb12177").d(address)
+                        Timber.tag("youngminzzang").d(address)
                         addressNow = address
                     }
                     override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
@@ -145,9 +148,35 @@ class AfterPurchaseActivity : AppCompatActivity() {
                         Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
                     }
                 }, this)
-                //temp.startFindingAddress()
-                val sss = temp.findAddressForMapPointSync(metaData, currentMapPoint)
-                Timber.tag("mdb121777").d(sss)
+                temp.startFindingAddress()
+//                val sss = temp.findAddressForMapPointSync(metaData, currentMapPoint)
+            }
+        }
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    private suspend fun getAddressFromGeoCodeSuspend(mapPoint: MapPoint?) = suspendCancellableCoroutine<String> { suspendIt ->
+        val ai: ApplicationInfo = packageManager.getApplicationInfo(
+            packageName,
+            PackageManager.GET_META_DATA
+        )
+        if (ai.metaData != null) {
+            val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
+            mapPoint?.let {
+                val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
+                val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
+                        // 주소 받아오기 성공 - address: 현재 주소
+                        Timber.tag("youngminzzang").d(address)
+                        suspendIt.tryResume(address)
+                    }
+                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                        suspendIt.cancel(Throwable("Can't get address from map point"))
+                        Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                    }
+                }, this)
+                temp.startFindingAddress()
+//                val sss = temp.findAddressForMapPointSync(metaData, currentMapPoint)
             }
         }
     }
@@ -158,7 +187,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         if (spotList != null) {
             for (spot in spotList.infos) {
                 getAddressFromGeoCode(MapPoint.mapPointWithGeoCoord(spot.second.latitude, spot.second.longitude))
-                Timber.tag("mdb1217").d(addressNow)
+                Timber.tag("youngminzzang").d(addressNow)
                 addressList.add(addressNow)
             }
         }

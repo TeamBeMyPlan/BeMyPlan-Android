@@ -26,13 +26,16 @@ import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import com.kakao.sdk.common.KakaoSdk.appKey
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.*
+import kotlinx.coroutines.internal.synchronized
 import net.daum.mf.map.api.*
 import timber.log.Timber
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 
 @AndroidEntryPoint
-class AfterPurchaseActivity : AppCompatActivity() {
+class AfterPurchaseActivity : AppCompatActivity(), MapView.CurrentLocationEventListener,
+    MapReverseGeoCoder.ReverseGeoCodingResultListener {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
@@ -127,30 +130,34 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .commit()
     }
 
-    @Synchronized
-    private fun getAddressFromGeoCode(mapPoint: MapPoint?) {
+    private fun getAddressFromGeoCode(mapPoint: MapPoint) {
         val ai: ApplicationInfo = packageManager.getApplicationInfo(
             packageName,
             PackageManager.GET_META_DATA
         )
+        //val reLock = ReentrantLock()
         if (ai.metaData != null) {
             val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-            mapPoint?.let {
-                val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
-                val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
-                        // 주소 받아오기 성공 - address: 현재 주소
-                        Timber.tag("youngminzzang").d(address)
-                        addressNow = address
-                    }
-                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                        // 주소 받아오기 실패
-                        Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
-                    }
-                }, this)
-                temp.startFindingAddress()
-//                val sss = temp.findAddressForMapPointSync(metaData, currentMapPoint)
-            }
+            val mapReverseGeoCoder = MapReverseGeoCoder(metaData, mapPoint, this, this)
+            val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
+            mapReverseGeoCoder.findAddressForMapPointSync(metaData, currentMapPoint)
+//            mapPoint?.let {
+//                val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
+//                val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+//                    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
+//                        // 주소 받아오기 성공 - address: 현재 주소
+//                        addressNow = address
+//                    }
+//                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+//                        // 주소 받아오기 실패
+//                        Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+//                    }
+//                }, this)
+//                lock(reLock) {
+//                    temp.startFindingAddress()
+//                    Timber.tag("youngminzzang").d(addressNow)
+//                }
+//            }
         }
     }
 
@@ -175,8 +182,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
                         Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
                     }
                 }, this)
-                temp.startFindingAddress()
-//                val sss = temp.findAddressForMapPointSync(metaData, currentMapPoint)
+                //temp.startFindingAddress()
+                val sss = suspend {temp.findAddressForMapPointSync(metaData, currentMapPoint) }
+                addressNow = sss.toString()
+                Timber.tag("youngminzzang").d(addressNow)
             }
         }
     }
@@ -184,14 +193,31 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private fun setAddressFromKakao(): MutableList<String> {
         val spotList = viewModel.mergedPlanAndInfo.value
         val addressList = mutableListOf<String>()
+        //val reLock = ReentrantLock()
         if (spotList != null) {
             for (spot in spotList.infos) {
-                getAddressFromGeoCode(MapPoint.mapPointWithGeoCoord(spot.second.latitude, spot.second.longitude))
-                Timber.tag("youngminzzang").d(addressNow)
+                getAddressFromGeoCode(
+                    MapPoint.mapPointWithGeoCoord(
+                        spot.second.latitude,
+                        spot.second.longitude
+                    )
+                )
+                Timber.tag("hooni").d(addressList.toString())
                 addressList.add(addressNow)
             }
         }
         return addressList
+    }
+
+    // 위도, 경도로 부터 주소를 동기화로 불러오기 위한 Lock
+    private fun <T> lock (reLock : ReentrantLock, body : () -> T) : T {
+        reLock.lock()
+        try {
+            // 임계 영역
+            return body()
+        } finally {
+            reLock.unlock()
+        }
     }
 
     // 작성자 정보 다음 뷰로 전송
@@ -404,5 +430,34 @@ class AfterPurchaseActivity : AppCompatActivity() {
         override fun onDraggablePOIItemMoved(mapView: MapView?, poiItem: MapPOIItem?, mapPoint: MapPoint?) {
             // 마커의 속성 중 isDraggable = true 일 때 마커를 이동시켰을 경우
         }
+    }
+
+    // MapReverseGeocoder override function
+    override fun onCurrentLocationUpdate(p0: MapView?, p1: MapPoint?, p2: Float) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCurrentLocationUpdateFailed(p0: MapView?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCurrentLocationUpdateCancelled(p0: MapView?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, p1: String?) {
+        if (p1 != null) {
+            addressNow = p1
+            Timber.tag("hooni").d(addressNow)
+            Timber.tag("hooni11").d(p1)
+        }
+    }
+
+    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+        TODO("Not yet implemented")
     }
 }

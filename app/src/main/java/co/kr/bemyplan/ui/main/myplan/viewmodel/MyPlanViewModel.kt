@@ -6,14 +6,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.domain.repository.MyPlanRepository
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,27 +28,41 @@ class MyPlanViewModel @Inject constructor(
 
     private var page = 0
     private var pageSize = 10
+    private var lastPlanId: Int = -1
 
     private var _nickname = MutableLiveData<String>()
     val nickname: LiveData<String> get() = _nickname
 
-    private var _myPlan = MutableLiveData<List<MyModel>>()
-    val myPlan: LiveData<List<MyModel>> get() = _myPlan
+    private var _myPlanList = MutableLiveData<List<ContentModel>>()
+    val myPlanList: LiveData<List<ContentModel>> get() = _myPlanList
 
     fun setNickname(nickname: String) {
         _nickname.value = nickname
     }
 
-    fun getMyPlanList() {
+    fun fetchMyPlanList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                myPlanRepository.getMyPlan(page, pageSize)
-            }.onSuccess {
-                if(_myPlan.value != it.data.items) {
-                    _myPlan.value = it.data.items
+                myPlanRepository.fetchMyPlanList(size = 1, sort = "id,desc")
+            }.onSuccess { response ->
+                _myPlanList.value = response.contents
+                lastPlanId = response.nextCursor
+            }.onFailure { error ->
+                Timber.tag("mlog: MyPlanViewModel::fetchMyPlanList error").e(error)
+            }
+        }
+    }
+
+    fun fetchMoreMyPlanList() {
+        viewModelScope.launch {
+            if (lastPlanId != -1) {
+                kotlin.runCatching {
+                    myPlanRepository.fetchMoreMyPlanList(size = 1, sort = "id,desc", lastPlanId)
+                }.onSuccess { response ->
+                    _myPlanList.value = _myPlanList.value?.toMutableList()
+                        ?.apply { addAll(response.contents) }
+                    lastPlanId = response.nextCursor
                 }
-            }.onFailure {
-                Log.e("mlog: MyPlanViewModel::getMyPlan error", it.message.toString())
             }
         }
     }
@@ -57,23 +72,23 @@ class MyPlanViewModel @Inject constructor(
             kotlin.runCatching {
                 postScrapRepository.postScrap(postId)
             }.onSuccess {
-                when(it.data.scrapped) {
+                when (it.data.scrapped) {
                     true -> {
                         fb.logEvent("scrapTravelPlan", Bundle().apply {
-                            putString("source", "BeforeChargingView")
+                            putString("source", "ListView")
                             putInt("postIdx", postId)
                         })
                     }
                     false -> {
                         fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
-                            putString("source", "BeforeChargingView")
+                            putString("source", "ListView")
                             putInt("postIdx", postId)
                         })
                     }
                 }
-                Log.d("mlog: postScrap", "success")
+                Timber.tag("mlog: postScrap").d("success")
             }.onFailure {
-                Log.d("mlog: postScrap", "fail")
+                Timber.tag("mlog: postScrap").d("fail")
             }
         }
     }

@@ -5,4 +5,14 @@ data class PreviewPlan(
     val updatedAt: String,
     val previewInfo: PreviewInfo,
     val previewContents: List<PreviewContents>
-)
+) {
+    fun translate(): PreviewPlan {
+        return this.apply {
+            previewContents.map {
+                if (it.type == "IMAGE") {
+                    it.value = it.value.replace(" ", "")
+                }
+            }
+        }
+    }
+}

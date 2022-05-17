@@ -14,7 +14,7 @@ class PreviewRepositoryImpl @Inject constructor(
 ) : PreviewRepository {
     override suspend fun fetchPreviewPlan(planId: Int): PreviewPlan {
         return withContext(coroutineDispatcher) {
-            service.fetchPreviewPlan(planId).data
+            service.fetchPreviewPlan(planId).data.translate()
         }
     }
 }

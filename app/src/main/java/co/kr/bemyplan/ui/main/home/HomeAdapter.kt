@@ -9,8 +9,8 @@ import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.util.clipTo
 
 class HomeAdapter(
-    val beforePurchase: (Int, Boolean) -> Unit,
-    val afterPurchase: (Int) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+    val beforePurchase: (HomeDomainData) -> Unit,
+    val afterPurchase: (HomeDomainData) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
     val planList = mutableListOf<HomeDomainData>()
 
@@ -23,10 +23,10 @@ class HomeAdapter(
 
         private fun clickItem(data: HomeDomainData) {
             binding.root.setOnClickListener {
-                if (data.orderStatus == true) {
-                    afterPurchase(data.planId)
+                if (data.orderStatus) {
+                    afterPurchase(data)
                 } else {
-                    beforePurchase(data.planId, data.scrapStatus)
+                    beforePurchase(data)
                 }
             }
         }
@@ -42,7 +42,6 @@ class HomeAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.d("yongminAdapter", "홈 뷰 일정 개수${planList.size}")
         return planList.size
     }
 }

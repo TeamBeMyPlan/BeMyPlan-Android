@@ -11,8 +11,8 @@ import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.util.clipTo
 
 class HomeViewPagerAdapter(
-    val beforePurchase: (Int, Boolean) -> Unit,
-    val afterPurchase: (Int) -> Unit
+    val beforePurchase: (HomeDomainData) -> Unit,
+    val afterPurchase: (HomeDomainData) -> Unit
 ) :
     RecyclerView.Adapter<HomeViewPagerAdapter.PagerViewHolder>() {
 
@@ -32,9 +32,9 @@ class HomeViewPagerAdapter(
         private fun clickItem(data: HomeDomainData) {
             binding.root.setOnClickListener {
                 if (data.orderStatus == true) {
-                    afterPurchase(data.planId)
+                    afterPurchase(data)
                 } else {
-                    beforePurchase(data.planId, data.orderStatus)
+                    beforePurchase(data)
                 }
             }
         }
@@ -55,7 +55,6 @@ class HomeViewPagerAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.d("yongminAdapter", "인기일정개수 ${planList.size}")
         return planList.size
     }
 

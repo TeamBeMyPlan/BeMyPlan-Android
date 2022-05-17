@@ -61,14 +61,21 @@ class HomeFragment : Fragment() {
     private fun initAdapterNew() {
         homeViewModel.getNewData()
 
-        recentAdapter = HomeAdapter(beforePurchase = { id: Int, scraped : Boolean ->
-            val intent = Intent(requireContext(), PurchaseActivity::class.java)
-            intent.putExtra("postId", id)
-            intent.putExtra("isScraped", scraped)
+        recentAdapter = HomeAdapter({
+            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
+                putExtra("planId", it.planId)
+                putExtra("scrapStatus", it.scrapStatus)
+                putExtra("authorNickname", it.user.nickname)
+                putExtra("authorUserId", it.user.userId)
+            }
             startActivity(intent)
-        }, afterPurchase = { id: Int ->
-            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-            intent.putExtra("postId", id)
+        }, {
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", it.planId)
+                putExtra("scrapStatus", it.scrapStatus)
+                putExtra("authorNickname", it.user.nickname)
+                putExtra("authorUserId", it.user.userId)
+            }
             startActivity(intent)
         })
         binding.rvRecent.adapter = recentAdapter
@@ -88,14 +95,21 @@ class HomeFragment : Fragment() {
     private fun initAdapterSuggest() {
         homeViewModel.getSuggestData()
 
-        editorAdapter = HomeAdapter(beforePurchase = { id: Int, scraped : Boolean ->
-            val intent = Intent(requireContext(), PurchaseActivity::class.java)
-            intent.putExtra("postId", id)
-            intent.putExtra("isScraped", scraped)
+        editorAdapter = HomeAdapter({
+            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
+                putExtra("planId", it.planId)
+                putExtra("scrapStatus", it.scrapStatus)
+                putExtra("authorNickname", it.user.nickname)
+                putExtra("authorUserId", it.user.userId)
+            }
             startActivity(intent)
-        }, afterPurchase = { id: Int ->
-            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-            intent.putExtra("postId", id)
+        }, {
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", it.planId)
+                putExtra("scrapStatus", it.scrapStatus)
+                putExtra("authorNickname", it.user.nickname)
+                putExtra("authorUserId", it.user.userId)
+            }
             startActivity(intent)
         })
         binding.rvEditorSuggest.adapter = editorAdapter
@@ -111,14 +125,21 @@ class HomeFragment : Fragment() {
     private fun initAdapterPopular() {
         homeViewModel.getPopularData()
 
-        homeViewPagerAdapter = HomeViewPagerAdapter(beforePurchase = { id: Int, scraped : Boolean ->
-            val intent = Intent(requireContext(), PurchaseActivity::class.java)
-            intent.putExtra("postId", id)
-            intent.putExtra("isScraped", scraped)
+        homeViewPagerAdapter = HomeViewPagerAdapter({
+            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
+                putExtra("planId", it.planId)
+                putExtra("scrapStatus", it.scrapStatus)
+                putExtra("authorNickname", it.user.nickname)
+                putExtra("authorUserId", it.user.userId)
+            }
             startActivity(intent)
-        }, afterPurchase = { id: Int ->
-            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-            intent.putExtra("postId", id)
+        }, {
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", it.planId)
+                putExtra("scrapStatus", it.scrapStatus)
+                putExtra("authorNickname", it.user.nickname)
+                putExtra("authorUserId", it.user.userId)
+            }
             startActivity(intent)
         })
 

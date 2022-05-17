@@ -10,14 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.AutoLoginData
-import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
+import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter
 import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 import co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
+import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +27,7 @@ class MyPlanFragment : Fragment() {
     private var _binding: FragmentMyPlanBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by viewModels<MyPlanViewModel>()
-    private var listItem = listOf<MyModel>()
+    private var listItem = listOf<ContentModel>()
     private lateinit var purchaseTourAdapter: MyPlanAdapter
 
     override fun onCreateView(
@@ -46,13 +48,13 @@ class MyPlanFragment : Fragment() {
     }
 
     private fun initList() {
-        viewModel.getMyPlanList()
-        viewModel.myPlan.observe(viewLifecycleOwner) {
+        viewModel.fetchMyPlanList()
+        viewModel.myPlanList.observe(viewLifecycleOwner) {
             listItem = it
             if (listItem.isEmpty()) {
                 lookingAroundEvent()
             } else {
-                initAdapter()
+                initRecyclerView()
             }
         }
     }
@@ -61,13 +63,36 @@ class MyPlanFragment : Fragment() {
         binding.rvMyPlanPurchase.layoutManager = GridLayoutManager(requireContext(), 2)
         purchaseTourAdapter = MyPlanAdapter({
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-            intent.putExtra("postId", it.postId)
+            intent.putExtra("postId", it.planId)
             startActivity(intent)
         }, {
-            viewModel.postScrap(it.postId)
+            viewModel.postScrap(it)
         })
-        purchaseTourAdapter.setItems(listItem)
+        viewModel.myPlanList.observe(viewLifecycleOwner) { list ->
+            purchaseTourAdapter.replaceItem(list)
+        }
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
+    }
+
+    private fun initRecyclerView() {
+        purchaseTourAdapter = MyPlanAdapter({
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
+            intent.putExtra("postId", it.planId)
+            startActivity(intent)
+        }, {
+            viewModel.postScrap(it)
+        })
+        with(binding) {
+            rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (!rvMyPlanPurchase.canScrollVertically(1)) {
+                        viewModel?.fetchMoreMyPlanList()
+                    }
+                }
+            })
+            rvMyPlanPurchase.adapter = purchaseTourAdapter
+        }
     }
 
     private fun lookingAroundEvent() {

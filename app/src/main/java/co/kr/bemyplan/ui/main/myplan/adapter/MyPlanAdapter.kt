@@ -4,17 +4,20 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.ItemMyPlanPurchaseListBinding
-import co.kr.bemyplan.util.clipTo
+import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.ui.list.adapter.ListAdapter
+import timber.log.Timber
 
 class MyPlanAdapter(
-    private val itemClick: (MyModel) -> Unit,
-    private val scrapClick: (MyModel) -> Unit
+    private val itemClick: (ContentModel) -> Unit,
+    private val scrapClick: (Int) -> Unit
 ) :
     RecyclerView.Adapter<MyPlanAdapter.ExistMyPlanViewHolder>() {
-    private var purchaseTourList = listOf<MyModel>()
+    private val asyncDiffer = AsyncListDiffer(this, diffCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExistMyPlanViewHolder {
         val binding = ItemMyPlanPurchaseListBinding.inflate(
@@ -26,48 +29,57 @@ class MyPlanAdapter(
     }
 
     override fun onBindViewHolder(holder: ExistMyPlanViewHolder, position: Int) {
-        holder.onBind(purchaseTourList[position])
+        holder.onBind(asyncDiffer.currentList[position])
     }
 
-    override fun getItemCount() = purchaseTourList.size
+    override fun getItemCount() = asyncDiffer.currentList.size
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setItems(items: List<MyModel>) {
-        purchaseTourList = items
-        notifyDataSetChanged()
+    fun replaceItem(itemList: List<ContentModel>) {
+        asyncDiffer.submitList(itemList)
+    }
+
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<ContentModel>() {
+            override fun areItemsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
+                return oldItem.planId == newItem.planId
+            }
+
+            override fun areContentsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     class ExistMyPlanViewHolder(
         private val binding: ItemMyPlanPurchaseListBinding,
-        private val itemClick: (MyModel) -> Unit,
-        private val scrapClick: (MyModel) -> Unit
+        private val itemClick: (ContentModel) -> Unit,
+        private val scrapClick: (Int) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind(data: MyModel) {
-            Log.d("mlog: MyPlanAdapter", data.postId.toString())
-            binding.model = data
+        fun onBind(contentModel: ContentModel) {
+            Timber.tag("mlog: MyPlanAdapter").d(contentModel.planId.toString())
+            binding.model = contentModel
             binding.ivMyPlanSpot.clipToOutline = true
-            clickItem(data)
-            clickScrap(data)
+            clickItem(contentModel)
+            clickScrap(contentModel)
         }
 
-        private fun clickItem(data: MyModel) {
+        private fun clickItem(data: ContentModel) {
             binding.root.setOnClickListener {
                 itemClick(data)
             }
         }
 
-        private fun clickScrap(data: MyModel) {
+        private fun clickScrap(contentModel: ContentModel) {
             binding.layoutScrap.setOnClickListener {
-                scrapClick(data)
-                // TODO: 추후 null 처리 다시 해야합니다 !! 서버 확인하고서 ~_~
-                if (data.isScrapped != null) {
-                    data.isScrapped = !data.isScrapped!!
-                } else {
-                    data.isScrapped = false
-                }
-                binding.model = data
+                scrapClick(contentModel.planId)
+                contentModel.scrapStatus = !contentModel.scrapStatus
+                reDrawView(contentModel)
             }
+        }
+
+        private fun reDrawView(contentModel: ContentModel) {
+            binding.model = contentModel
         }
     }
 }

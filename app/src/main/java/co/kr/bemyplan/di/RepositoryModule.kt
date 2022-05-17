@@ -11,8 +11,8 @@ import co.kr.bemyplan.data.repository.main.home.HomeNewRepositoryImpl
 import co.kr.bemyplan.data.repository.main.home.HomePopularRepositoryImpl
 import co.kr.bemyplan.data.repository.main.home.HomeSuggestRepositoryImpl
 import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
-import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
+import co.kr.bemyplan.data.repository.main.myplan.logout.LogoutRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
@@ -93,9 +93,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideMyPlanRepository(
-        myPlanService: MyPlanService
+        myPlanService: MyPlanService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): MyPlanRepository {
-        return MyPlanRepositoryImpl(myPlanService)
+        return MyPlanRepositoryImpl(myPlanService, coroutineDispatcher)
     }
 
     // 로그인 뷰
@@ -106,6 +107,16 @@ object RepositoryModule {
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): LoginRepository {
         return LoginRepositoryImpl(loginService, coroutineDispatcher)
+    }
+
+    // 로그아웃
+    @ViewModelScoped
+    @Provides
+    fun provideLogoutRepository(
+        logoutService: LogoutService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): LogoutRepository {
+        return LogoutRepositoryImpl(logoutService, coroutineDispatcher)
     }
 
     // 구글 로그인

@@ -3,15 +3,24 @@ package co.kr.bemyplan.ui.main.myplan.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
 import co.kr.bemyplan.ui.login.LoginActivity
+import co.kr.bemyplan.ui.main.MainActivity
 import co.kr.bemyplan.ui.main.myplan.settings.creator.CreatorProposeActivity
+import co.kr.bemyplan.ui.main.myplan.settings.viewmodel.SettingsViewModel
 import co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity
 import co.kr.bemyplan.util.CustomDialog
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.kakao.sdk.auth.AuthApi
+import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -20,6 +29,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
+    var googleSignInClient : GoogleSignInClient ?= null
+
+    private val viewModel by viewModels<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,10 +92,20 @@ class SettingsActivity : AppCompatActivity() {
         dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
-                    val intent = Intent(this@SettingsActivity, LoginActivity::class.java)
-                    startActivity(intent)
-                    this@SettingsActivity.finish()
+//                    // 구글 로그아웃을 위해 로그인 세션 가져오기
+//                    var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                        .requestIdToken(getString(R.string.default_web_client_id))
+//                        .requestEmail()
+//                        .build()
+//                    googleSignInClient = GoogleSignIn.getClient(this@SettingsActivity, gso)
+                    UserApiClient.instance.logout {
+                        val intent = Intent(this@SettingsActivity, LoginActivity::class.java)
+                        startActivity(intent)
+                        this@SettingsActivity.finish()
+                    }
+                    googleSignInClient
                 }
+
             }
         })
     }

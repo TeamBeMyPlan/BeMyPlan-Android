@@ -30,12 +30,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.internal.synchronized
 import net.daum.mf.map.api.*
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 @AndroidEntryPoint
-class AfterPurchaseActivity : AppCompatActivity(), MapView.CurrentLocationEventListener,
-    MapReverseGeoCoder.ReverseGeoCodingResultListener {
+class AfterPurchaseActivity : AppCompatActivity() {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
@@ -45,7 +45,7 @@ class AfterPurchaseActivity : AppCompatActivity(), MapView.CurrentLocationEventL
     private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
-    private var addressNow: String = ""
+    private var addressNow: AtomicReference<String> = AtomicReference("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,29 +135,23 @@ class AfterPurchaseActivity : AppCompatActivity(), MapView.CurrentLocationEventL
             packageName,
             PackageManager.GET_META_DATA
         )
-        //val reLock = ReentrantLock()
         if (ai.metaData != null) {
             val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-            val mapReverseGeoCoder = MapReverseGeoCoder(metaData, mapPoint, this, this)
-            val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
-            mapReverseGeoCoder.findAddressForMapPointSync(metaData, currentMapPoint)
-//            mapPoint?.let {
-//                val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
-//                val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-//                    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
-//                        // 주소 받아오기 성공 - address: 현재 주소
-//                        addressNow = address
-//                    }
-//                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-//                        // 주소 받아오기 실패
-//                        Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
-//                    }
-//                }, this)
-//                lock(reLock) {
-//                    temp.startFindingAddress()
-//                    Timber.tag("youngminzzang").d(addressNow)
-//                }
-//            }
+            mapPoint.let {
+                val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
+                val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
+                        // 주소 받아오기 성공 - address: 현재 주소
+                        addressNow.set(address)
+                        Timber.tag("hooni").d(addressNow.get())
+                    }
+                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                        // 주소 받아오기 실패
+                        Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                    }
+                }, this)
+                temp.startFindingAddress()
+            }
         }
     }
 
@@ -184,8 +178,6 @@ class AfterPurchaseActivity : AppCompatActivity(), MapView.CurrentLocationEventL
                 }, this)
                 //temp.startFindingAddress()
                 val sss = suspend {temp.findAddressForMapPointSync(metaData, currentMapPoint) }
-                addressNow = sss.toString()
-                Timber.tag("youngminzzang").d(addressNow)
             }
         }
     }
@@ -193,7 +185,6 @@ class AfterPurchaseActivity : AppCompatActivity(), MapView.CurrentLocationEventL
     private fun setAddressFromKakao(): MutableList<String> {
         val spotList = viewModel.mergedPlanAndInfo.value
         val addressList = mutableListOf<String>()
-        //val reLock = ReentrantLock()
         if (spotList != null) {
             for (spot in spotList.infos) {
                 getAddressFromGeoCode(
@@ -202,8 +193,8 @@ class AfterPurchaseActivity : AppCompatActivity(), MapView.CurrentLocationEventL
                         spot.second.longitude
                     )
                 )
+                addressList.add(addressNow.get())
                 Timber.tag("hooni").d(addressList.toString())
-                addressList.add(addressNow)
             }
         }
         return addressList
@@ -430,34 +421,5 @@ class AfterPurchaseActivity : AppCompatActivity(), MapView.CurrentLocationEventL
         override fun onDraggablePOIItemMoved(mapView: MapView?, poiItem: MapPOIItem?, mapPoint: MapPoint?) {
             // 마커의 속성 중 isDraggable = true 일 때 마커를 이동시켰을 경우
         }
-    }
-
-    // MapReverseGeocoder override function
-    override fun onCurrentLocationUpdate(p0: MapView?, p1: MapPoint?, p2: Float) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onCurrentLocationUpdateFailed(p0: MapView?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onCurrentLocationUpdateCancelled(p0: MapView?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, p1: String?) {
-        if (p1 != null) {
-            addressNow = p1
-            Timber.tag("hooni").d(addressNow)
-            Timber.tag("hooni11").d(p1)
-        }
-    }
-
-    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-        TODO("Not yet implemented")
     }
 }

@@ -185,12 +185,12 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
+                    android:text="@{Integer.toString(viewModel.previewInfo.price) + `원`}"
                     android:textColor="@color/blue_0077b0"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"
                     app:layout_constraintEnd_toEndOf="@+id/view_line"
                     app:layout_constraintTop_toTopOf="@+id/tv_cost_title" />
-                <!--            android:text="@{Integer.toString(viewModel.previewInfo.price) + `원`}"-->
 
                 <TextView
                     android:id="@+id/tv_way_title"

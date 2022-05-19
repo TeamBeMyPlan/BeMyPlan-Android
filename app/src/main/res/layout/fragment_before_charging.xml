@@ -918,14 +918,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                android:text="서버님 데이터 주세요"
+                android:text="@{@string/price_format(info.price)+`원`}"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/layout_linear3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-<!--            android:text="@{@string/price_format(info.price)+`원`}"-->
 
             <LinearLayout
                 android:id="@+id/layout_linear3"

@@ -14,10 +14,10 @@ class PurchaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setValue() // note: View 생성 전에 value 할당해야 한다. 그렇지 않으면 하위 프래그먼트 생성 시 할당되지 않은 value 로 서버통신하게 됨
         binding = ActivityPurchaseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setValue()
         observeLiveData()
     }
 

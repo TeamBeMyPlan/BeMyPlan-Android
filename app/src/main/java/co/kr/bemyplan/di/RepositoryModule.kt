@@ -13,7 +13,7 @@ import co.kr.bemyplan.data.repository.main.home.HomeSuggestRepositoryImpl
 import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepository
+import co.kr.bemyplan.domain.repository.ScrapListRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PurchaseRepositoryImpl
@@ -44,9 +44,10 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideScrapListRepository(
-        scrapListService: ScrapListService
+        scrapListService: ScrapListService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): ScrapListRepository {
-        return ScrapListRepositoryImpl(scrapListService)
+        return ScrapListRepositoryImpl(scrapListService, coroutineDispatcher)
     }
 
     // 최신 여행 일정 리스트 뷰

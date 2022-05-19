@@ -1,14 +1,12 @@
-package co.kr.bemyplan.data.repository.main.scrap
+package co.kr.bemyplan.domain.repository
 
 import co.kr.bemyplan.data.entity.main.scrap.ResponseEmptyScrapList
-import co.kr.bemyplan.data.entity.main.scrap.ResponseScrapList
+import co.kr.bemyplan.domain.model.list.PlanList
 
 interface ScrapListRepository {
     suspend fun getScrapList(
-        page: Int,
-        pageSize: Int,
         sort: String
-    ): ResponseScrapList
+    ): PlanList
 
     suspend fun getEmptyScrapList(): ResponseEmptyScrapList
 }

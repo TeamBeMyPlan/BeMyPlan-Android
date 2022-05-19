@@ -1,12 +1,9 @@
 package co.kr.bemyplan.data.entity.main.scrap
 
-import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.domain.model.list.PlanList
 
 data class ResponseScrapList(
-    val data: Data
-) {
-    data class Data(
-        val items: List<ContentModel>,
-        val totalPage: Int
-    )
-}
+    val resultCode: String,
+    val message: String,
+    val data: PlanList
+)

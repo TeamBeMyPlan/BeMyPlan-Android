@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepository
+import co.kr.bemyplan.domain.repository.ScrapListRepository
 import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.domain.repository.ScrapRepository
 import com.google.firebase.analytics.ktx.analytics
@@ -34,14 +34,15 @@ class ScrapViewModel @Inject constructor(
     private var _emptyScrapList = MutableLiveData<List<ContentModel>>()
     val emptyScrapList: LiveData<List<ContentModel>> get() = _emptyScrapList
 
+    private var lastPlanId: Int = -1
+
     fun getScrapList(sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                scrapListRepository.getScrapList(page, pageSize, sort)
-            }.onSuccess {
-                if (_scrapList.value != it.data.items) {
-                    _scrapList.value = it.data.items
-                }
+                scrapListRepository.getScrapList(sort)
+            }.onSuccess { response ->
+                _scrapList.value = response.contents
+                lastPlanId = response.nextCursor
             }.onFailure {
                 Timber.tag("mlog: ListViewModel::getScrapList error").e(it.message.toString())
             }

@@ -1,7 +1,6 @@
 package co.kr.bemyplan.ui.purchase.before.viewmodel
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,7 +18,6 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.IndexOutOfBoundsException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,7 +90,7 @@ class BeforeChargingViewModel @Inject constructor(
     }
 
     fun scrap() {
-        when(requireNotNull(scrapStatus.value)) {
+        when (requireNotNull(scrapStatus.value)) {
             true -> deleteScrap()
             false -> postScrap()
         }
@@ -121,7 +119,7 @@ class BeforeChargingViewModel @Inject constructor(
             kotlin.runCatching {
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
-                if(it) {
+                if (it) {
                     fb.logEvent("unScrapTravelPlan", Bundle().apply {
                         putString("source", "ListView")
                         putInt("postIdx", planId)

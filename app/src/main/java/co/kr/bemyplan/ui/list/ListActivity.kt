@@ -3,6 +3,7 @@ package co.kr.bemyplan.ui.list
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -29,6 +30,15 @@ class ListActivity : AppCompatActivity() {
     var authorUserId: Int = -1
     var authorNickname: String = ""
     var locationName: String = ""
+    private val planActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == RESULT_OK) {
+            it.data?.let { intent ->
+                val scrapStatusFromPlanActivity = intent.getBooleanExtra("scrapStatus", false)
+                val planIdFromPlanActivity = intent.getIntExtra("planId", -1)
+                listAdapter.updateItem(scrapStatusFromPlanActivity, planIdFromPlanActivity)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +109,7 @@ class ListActivity : AppCompatActivity() {
                     putExtra("authorNickname", it.user.nickname)
                     putExtra("authorUserId", it.user.userId)
                 }
-                startActivity(intent)
+                planActivityResultLauncher.launch(intent)
             } else {
                 val intent = Intent(this, PurchaseActivity::class.java).apply {
                     putExtra("planId", it.planId)
@@ -107,7 +117,7 @@ class ListActivity : AppCompatActivity() {
                     putExtra("authorNickname", it.user.nickname)
                     putExtra("authorUserId", it.user.userId)
                 }
-                startActivity(intent)
+                planActivityResultLauncher.launch(intent)
             }
         }, { planId, scrapStatus ->
             when (scrapStatus) {

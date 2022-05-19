@@ -14,6 +14,14 @@ class PurchaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityPurchaseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setValue()
+        observeLiveData()
+    }
+
+    private fun setValue() {
         val planId = intent.getIntExtra("planId", -1)
         val scrapStatus = intent.getBooleanExtra("scrapStatus", false)
         val authorNickname = intent.getStringExtra("authorNickname") ?: ""
@@ -22,8 +30,13 @@ class PurchaseActivity : AppCompatActivity() {
         viewModel.setPlanId(planId)
         viewModel.setScrapStatus(scrapStatus)
         viewModel.setAuthor(authorNickname, authorUserId)
+    }
 
-        binding = ActivityPurchaseBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    private fun observeLiveData() {
+        viewModel.scrapStatus.observe(this) {
+            intent.putExtra("scrapStatus", it)
+            intent.putExtra("planId", requireNotNull(viewModel.planId))
+            setResult(RESULT_OK, intent)
+        }
     }
 }

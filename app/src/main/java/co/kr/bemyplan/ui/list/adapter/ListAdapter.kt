@@ -77,6 +77,16 @@ class ListAdapter(
         asyncDiffer.submitList(itemList)
     }
 
+    fun updateItem(scrapStatus: Boolean, planId: Int) {
+        val itemList = asyncDiffer.currentList.toMutableList()
+        val item = itemList.find { it.planId == planId } ?: return
+        val itemIndex = itemList.indexOf(item)
+        itemList[itemIndex] = item.copy().apply {
+            this.scrapStatus = scrapStatus
+        }
+        asyncDiffer.submitList(itemList)
+    }
+
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<ContentModel>() {
             override fun areItemsTheSame(oldItem: ContentModel, newItem: ContentModel): Boolean {

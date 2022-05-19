@@ -1,15 +1,14 @@
 package co.kr.bemyplan.ui.main.scrap.viewmodel
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
+import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepository
+import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.domain.repository.ScrapRepository
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,9 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScrapViewModel @Inject constructor(
-    private val scrapListRepository: ScrapRepository,
-    private val postScrapRepository: PostScrapRepository
-): ViewModel() {
+    private val scrapListRepository: ScrapListRepository,
+    private val scrapRepository: ScrapRepository
+) : ViewModel() {
     private val fb = Firebase.analytics.apply {
         setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
     }
@@ -40,7 +39,7 @@ class ScrapViewModel @Inject constructor(
             kotlin.runCatching {
                 scrapListRepository.getScrapList(page, pageSize, sort)
             }.onSuccess {
-                if(_scrapList.value != it.data.items) {
+                if (_scrapList.value != it.data.items) {
                     _scrapList.value = it.data.items
                 }
             }.onFailure {
@@ -54,7 +53,7 @@ class ScrapViewModel @Inject constructor(
             kotlin.runCatching {
                 scrapListRepository.getEmptyScrapList()
             }.onSuccess {
-                if(_emptyScrapList.value != it.data) {
+                if (_emptyScrapList.value != it.data) {
                     _emptyScrapList.value = it.data
                 }
             }.onFailure {
@@ -66,25 +65,33 @@ class ScrapViewModel @Inject constructor(
     fun postScrap(postId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                postScrapRepository.postScrap(postId)
+                scrapRepository.postScrap(postId)
             }.onSuccess {
-                when (it.data.scrapped) {
-                    true -> {
-                        fb.logEvent("scrapTravelPlan", Bundle().apply {
-                            putString("source", "ScrapView")
-                            putInt("postIdx", postId)
-                        })
-                    }
-                    false -> {
-                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
-                            putString("source", "ScrapView")
-                            putInt("postIdx", postId)
-                        })
-                    }
+                if(it) {
+                    fb.logEvent("scrapTravelPlan", Bundle().apply {
+                        putString("source", "ScrapView")
+                        putInt("postIdx", postId)
+                    })
                 }
-                Timber.tag("mlog: postScrap").d("success")
-            }.onFailure {
-                Timber.tag("mlog: postScrap").d("fail")
+            }.onFailure { exception ->
+                Timber.e(exception)
+            }
+        }
+    }
+
+    fun deleteScrap(planId: Int) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                scrapRepository.deleteScrap(planId)
+            }.onSuccess {
+                if(it) {
+                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
+                        putString("source", "ListView")
+                        putInt("postIdx", planId)
+                    })
+                }
+            }.onFailure { exception ->
+                Timber.e(exception)
             }
         }
     }

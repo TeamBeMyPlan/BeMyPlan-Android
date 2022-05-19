@@ -109,8 +109,11 @@ class ListActivity : AppCompatActivity() {
                 }
                 startActivity(intent)
             }
-        }, {
-            viewModel.postScrap(it)
+        }, { planId, scrapStatus ->
+            when (scrapStatus) {
+                true -> viewModel.deleteScrap(planId)
+                false -> viewModel.postScrap(planId)
+            }
         })
         with(binding) {
             rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {

@@ -13,12 +13,12 @@ import co.kr.bemyplan.data.repository.main.home.HomeSuggestRepositoryImpl
 import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
-import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
+import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepository
+import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PurchaseRepositoryImpl
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepositoryImpl
+import co.kr.bemyplan.domain.repository.ScrapRepository
+import co.kr.bemyplan.data.repository.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.domain.repository.*
 import dagger.Module
 import dagger.Provides
@@ -45,8 +45,8 @@ object RepositoryModule {
     @Provides
     fun provideScrapListRepository(
         scrapListService: ScrapListService
-    ): ScrapRepository {
-        return ScrapRepositoryImpl(scrapListService)
+    ): ScrapListRepository {
+        return ScrapListRepositoryImpl(scrapListService)
     }
 
     // 최신 여행 일정 리스트 뷰
@@ -121,10 +121,11 @@ object RepositoryModule {
     // 스크랩 버튼 클릭
     @ViewModelScoped
     @Provides
-    fun providePostScrapRepository(
-        postScrapService: PostScrapService
-    ): PostScrapRepository {
-        return PostScrapRepositoryImpl(postScrapService)
+    fun provideScrapRepository(
+        scrapService: ScrapService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): ScrapRepository {
+        return ScrapRepositoryImpl(scrapService, coroutineDispatcher)
     }
 
     //여행지뷰

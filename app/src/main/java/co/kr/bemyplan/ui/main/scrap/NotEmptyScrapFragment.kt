@@ -77,8 +77,11 @@ class NotEmptyScrapFragment : Fragment() {
                 intent.putExtra("isScraped", true)
                 startActivity(intent)
             }
-        }, {
-            viewModel.postScrap(it)
+        }, { planId, scrapStatus ->
+            when(scrapStatus) {
+                true -> viewModel.deleteScrap(planId)
+                false -> viewModel.postScrap(planId)
+            }
         })
         binding.rvContent.adapter = scrapAdapter
     }

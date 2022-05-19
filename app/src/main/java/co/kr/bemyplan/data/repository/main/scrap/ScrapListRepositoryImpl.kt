@@ -7,9 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ScrapRepositoryImpl @Inject constructor(
+class ScrapListRepositoryImpl @Inject constructor(
     private val service: ScrapListService
-) : ScrapRepository {
+) : ScrapListRepository {
     override suspend fun getScrapList(
         page: Int,
         pageSize: Int,

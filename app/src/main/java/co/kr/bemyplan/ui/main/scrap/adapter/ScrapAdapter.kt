@@ -10,14 +10,14 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapContentBinding
 
-class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val scrapClick: (Int) -> Unit) :
+class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val scrapClick: (Int, Boolean) -> Unit) :
     RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder>() {
     private val asyncDiffer = AsyncListDiffer(this, diffCallback)
 
     class ScrapViewHolder(
         private val binding: ItemScrapContentBinding,
         private val itemClick: (ContentModel) -> Unit,
-        private val scrapClick: (Int) -> Unit
+        private val scrapClick: (Int, Boolean) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
@@ -42,7 +42,7 @@ class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val sc
 
         private fun clickScrap(contentModel: ContentModel) {
             binding.layoutScrap.setOnClickListener {
-                scrapClick(contentModel.planId)
+                scrapClick(contentModel.planId, contentModel.scrapStatus)
                 contentModel.scrapStatus = !contentModel.scrapStatus
                 reDrawView(contentModel)
             }

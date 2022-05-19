@@ -76,8 +76,8 @@ object ServiceModule {
     // 스크랩 버튼 클릭
     @Singleton
     @Provides
-    fun providePostScrapService(@BeMyPlanRetrofit retrofit: Retrofit): PostScrapService {
-        return retrofit.create(PostScrapService::class.java)
+    fun provideScrapService(@BeMyPlanRetrofit retrofit: Retrofit): ScrapService {
+        return retrofit.create(ScrapService::class.java)
     }
 
     @Singleton

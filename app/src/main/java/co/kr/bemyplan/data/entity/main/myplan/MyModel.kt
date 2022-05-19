@@ -9,5 +9,5 @@ data class MyModel(
     val thumbnailUrl: String,
     val title: String,
     val author: String,
-    var isScrapped: Boolean?
+    var isScrapped: Boolean
 )

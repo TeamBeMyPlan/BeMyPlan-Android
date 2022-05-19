@@ -64,7 +64,10 @@ class MyPlanFragment : Fragment() {
             intent.putExtra("postId", it.postId)
             startActivity(intent)
         }, {
-            viewModel.postScrap(it.postId)
+            when(it.isScrapped) {
+                true -> viewModel.deleteScrap(it.postId)
+                false -> viewModel.postScrap(it.postId)
+            }
         })
         purchaseTourAdapter.setItems(listItem)
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
@@ -72,8 +75,6 @@ class MyPlanFragment : Fragment() {
 
     private fun lookingAroundEvent() {
         binding.tvLookingAround.setOnClickListener {
-//            Navigation Component로 변경함에 따른 주석처리
-//            (activity as MainActivity).moveHome()
             Navigation.findNavController(binding.root).navigate(R.id.action_fragment_my_plan_to_fragment_home)
         }
     }

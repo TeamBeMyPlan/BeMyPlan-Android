@@ -3,6 +3,7 @@ package co.kr.bemyplan.ui.list
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -29,6 +30,16 @@ class ListActivity : AppCompatActivity() {
     var authorUserId: Int = -1
     var authorNickname: String = ""
     var locationName: String = ""
+    private val planActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                it.data?.let { intent ->
+                    val scrapStatusFromPlanActivity = intent.getBooleanExtra("scrapStatus", false)
+                    val planIdFromPlanActivity = intent.getIntExtra("planId", -1)
+                    listAdapter.updateItem(scrapStatusFromPlanActivity, planIdFromPlanActivity)
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,19 +109,24 @@ class ListActivity : AppCompatActivity() {
                     putExtra("scrapStatus", it.scrapStatus)
                     putExtra("authorNickname", it.user.nickname)
                     putExtra("authorUserId", it.user.userId)
+                    putExtra("thumbnail", it.thumbnailUrl)
                 }
-                startActivity(intent)
+                planActivityResultLauncher.launch(intent)
             } else {
                 val intent = Intent(this, PurchaseActivity::class.java).apply {
                     putExtra("planId", it.planId)
                     putExtra("scrapStatus", it.scrapStatus)
                     putExtra("authorNickname", it.user.nickname)
                     putExtra("authorUserId", it.user.userId)
+                    putExtra("thumbnail", it.thumbnailUrl)
                 }
-                startActivity(intent)
+                planActivityResultLauncher.launch(intent)
             }
-        }, {
-            viewModel.postScrap(it)
+        }, { planId, scrapStatus ->
+            when (scrapStatus) {
+                true -> viewModel.deleteScrap(planId)
+                false -> viewModel.postScrap(planId)
+            }
         })
         with(binding) {
             rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {

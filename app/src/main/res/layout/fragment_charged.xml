@@ -118,10 +118,15 @@
 
                 <ImageView
                     android:id="@+id/iv_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/img_charge"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    setImageString="@{viewModel.thumbnail}"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.258"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@id/view_line"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/view_line"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -185,12 +190,12 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
+                    android:text="@{Integer.toString(viewModel.previewInfo.price) + `원`}"
                     android:textColor="@color/blue_0077b0"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"
                     app:layout_constraintEnd_toEndOf="@+id/view_line"
                     app:layout_constraintTop_toTopOf="@+id/tv_cost_title" />
-                <!--            android:text="@{Integer.toString(viewModel.previewInfo.price) + `원`}"-->
 
                 <TextView
                     android:id="@+id/tv_way_title"

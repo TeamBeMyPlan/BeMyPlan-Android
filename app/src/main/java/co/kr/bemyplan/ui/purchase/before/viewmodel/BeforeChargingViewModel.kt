@@ -1,18 +1,17 @@
 package co.kr.bemyplan.ui.purchase.before.viewmodel
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContent
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
 import co.kr.bemyplan.domain.model.purchase.before.PreviewInfo
 import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.domain.repository.PurchaseRepository
+import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -24,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BeforeChargingViewModel @Inject constructor(
     private val previewRepository: PreviewRepository,
-    private val postScrapRepository: PostScrapRepository,
+    private val scrapRepository: ScrapRepository,
     private val purchaseRepository: PurchaseRepository
 ) : ViewModel() {
 
@@ -48,6 +47,9 @@ class BeforeChargingViewModel @Inject constructor(
     private var _authorUserId = -1
     val authorUserId get() = _authorUserId
 
+    private var _thumbnail = ""
+    val thumbnail get() = _thumbnail
+
     private var _payWay = MutableLiveData<Pay>(Pay.NULL)
     val payWay: LiveData<Pay> get() = _payWay
 
@@ -66,7 +68,7 @@ class BeforeChargingViewModel @Inject constructor(
     // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
     fun setScrapStatus(flag: Boolean) {
         _scrapStatus.value = flag
-        Log.d("mlog: BeforeChargingViewModel::setIsScraped", scrapStatus.value.toString())
+        Timber.tag("mlog: BeforeChargingViewModel::setIsScraped").d(scrapStatus.value.toString())
     }
 
     fun setPlanId(postId: Int) {
@@ -78,39 +80,61 @@ class BeforeChargingViewModel @Inject constructor(
         _authorUserId = userId
     }
 
+    fun setThumbnail(thumbnail: String) {
+        _thumbnail = thumbnail
+    }
+
     fun selectPay(way: Pay) {
         when (way) {
             Pay.KAKAO -> _payWay.value = Pay.KAKAO
             Pay.NAVER -> _payWay.value = Pay.NAVER
             Pay.TOSS -> _payWay.value = Pay.TOSS
+            else -> throw IndexOutOfBoundsException()
         }
         fb.logEvent("clickPaymentMethod", Bundle().apply {
             putString("source", payWay.value.toString())
         })
     }
 
-    fun postScrap() {
+    fun scrap() {
+        when (requireNotNull(scrapStatus.value)) {
+            true -> deleteScrap()
+            false -> postScrap()
+        }
+    }
+
+    private fun postScrap() {
         viewModelScope.launch {
             kotlin.runCatching {
-                postScrapRepository.postScrap(planId)
+                scrapRepository.postScrap(planId)
             }.onSuccess {
-                when (it.data.scrapped) {
-                    true -> {
-                        fb.logEvent("scrapTravelPlan", Bundle().apply {
-                            putString("source", "BeforeChargingView")
-                            putInt("postIdx", planId)
-                        })
-                    }
-                    false -> {
-                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
-                            putString("source", "BeforeChargingView")
-                            putInt("postIdx", planId)
-                        })
-                    }
+                if (it) {
+                    fb.logEvent("scrapTravelPlan", Bundle().apply {
+                        putString("source", "BeforeChargingView")
+                        putInt("postIdx", planId)
+                    })
+                    _scrapStatus.value = true
                 }
-                _scrapStatus.value = it.data.scrapped
-            }.onFailure {
-                Log.e("mlog: BeforeChargingViewModel::postScrap error", it.message.toString())
+            }.onFailure { exception ->
+                Timber.e(exception)
+            }
+        }
+    }
+
+    private fun deleteScrap() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                scrapRepository.deleteScrap(planId)
+            }.onSuccess {
+                if (it) {
+                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
+                        putString("source", "ListView")
+                        putInt("postIdx", planId)
+                    })
+                    _scrapStatus.value = false
+                }
+            }.onFailure { exception ->
+                Timber.e(exception)
             }
         }
     }

@@ -7,11 +7,10 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ScrapListService {
-    @GET("/api/v1/scrap")
+    @GET("/v1/plan/bookmark")
     suspend fun getScrapList(
-        @Query("page") page: Int,
-        @Query("pageSize") pageSize: Int,
-        @Query("sort") sort: String
+        @Query("size") page: Int,
+        @Query("sort", encoded = true) sort: String
     ): ResponseScrapList
 
     @GET("api/v1/post/random")

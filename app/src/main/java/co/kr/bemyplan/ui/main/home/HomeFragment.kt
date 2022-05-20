@@ -67,6 +67,7 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
+                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         }, {
@@ -75,6 +76,7 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
+                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         })
@@ -101,6 +103,7 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
+                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         }, {
@@ -109,6 +112,7 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
+                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         })
@@ -131,6 +135,7 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
+                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         }, {
@@ -139,6 +144,7 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
+                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         })
@@ -158,7 +164,7 @@ class HomeFragment : Fragment() {
             val ratio: Double = 312 / 360.0
             val pageWidth = ratio * deviceWidth!!
             val pagePadding = ((deviceWidth - pageWidth) / 2).toInt()
-            val innerPadding = (pagePadding / 2).toInt()
+            val innerPadding = pagePadding / 2
 
             getChildAt(0).overScrollMode =
                 RecyclerView.OVER_SCROLL_NEVER //맨 위에서 더 이상 위로 스크롤할 영역이 없을 때 위로 땡겨지지 않도록

@@ -2,10 +2,11 @@ package co.kr.bemyplan.ui.main.scrap
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -27,6 +28,18 @@ class NotEmptyScrapFragment : Fragment() {
     private val viewModel by activityViewModels<ScrapViewModel>()
     private val sortViewModel by activityViewModels<SortViewModel>()
     private lateinit var scrapAdapter: ScrapAdapter
+    private val planActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                it.data?.let { intent ->
+                    val scrapStatusFromPlanActivity = intent.getBooleanExtra("scrapStatus", false)
+                    val planIdFromPlanActivity = intent.getIntExtra("planId", -1)
+                    Timber.tag("scrapStatusFromPlanActivity").i(scrapStatusFromPlanActivity.toString())
+                    Timber.tag("planIdFromPlanActivity").i(planIdFromPlanActivity.toString())
+                    scrapAdapter.updateItem(scrapStatusFromPlanActivity, planIdFromPlanActivity)
+                }
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,18 +80,29 @@ class NotEmptyScrapFragment : Fragment() {
     private fun initRecyclerView() {
         scrapAdapter = ScrapAdapter({
             if (it.orderStatus) {
-                val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-                intent.putExtra("postId", it.planId)
-                startActivity(intent)
+                val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                    putExtra("planId", it.planId)
+                    putExtra("scrapStatus", it.scrapStatus)
+                    putExtra("authorNickname", it.user.nickname)
+                    putExtra("authorUserId", it.user.userId)
+                    putExtra("thumbnail", it.thumbnailUrl)
+                }
+                planActivityResultLauncher.launch(intent)
             } else {
-                val intent = Intent(requireContext(), PurchaseActivity::class.java)
-                intent.putExtra("postId", it.planId)
-                // TODO : 언젠가는 고쳐야 함
-                intent.putExtra("isScraped", true)
-                startActivity(intent)
+                val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
+                    putExtra("planId", it.planId)
+                    putExtra("scrapStatus", it.scrapStatus)
+                    putExtra("authorNickname", it.user.nickname)
+                    putExtra("authorUserId", it.user.userId)
+                    putExtra("thumbnail", it.thumbnailUrl)
+                }
+                planActivityResultLauncher.launch(intent)
             }
-        }, {
-            viewModel.postScrap(it)
+        }, { planId, scrapStatus ->
+            when (scrapStatus) {
+                true -> viewModel.deleteScrap(planId)
+                false -> viewModel.postScrap(planId)
+            }
         })
         binding.rvContent.adapter = scrapAdapter
     }

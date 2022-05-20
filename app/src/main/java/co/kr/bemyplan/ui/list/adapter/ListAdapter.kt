@@ -14,7 +14,7 @@ import timber.log.Timber
 
 class ListAdapter(
     private val itemClick: (ContentModel) -> Unit,
-    private val scrapClick: (Int) -> Unit
+    private val scrapClick: (Int, Boolean) -> Unit
 ) :
     RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
     private val asyncDiffer = AsyncListDiffer(this, diffCallback)
@@ -22,7 +22,7 @@ class ListAdapter(
     class ListViewHolder(
         private val binding: ItemListContentBinding,
         private val itemClick: (ContentModel) -> Unit,
-        private val scrapClick: (Int) -> Unit
+        private val scrapClick: (Int, Boolean) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
@@ -48,7 +48,7 @@ class ListAdapter(
 
         private fun clickScrap(contentModel: ContentModel) {
             binding.layoutScrap.setOnClickListener {
-                scrapClick(contentModel.planId)
+                scrapClick(contentModel.planId, contentModel.scrapStatus)
                 contentModel.scrapStatus = !contentModel.scrapStatus
                 reDrawView(contentModel)
             }
@@ -74,6 +74,16 @@ class ListAdapter(
     }
 
     fun replaceItem(itemList: List<ContentModel>) {
+        asyncDiffer.submitList(itemList)
+    }
+
+    fun updateItem(scrapStatus: Boolean, planId: Int) {
+        val itemList = asyncDiffer.currentList.toMutableList()
+        val item = itemList.find { it.planId == planId } ?: return
+        val itemIndex = itemList.indexOf(item)
+        itemList[itemIndex] = item.copy().apply {
+            this.scrapStatus = scrapStatus
+        }
         asyncDiffer.submitList(itemList)
     }
 

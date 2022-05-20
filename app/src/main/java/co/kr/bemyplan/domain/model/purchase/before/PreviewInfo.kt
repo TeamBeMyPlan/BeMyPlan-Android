@@ -6,6 +6,7 @@ data class PreviewInfo(
     val description: String,
     val spotCnt: Int,
     val rstrnCnt: Int,
+    val price: Int,
     val budget: Budget,
     val month: Int,
     val totalDay: Int,

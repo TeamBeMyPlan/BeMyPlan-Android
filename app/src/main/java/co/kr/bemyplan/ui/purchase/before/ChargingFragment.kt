@@ -81,16 +81,10 @@ class ChargingFragment : Fragment() {
             dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
                 override fun onClicked(num: Int) {
                     if (num == 1) {
-//                        viewModel.purchasePlan()
+                        viewModel.purchasePlan()
                     }
                 }
             })
-//            val zeroEventDialog = ZeroEventDialog()
-//            val transaction = parentFragmentManager.beginTransaction()
-//            val beforeChargingFragment = BeforeChargingFragment()
-//            zeroEventDialog.show(parentFragmentManager, "ZeroEventDialogFragment")
-//            transaction.remove(beforeChargingFragment)
-//            transaction.commit()
         }
     }
 

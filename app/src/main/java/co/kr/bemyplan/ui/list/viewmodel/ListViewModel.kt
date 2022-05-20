@@ -6,12 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.domain.model.list.ContentModel
-import co.kr.bemyplan.domain.repository.LatestListRepository
-import co.kr.bemyplan.domain.repository.LocationListRepository
-import co.kr.bemyplan.domain.repository.SuggestListRepository
-import co.kr.bemyplan.domain.repository.UserPostListRepository
+import co.kr.bemyplan.domain.repository.*
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +21,7 @@ class ListViewModel @Inject constructor(
     private val suggestListRepository: SuggestListRepository,
     private val locationListRepository: LocationListRepository,
     private val userPostListRepository: UserPostListRepository,
-    private val postScrapRepository: PostScrapRepository
+    private val scrapRepository: ScrapRepository
 ) : ViewModel() {
     private val fb = Firebase.analytics.apply {
         setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
@@ -177,28 +173,36 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun postScrap(postId: Int) {
+    fun postScrap(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                postScrapRepository.postScrap(postId)
+                scrapRepository.postScrap(planId)
             }.onSuccess {
-                when (it.data.scrapped) {
-                    true -> {
-                        fb.logEvent("scrapTravelPlan", Bundle().apply {
-                            putString("source", "ListView")
-                            putInt("postIdx", postId)
-                        })
-                    }
-                    false -> {
-                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
-                            putString("source", "ListView")
-                            putInt("postIdx", postId)
-                        })
-                    }
+                if(it) {
+                    fb.logEvent("scrapTravelPlan", Bundle().apply {
+                        putString("source", "ListView")
+                        putInt("postIdx", planId)
+                    })
                 }
-                Timber.tag("mlog: postScrap").d("success")
-            }.onFailure {
-                Timber.tag("mlog: postScrap").d("fail")
+            }.onFailure { exception ->
+                Timber.e(exception)
+            }
+        }
+    }
+
+    fun deleteScrap(planId: Int) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                scrapRepository.deleteScrap(planId)
+            }.onSuccess {
+                if(it) {
+                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
+                        putString("source", "ListView")
+                        putInt("postIdx", planId)
+                    })
+                }
+            }.onFailure { exception ->
+                Timber.e(exception)
             }
         }
     }

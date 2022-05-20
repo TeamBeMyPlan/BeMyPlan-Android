@@ -20,6 +20,8 @@ import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+import java.lang.IllegalStateException
 
 @AndroidEntryPoint
 class BeforeChargingFragment : Fragment() {
@@ -47,6 +49,7 @@ class BeforeChargingFragment : Fragment() {
         clickBack()
         clickNickname()
         clickPurchase()
+        clickScrap()
         showExample()
     }
 
@@ -60,9 +63,6 @@ class BeforeChargingFragment : Fragment() {
         viewModel.previewInfo.observe(viewLifecycleOwner) { previewInfo ->
             binding.info = previewInfo
         }
-//        viewModel.previewContents.observe(viewLifecycleOwner) { previewContents ->
-//            contentAdapter.replaceItem(previewContents)
-//        }
         viewModel.previewContent.observe(viewLifecycleOwner) { previewContent ->
             contentAdapter.replaceItem(previewContent)
         }
@@ -172,6 +172,12 @@ class BeforeChargingFragment : Fragment() {
             transaction.add(R.id.fragment_container_charging, chargingFragment)
             transaction.addToBackStack(null)
             transaction.commit()
+        }
+    }
+
+    private fun clickScrap() {
+        binding.layoutScrap.setOnClickListener {
+            viewModel.scrap()
         }
     }
 }

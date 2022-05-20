@@ -9,19 +9,19 @@ import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapContentBinding
+import timber.log.Timber
 
-class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val scrapClick: (Int) -> Unit) :
+class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val scrapClick: (Int, Boolean) -> Unit) :
     RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder>() {
     private val asyncDiffer = AsyncListDiffer(this, diffCallback)
 
     class ScrapViewHolder(
         private val binding: ItemScrapContentBinding,
         private val itemClick: (ContentModel) -> Unit,
-        private val scrapClick: (Int) -> Unit
+        private val scrapClick: (Int, Boolean) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
-            contentModel.scrapStatus = true
             binding.model = contentModel
             binding.ivPhoto.clipToOutline = true
             binding.executePendingBindings()
@@ -42,7 +42,7 @@ class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val sc
 
         private fun clickScrap(contentModel: ContentModel) {
             binding.layoutScrap.setOnClickListener {
-                scrapClick(contentModel.planId)
+                scrapClick(contentModel.planId, contentModel.scrapStatus)
                 contentModel.scrapStatus = !contentModel.scrapStatus
                 reDrawView(contentModel)
             }
@@ -69,6 +69,22 @@ class ScrapAdapter(private val itemClick: (ContentModel) -> Unit, private val sc
 
     fun replaceItem(itemList: List<ContentModel>) {
         asyncDiffer.submitList(itemList)
+    }
+
+    fun updateItem(scrapStatus: Boolean, planId: Int) {
+        val itemList = asyncDiffer.currentList.toMutableList()
+        val item = itemList.find { it.planId == planId } ?: return
+        val itemIndex = itemList.indexOf(item)
+        itemList[itemIndex] = item.copy().apply {
+            this.scrapStatus = scrapStatus
+        }
+        itemList.forEach {
+            Timber.i(it.toString())
+        }
+        asyncDiffer.submitList(itemList)
+        asyncDiffer.currentList.forEach {
+            Timber.i(it.toString())
+        }
     }
 
     companion object {

@@ -30,15 +30,16 @@ class ListActivity : AppCompatActivity() {
     var authorUserId: Int = -1
     var authorNickname: String = ""
     var locationName: String = ""
-    private val planActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if(it.resultCode == RESULT_OK) {
-            it.data?.let { intent ->
-                val scrapStatusFromPlanActivity = intent.getBooleanExtra("scrapStatus", false)
-                val planIdFromPlanActivity = intent.getIntExtra("planId", -1)
-                listAdapter.updateItem(scrapStatusFromPlanActivity, planIdFromPlanActivity)
+    private val planActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                it.data?.let { intent ->
+                    val scrapStatusFromPlanActivity = intent.getBooleanExtra("scrapStatus", false)
+                    val planIdFromPlanActivity = intent.getIntExtra("planId", -1)
+                    listAdapter.updateItem(scrapStatusFromPlanActivity, planIdFromPlanActivity)
+                }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

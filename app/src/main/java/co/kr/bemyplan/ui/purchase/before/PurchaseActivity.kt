@@ -26,10 +26,12 @@ class PurchaseActivity : AppCompatActivity() {
         val scrapStatus = intent.getBooleanExtra("scrapStatus", false)
         val authorNickname = intent.getStringExtra("authorNickname") ?: ""
         val authorUserId = intent.getIntExtra("authorUserId", -1)
+        val thumbnail = intent.getStringExtra("thumbnail") ?: ""
 
         viewModel.setPlanId(planId)
         viewModel.setScrapStatus(scrapStatus)
         viewModel.setAuthor(authorNickname, authorUserId)
+        viewModel.setThumbnail(thumbnail)
     }
 
     private fun observeLiveData() {

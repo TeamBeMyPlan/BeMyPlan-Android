@@ -47,6 +47,9 @@ class BeforeChargingViewModel @Inject constructor(
     private var _authorUserId = -1
     val authorUserId get() = _authorUserId
 
+    private var _thumbnail = ""
+    val thumbnail get() = _thumbnail
+
     private var _payWay = MutableLiveData<Pay>(Pay.NULL)
     val payWay: LiveData<Pay> get() = _payWay
 
@@ -75,6 +78,10 @@ class BeforeChargingViewModel @Inject constructor(
     fun setAuthor(nickname: String, userId: Int) {
         _authorNickname = nickname
         _authorUserId = userId
+    }
+
+    fun setThumbnail(thumbnail: String) {
+        _thumbnail = thumbnail
     }
 
     fun selectPay(way: Pay) {

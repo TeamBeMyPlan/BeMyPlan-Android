@@ -2,7 +2,6 @@ package co.kr.bemyplan.ui.main.scrap
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,18 +66,26 @@ class NotEmptyScrapFragment : Fragment() {
     private fun initRecyclerView() {
         scrapAdapter = ScrapAdapter({
             if (it.orderStatus) {
-                val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-                intent.putExtra("postId", it.planId)
+                val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                    putExtra("planId", it.planId)
+                    putExtra("scrapStatus", it.scrapStatus)
+                    putExtra("authorNickname", it.user.nickname)
+                    putExtra("authorUserId", it.user.userId)
+                    putExtra("thumbnail", it.thumbnailUrl)
+                }
                 startActivity(intent)
             } else {
-                val intent = Intent(requireContext(), PurchaseActivity::class.java)
-                intent.putExtra("postId", it.planId)
-                // TODO : 언젠가는 고쳐야 함
-                intent.putExtra("isScraped", true)
+                val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
+                    putExtra("planId", it.planId)
+                    putExtra("scrapStatus", it.scrapStatus)
+                    putExtra("authorNickname", it.user.nickname)
+                    putExtra("authorUserId", it.user.userId)
+                    putExtra("thumbnail", it.thumbnailUrl)
+                }
                 startActivity(intent)
             }
         }, { planId, scrapStatus ->
-            when(scrapStatus) {
+            when (scrapStatus) {
                 true -> viewModel.deleteScrap(planId)
                 false -> viewModel.postScrap(planId)
             }

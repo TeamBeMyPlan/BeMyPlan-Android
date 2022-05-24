@@ -47,6 +47,11 @@ class AfterPurchaseViewModel @Inject constructor(
     val spots: LiveData<List<Spots>>
         get() = _spots
 
+    // 일차별 spot
+    private var _spotsWithAddress = MutableLiveData<List<SpotsWithAddress>>()
+    val spotsWithAddress: LiveData<List<SpotsWithAddress>>
+        get() = _spotsWithAddress
+
     // 스크랩
     private var _isScraped = MutableLiveData<Boolean>()
     val isScraped: LiveData<Boolean>
@@ -88,15 +93,6 @@ class AfterPurchaseViewModel @Inject constructor(
     private val _mergedPlanAndInfo = MutableLiveData<MergedPlanAndInfo>()
     val mergedPlanAndInfo: LiveData<MergedPlanAndInfo>
         get() = _mergedPlanAndInfo
-
-    // 장소의 주소
-    private val _addressNameList = MutableLiveData<List<String>>()
-    val addressNameList: LiveData<List<String>>
-        get() = _addressNameList
-
-    private val _addressName = MutableLiveData<String>()
-    val addressName: LiveData<String>
-        get() = _addressName
 
     // 서버 통신
     fun fetchPlanDetail(planId: Int) {
@@ -186,13 +182,13 @@ class AfterPurchaseViewModel @Inject constructor(
     fun setMergedPlanAndInfoList(planDetail: PlanDetail, listMoveInfo: List<MoveInfo>) {
         val bigList = mutableListOf<MergedPlanAndInfo>()
         for (i in planDetail.contents.indices) {
-            val pairList = mutableListOf<Pair<Infos?, Spots>>()
+            val pairList = mutableListOf<Pair<Infos?, SpotsWithAddress>>()
             val dailySpots = planDetail.contents[i].spots
             for (j in dailySpots.indices) {
                 if (j == dailySpots.size - 1)
-                    pairList.add(Pair(null, dailySpots[j]))
+                    pairList.add(Pair(null, spotsWithAddress.value!![j]))
                 else
-                    pairList.add(Pair(listMoveInfo[i].infos[j], dailySpots[j]))
+                    pairList.add(Pair(listMoveInfo[i].infos[j], spotsWithAddress.value!![j]))
             }
             bigList.add(MergedPlanAndInfo(i + 1, pairList.toList()))
         }
@@ -201,13 +197,5 @@ class AfterPurchaseViewModel @Inject constructor(
 
     fun setMergedPlanAndInfo(index: Int) {
         _mergedPlanAndInfo.value = mergedPlanAndInfoList.value?.get(index)
-    }
-
-    fun setAddressNameList(addressList: List<String>) {
-        _addressNameList.value = addressList
-    }
-
-    fun setAddressName(name: String) {
-        _addressName.value = name
     }
 }

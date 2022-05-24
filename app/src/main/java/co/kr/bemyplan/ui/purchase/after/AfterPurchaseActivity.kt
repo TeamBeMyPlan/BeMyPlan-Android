@@ -21,6 +21,8 @@ import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.domain.model.purchase.after.Spots
+import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
+import co.kr.bemyplan.domain.model.purchase.after.toSpotsWithAddress
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
@@ -46,9 +48,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
     // 좌표 -> 주소로 바꿀 때 쓸 리스트
-    private val addressList = mutableListOf<String>()
+    private val addressList = mutableListOf(mutableListOf<SpotsWithAddress>())
     // 모든 주소가 다 들어왔을때 통신이 이루어지게 하기 위함
     private var addressCount = 0
+    private var dayCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +73,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val authorNickname = intent.getStringExtra("authorNickname") ?: ""
         val authorUserId = intent.getIntExtra("authorUserId", -1)
         viewModel.setAuthor(authorNickname, authorUserId)
-        Timber.tag("mdb1217").d(authorNickname)
 
         // 카카오맵 초기화
         initMap()
@@ -79,7 +81,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // 더미데이터, 진짜데이터 구분
         checkData(planId)
-
 
         // Observer
         viewModel.mergedPlanAndInfoList.observe(this) {
@@ -92,7 +93,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
 
         viewModel.planDetail.observe(this) {
-            viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
+            setAddressFromKakao()
+            //viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
             // writer 버튼 생성
             binding.clWriter.setOnClickListener { initUserButton() }
         }
@@ -122,9 +124,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private fun initFragment(index: Int) {
         viewModel.setSpots(index)
         viewModel.setMoveInfo(index)
-        viewModel.setMergedPlanAndInfo(index)
 
-        val addressList = setAddressFromKakao()
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
@@ -144,10 +144,18 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
                     override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
                         // 주소 받아오기 성공 - address: 현재 주소
-                        addressList.add(address)
+                        viewModel.spots.value?.get(addressCount)?.let {
+                            addressList[dayCount].add(it.toSpotsWithAddress(address))
+                        }
                         ++addressCount
+
                         if (addressCount == viewModel.mergedPlanAndInfo.value?.infos?.size) {
-                            viewModel.setAddressNameList(addressList)
+                            if (dayCount == viewModel.mergedPlanAndInfoList.value?.size) {
+                                viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
+                                Timber.tag("hooni").d(addressList.toString())
+                            }
+                            ++dayCount
+                            addressCount = 0
                         }
                     }
                     override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
@@ -159,30 +167,19 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun setAddressFromKakao(): MutableList<String> {
-        val spotList = viewModel.mergedPlanAndInfo.value
-        val addressList = mutableListOf<String>()
+    private fun setAddressFromKakao() {
+        val spotList = viewModel.mergedPlanAndInfoList.value
         if (spotList != null) {
-            for (spot in spotList.infos) {
-                getAddressFromGeoCode(
-                    MapPoint.mapPointWithGeoCoord(
-                        spot.second.latitude,
-                        spot.second.longitude
+            for (spots in spotList) {
+                for (spot in spots.infos) {
+                    getAddressFromGeoCode(
+                        MapPoint.mapPointWithGeoCoord(
+                            spot.second.latitude,
+                            spot.second.longitude
+                        )
                     )
-                )
+                }
             }
-        }
-        return addressList
-    }
-
-    // 위도, 경도로 부터 주소를 동기화로 불러오기 위한 Lock
-    private fun <T> lock (reLock : ReentrantLock, body : () -> T) : T {
-        reLock.lock()
-        try {
-            // 임계 영역
-            return body()
-        } finally {
-            reLock.unlock()
         }
     }
 

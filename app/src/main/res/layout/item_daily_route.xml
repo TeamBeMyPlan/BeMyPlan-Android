@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="spots"
-            type="co.kr.bemyplan.domain.model.purchase.after.Spots" />
+            type="co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress" />
         <variable
             name="infos"
             type="co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos" />

@@ -1,3 +1,5 @@
 package co.kr.bemyplan.domain.model.purchase.after
 
-data class ContentsWithAddress()
+data class ContentsWithAddress(
+    val spotsWithAddress: List<SpotsWithAddress>
+)

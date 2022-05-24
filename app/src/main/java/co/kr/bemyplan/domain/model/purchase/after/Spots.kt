@@ -10,3 +10,15 @@ data class Spots(
     val tip: String?,
     val updatedAt: String
 )
+
+fun Spots.toSpotsWithAddress(address : String) = SpotsWithAddress(
+    this.createdAt,
+    this.images,
+    this.latitude,
+    this.longitude,
+    address,
+    this.name,
+    this.review,
+    this.tip,
+    this.updatedAt
+)

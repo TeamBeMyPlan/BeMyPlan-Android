@@ -71,11 +71,6 @@ class DailyContentsFragment : Fragment() {
             }
         }
 
-        viewModel.addressNameList.observe(viewLifecycleOwner) {
-            contentsAdapter.addressList.addAll(it)
-            contentsAdapter.notifyDataSetChanged()
-        }
-
         binding.rvDailyContents.adapter = contentsAdapter
         binding.rvDailyRoute.adapter = routeAdapter
     }

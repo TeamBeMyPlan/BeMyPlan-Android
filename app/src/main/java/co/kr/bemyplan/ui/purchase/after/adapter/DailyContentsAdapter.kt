@@ -15,6 +15,7 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
 import co.kr.bemyplan.domain.model.purchase.after.Spots
+import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
@@ -28,18 +29,18 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     val addressList = mutableListOf<String>()
 
     // item 갱신
-    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, Spots>>() {
-        override fun areItemsTheSame(oldItem: Pair<Infos?, Spots>, newItem: Pair<Infos?, Spots>): Boolean {
+    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, SpotsWithAddress>>() {
+        override fun areItemsTheSame(oldItem: Pair<Infos?, SpotsWithAddress>, newItem: Pair<Infos?, SpotsWithAddress>): Boolean {
             return oldItem == newItem
         }
-        override fun areContentsTheSame(oldItem: Pair<Infos?, Spots>, newItem: Pair<Infos?, Spots>): Boolean {
+        override fun areContentsTheSame(oldItem: Pair<Infos?, SpotsWithAddress>, newItem: Pair<Infos?, SpotsWithAddress>): Boolean {
             return oldItem == newItem
         }
     }
     private val differ = AsyncListDiffer(this, differCallback)
 
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
-    fun submitList(list: List<Pair<Infos?, Spots>>) {
+    fun submitList(list: List<Pair<Infos?, SpotsWithAddress>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
         })
@@ -94,9 +95,9 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Pair<Infos?, Spots>, address: String?, isLastSpot: Boolean) {}
-        open fun onBind(data: Pair<Infos?, Spots>, address: String?, nextSpot: String) {}
-        open fun onBind(data: Pair<Infos?, Spots>, position: Int, lastPosition: Int) {}
+        open fun onBind(data: Pair<Infos?, SpotsWithAddress>, address: String?, isLastSpot: Boolean) {}
+        open fun onBind(data: Pair<Infos?, SpotsWithAddress>, address: String?, nextSpot: String) {}
+        open fun onBind(data: Pair<Infos?, SpotsWithAddress>, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(
@@ -105,7 +106,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-        override fun onBind(data: Pair<Infos?, Spots>, address: String?, nextSpot: String) {
+        override fun onBind(data: Pair<Infos?, SpotsWithAddress>, address: String?, nextSpot: String) {
             binding.spots = data.second
             binding.infos = data.first
             binding.nextSpot = nextSpot
@@ -118,7 +119,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.clAddress.setOnClickListener { copyButton() }
         }
 
-        override fun onBind(data: Pair<Infos?, Spots>, address: String?, isLastSpot: Boolean) {
+        override fun onBind(data: Pair<Infos?, SpotsWithAddress>, address: String?, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
@@ -152,7 +153,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             }
         }
 
-        private fun initViewPagerAdapter(data: Pair<Infos?, Spots>) {
+        private fun initViewPagerAdapter(data: Pair<Infos?, SpotsWithAddress>) {
             viewPagerAdapter = PhotoViewPagerAdapter(photoUrl)
             viewPagerAdapter.setItems(data.second.images)
             binding.vpPhoto.adapter = viewPagerAdapter
@@ -167,7 +168,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     }
 
     class RouteViewHolder(private val binding: ItemDailyRouteBinding) : SpotViewHolder(binding) {
-        override fun onBind(data: Pair<Infos?, Spots>, position: Int, lastPosition: Int) {
+        override fun onBind(data: Pair<Infos?, SpotsWithAddress>, position: Int, lastPosition: Int) {
             binding.spots = data.second
             binding.infos = data.first
             binding.position = position

@@ -18,12 +18,14 @@ import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
+import timber.log.Timber
 
 
 class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
+    val addressList = mutableListOf<String>()
 
     // item 갱신
     private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, Spots>>() {
@@ -36,26 +38,11 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     }
     private val differ = AsyncListDiffer(this, differCallback)
 
-    private val differAddressCallback = object: DiffUtil.ItemCallback<String>() {
-        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
-        }
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
-        }
-    }
-    private val differAddress = AsyncListDiffer(this, differAddressCallback)
-
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
     fun submitList(list: List<Pair<Infos?, Spots>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
         })
-    }
-
-    // 리사이클러뷰 서버 통신시에 호출
-    fun submitAddressList(list: List<String>) {
-        differAddress.submitList(list)
     }
 
     override fun getItemViewType(position: Int) = viewType
@@ -82,14 +69,20 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
 
     override fun onBindViewHolder(holder: SpotViewHolder, position: Int) {
         val spots = differ.currentList[position]
-        val addressList = differAddress.currentList[position]
-
         when (holder) {
             is ContentsViewHolder -> {
-                if (position == differ.currentList.size - 1) {
-                    holder.onBind(spots, addressList,true)
+                if (addressList.isNotEmpty()) {
+                    if (position == differ.currentList.size - 1) {
+                        holder.onBind(spots, addressList[position], true)
+                    } else {
+                        holder.onBind(spots, addressList[position], differ.currentList[position + 1].second.name)
+                    }
                 } else {
-                    holder.onBind(spots, addressList, differ.currentList[position + 1].second.name)
+                    if (position == differ.currentList.size - 1) {
+                        holder.onBind(spots, null, true)
+                    } else {
+                        holder.onBind(spots, null, differ.currentList[position + 1].second.name)
+                    }
                 }
             }
             is RouteViewHolder -> {
@@ -101,8 +94,8 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Pair<Infos?, Spots>, address: String, isLastSpot: Boolean) {}
-        open fun onBind(data: Pair<Infos?, Spots>, address: String, nextSpot: String) {}
+        open fun onBind(data: Pair<Infos?, Spots>, address: String?, isLastSpot: Boolean) {}
+        open fun onBind(data: Pair<Infos?, Spots>, address: String?, nextSpot: String) {}
         open fun onBind(data: Pair<Infos?, Spots>, position: Int, lastPosition: Int) {}
     }
 
@@ -112,7 +105,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-        override fun onBind(data: Pair<Infos?, Spots>, address: String, nextSpot: String) {
+        override fun onBind(data: Pair<Infos?, Spots>, address: String?, nextSpot: String) {
             binding.spots = data.second
             binding.infos = data.first
             binding.nextSpot = nextSpot
@@ -125,7 +118,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.clAddress.setOnClickListener { copyButton() }
         }
 
-        override fun onBind(data: Pair<Infos?, Spots>, address: String, isLastSpot: Boolean) {
+        override fun onBind(data: Pair<Infos?, Spots>, address: String?, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first

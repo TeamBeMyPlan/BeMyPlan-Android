@@ -45,7 +45,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
-    private var addressNow: AtomicReference<String> = AtomicReference("")
+    // 좌표 -> 주소로 바꿀 때 쓸 리스트
+    private val addressList = mutableListOf<String>()
+    // 모든 주소가 다 들어왔을때 통신이 이루어지게 하기 위함
+    private var addressCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +125,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         viewModel.setMergedPlanAndInfo(index)
 
         val addressList = setAddressFromKakao()
-        viewModel.setAddressNameList(addressList)
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
@@ -139,45 +141,20 @@ class AfterPurchaseActivity : AppCompatActivity() {
             val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
             mapPoint.let {
                 val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
-                val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
                     override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
                         // 주소 받아오기 성공 - address: 현재 주소
-                        addressNow.set(address)
-                        Timber.tag("hooni").d(addressNow.get())
+                        addressList.add(address)
+                        ++addressCount
+                        if (addressCount == viewModel.mergedPlanAndInfo.value?.infos?.size) {
+                            viewModel.setAddressNameList(addressList)
+                        }
                     }
                     override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
                         // 주소 받아오기 실패
                         Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
                     }
-                }, this)
-                temp.startFindingAddress()
-            }
-        }
-    }
-
-    @OptIn(InternalCoroutinesApi::class)
-    private suspend fun getAddressFromGeoCodeSuspend(mapPoint: MapPoint?) = suspendCancellableCoroutine<String> { suspendIt ->
-        val ai: ApplicationInfo = packageManager.getApplicationInfo(
-            packageName,
-            PackageManager.GET_META_DATA
-        )
-        if (ai.metaData != null) {
-            val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-            mapPoint?.let {
-                val currentMapPoint =  MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
-                val temp = MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                    override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
-                        // 주소 받아오기 성공 - address: 현재 주소
-                        Timber.tag("youngminzzang").d(address)
-                        suspendIt.tryResume(address)
-                    }
-                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                        suspendIt.cancel(Throwable("Can't get address from map point"))
-                        Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
-                    }
-                }, this)
-                //temp.startFindingAddress()
-                val sss = suspend {temp.findAddressForMapPointSync(metaData, currentMapPoint) }
+                }, this).startFindingAddress()
             }
         }
     }
@@ -193,8 +170,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
                         spot.second.longitude
                     )
                 )
-                addressList.add(addressNow.get())
-                Timber.tag("hooni").d(addressList.toString())
             }
         }
         return addressList

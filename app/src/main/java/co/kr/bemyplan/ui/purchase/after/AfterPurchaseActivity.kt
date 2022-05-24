@@ -83,6 +83,17 @@ class AfterPurchaseActivity : AppCompatActivity() {
         checkData(planId)
 
         // Observer
+        viewModel.contents.observe(this) {
+            setAddressFromKakao()
+
+            // writer 버튼 생성
+            binding.clWriter.setOnClickListener { initUserButton() }
+        }
+
+        viewModel.spotsWithAddress.observe(this) {
+            viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
+        }
+
         viewModel.mergedPlanAndInfoList.observe(this) {
             // fragment 생성
             initFragment(0)
@@ -90,13 +101,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
             initMarker(it)
             // 일자별 버튼 생성
             initChips(it)
-        }
-
-        viewModel.planDetail.observe(this) {
-            setAddressFromKakao()
-            //viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
-            // writer 버튼 생성
-            binding.clWriter.setOnClickListener { initUserButton() }
         }
 
         // back button
@@ -144,14 +148,17 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 MapReverseGeoCoder(metaData, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
                     override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
                         // 주소 받아오기 성공 - address: 현재 주소
-                        viewModel.spots.value?.get(addressCount)?.let {
-                            addressList[dayCount].add(it.toSpotsWithAddress(address))
+                        viewModel.contents.value?.get(dayCount)?.let {
+                            addressList[dayCount].add(it.spots[addressCount].toSpotsWithAddress(address))
                         }
                         ++addressCount
+                        Timber.tag("hooniaddress").d(address)
+                        Timber.tag("hooniaddress").d(addressCount.toString())
 
-                        if (addressCount == viewModel.mergedPlanAndInfo.value?.infos?.size) {
-                            if (dayCount == viewModel.mergedPlanAndInfoList.value?.size) {
-                                viewModel.setMergedPlanAndInfoList(viewModel.planDetail.value!!, viewModel.moveInfoList.value!!)
+                        if (addressCount + 1 == viewModel.contents.value?.get(dayCount)?.spots?.size) {
+                            Timber.tag("hoonispot").d(viewModel.contents.value?.get(dayCount)?.spots?.get(addressCount)?.name)
+                            if (dayCount + 1 == viewModel.contents.value?.size) {
+                                viewModel.setSpotsWithAddress(addressList)
                                 Timber.tag("hooni").d(addressList.toString())
                             }
                             ++dayCount
@@ -167,15 +174,16 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
+    // 2중 배열로 spotsWithAddress 세팅
     private fun setAddressFromKakao() {
-        val spotList = viewModel.mergedPlanAndInfoList.value
-        if (spotList != null) {
-            for (spots in spotList) {
-                for (spot in spots.infos) {
+        val contents = viewModel.contents.value
+        if (contents != null) {
+            for (spots in contents) {
+                for (spot in spots.spots) {
                     getAddressFromGeoCode(
                         MapPoint.mapPointWithGeoCoord(
-                            spot.second.latitude,
-                            spot.second.longitude
+                            spot.latitude,
+                            spot.longitude
                         )
                     )
                 }

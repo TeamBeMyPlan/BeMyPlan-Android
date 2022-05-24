@@ -48,8 +48,8 @@ class AfterPurchaseViewModel @Inject constructor(
         get() = _spots
 
     // 일차별 spot
-    private var _spotsWithAddress = MutableLiveData<List<SpotsWithAddress>>()
-    val spotsWithAddress: LiveData<List<SpotsWithAddress>>
+    private var _spotsWithAddress = MutableLiveData<List<List<SpotsWithAddress>>>()
+    val spotsWithAddress: LiveData<List<List<SpotsWithAddress>>>
         get() = _spotsWithAddress
 
     // 스크랩
@@ -186,16 +186,16 @@ class AfterPurchaseViewModel @Inject constructor(
             val dailySpots = planDetail.contents[i].spots
             for (j in dailySpots.indices) {
                 if (j == dailySpots.size - 1)
-                    pairList.add(Pair(null, spotsWithAddress.value!![j]))
+                    pairList.add(Pair(null, spotsWithAddress.value!![i][j]))
                 else
-                    pairList.add(Pair(listMoveInfo[i].infos[j], spotsWithAddress.value!![j]))
+                    pairList.add(Pair(listMoveInfo[i].infos[j], spotsWithAddress.value!![i][j]))
             }
             bigList.add(MergedPlanAndInfo(i + 1, pairList.toList()))
         }
         _mergedPlanAndInfoList.value = bigList
     }
 
-    fun setMergedPlanAndInfo(index: Int) {
-        _mergedPlanAndInfo.value = mergedPlanAndInfoList.value?.get(index)
+    fun setSpotsWithAddress(list: List<List<SpotsWithAddress>>) {
+        _spotsWithAddress.value = list
     }
 }

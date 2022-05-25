@@ -48,9 +48,14 @@ class AfterPurchaseViewModel @Inject constructor(
         get() = _spots
 
     // 일차별 spot
-    private var _spotsWithAddress = MutableLiveData<List<List<SpotsWithAddress>>>()
-    val spotsWithAddress: LiveData<List<List<SpotsWithAddress>>>
+    private var _spotsWithAddress = MutableLiveData<List<List<SpotsWithAddress?>>>()
+    val spotsWithAddress: LiveData<List<List<SpotsWithAddress?>>>
         get() = _spotsWithAddress
+
+    // 모든 데이터가 다 채워졌을때 옵저브
+    private var _spotSize = MutableLiveData<Int>(0)
+    val spotSize : LiveData<Int>
+        get() = _spotSize
 
     // 스크랩
     private var _isScraped = MutableLiveData<Boolean>()
@@ -182,7 +187,7 @@ class AfterPurchaseViewModel @Inject constructor(
     fun setMergedPlanAndInfoList(planDetail: PlanDetail, listMoveInfo: List<MoveInfo>) {
         val bigList = mutableListOf<MergedPlanAndInfo>()
         for (i in planDetail.contents.indices) {
-            val pairList = mutableListOf<Pair<Infos?, SpotsWithAddress>>()
+            val pairList = mutableListOf<Pair<Infos?, SpotsWithAddress?>>()
             val dailySpots = planDetail.contents[i].spots
             for (j in dailySpots.indices) {
                 if (j == dailySpots.size - 1)
@@ -195,7 +200,15 @@ class AfterPurchaseViewModel @Inject constructor(
         _mergedPlanAndInfoList.value = bigList
     }
 
-    fun setSpotsWithAddress(list: List<List<SpotsWithAddress>>) {
+    fun setSpotsWithAddress(list: MutableList<MutableList<SpotsWithAddress?>>) {
         _spotsWithAddress.value = list
+    }
+
+    fun plusSpotSize() {
+        _spotSize.value?.plus(1)
+    }
+
+    fun minusSpotSize() {
+        _spotSize.value?.minus(1)
     }
 }

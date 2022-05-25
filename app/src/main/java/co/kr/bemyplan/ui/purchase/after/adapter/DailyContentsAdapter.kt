@@ -29,18 +29,18 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     val addressList = mutableListOf<String>()
 
     // item 갱신
-    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, SpotsWithAddress>>() {
-        override fun areItemsTheSame(oldItem: Pair<Infos?, SpotsWithAddress>, newItem: Pair<Infos?, SpotsWithAddress>): Boolean {
+    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, SpotsWithAddress?>>() {
+        override fun areItemsTheSame(oldItem: Pair<Infos?, SpotsWithAddress?>, newItem: Pair<Infos?, SpotsWithAddress?>): Boolean {
             return oldItem == newItem
         }
-        override fun areContentsTheSame(oldItem: Pair<Infos?, SpotsWithAddress>, newItem: Pair<Infos?, SpotsWithAddress>): Boolean {
+        override fun areContentsTheSame(oldItem: Pair<Infos?, SpotsWithAddress?>, newItem: Pair<Infos?, SpotsWithAddress?>): Boolean {
             return oldItem == newItem
         }
     }
     private val differ = AsyncListDiffer(this, differCallback)
 
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
-    fun submitList(list: List<Pair<Infos?, SpotsWithAddress>>) {
+    fun submitList(list: List<Pair<Infos?, SpotsWithAddress?>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
         })
@@ -76,13 +76,13 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                     if (position == differ.currentList.size - 1) {
                         holder.onBind(spots, addressList[position], true)
                     } else {
-                        holder.onBind(spots, addressList[position], differ.currentList[position + 1].second.name)
+                        holder.onBind(spots, addressList[position], differ.currentList[position + 1].second!!.name)
                     }
                 } else {
                     if (position == differ.currentList.size - 1) {
                         holder.onBind(spots, null, true)
                     } else {
-                        holder.onBind(spots, null, differ.currentList[position + 1].second.name)
+                        holder.onBind(spots, null, differ.currentList[position + 1].second!!.name)
                     }
                 }
             }
@@ -95,9 +95,9 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress>, address: String?, isLastSpot: Boolean) {}
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress>, address: String?, nextSpot: String) {}
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress>, position: Int, lastPosition: Int) {}
+        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, address: String?, isLastSpot: Boolean) {}
+        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, address: String?, nextSpot: String) {}
+        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(
@@ -106,25 +106,25 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress>, address: String?, nextSpot: String) {
+        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, address: String?, nextSpot: String) {
             binding.spots = data.second
             binding.infos = data.first
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
             binding.tvAddress.text = address
             data.first?.let { setMobilityToKorean(it) }
-            binding.isTipAvailable = data.second.tip.isNullOrEmpty()
+            binding.isTipAvailable = data.second!!.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
         }
 
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress>, address: String?, isLastSpot: Boolean) {
+        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, address: String?, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
             binding.tvAddress.text = address
-            binding.isTipAvailable = data.second.tip.isNullOrEmpty()
+            binding.isTipAvailable = data.second!!.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()
             binding.clAddress.setOnClickListener { copyButton() }
@@ -153,9 +153,9 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             }
         }
 
-        private fun initViewPagerAdapter(data: Pair<Infos?, SpotsWithAddress>) {
+        private fun initViewPagerAdapter(data: Pair<Infos?, SpotsWithAddress?>) {
             viewPagerAdapter = PhotoViewPagerAdapter(photoUrl)
-            viewPagerAdapter.setItems(data.second.images)
+            viewPagerAdapter.setItems(data.second!!.images)
             binding.vpPhoto.adapter = viewPagerAdapter
             binding.vpPhoto.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }
@@ -168,7 +168,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     }
 
     class RouteViewHolder(private val binding: ItemDailyRouteBinding) : SpotViewHolder(binding) {
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress>, position: Int, lastPosition: Int) {
+        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, position: Int, lastPosition: Int) {
             binding.spots = data.second
             binding.infos = data.first
             binding.position = position

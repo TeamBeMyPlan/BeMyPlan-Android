@@ -102,7 +102,7 @@ class AfterPurchaseViewModel @Inject constructor(
     fun fetchPlanDetail(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                planDetailRepository.fetchPlanDetail(1)
+                planDetailRepository.fetchPlanDetail(planId)
             }.onSuccess { planDetail ->
                 _planDetail.value = planDetail
                 _contents.value = planDetail.contents
@@ -115,10 +115,10 @@ class AfterPurchaseViewModel @Inject constructor(
     fun fetchMoveInfo(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                moveInfoRepository.fetchMoveInfo(1)
+                moveInfoRepository.fetchMoveInfo(planId)
             }.onSuccess { moveInfoList ->
                 _moveInfoList.value = moveInfoList
-                fetchPlanDetail(1)
+                fetchPlanDetail(planId)
             }.onFailure { error ->
                 Timber.tag("fetchMoveInfo").e(error)
             }

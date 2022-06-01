@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface HomeNewService {
-    @GET("/v1/plans?size=10&sort=createdAt,desc")
+    @GET("v1/plans?size=10&sort=createdAt,desc")
     suspend fun getNewData() : ResponseHomeData
 }

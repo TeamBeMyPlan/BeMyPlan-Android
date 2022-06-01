@@ -108,7 +108,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // scrap button
         binding.layoutScrap.setOnClickListener { viewModel.scrap() }
         // back button
-        binding.layoutBack.setOnClickListener { finish() }
+        binding.layoutBack.setOnClickListener {
+            intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
+            setResult(RESULT_OK, intent)
+            finish()
+        }
         // 스크롤뷰 설정
         binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ -> setTopTitle() })
 

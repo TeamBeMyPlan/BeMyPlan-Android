@@ -154,8 +154,9 @@ class AfterPurchaseViewModel @Inject constructor(
 
     // 더미데이터 생성
     fun initDummy() {
-//        val dummy = ExampleDummy().getPlan()
-//        _contents.value = dummy
+        _planDetail.value = ExampleDummy().getPlanDetail()
+        _contents.value = ExampleDummy().getPlanDetail().contents
+        _moveInfoList.value = ExampleDummy().getMoveInfoList()
     }
 
     // 일차별 장소들 초기화

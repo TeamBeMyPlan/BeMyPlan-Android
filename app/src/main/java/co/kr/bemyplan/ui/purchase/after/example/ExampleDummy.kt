@@ -1,6 +1,9 @@
 package co.kr.bemyplan.ui.purchase.after.example
 
+import android.icu.text.IDNA
 import co.kr.bemyplan.domain.model.purchase.after.*
+import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
+import co.kr.bemyplan.domain.model.purchase.after.moveInfo.MoveInfo
 
 class ExampleDummy {
     private fun getContents() = listOf(
@@ -48,8 +51,20 @@ class ExampleDummy {
             )
         )
     )
-    
     private fun setUser() = PlanDetail.User(-1, "베이비타이거")
 
-    fun getPlanDetail() = PlanDetail(getContents(),"1",-1, "1","친구와 함께 퇴사 기념 힐링여행", setUser())
+    private fun setMoveInfoList() = listOf(
+        MoveInfo(1, listOf(
+            Infos(1, "CAR", 52, 2), Infos(2, "WALK", 3, 3), Infos(3, "PUBLIC", 30, 4)
+        )),
+        MoveInfo(2, listOf(
+            Infos(5, "PUBLIC", 38, 6), Infos(6, "WALK", 10, 7)
+        )),
+        MoveInfo(3, listOf(
+            Infos(8, "CAR", 30, 9), Infos(9, "CAR", 35, 10)
+        ))
+    )
+
+    fun getPlanDetail() = PlanDetail(getContents(),"1",-1, "친구와 함께 퇴사 기념 힐링여행","1", setUser())
+    fun getMoveInfoList() = setMoveInfoList()
 }

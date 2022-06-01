@@ -80,12 +80,12 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // Observer
         viewModel.contents.observe(this) {
             setAddressFromKakao(it)
-//            viewModel.setSpotsWithAddress(addressList)
 
             // writer 버튼 생성
             binding.clWriter.setOnClickListener { initUserButton() }
         }
 
+        // setAddressFromKakao()에서 모든 spot의 조회가 끝나고 spotSize가 -1이 될 때 addressList 넣기
         viewModel.spotSize.observe(this) {
             if (it == -1) {
                 viewModel.setSpotsWithAddress(addressList)
@@ -122,9 +122,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         if (planId == -1) {
             viewModel.initDummy()
             binding.ivToWriterProfile.isVisible = false
-
-            // fragment 보이기
-            initFragment(0)
         } else { // network 연결
             viewModel.fetchMoveInfo(planId)
         }

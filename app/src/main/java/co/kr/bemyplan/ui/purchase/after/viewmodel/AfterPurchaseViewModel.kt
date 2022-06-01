@@ -107,8 +107,6 @@ class AfterPurchaseViewModel @Inject constructor(
             }.onSuccess { planDetail ->
                 _planDetail.value = planDetail
                 _contents.value = planDetail.contents
-                _authorNickname = planDetail.user.nickname
-                _authorUserId = planDetail.user.userId
             }.onFailure { error ->
                 Timber.tag("fetchPlanDetail").e(error)
             }
@@ -208,10 +206,10 @@ class AfterPurchaseViewModel @Inject constructor(
     }
 
     fun plusSpotSize() {
-        _spotSize.value?.plus(1)
+        _spotSize.value = _spotSize.value?.plus(1)
     }
 
     fun minusSpotSize() {
-        _spotSize.value?.minus(1)
+        _spotSize.value = _spotSize.value?.minus(1)
     }
 }

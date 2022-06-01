@@ -14,19 +14,16 @@ import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
-import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
-import timber.log.Timber
 
 
 class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
-    val addressList = mutableListOf<String>()
 
     // item 갱신
     private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, SpotsWithAddress?>>() {
@@ -72,18 +69,10 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         val spots = differ.currentList[position]
         when (holder) {
             is ContentsViewHolder -> {
-                if (addressList.isNotEmpty()) {
-                    if (position == differ.currentList.size - 1) {
-                        holder.onBind(spots, addressList[position], true)
-                    } else {
-                        holder.onBind(spots, addressList[position], differ.currentList[position + 1].second!!.name)
-                    }
+                if (position == differ.currentList.size - 1) {
+                    holder.onBind(spots,true)
                 } else {
-                    if (position == differ.currentList.size - 1) {
-                        holder.onBind(spots, null, true)
-                    } else {
-                        holder.onBind(spots, null, differ.currentList[position + 1].second!!.name)
-                    }
+                    holder.onBind(spots, differ.currentList[position + 1].second!!.name)
                 }
             }
             is RouteViewHolder -> {
@@ -95,8 +84,8 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, address: String?, isLastSpot: Boolean) {}
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, address: String?, nextSpot: String) {}
+        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, isLastSpot: Boolean) {}
+        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, nextSpot: String) {}
         open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, position: Int, lastPosition: Int) {}
     }
 
@@ -106,12 +95,12 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, address: String?, nextSpot: String) {
+        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, nextSpot: String) {
             binding.spots = data.second
             binding.infos = data.first
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
-            binding.tvAddress.text = address
+            binding.tvAddress.text = data.second?.address
             data.first?.let { setMobilityToKorean(it) }
             binding.isTipAvailable = data.second!!.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
@@ -119,11 +108,11 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.clAddress.setOnClickListener { copyButton() }
         }
 
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, address: String?, isLastSpot: Boolean) {
+        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
-            binding.tvAddress.text = address
+            binding.tvAddress.text = data.second?.address
             binding.isTipAvailable = data.second!!.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()

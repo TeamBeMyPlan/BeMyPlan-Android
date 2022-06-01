@@ -1,7 +1,9 @@
 package co.kr.bemyplan.ui.purchase.after.example
 
-import android.icu.text.IDNA
-import co.kr.bemyplan.domain.model.purchase.after.*
+import co.kr.bemyplan.domain.model.purchase.after.Contents
+import co.kr.bemyplan.domain.model.purchase.after.Images
+import co.kr.bemyplan.domain.model.purchase.after.PlanDetail
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.MoveInfo
 

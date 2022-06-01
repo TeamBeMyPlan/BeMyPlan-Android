@@ -1,7 +1,6 @@
 package co.kr.bemyplan.ui.purchase.after.viewmodel
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

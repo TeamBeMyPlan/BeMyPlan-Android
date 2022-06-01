@@ -1,13 +1,10 @@
 package co.kr.bemyplan.ui.purchase.after
 
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.browser.customtabs.CustomTabsClient.getPackageName
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,10 +13,6 @@ import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapReverseGeoCoder
-import timber.log.Timber
-import java.util.*
 
 @AndroidEntryPoint
 class DailyContentsFragment : Fragment() {

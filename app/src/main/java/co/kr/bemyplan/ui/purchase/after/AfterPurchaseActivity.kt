@@ -19,19 +19,16 @@ import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
-import co.kr.bemyplan.domain.model.purchase.after.*
+import co.kr.bemyplan.domain.model.purchase.after.Contents
+import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
+import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
+import co.kr.bemyplan.domain.model.purchase.after.toSpotsWithAddress
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
-import com.kakao.sdk.common.KakaoSdk.appKey
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import kotlinx.coroutines.internal.synchronized
 import net.daum.mf.map.api.*
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicReference
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -73,7 +70,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         initMap()
         // kakaomap 터치 이벤트
         initTouchListener()
-
         // 더미데이터, 진짜데이터 구분
         checkData(planId)
 

@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
-                android:onClick="@{() -> viewModel.postScrap()}"
+                android:onClick="@{() -> viewModel.scrap()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="13dp"
-                    android:src="@{viewModel.isScraped ? @drawable/icn_scrap : @drawable/icn_not_scrap}"
+                    android:src="@{viewModel.scrapStatus ? @drawable/icn_scrap : @drawable/icn_not_scrap}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

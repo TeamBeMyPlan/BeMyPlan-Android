@@ -59,8 +59,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val planId = intent.getIntExtra("postId", -1)
         viewModel.setPlanId(planId)
 
-        var isScraped = intent.getBooleanExtra("scrapStatus", false)
-        viewModel.setIsScraped(isScraped)
+        // scrap status 설정
+        val scrapStatus = intent.getBooleanExtra("scrapStatus", false)
+        viewModel.setScrapStatus(scrapStatus)
 
         val authorNickname = intent.getStringExtra("authorNickname") ?: ""
         val authorUserId = intent.getIntExtra("authorUserId", -1)
@@ -104,8 +105,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
             initChips(it)
         }
 
+        // scrap button
+        binding.layoutScrap.setOnClickListener { viewModel.scrap() }
         // back button
-        binding.ivBack.setOnClickListener { finish() }
+        binding.layoutBack.setOnClickListener {
+            intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
+            setResult(RESULT_OK, intent)
+            finish()
+        }
         // 스크롤뷰 설정
         binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ -> setTopTitle() })
 
@@ -203,9 +210,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
     // 작성자 정보 다음 뷰로 전송
     private fun initUserButton() {
         val intent = Intent(this, ListActivity::class.java)
-        intent.putExtra("from", "user")
+        //intent.putExtra("from", "user")
+        intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
         intent.putExtra("authorNickname", viewModel.authorNickname)
         intent.putExtra("authorUserId", viewModel.authorUserId)
+        setResult(RESULT_OK, intent)
         startActivity(intent)
         finish()
     }

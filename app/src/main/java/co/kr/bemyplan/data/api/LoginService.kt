@@ -11,17 +11,17 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface LoginService {
-    @POST("/v1/login")
+    @POST("v1/login")
     suspend fun postLogin(
         @Body body: RequestLogin
     ): ResponseLogin
 
-    @GET("/v1/user/name/check")
+    @GET("v1/user/name/check")
     suspend fun postDuplicatedNickname(
         @Query("nickname") nickname: String
     ): ResponseDuplicatedNickname
 
-    @POST("/v1/signup")
+    @POST("v1/signup")
     suspend fun postSignUp(
         @Body body: RequestSignUp
     ): ResponseSignUp

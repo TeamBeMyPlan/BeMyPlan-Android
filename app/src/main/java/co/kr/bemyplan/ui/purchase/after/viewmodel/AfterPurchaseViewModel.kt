@@ -6,12 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.data.repository.scrap.PostScrapRepository
 import co.kr.bemyplan.domain.model.purchase.after.*
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.MoveInfo
 import co.kr.bemyplan.domain.repository.MoveInfoRepository
 import co.kr.bemyplan.domain.repository.PlanDetailRepository
+import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class AfterPurchaseViewModel @Inject constructor(
     private val planDetailRepository: PlanDetailRepository,
     private val moveInfoRepository: MoveInfoRepository,
-    private val postScrapRepository: PostScrapRepository
+    private val scrapRepository: ScrapRepository
 ): ViewModel() {
 
     private val fb = Firebase.analytics.apply {
@@ -57,9 +57,9 @@ class AfterPurchaseViewModel @Inject constructor(
         get() = _spotSize
 
     // 스크랩
-    private var _isScraped = MutableLiveData<Boolean>()
-    val isScraped: LiveData<Boolean>
-        get() = _isScraped
+    private var _scrapStatus = MutableLiveData<Boolean>()
+    val scrapStatus: LiveData<Boolean>
+        get() = _scrapStatus
 
     // 작성자
     private var _authorNickname = ""
@@ -102,7 +102,7 @@ class AfterPurchaseViewModel @Inject constructor(
     fun fetchPlanDetail(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                planDetailRepository.fetchPlanDetail(1)
+                planDetailRepository.fetchPlanDetail(planId)
             }.onSuccess { planDetail ->
                 _planDetail.value = planDetail
                 _contents.value = planDetail.contents
@@ -115,38 +115,55 @@ class AfterPurchaseViewModel @Inject constructor(
     fun fetchMoveInfo(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                moveInfoRepository.fetchMoveInfo(1)
+                moveInfoRepository.fetchMoveInfo(planId)
             }.onSuccess { moveInfoList ->
                 _moveInfoList.value = moveInfoList
-                fetchPlanDetail(1)
+                fetchPlanDetail(planId)
             }.onFailure { error ->
                 Timber.tag("fetchMoveInfo").e(error)
             }
         }
     }
 
-    fun postScrap() {
+    fun scrap() {
+        when (requireNotNull(scrapStatus.value)) {
+            true -> deleteScrap()
+            false -> postScrap()
+        }
+    }
+
+    private fun postScrap() {
         viewModelScope.launch {
             kotlin.runCatching {
-                postScrapRepository.postScrap(planId)
+                scrapRepository.postScrap(planId)
             }.onSuccess {
-                when (it.data.scrapped) {
-                    true -> {
-                        fb.logEvent("scrapTravelPlan", Bundle().apply {
-                            putString("source", "BeforeChargingView")
-                            putInt("postIdx", planId)
-                        })
-                    }
-                    false -> {
-                        fb.logEvent("scrapCancelTravelPlan", Bundle().apply {
-                            putString("source", "BeforeChargingView")
-                            putInt("postIdx", planId)
-                        })
-                    }
+                if (it) {
+                    fb.logEvent("scrapTravelPlan", Bundle().apply {
+                        putString("source", "AfterPurchaseView")
+                        putInt("postIdx", planId)
+                    })
+                    _scrapStatus.value = true
                 }
-                _isScraped.value = it.data.scrapped
-            }.onFailure { error ->
-                Timber.tag("postScrap").e(error)
+            }.onFailure { exception ->
+                Timber.e(exception)
+            }
+        }
+    }
+
+    private fun deleteScrap() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                scrapRepository.deleteScrap(planId)
+            }.onSuccess {
+                if (it) {
+                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
+                        putString("source", "ListView")
+                        putInt("postIdx", planId)
+                    })
+                    _scrapStatus.value = false
+                }
+            }.onFailure { exception ->
+                Timber.e(exception)
             }
         }
     }
@@ -163,8 +180,10 @@ class AfterPurchaseViewModel @Inject constructor(
         _spots.value = contents.value?.get(index)?.spots
     }
 
-    fun setIsScraped(flag: Boolean) {
-        _isScraped.value = flag
+    // response 로 스크랩 여부가 날아오지 않음. 이전 단계에서 받은 스크랩 여부를 적용해야 함
+    fun setScrapStatus(flag: Boolean) {
+        _scrapStatus.value = flag
+        Timber.tag("mlog: AfterPurchaseViewModel::setIsScraped").d(scrapStatus.value.toString())
     }
 
     fun setAuthor(authorNickname: String, authorUserId: Int) {

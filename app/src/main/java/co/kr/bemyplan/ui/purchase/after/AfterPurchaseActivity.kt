@@ -59,12 +59,15 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val planId = intent.getIntExtra("postId", -1)
         viewModel.setPlanId(planId)
 
-        var isScraped = intent.getBooleanExtra("scrapStatus", false)
-        viewModel.setIsScraped(isScraped)
+        // scrap status 설정
+        val scrapStatus = intent.getBooleanExtra("scrapStatus", false)
+        viewModel.setScrapStatus(scrapStatus)
 
         val authorNickname = intent.getStringExtra("authorNickname") ?: ""
         val authorUserId = intent.getIntExtra("authorUserId", -1)
         viewModel.setAuthor(authorNickname, authorUserId)
+
+        clickScrap()
 
         // 카카오맵 초기화
         initMap()
@@ -110,6 +113,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ -> setTopTitle() })
 
         setContentView(binding.root)
+    }
+
+    // scrap 클릭
+    private fun clickScrap() {
+        binding.layoutScrap.setOnClickListener {
+            viewModel.scrap()
+        }
     }
 
     // 더미데이터인지, 진짜데이터인지 확인
@@ -203,10 +213,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
     // 작성자 정보 다음 뷰로 전송
     private fun initUserButton() {
         val intent = Intent(this, ListActivity::class.java)
-        intent.putExtra("from", "user")
-        intent.putExtra("authorNickname", viewModel.authorNickname)
-        intent.putExtra("authorUserId", viewModel.authorUserId)
-        startActivity(intent)
+        viewModel.scrapStatus.observe(this) {
+            //intent.putExtra("from", "user")
+            intent.putExtra("scrapStatus", it)
+            intent.putExtra("authorNickname", viewModel.authorNickname)
+            intent.putExtra("authorUserId", viewModel.authorUserId)
+            setResult(RESULT_OK, intent)
+            startActivity(intent)
+        }
         finish()
     }
 

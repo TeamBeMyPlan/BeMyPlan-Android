@@ -13,8 +13,6 @@ import co.kr.bemyplan.data.repository.main.home.HomeSuggestRepositoryImpl
 import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
-import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
-import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.after.PlanDetailRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.after.moveInfo.MoveInfoRepositoryImpl
 import co.kr.bemyplan.domain.repository.ScrapListRepository

@@ -201,6 +201,10 @@ class AfterPurchaseViewModel @Inject constructor(
         _mergedPlanAndInfoList.value = bigList
     }
 
+    fun setMergedPlanAndInfo(index: Int) {
+        _mergedPlanAndInfo.value = _mergedPlanAndInfoList.value?.get(index)
+    }
+
     fun setSpotsWithAddress(list: MutableList<MutableList<SpotsWithAddress?>>) {
         _spotsWithAddress.value = list
     }

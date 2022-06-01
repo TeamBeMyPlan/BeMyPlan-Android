@@ -130,8 +130,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private fun initFragment(index: Int) {
         viewModel.setSpots(index)
         viewModel.setMoveInfo(index)
-
-        Timber.tag("hooni").d(viewModel.spots.value.toString())
+        viewModel.setMergedPlanAndInfo(index)
 
         val fragment = DailyContentsFragment()
         supportFragmentManager

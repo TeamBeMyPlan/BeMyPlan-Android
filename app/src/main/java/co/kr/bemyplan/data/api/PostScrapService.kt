@@ -5,7 +5,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface PostScrapService {
-    @POST("api/v1/scrap/{postId}")
+    @POST("/api/v1/scrap/{postId}")
     suspend fun postScrap(
         @Path("postId") postId: Int
     ): ResponseScrap

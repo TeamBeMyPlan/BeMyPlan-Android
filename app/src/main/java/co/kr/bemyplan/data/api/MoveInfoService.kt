@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface MoveInfoService {
-    @GET("v1/plan/{planId}/moveInfo")
+    @GET("/api/v1/plan/{planId}/moveInfo")
     suspend fun fetchMoveInfo(
         @Path("planId") planId: Int,
     ): ResponseMoveInfo

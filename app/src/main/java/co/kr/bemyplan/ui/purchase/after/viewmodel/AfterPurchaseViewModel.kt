@@ -107,6 +107,8 @@ class AfterPurchaseViewModel @Inject constructor(
             }.onSuccess { planDetail ->
                 _planDetail.value = planDetail
                 _contents.value = planDetail.contents
+                _authorNickname = planDetail.user.nickname
+                _authorUserId = planDetail.user.userId
             }.onFailure { error ->
                 Timber.tag("fetchPlanDetail").e(error)
             }

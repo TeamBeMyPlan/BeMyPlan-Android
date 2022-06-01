@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface PreviewService {
-    @GET("/v1/plan/{planId}/preview")
+    @GET("/api/v1/plan/{planId}/preview")
     suspend fun fetchPreviewPlan(
         @Path("planId") planId: Int
     ): ResponsePreviewPlan

@@ -7,7 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.HTTP
 
 interface WithdrawService {
-    @HTTP(method = "DELETE", path = "v1/auth/withdraw", hasBody = true)
+    @HTTP(method = "DELETE", path = "/v1/auth/withdraw", hasBody = true)
     fun deleteToken(
         @Body body: RequestWithdraw
     ): Call<ResponseWithdraw>

@@ -13,6 +13,6 @@ interface ScrapListService {
         @Query("sort", encoded = true) sort: String
     ): ResponseScrapList
 
-    @GET("api/v1/post/random")
+    @GET("/v1/post/random")
     suspend fun getEmptyScrapList(): ResponseEmptyScrapList
 }

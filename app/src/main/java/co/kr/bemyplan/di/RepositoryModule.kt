@@ -13,6 +13,10 @@ import co.kr.bemyplan.data.repository.main.home.HomeSuggestRepositoryImpl
 import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
+import co.kr.bemyplan.data.repository.main.scrap.ScrapRepository
+import co.kr.bemyplan.data.repository.main.scrap.ScrapRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.after.PlanDetailRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.after.moveInfo.MoveInfoRepositoryImpl
 import co.kr.bemyplan.domain.repository.ScrapListRepository
 import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
@@ -177,12 +181,23 @@ object RepositoryModule {
         return HomeSuggestRepositoryImpl(homeSuggestService, coroutineDispatcher)
     }
 
-    // ?? 뭐지 왜 없는데 됐었지...?
-//    @ViewModelScoped
-//    @Provides
-//    fun provideAfterPurchaseRepository(
-//        afterPostService: AfterPostService
-//    ): AfterPurchaseRepository {
-//        return AfterPurchaseRepositoryImpl(afterPostService)
-//    }
+    // 상세한 일정
+    @ViewModelScoped
+    @Provides
+    fun providePlanDetailRepository(
+        planDetailService: PlanDetailService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): PlanDetailRepository {
+        return PlanDetailRepositoryImpl(planDetailService, coroutineDispatcher)
+    }
+
+    // moveInfo 정보
+    @ViewModelScoped
+    @Provides
+    fun provideMoveInfoRepository(
+        moveInfoService: MoveInfoService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): MoveInfoRepository {
+        return MoveInfoRepositoryImpl(moveInfoService, coroutineDispatcher)
+    }
 }

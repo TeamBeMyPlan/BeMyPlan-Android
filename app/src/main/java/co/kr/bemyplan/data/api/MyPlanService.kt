@@ -6,7 +6,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MyPlanService {
-    @GET("api/v1/order")
+    @GET("/v1/order")
     suspend fun getMyPlan(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int

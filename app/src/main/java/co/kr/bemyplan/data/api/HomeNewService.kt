@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface HomeNewService {
-    @GET("/api/v1/post/new")
+    @GET("/v1/post/new")
     fun getNewData(): Call<ResponseHomeData>
 }

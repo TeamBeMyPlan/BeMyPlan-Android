@@ -215,7 +215,8 @@
                         android:layout_marginTop="12dp"
                         android:overScrollMode="never"
                         android:visibility="@{viewModel.myPlan.empty ? View.GONE : View.VISIBLE}"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="2"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_my_plan_purchase_list_title"
                         tools:listitem="@layout/item_my_plan_purchase_list" />

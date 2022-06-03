@@ -6,12 +6,12 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ScrapService {
-    @POST("/v1/plan/scrap/{planId}")
+    @POST("v1/plan/scrap/{planId}")
     suspend fun postScrap(
         @Path("planId") planId: Int
     ): ResponseScrap
 
-    @DELETE("/v1/plan/scrap/{planId}")
+    @DELETE("v1/plan/scrap/{planId}")
     suspend fun deleteScrap(
         @Path("planId") planId: Int
     ): ResponseScrap

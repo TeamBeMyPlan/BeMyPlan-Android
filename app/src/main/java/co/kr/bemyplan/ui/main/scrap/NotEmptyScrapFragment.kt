@@ -85,7 +85,6 @@ class NotEmptyScrapFragment : Fragment() {
                     putExtra("scrapStatus", it.scrapStatus)
                     putExtra("authorNickname", it.user.nickname)
                     putExtra("authorUserId", it.user.userId)
-                    putExtra("thumbnail", it.thumbnailUrl)
                 }
                 planActivityResultLauncher.launch(intent)
             } else {

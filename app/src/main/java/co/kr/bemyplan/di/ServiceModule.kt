@@ -73,16 +73,24 @@ object ServiceModule {
         return retrofit.create(ScrapService::class.java)
     }
 
+    // 상세한 일정
     @Singleton
     @Provides
-    fun provideAfterPostService(@BeMyPlanRetrofit retrofit: Retrofit): AfterPostService {
-        return retrofit.create(AfterPostService::class.java)
+    fun providePlanDetailService(@BeMyPlanRetrofit retrofit: Retrofit): PlanDetailService {
+        return retrofit.create(PlanDetailService::class.java)
+    }
+
+    // 상세한 일정
+    @Singleton
+    @Provides
+    fun provideMoveInfoService(@BeMyPlanRetrofit retrofit: Retrofit): MoveInfoService {
+        return retrofit.create(MoveInfoService::class.java)
     }
 
     //여행지뷰
     @Singleton
     @Provides
-    fun provideLocationService(@BeMyPlanRetrofit retrofit: Retrofit):LocationService {
+    fun provideLocationService(@BeMyPlanRetrofit retrofit: Retrofit): LocationService {
         return retrofit.create(LocationService::class.java)
     }
 
@@ -96,21 +104,21 @@ object ServiceModule {
     //홈뷰 인기 일정
     @Singleton
     @Provides
-    fun provideHomePopularService(@BeMyPlanRetrofit retrofit: Retrofit):HomePopularService{
+    fun provideHomePopularService(@BeMyPlanRetrofit retrofit: Retrofit): HomePopularService {
         return retrofit.create(HomePopularService::class.java)
     }
 
     //홈뷰 최신 일정
     @Singleton
     @Provides
-    fun provideHomeNewService(@BeMyPlanRetrofit retrofit: Retrofit):HomeNewService{
+    fun provideHomeNewService(@BeMyPlanRetrofit retrofit: Retrofit): HomeNewService {
         return retrofit.create(HomeNewService::class.java)
     }
 
     //홈뷰 추천 일정
     @Singleton
     @Provides
-    fun provideHomeSuggestService(@BeMyPlanRetrofit retrofit: Retrofit):HomeSuggestService{
+    fun provideHomeSuggestService(@BeMyPlanRetrofit retrofit: Retrofit): HomeSuggestService {
         return retrofit.create(HomeSuggestService::class.java)
     }
 
@@ -119,5 +127,11 @@ object ServiceModule {
     @Provides
     fun provideMyPlanService(@BeMyPlanRetrofit retrofit: Retrofit):MyPlanService{
         return retrofit.create(MyPlanService::class.java)
+
+    // 로그아웃, 회원탈퇴
+    @Singleton
+    @Provides
+    fun provideLogoutService(@BeMyPlanRetrofit retrofit: Retrofit): LogoutService {
+        return retrofit.create(LogoutService::class.java)
     }
 }

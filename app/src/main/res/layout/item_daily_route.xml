@@ -5,8 +5,11 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="spot"
-            type="co.kr.bemyplan.data.entity.purchase.after.Spot" />
+            name="spots"
+            type="co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress" />
+        <variable
+            name="infos"
+            type="co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos" />
         <variable
             name="position"
             type="java.lang.Integer" />
@@ -38,7 +41,7 @@
             android:textColor="@color/grey_313740"
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:textSize="14sp"
-            app:text="@{spot.title}"
+            app:text="@{spots.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -87,7 +90,7 @@
             android:fontFamily="@font/spoqa_han_sans_neo_regular"
             android:textSize="12sp"
             android:visibility="@{last_position == position ? View.GONE : View.VISIBLE}"
-            app:text="@{spot.nextSpotRequiredTime}"
+            app:text="@{@string/text_minute(infos.spentMinute)}"
             app:layout_constraintStart_toEndOf="@id/iv_transportation"
             app:layout_constraintTop_toTopOf="@id/iv_transportation"
             app:layout_constraintBottom_toBottomOf="@id/iv_transportation" />

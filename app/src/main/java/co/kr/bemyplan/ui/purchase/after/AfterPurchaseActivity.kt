@@ -3,6 +3,8 @@ package co.kr.bemyplan.ui.purchase.after
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
@@ -15,18 +17,18 @@ import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.entity.purchase.after.Post
-import co.kr.bemyplan.data.entity.purchase.after.Spot
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
+import co.kr.bemyplan.domain.model.purchase.after.Contents
+import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
+import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
+import co.kr.bemyplan.domain.model.purchase.after.toSpotsWithAddress
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
-import net.daum.mf.map.api.CalloutBalloonAdapter
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
+import net.daum.mf.map.api.*
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -40,6 +42,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
 
+    // 좌표 -> 주소로 바꿀 때 쓸 리스트
+    private lateinit var addressList : MutableList<MutableList<SpotsWithAddress?>>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,31 +55,64 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        // post id 받아오기
-        val postId = intent.getIntExtra("postId", -1)
+        // plan id 받아오기
+        val planId = intent.getIntExtra("planId", -1)
+        viewModel.setPlanId(planId)
+
+        // scrap status 설정
+        val scrapStatus = intent.getBooleanExtra("scrapStatus", false)
+        viewModel.setScrapStatus(scrapStatus)
+
+        val authorNickname = intent.getStringExtra("authorNickname") ?: ""
+        val authorUserId = intent.getIntExtra("authorUserId", -1)
+        viewModel.setAuthor(authorNickname, authorUserId)
 
         // 카카오맵 초기화
         initMap()
         // kakaomap 터치 이벤트
         initTouchListener()
-
         // 더미데이터, 진짜데이터 구분
-        checkData(postId)
+        checkData(planId)
 
         // Observer
-        viewModel.post.observe(this) {
+        viewModel.contents.observe(this) {
+            setAddressFromKakao(it)
+
+            // writer 버튼 생성
+            binding.clWriter.setOnClickListener { initUserButton() }
+        }
+
+        // setAddressFromKakao()에서 모든 spot의 조회가 끝나고 spotSize가 -1이 될 때 addressList 넣기
+        viewModel.spotSize.observe(this) {
+            if (it == -1) {
+                viewModel.setSpotsWithAddress(addressList)
+            }
+        }
+
+        viewModel.spotsWithAddress.observe(this) {
+            viewModel.setMergedPlanAndInfoList(
+                viewModel.planDetail.value!!,
+                viewModel.moveInfoList.value!!
+            )
+        }
+
+        viewModel.mergedPlanAndInfoList.observe(this) {
             // fragment 생성
             initFragment(0)
             // 마커 생성
-            initMarker(it.spots)
+            initMarker(it)
             // 일자별 버튼 생성
-            initChips(it.spots)
-            // user 버튼 생성
-            binding.clWriter.setOnClickListener{ _ -> initUserButton(it) }
+            initChips(it)
         }
 
+        // scrap button
+        binding.layoutScrap.setOnClickListener { viewModel.scrap() }
         // back button
-        binding.ivBack.setOnClickListener { finish() }
+        binding.layoutBack.setOnClickListener {
+            intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
+            setResult(RESULT_OK, intent)
+            finish()
+        }
         // 스크롤뷰 설정
         binding.svDailyContents.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ -> setTopTitle() })
 
@@ -82,21 +120,21 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 더미데이터인지, 진짜데이터인지 확인
-    private fun checkData(postId: Int) {
-        if (postId == -1) {
+    private fun checkData(planId: Int) {
+        if (planId == -1) {
             viewModel.initDummy()
             binding.ivToWriterProfile.isVisible = false
-
-            // fragment 보이기
-            initFragment(0)
         } else { // network 연결
-            viewModel.getPost(postId)
+            viewModel.fetchMoveInfo(planId)
         }
     }
 
     // fragment 그리기
     private fun initFragment(index: Int) {
-        viewModel.setDailySpot(binding.viewModel!!.post.value!!.spots[index])
+        viewModel.setSpots(index)
+        viewModel.setMoveInfo(index)
+        viewModel.setMergedPlanAndInfo(index)
+
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
@@ -104,18 +142,85 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .commit()
     }
 
+    private fun getAddressFromGeoCode(mapPoint: MapPoint, dayIndex: Int, addressIndex: Int) {
+        val ai: ApplicationInfo = packageManager.getApplicationInfo(
+            packageName,
+            PackageManager.GET_META_DATA
+        )
+        if (ai.metaData != null) {
+            val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
+            mapPoint.let {
+                val currentMapPoint = MapPoint.mapPointWithGeoCoord(
+                    mapPoint.mapPointGeoCoord.latitude,
+                    mapPoint.mapPointGeoCoord.longitude
+                )
+                MapReverseGeoCoder(
+                    metaData,
+                    currentMapPoint,
+                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                        override fun onReverseGeoCoderFoundAddress(
+                            p0: MapReverseGeoCoder?,
+                            address: String
+                        ) {
+                            // 주소 받아오기 성공 - address: 현재 주소
+                            viewModel.contents.value?.get(dayIndex)?.let {
+                                addressList[dayIndex][addressIndex] = it.spots[addressIndex].toSpotsWithAddress(address)
+                                viewModel.minusSpotSize()
+                            }
+                        }
+
+                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                            // 주소 받아오기 실패
+                            Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                        }
+                    },
+                    this
+                ).startFindingAddress()
+            }
+        }
+    }
+
+    // 2중 배열로 spotsWithAddress 세팅
+    private fun setAddressFromKakao(contents: List<Contents>) {
+        addressList = mutableListOf()
+
+        for (spotsIndex in contents.indices) {
+            addressList.add(mutableListOf())
+            for (spotIndex in contents[spotsIndex].spots.indices) {
+                addressList[spotsIndex].add(null)
+                viewModel.plusSpotSize()
+            }
+        }
+        viewModel.minusSpotSize()
+
+        for (spotsIndex in contents.indices) {
+            for (spotIndex in contents[spotsIndex].spots.indices) {
+                getAddressFromGeoCode(
+                    MapPoint.mapPointWithGeoCoord(
+                        contents[spotsIndex].spots[spotIndex].latitude,
+                        contents[spotsIndex].spots[spotIndex].longitude
+                    ),
+                    spotsIndex,
+                    spotIndex
+                )
+            }
+        }
+    }
+
     // 작성자 정보 다음 뷰로 전송
-    private fun initUserButton(data: Post?) {
+    private fun initUserButton() {
         val intent = Intent(this, ListActivity::class.java)
-        intent.putExtra("from", "user")
-        intent.putExtra("userId", data?.authorId)
-        intent.putExtra("authorNickname", data?.author)
+        //intent.putExtra("from", "user")
+        intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
+        intent.putExtra("authorNickname", viewModel.authorNickname)
+        intent.putExtra("authorUserId", viewModel.authorUserId)
+        setResult(RESULT_OK, intent)
         startActivity(intent)
         finish()
     }
 
     // 일차별 버튼 초기화
-    private fun initChips(data: List<List<Spot>>) {
+    private fun initChips(data: List<MergedPlanAndInfo>) {
         val chipGroup: ChipGroup = binding.chipGroupDay
         for (i in data.indices) {
             val chip = ItemDayButtonBinding.inflate(layoutInflater)
@@ -129,7 +234,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
             }
 
-            if(i == 0) {
+            if (i == 0) {
                 chip.chipDayButton.isChecked = true
                 setMarker(i, data)
                 mapView.setMapCenterPoint(mapPoints[i], true)
@@ -173,7 +278,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 카카오맵의 핀 초기화
-    private fun initMarker(data: List<List<Spot>>) {
+    private fun initMarker(data: List<MergedPlanAndInfo>) {
         markers = mutableListOf()
         for (i in data.indices) {
             /*
@@ -186,14 +291,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
             val markerList = mutableListOf<MapPOIItem>()
 
-            for (j in data[i].indices) {
+            for (j in data[i].infos.indices) {
                 val marker = MapPOIItem()
-                val spot = data[i][j]
-                sumLatitude += spot.latitude
+                val spot = data[i].infos[j].second
+                sumLatitude += spot!!.latitude
                 sumLongitude += spot.longitude
 
                 marker.apply {
-                    itemName = spot.title
+                    itemName = spot.name
                     mapPoint = MapPoint.mapPointWithGeoCoord(spot.latitude, spot.longitude)
                     markerType = MapPOIItem.MarkerType.CustomImage
                     customImageResourceId = R.drawable.icn_subpin_select
@@ -215,15 +320,18 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun setMarker(index: Int, data: List<List<Spot>>) {
+    private fun setMarker(index: Int, data: List<MergedPlanAndInfo>) {
         mapView.removeAllPOIItems()
         mapPoints = mutableListOf()
-        for(i in data.indices) {
+        for (i in data.indices) {
             if (index == i) {
-                for (j in data[i].indices) {
+                for (j in data[i].infos.indices) {
                     markers[i][j].apply {
-                        itemName = data[i][j].title
-                        mapPoint = MapPoint.mapPointWithGeoCoord(data[i][j].latitude, data[i][j].longitude)
+                        itemName = data[i].infos[j].second!!.name
+                        mapPoint = MapPoint.mapPointWithGeoCoord(
+                            data[i].infos[j].second!!.latitude,
+                            data[i].infos[j].second!!.longitude
+                        )
                         markerType = MapPOIItem.MarkerType.CustomImage
                         selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                         customImageResourceId = R.drawable.icn_mainpin_select
@@ -234,12 +342,14 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     mapPoints.add(markers[i][j].mapPoint)
                 }
                 mapView.fitMapViewAreaToShowMapPoints(mapPoints.toTypedArray())
-            }
-            else {
-                for (j in data[i].indices) {
+            } else {
+                for (j in data[i].infos.indices) {
                     markers[i][j].apply {
-                        itemName = data[i][j].title
-                        mapPoint = MapPoint.mapPointWithGeoCoord(data[i][j].latitude, data[i][j].longitude)
+                        itemName = data[i].infos[j].second!!.name
+                        mapPoint = MapPoint.mapPointWithGeoCoord(
+                            data[i].infos[j].second!!.latitude,
+                            data[i].infos[j].second!!.longitude
+                        )
                         markerType = MapPOIItem.MarkerType.CustomImage
                         selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                         customImageResourceId = R.drawable.icn_subpin_select
@@ -258,7 +368,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 커스텀 말풍선 클래스
-    class CustomBalloonAdapter(private val inflater: LayoutInflater): CalloutBalloonAdapter {
+    class CustomBalloonAdapter(private val inflater: LayoutInflater) : CalloutBalloonAdapter {
         private val mCalloutBalloon = inflater.inflate(R.layout.card_balloon, null)
         val name: TextView = mCalloutBalloon.findViewById(R.id.tv_title)
 
@@ -271,14 +381,19 @@ class AfterPurchaseActivity : AppCompatActivity() {
         override fun getPressedCalloutBalloon(poiItem: MapPOIItem?): View {
             // 말풍선 클릭 시
             mCalloutBalloon.setOnClickListener {
-                val intentKakaoMap = inflater.context.packageManager.getLaunchIntentForPackage("net.daum.android.map")
+                val intentKakaoMap =
+                    inflater.context.packageManager.getLaunchIntentForPackage("net.daum.android.map")
                 try {
                     val latitude = poiItem?.mapPoint?.mapPointGeoCoord?.latitude
                     val longitude = poiItem?.mapPoint?.mapPointGeoCoord?.longitude
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://look?p=$latitude,$longitude"))
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("kakaomap://look?p=$latitude,$longitude")
+                    )
                     inflater.context.startActivity(intent)
                 } catch (e: Exception) {
-                    val intentPlayStore = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
+                    val intentPlayStore =
+                        Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
                     inflater.context.startActivity(intentPlayStore)
                 }
             }
@@ -288,7 +403,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 마커 클릭 이벤트 리스너
-    class MarkerEventListener(val context: Context): MapView.POIItemEventListener {
+    class MarkerEventListener(val context: Context) : MapView.POIItemEventListener {
         override fun onPOIItemSelected(mapView: MapView?, poiItem: MapPOIItem?) {
             // 마커 클릭 시
         }
@@ -297,21 +412,32 @@ class AfterPurchaseActivity : AppCompatActivity() {
             // 말풍선 클릭 시 (Deprecated)
         }
 
-        override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, poiItem: MapPOIItem?, buttonType: MapPOIItem.CalloutBalloonButtonType?) {
+        override fun onCalloutBalloonOfPOIItemTouched(
+            mapView: MapView?,
+            poiItem: MapPOIItem?,
+            buttonType: MapPOIItem.CalloutBalloonButtonType?
+        ) {
             // 말풍선 클릭 시
-            val intentKakaoMap = context.packageManager.getLaunchIntentForPackage("net.daum.android.map")
+            val intentKakaoMap =
+                context.packageManager.getLaunchIntentForPackage("net.daum.android.map")
             try {
                 val latitude = poiItem?.mapPoint?.mapPointGeoCoord?.latitude
                 val longitude = poiItem?.mapPoint?.mapPointGeoCoord?.longitude
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://look?p=$latitude,$longitude"))
+                val intent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://look?p=$latitude,$longitude"))
                 context.startActivity(intent)
             } catch (e: Exception) {
-                val intentPlayStore = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
+                val intentPlayStore =
+                    Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
                 context.startActivity(intentPlayStore)
             }
         }
 
-        override fun onDraggablePOIItemMoved(mapView: MapView?, poiItem: MapPOIItem?, mapPoint: MapPoint?) {
+        override fun onDraggablePOIItemMoved(
+            mapView: MapView?,
+            poiItem: MapPOIItem?,
+            mapPoint: MapPoint?
+        ) {
             // 마커의 속성 중 isDraggable = true 일 때 마커를 이동시켰을 경우
         }
     }

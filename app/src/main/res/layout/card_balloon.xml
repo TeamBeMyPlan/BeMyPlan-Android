@@ -2,8 +2,8 @@
 <layout>
     <data>
         <variable
-            name="spot"
-            type="co.kr.bemyplan.data.entity.purchase.after.Spot" />
+            name="spots"
+            type="co.kr.bemyplan.domain.model.purchase.after.Spots" />
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

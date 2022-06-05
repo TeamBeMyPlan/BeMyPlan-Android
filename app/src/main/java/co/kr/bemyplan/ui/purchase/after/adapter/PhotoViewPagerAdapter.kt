@@ -7,10 +7,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemAfterPurchasePhotoBinding
+import co.kr.bemyplan.domain.model.purchase.after.Images
 import co.kr.bemyplan.util.clipTo
 
 class PhotoViewPagerAdapter(val photoUrl: ((String) -> Unit)?): RecyclerView.Adapter<PhotoViewPagerAdapter.PagerViewHolder>() {
-    private var photoList = listOf<String>()
+    private var photoList = listOf<Images>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,18 +28,18 @@ class PhotoViewPagerAdapter(val photoUrl: ((String) -> Unit)?): RecyclerView.Ada
     override fun getItemCount() = photoList.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(items: List<String>) {
+    fun setItems(items: List<Images>) {
         photoList = items
         notifyDataSetChanged()
     }
 
     inner class PagerViewHolder(private val binding: ItemAfterPurchasePhotoBinding):RecyclerView.ViewHolder(binding.root) {
-        fun onBind(data: String) {
-            binding.photo = data
-            clipTo(binding.ivPhoto, data)
+        fun onBind(data: Images) {
+            binding.photo = data.url
+            clipTo(binding.ivPhoto, data.url)
 
             binding.ivPhoto.setOnClickListener {
-                photoUrl?.invoke(data)
+                photoUrl?.invoke(data.url)
             }
         }
     }

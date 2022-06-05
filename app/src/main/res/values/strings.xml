@@ -74,4 +74,5 @@
     <string name="price_format">%,2d</string>
     <string name="text_sign_up_terms_title">이용약관 동의가 필요해요.</string>
     <string name="text_home_main">구매 많은 여행 일정</string>
+    <string name="text_minute">%d분</string>
 </resources>

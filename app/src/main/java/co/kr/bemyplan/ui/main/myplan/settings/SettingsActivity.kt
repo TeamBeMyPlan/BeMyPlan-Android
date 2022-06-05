@@ -71,8 +71,6 @@ class SettingsActivity : AppCompatActivity() {
         dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
-                    dataStore.sessionId = ""
-                    dataStore.userId = 0
                     runCatching {
                         viewModel.logout()
                     }.onSuccess {

@@ -67,7 +67,6 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
-                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         }, {
@@ -103,7 +102,6 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
-                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         }, {
@@ -135,7 +133,6 @@ class HomeFragment : Fragment() {
                 putExtra("scrapStatus", it.scrapStatus)
                 putExtra("authorNickname", it.user.nickname)
                 putExtra("authorUserId", it.user.userId)
-                putExtra("thumbnail", it.thumbnailUrl)
             }
             startActivity(intent)
         }, {

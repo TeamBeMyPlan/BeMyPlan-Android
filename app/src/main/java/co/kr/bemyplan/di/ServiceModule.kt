@@ -125,8 +125,9 @@ object ServiceModule {
     //마이페이지 구매일정
     @Singleton
     @Provides
-    fun provideMyPlanService(@BeMyPlanRetrofit retrofit: Retrofit):MyPlanService{
+    fun provideMyPlanService(@BeMyPlanRetrofit retrofit: Retrofit):MyPlanService {
         return retrofit.create(MyPlanService::class.java)
+    }
 
     // 로그아웃, 회원탈퇴
     @Singleton

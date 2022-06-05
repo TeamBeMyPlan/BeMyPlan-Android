@@ -104,7 +104,7 @@ class AfterPurchaseViewModel @Inject constructor(
             kotlin.runCatching {
                 planDetailRepository.fetchPlanDetail(planId)
             }.onSuccess { planDetail ->
-                _planDetail.value = planDetail
+                _planDetail.value = checkContents(planDetail)
                 _contents.value = planDetail.contents
             }.onFailure { error ->
                 Timber.tag("fetchPlanDetail").e(error)
@@ -207,9 +207,8 @@ class AfterPurchaseViewModel @Inject constructor(
         val bigList = mutableListOf<MergedPlanAndInfo>()
         for (i in planDetail.contents.indices) {
             val pairList = mutableListOf<Pair<Infos?, SpotsWithAddress?>>()
-            val dailySpots = planDetail.contents[i].spots
+            val dailySpots = planDetail.contents[i].spots.toMutableList()
             for (j in dailySpots.indices) {
-                dailySpots[j].images = checkImageUrl(dailySpots[j].images)
                 if (j == dailySpots.size - 1)
                     pairList.add(Pair(null, spotsWithAddress.value!![i][j]))
                 else
@@ -220,12 +219,20 @@ class AfterPurchaseViewModel @Inject constructor(
         _mergedPlanAndInfoList.value = bigList
     }
 
+    // tip과 review에 \\n 되어있는 것 수정
     // 이미지 url 뒷부분 \r 로 되어있는 것 수정
-    private fun checkImageUrl(images: List<Images>): List<Images> {
-        for (image in images) {
-            image.url = image.url.replace("\r", "")
+    private fun checkContents(contents: PlanDetail): PlanDetail {
+        for (content in contents.contents) {
+            for (spot in content.spots) {
+                spot.tip = spot.tip?.replace("\\n", "\n")
+                spot.review = spot.review.replace("\\n", "\n")
+                for (image in spot.images) {
+                    image.url = image.url.replace("\r", "")
+                }
+            }
         }
-        return images
+
+        return contents
     }
 
     fun setMergedPlanAndInfo(index: Int) {

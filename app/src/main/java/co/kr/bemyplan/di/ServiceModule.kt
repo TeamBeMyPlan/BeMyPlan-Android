@@ -53,13 +53,6 @@ object ServiceModule {
         return retrofit.create(UserPlanListService::class.java)
     }
 
-    // 마이페이지 뷰
-    @Singleton
-    @Provides
-    fun provideMyPlanService(@BeMyPlanRetrofit retrofit: Retrofit): MyPlanService {
-        return retrofit.create(MyPlanService::class.java)
-    }
-
     // 로그인 뷰
     @Singleton
     @Provides
@@ -128,6 +121,12 @@ object ServiceModule {
     fun provideHomeSuggestService(@BeMyPlanRetrofit retrofit: Retrofit): HomeSuggestService {
         return retrofit.create(HomeSuggestService::class.java)
     }
+
+    //마이페이지 구매일정
+    @Singleton
+    @Provides
+    fun provideMyPlanService(@BeMyPlanRetrofit retrofit: Retrofit):MyPlanService{
+        return retrofit.create(MyPlanService::class.java)
 
     // 로그아웃, 회원탈퇴
     @Singleton

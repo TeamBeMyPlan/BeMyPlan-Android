@@ -9,11 +9,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.local.AutoLoginData
-import co.kr.bemyplan.data.entity.main.myplan.MyModel
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
+import co.kr.bemyplan.domain.model.main.myplan.MyPlanData
 import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter
 import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 import co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel
@@ -25,7 +25,7 @@ class MyPlanFragment : Fragment() {
     private var _binding: FragmentMyPlanBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by viewModels<MyPlanViewModel>()
-    private var listItem = listOf<MyModel>()
+    private var listItem = listOf<MyPlanData.Data>()
     private lateinit var purchaseTourAdapter: MyPlanAdapter
 
     override fun onCreateView(
@@ -42,7 +42,7 @@ class MyPlanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        viewModel.setNickname(AutoLoginData.getNickname(requireContext()))
+        //viewModel.setNickname(AutoLoginData.getNickname(requireContext()))
     }
 
     private fun initList() {
@@ -58,24 +58,32 @@ class MyPlanFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        binding.rvMyPlanPurchase.layoutManager = GridLayoutManager(requireContext(), 2)
         purchaseTourAdapter = MyPlanAdapter({
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-            intent.putExtra("postId", it.postId)
+            intent.putExtra("postId", it.planId)
             startActivity(intent)
         }, {
-            when(it.isScrapped) {
-                true -> viewModel.deleteScrap(it.postId)
-                false -> viewModel.postScrap(it.postId)
+            when (it.scrapStatus) {
+                true -> viewModel.deleteScrap(it.planId)
+                false -> viewModel.postScrap(it.planId)
             }
         })
-        purchaseTourAdapter.setItems(listItem)
+        /*binding.rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if(!binding.rvMyPlanPurchase.canScrollVertically(1)){
+                    viewModel.getMoreMyPlanList()
+                }
+            }
+        })*/
+        purchaseTourAdapter.submitList(listItem)
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
     }
 
     private fun lookingAroundEvent() {
         binding.tvLookingAround.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(R.id.action_fragment_my_plan_to_fragment_home)
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_fragment_my_plan_to_fragment_home)
         }
     }
 

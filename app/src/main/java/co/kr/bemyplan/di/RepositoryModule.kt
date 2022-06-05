@@ -12,7 +12,7 @@ import co.kr.bemyplan.data.repository.main.home.HomeNewRepositoryImpl
 import co.kr.bemyplan.data.repository.main.home.HomePopularRepositoryImpl
 import co.kr.bemyplan.data.repository.main.home.HomeSuggestRepositoryImpl
 import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
-import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
+import co.kr.bemyplan.domain.repository.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.after.PlanDetailRepositoryImpl
@@ -89,15 +89,6 @@ object RepositoryModule {
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): UserPostListRepository {
         return UserPostListRepositoryImpl(userPlanListService, coroutineDispatcher)
-    }
-
-    // 마이페이지 뷰
-    @ViewModelScoped
-    @Provides
-    fun provideMyPlanRepository(
-        myPlanService: MyPlanService
-    ): MyPlanRepository {
-        return MyPlanRepositoryImpl(myPlanService)
     }
 
     // 로그인 뷰
@@ -177,6 +168,26 @@ object RepositoryModule {
     ): HomeSuggestRepository {
         return HomeSuggestRepositoryImpl(homeSuggestService, coroutineDispatcher)
     }
+
+
+    //마이플랜 구매일정
+    @ViewModelScoped
+    @Provides
+    fun provideMyPlanRepository(
+        myPlanService: MyPlanService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ) : MyPlanRepository{
+        return MyPlanRepositoryImpl(myPlanService, coroutineDispatcher)
+    }
+
+    // ?? 뭐지 왜 없는데 됐었지...?
+//    @ViewModelScoped
+//    @Provides 
+//    fun provideAfterPurchaseRepository(
+//        afterPostService: AfterPostService
+//    ): AfterPurchaseRepository {
+//        return AfterPurchaseRepositoryImpl(afterPostService)
+//    }
 
     // 상세한 일정
     @ViewModelScoped

@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface GoogleLoginService {
-    @POST("/oauth2/v4/token")
+    @POST("oauth2/v4/token")
     suspend fun postGoogleSignInData(
         @Body body: RequestGoogleLogin
     ): ResponseGoogleLogin

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="model"
-            type="co.kr.bemyplan.data.entity.main.myplan.MyModel" />
+            type="co.kr.bemyplan.domain.model.main.myplan.MyPlanData.Data" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +40,7 @@
                 android:id="@+id/iv_scrap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@{model.isScrapped ? @drawable/icn_scrap_white : @drawable/icn_not_scrap_white}"
+                android:src="@{model.scrapStatus ? @drawable/icn_scrap_white : @drawable/icn_not_scrap_white}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -2,39 +2,33 @@ package co.kr.bemyplan.ui.main.myplan.settings.withdrawal
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.res.ColorStateList
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Base64
-import android.util.Log
 import android.view.MotionEvent
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.api.ApiService
-import co.kr.bemyplan.data.entity.main.myplan.RequestWithdraw
-import co.kr.bemyplan.data.entity.main.myplan.ResponseWithdraw
 import co.kr.bemyplan.databinding.ActivityWithdrawalBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.util.CustomDialog
-import com.kakao.util.maps.helper.Utility
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.security.MessageDigest
+import co.kr.bemyplan.util.ToastMessage.shortToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WithdrawalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWithdrawalBinding
+    private val viewModel by viewModels<WithdrawalViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWithdrawalBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initView()
+    }
+
+    private fun initView() {
         binding.ivBack.setOnClickListener {
             finish()
         }
@@ -98,8 +92,13 @@ class WithdrawalActivity : AppCompatActivity() {
         dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
-                    initNetwork()
-                    showWithdrawalFinishedDialog()
+                    runCatching {
+                        viewModel.signOut(binding.etWithdrawal.text.toString())
+                    }.onSuccess {
+                        showWithdrawalFinishedDialog()
+                    }.onFailure {
+                        this@WithdrawalActivity.shortToast("문제가 발생했습니다. 잠시 후 다시 시도해주세요.")
+                    }
                 }
             }
         })
@@ -112,29 +111,12 @@ class WithdrawalActivity : AppCompatActivity() {
         dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
-                    val intent = Intent(this@WithdrawalActivity, LoginActivity::class.java)
+                    val intent = Intent(this@WithdrawalActivity, LoginActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    }
                     startActivity(intent)
                     this@WithdrawalActivity.finish()
                 }
-            }
-        })
-    }
-
-    private fun initNetwork() {
-        val reason = binding.etWithdrawal.text.toString()
-        val call = ApiService.withdrawService.deleteToken(body = RequestWithdraw(reason))
-        call.enqueue(object : Callback<ResponseWithdraw> {
-            override fun onResponse(
-                call: Call<ResponseWithdraw>,
-                response: Response<ResponseWithdraw>
-            ) {
-                if (response.isSuccessful) {
-                    //TODO: 삭제
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseWithdraw>, t: Throwable) {
-                Log.d("탈퇴 서버 통신 실패", t.message!!)
             }
         })
     }

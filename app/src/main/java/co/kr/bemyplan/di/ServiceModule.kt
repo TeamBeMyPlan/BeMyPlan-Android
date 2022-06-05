@@ -97,7 +97,7 @@ object ServiceModule {
     //여행지뷰
     @Singleton
     @Provides
-    fun provideLocationService(@BeMyPlanRetrofit retrofit: Retrofit):LocationService {
+    fun provideLocationService(@BeMyPlanRetrofit retrofit: Retrofit): LocationService {
         return retrofit.create(LocationService::class.java)
     }
 
@@ -111,21 +111,28 @@ object ServiceModule {
     //홈뷰 인기 일정
     @Singleton
     @Provides
-    fun provideHomePopularService(@BeMyPlanRetrofit retrofit: Retrofit):HomePopularService{
+    fun provideHomePopularService(@BeMyPlanRetrofit retrofit: Retrofit): HomePopularService {
         return retrofit.create(HomePopularService::class.java)
     }
 
     //홈뷰 최신 일정
     @Singleton
     @Provides
-    fun provideHomeNewService(@BeMyPlanRetrofit retrofit: Retrofit):HomeNewService{
+    fun provideHomeNewService(@BeMyPlanRetrofit retrofit: Retrofit): HomeNewService {
         return retrofit.create(HomeNewService::class.java)
     }
 
     //홈뷰 추천 일정
     @Singleton
     @Provides
-    fun provideHomeSuggestService(@BeMyPlanRetrofit retrofit: Retrofit):HomeSuggestService{
+    fun provideHomeSuggestService(@BeMyPlanRetrofit retrofit: Retrofit): HomeSuggestService {
         return retrofit.create(HomeSuggestService::class.java)
+    }
+
+    // 로그아웃, 회원탈퇴
+    @Singleton
+    @Provides
+    fun provideLogoutService(@BeMyPlanRetrofit retrofit: Retrofit): LogoutService {
+        return retrofit.create(LogoutService::class.java)
     }
 }

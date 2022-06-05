@@ -7,19 +7,18 @@ import co.kr.bemyplan.data.repository.list.SuggestListRepositoryImpl
 import co.kr.bemyplan.data.repository.list.UserPostListRepositoryImpl
 import co.kr.bemyplan.data.repository.login.GoogleLoginRepositoryImpl
 import co.kr.bemyplan.data.repository.login.LoginRepositoryImpl
+import co.kr.bemyplan.data.repository.logout.LogoutRepositoryImpl
 import co.kr.bemyplan.data.repository.main.home.HomeNewRepositoryImpl
 import co.kr.bemyplan.data.repository.main.home.HomePopularRepositoryImpl
 import co.kr.bemyplan.data.repository.main.home.HomeSuggestRepositoryImpl
 import co.kr.bemyplan.data.repository.main.location.LocationRepositoryImpl
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepository
 import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
+import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.after.PlanDetailRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.after.moveInfo.MoveInfoRepositoryImpl
-import co.kr.bemyplan.domain.repository.ScrapListRepository
-import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PurchaseRepositoryImpl
-import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.data.repository.scrap.ScrapRepositoryImpl
 import co.kr.bemyplan.domain.repository.*
 import dagger.Module
@@ -155,7 +154,7 @@ object RepositoryModule {
     fun provideHomePopularRepository(
         homePopularService: HomePopularService,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-    ) : HomePopularRepository{
+    ): HomePopularRepository {
         return HomePopularRepositoryImpl(homePopularService, coroutineDispatcher)
     }
 
@@ -165,7 +164,7 @@ object RepositoryModule {
     fun provideHomeNewRepository(
         homeNewService: HomeNewService,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-    ) : HomeNewRepository{
+    ): HomeNewRepository {
         return HomeNewRepositoryImpl(homeNewService, coroutineDispatcher)
     }
 
@@ -175,7 +174,7 @@ object RepositoryModule {
     fun provideHomeSuggestRepository(
         homeSuggestService: HomeSuggestService,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-    ) : HomeSuggestRepository{
+    ): HomeSuggestRepository {
         return HomeSuggestRepositoryImpl(homeSuggestService, coroutineDispatcher)
     }
 
@@ -198,4 +197,12 @@ object RepositoryModule {
     ): MoveInfoRepository {
         return MoveInfoRepositoryImpl(moveInfoService, coroutineDispatcher)
     }
+
+    // 로그아웃, 회원탈퇴
+    @ViewModelScoped
+    @Provides
+    fun provideLogoutRepository(
+        logoutService: LogoutService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): LogoutRepository = LogoutRepositoryImpl(logoutService, coroutineDispatcher)
 }

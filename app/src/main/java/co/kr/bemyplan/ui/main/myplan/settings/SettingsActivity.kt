@@ -3,21 +3,24 @@ package co.kr.bemyplan.ui.main.myplan.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.main.myplan.settings.creator.CreatorProposeActivity
 import co.kr.bemyplan.ui.main.myplan.settings.withdrawal.WithdrawalActivity
 import co.kr.bemyplan.util.CustomDialog
+import co.kr.bemyplan.util.ToastMessage.shortToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+    private val viewModel by viewModels<SettingViewModel>()
+
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
 
@@ -25,7 +28,10 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initView()
+    }
 
+    private fun initView() {
         // 뒤로가기
         binding.clBack.setOnClickListener {
             finish()
@@ -67,7 +73,13 @@ class SettingsActivity : AppCompatActivity() {
                 if (num == 1) {
                     dataStore.sessionId = ""
                     dataStore.userId = 0
-                    showLogoutFinishedDialog()
+                    runCatching {
+                        viewModel.logout()
+                    }.onSuccess {
+                        showLogoutFinishedDialog()
+                    }.onFailure {
+                        this@SettingsActivity.shortToast("문제가 발생했습니다. 잠시 후 다시 시도해주세요.")
+                    }
                 }
             }
         })

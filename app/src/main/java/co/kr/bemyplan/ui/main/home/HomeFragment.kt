@@ -25,7 +25,6 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
     private lateinit var recentAdapter: HomeAdapter
     private lateinit var editorAdapter: HomeAdapter
-    private lateinit var snapHelper: LinearSnapHelper
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val homeViewModel: HomeViewModel by viewModels()
@@ -40,17 +39,6 @@ class HomeFragment : Fragment() {
         initAdapterPopular()
         clickMore()
         return binding.root
-    }
-
-    private fun findCenterView(layoutManager: LinearLayoutManager) : View? {
-        val llm : LinearLayoutManager = layoutManager
-        if(llm.findFirstCompletelyVisibleItemPosition() == 0){
-            return llm.getChildAt(0)
-        }
-        else if(llm.findLastCompletelyVisibleItemPosition() == layoutManager.itemCount -1){
-            return llm.getChildAt(layoutManager.itemCount-1)
-        }
-        else return null
     }
 
     override fun onDestroyView() {
@@ -81,10 +69,6 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         })
         binding.rvRecent.adapter = recentAdapter
-//        binding.rvRecent.layoutManager = LinearLayoutManager(requireContext())
-//        val lm = binding.rvRecent.layoutManager
-        val gravitySnapHelper = GravitySnapHelper(Gravity.START)
-        gravitySnapHelper.attachToRecyclerView(binding.rvRecent)
 
         homeViewModel.new.observe(viewLifecycleOwner) {
             recentAdapter.planList.addAll(it)

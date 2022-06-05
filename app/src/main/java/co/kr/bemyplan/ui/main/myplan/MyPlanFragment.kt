@@ -68,14 +68,14 @@ class MyPlanFragment : Fragment() {
                 false -> viewModel.postScrap(it.planId)
             }
         })
-        binding.rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        /*binding.rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if(!binding.rvMyPlanPurchase.canScrollVertically(1)){
                     viewModel.getMoreMyPlanList()
                 }
             }
-        })
+        })*/
         purchaseTourAdapter.submitList(listItem)
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
     }

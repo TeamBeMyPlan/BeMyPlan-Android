@@ -10,7 +10,7 @@ data class MyPlanData(
         val createdAt: String,
         val orderStatus: Boolean,
         val planId: Int,
-        val scrapStatus: Boolean,
+        var scrapStatus: Boolean,
         val thumbnailUrl: String,
         val title: String,
         val updatedAt: String,

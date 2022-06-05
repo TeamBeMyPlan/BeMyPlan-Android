@@ -15,13 +15,6 @@ class MyPlanAdapter(
     private val scrapClick: (MyPlanData.Data) -> Unit
 ) :
     ListAdapter<MyPlanData.Data, MyPlanAdapter.ExistMyPlanViewHolder>(MyPlanComparator()) {
-    //private var purchaseTourList = listOf<MyPlanData.Data>()
-
-    /*@SuppressLint("NotifyDataSetChanged")
-    fun setItems(items: List<MyPlanData.Data>) {
-        purchaseTourList = items
-        notifyDataSetChanged()
-    }*/
 
     class ExistMyPlanViewHolder(
         private val binding: ItemMyPlanPurchaseListBinding,
@@ -52,6 +45,7 @@ class MyPlanAdapter(
                 } else {
                     data.isScrapped = false
                 }*/
+                data.scrapStatus = !data.scrapStatus
                 binding.model = data
             }
         }

@@ -27,8 +27,11 @@ import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 import net.daum.mf.map.api.*
 import timber.log.Timber
+import java.util.*
+import kotlin.concurrent.timerTask
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -167,6 +170,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                                 addressList[dayIndex][addressIndex] = it.spots[addressIndex].toSpotsWithAddress(address)
                                 viewModel.minusSpotSize()
                             }
+                            Timber.tag("hooni").d(viewModel.spotSize.value.toString())
                         }
 
                         override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
@@ -181,6 +185,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 2중 배열로 spotsWithAddress 세팅
+    @OptIn(DelicateCoroutinesApi::class)
     private fun setAddressFromKakao(contents: List<Contents>) {
         addressList = mutableListOf()
 
@@ -194,16 +199,21 @@ class AfterPurchaseActivity : AppCompatActivity() {
         viewModel.minusSpotSize()
 
         for (spotsIndex in contents.indices) {
-            for (spotIndex in contents[spotsIndex].spots.indices) {
-                getAddressFromGeoCode(
-                    MapPoint.mapPointWithGeoCoord(
-                        contents[spotsIndex].spots[spotIndex].latitude,
-                        contents[spotsIndex].spots[spotIndex].longitude
-                    ),
-                    spotsIndex,
-                    spotIndex
-                )
+            runBlocking {
+                for (spotIndex in contents[spotsIndex].spots.indices) {
+                    Timber.tag("hooniloop").d(viewModel.spotSize.value.toString())
+                    delay(100L)
+                    getAddressFromGeoCode(
+                        MapPoint.mapPointWithGeoCoord(
+                            contents[spotsIndex].spots[spotIndex].latitude,
+                            contents[spotsIndex].spots[spotIndex].longitude
+                        ),
+                        spotsIndex,
+                        spotIndex
+                    )
+                }
             }
+
         }
     }
 

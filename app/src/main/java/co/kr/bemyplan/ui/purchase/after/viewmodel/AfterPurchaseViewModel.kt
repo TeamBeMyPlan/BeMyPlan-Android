@@ -209,6 +209,7 @@ class AfterPurchaseViewModel @Inject constructor(
             val pairList = mutableListOf<Pair<Infos?, SpotsWithAddress?>>()
             val dailySpots = planDetail.contents[i].spots
             for (j in dailySpots.indices) {
+                dailySpots[j].images = checkImageUrl(dailySpots[j].images)
                 if (j == dailySpots.size - 1)
                     pairList.add(Pair(null, spotsWithAddress.value!![i][j]))
                 else
@@ -217,6 +218,14 @@ class AfterPurchaseViewModel @Inject constructor(
             bigList.add(MergedPlanAndInfo(i + 1, pairList.toList()))
         }
         _mergedPlanAndInfoList.value = bigList
+    }
+
+    // 이미지 url 뒷부분 \r 로 되어있는 것 수정
+    private fun checkImageUrl(images: List<Images>): List<Images> {
+        for (image in images) {
+            image.url = image.url.replace("\r", "")
+        }
+        return images
     }
 
     fun setMergedPlanAndInfo(index: Int) {

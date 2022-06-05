@@ -90,7 +90,9 @@ class SettingsActivity : AppCompatActivity() {
         dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
             override fun onClicked(num: Int) {
                 if (num == 1) {
-                    val intent = Intent(this@SettingsActivity, LoginActivity::class.java)
+                    val intent = Intent(this@SettingsActivity, LoginActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    }
                     startActivity(intent)
                     this@SettingsActivity.finish()
                 }

@@ -9,8 +9,9 @@ import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.domain.repository.LoginRepository
+import co.kr.bemyplan.domain.model.login.UserInfoModel
 import co.kr.bemyplan.domain.repository.GoogleLoginRepository
+import co.kr.bemyplan.domain.repository.LoginRepository
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -111,7 +112,10 @@ class LoginViewModel @Inject constructor(
     fun login() {
         viewModelScope.launch {
             kotlin.runCatching {
-                loginRepository.postLogin(requestLogin)
+                loginRepository.postLogin(
+                    requireNotNull(socialType.value),
+                    requireNotNull(socialToken.value)
+                )
             }.onSuccess {
                 // FB LOG
                 fb.logEvent("signin", Bundle().apply {
@@ -124,7 +128,7 @@ class LoginViewModel @Inject constructor(
                 }
                 _userInfo.value = it
                 _isUser.value = true
-            }.onFailure {  exception ->
+            }.onFailure { exception ->
                 when (exception) {
                     is retrofit2.HttpException -> {
                         if (exception.code() == 404) {

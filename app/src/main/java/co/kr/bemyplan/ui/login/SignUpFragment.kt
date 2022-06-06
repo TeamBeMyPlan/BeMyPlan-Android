@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentSignUpBinding
 import co.kr.bemyplan.ui.login.signup.CheckNicknameFragment
-import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

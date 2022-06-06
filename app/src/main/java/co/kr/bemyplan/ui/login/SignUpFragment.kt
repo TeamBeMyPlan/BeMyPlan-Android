@@ -21,7 +21,7 @@ class SignUpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_sign_up, container, false)
         return binding.root
     }

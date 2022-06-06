@@ -12,13 +12,19 @@ class ScrapRepositoryImpl @Inject constructor(
 ) : ScrapRepository {
     override suspend fun postScrap(planId: Int): Boolean {
         return withContext(coroutineDispatcher) {
-            service.postScrap(planId).toBoolean()
+            service.postScrap(planId).toModel()
         }
     }
 
     override suspend fun deleteScrap(planId: Int): Boolean {
         return withContext(coroutineDispatcher) {
-            service.deleteScrap(planId).toBoolean()
+            service.deleteScrap(planId).toModel()
+        }
+    }
+
+    override suspend fun checkScrapStatus(planId: Int): Boolean {
+        return withContext(coroutineDispatcher) {
+            service.checkScrapStatus(planId).toModel()
         }
     }
 }

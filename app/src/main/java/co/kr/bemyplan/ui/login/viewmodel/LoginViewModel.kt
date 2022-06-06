@@ -1,14 +1,11 @@
 package co.kr.bemyplan.ui.login.viewmodel
 
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.login.UserInfoModel
-import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.repository.LoginRepository

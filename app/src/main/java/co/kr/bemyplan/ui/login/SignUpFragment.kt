@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")
-    private val viewModel by activityViewModels<LoginViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

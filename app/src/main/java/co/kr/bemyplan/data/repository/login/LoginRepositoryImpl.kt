@@ -25,9 +25,14 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun postSignUp(requestSignUp: RequestSignUp): ResponseSignUp {
+    override suspend fun postSignUp(
+        token: String,
+        socialType: String,
+        nickname: String,
+        email: String
+    ): UserInfoModel {
         return withContext(coroutineDispatcher) {
-            service.postSignUp(requestSignUp)
+            service.postSignUp(RequestSignUp(token, socialType, nickname, email)).data.toModel()
         }
     }
 }

@@ -227,12 +227,10 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 loginRepository.postSignUp(
-                    RequestSignUp(
-                        socialToken.value.toString(),
-                        socialType.value.toString(),
-                        nickname.value.toString(),
-                        email.value.toString()
-                    )
+                    requireNotNull(socialToken.value),
+                    requireNotNull(socialType.value),
+                    requireNotNull(nickname.value),
+                    requireNotNull(email.value)
                 )
             }.onSuccess {
                 // FB LOG

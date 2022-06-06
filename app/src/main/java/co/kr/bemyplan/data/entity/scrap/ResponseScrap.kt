@@ -5,7 +5,7 @@ data class ResponseScrap(
     val message: String,
     val data: String
 ) {
-    fun toBoolean(): Boolean {
+    fun toModel(): Boolean {
         return when (data) {
             "OK" -> true
             else -> false

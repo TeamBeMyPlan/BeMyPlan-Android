@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +19,6 @@ import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
-import java.lang.IllegalStateException
 
 @AndroidEntryPoint
 class BeforeChargingFragment : Fragment() {

@@ -3,7 +3,6 @@ package co.kr.bemyplan.data.repository.scrap
 import co.kr.bemyplan.data.api.ScrapService
 import co.kr.bemyplan.domain.repository.ScrapRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

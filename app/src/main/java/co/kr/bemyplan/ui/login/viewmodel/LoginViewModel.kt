@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.repository.LoginRepository
 import co.kr.bemyplan.domain.repository.GoogleLoginRepository
@@ -24,6 +25,9 @@ class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     private val googleLoginRepository: GoogleLoginRepository
 ) : ViewModel() {
+    @Inject
+    lateinit var dataStore: BeMyPlanDataStore
+
     val fb = Firebase.analytics.apply {
         setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
     }
@@ -114,8 +118,12 @@ class LoginViewModel @Inject constructor(
                 fb.logEvent("signin", Bundle().apply {
                     putString("source", socialType.value)
                 })
-
-                _userInfo.value = it.data
+                with(dataStore) {
+                    sessionId = it.sessionId
+                    userId = it.userId
+                    nickname = it.nickname
+                }
+                _userInfo.value = it
                 _isUser.value = true
             }.onFailure {  exception ->
                 when (exception) {

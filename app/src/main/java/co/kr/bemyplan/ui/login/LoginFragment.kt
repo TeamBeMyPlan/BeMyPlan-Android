@@ -88,10 +88,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
         clickGuestLogin()
         clickKakaoLogin()
         clickGoogleLogin()
-        testForSignUpPage()
     }
 
     private fun clickGuestLogin() {
@@ -114,14 +117,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun clickGoogleLogin() {
         binding.layoutGoogle.setOnClickListener {
             getGoogleToken()
-        }
-    }
-
-    private fun testForSignUpPage() {
-        // TODO: 나중에 꼭 !! 지우세요
-        // test용으로 비마이플랜 이미지 클릭 시 회원가입 뷰 보여줌
-        binding.ivLogo.setOnClickListener {
-            startSignUpFragment()
         }
     }
 

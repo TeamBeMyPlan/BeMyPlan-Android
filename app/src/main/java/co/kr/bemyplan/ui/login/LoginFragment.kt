@@ -160,8 +160,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         viewModel.login()
 
         viewModel.userInfo.observe(viewLifecycleOwner) {
-            dataStore.sessionId = it.sessionId
-            dataStore.userId = it.userId
             startMainActivity()
         }
 

@@ -5,5 +5,5 @@ import co.kr.bemyplan.domain.model.login.UserInfoModel
 interface LoginRepository {
     suspend fun postLogin(socialType: String, token: String): UserInfoModel
     suspend fun postDuplicatedNickname(nickname: String): String
-    suspend fun postSignUp(requestSignUp: RequestSignUp): ResponseSignUp
+    suspend fun postSignUp(token: String, socialType: String, nickname: String, email: String): UserInfoModel
 }

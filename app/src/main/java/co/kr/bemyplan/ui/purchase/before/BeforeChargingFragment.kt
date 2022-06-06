@@ -64,6 +64,10 @@ class BeforeChargingFragment : Fragment() {
 
     private fun initNetwork() {
         viewModel.fetchPreviewPlan()
+        viewModel.checkScrapStatus()
+    }
+
+    private fun observeData() {
         viewModel.previewInfo.observe(viewLifecycleOwner) { previewInfo ->
             binding.info = previewInfo
         }

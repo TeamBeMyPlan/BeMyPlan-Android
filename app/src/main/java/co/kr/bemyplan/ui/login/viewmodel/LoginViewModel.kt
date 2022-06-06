@@ -109,7 +109,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login() {
-        val requestLogin = RequestLogin(socialToken.value.toString(), socialType.value.toString())
         viewModelScope.launch {
             kotlin.runCatching {
                 loginRepository.postLogin(requestLogin)

@@ -42,7 +42,17 @@ class BeforeChargingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initList()
+        initView()
+        initNetwork()
+        observeData()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    private fun initView() {
         initRecyclerView()
         initNestedScrollView()
         clickBack()
@@ -52,12 +62,7 @@ class BeforeChargingFragment : Fragment() {
         showExample()
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-
-    private fun initList() {
+    private fun initNetwork() {
         viewModel.fetchPreviewPlan()
         viewModel.previewInfo.observe(viewLifecycleOwner) { previewInfo ->
             binding.info = previewInfo

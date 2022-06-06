@@ -21,4 +21,8 @@ class BeMyPlanDataStore @Inject constructor(
     var userId: Int
         set(value) = dataStore.edit { putInt("USER_ID", value) }
         get() = dataStore.getInt("USER_ID", 0)
+
+    var nickname: String
+        set(value) = dataStore.edit { putString("NICKNAME", value) }
+        get() = dataStore.getString("NICKNAME", "") ?: ""
 }

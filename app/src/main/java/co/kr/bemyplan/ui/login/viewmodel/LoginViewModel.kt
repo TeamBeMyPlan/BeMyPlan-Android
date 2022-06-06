@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.model.login.UserInfoModel

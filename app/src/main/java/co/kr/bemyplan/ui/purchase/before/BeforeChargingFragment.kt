@@ -12,6 +12,8 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.list.ListActivity
@@ -164,11 +166,10 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickPurchase() {
         binding.layoutPurchase.setOnClickListener {
-            val chargingFragment = ChargingFragment()
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.add(R.id.fragment_container_charging, chargingFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            parentFragmentManager.commit {
+                add<ChargingFragment>(R.id.fragment_container_charging)
+                addToBackStack(null)
+            }
         }
     }
 

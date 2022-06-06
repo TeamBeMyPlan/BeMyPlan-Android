@@ -3,7 +3,6 @@ package co.kr.bemyplan.ui.login
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
@@ -11,7 +10,6 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import co.kr.bemyplan.BuildConfig
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentLoginBinding
 import co.kr.bemyplan.ui.base.BaseFragment
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
@@ -24,15 +22,12 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
     private val viewModel by activityViewModels<LoginViewModel>()
     private val userApiClient = UserApiClient.instance
-    @Inject
-    lateinit var dataStore: BeMyPlanDataStore
 
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, _ ->
         if (token != null) {
@@ -93,10 +88,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
         clickGuestLogin()
         clickKakaoLogin()
         clickGoogleLogin()
-        testForSignUpPage()
     }
 
     private fun clickGuestLogin() {
@@ -119,14 +117,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun clickGoogleLogin() {
         binding.layoutGoogle.setOnClickListener {
             getGoogleToken()
-        }
-    }
-
-    private fun testForSignUpPage() {
-        // TODO: 나중에 꼭 !! 지우세요
-        // test용으로 비마이플랜 이미지 클릭 시 회원가입 뷰 보여줌
-        binding.ivLogo.setOnClickListener {
-            startSignUpFragment()
         }
     }
 
@@ -160,8 +150,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         viewModel.login()
 
         viewModel.userInfo.observe(viewLifecycleOwner) {
-            dataStore.sessionId = it.sessionId
-            dataStore.userId = it.userId
             startMainActivity()
         }
 

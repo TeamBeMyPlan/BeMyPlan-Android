@@ -3,19 +3,14 @@ package co.kr.bemyplan.ui.main.home
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import retrofit2.Call
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.api.ApiService
-import co.kr.bemyplan.data.entity.main.home.ResponseHomeData
 import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.domain.repository.HomeNewRepository
 import co.kr.bemyplan.domain.repository.HomePopularRepository
 import co.kr.bemyplan.domain.repository.HomeSuggestRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel

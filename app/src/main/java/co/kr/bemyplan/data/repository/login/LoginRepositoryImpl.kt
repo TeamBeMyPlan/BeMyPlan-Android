@@ -3,7 +3,6 @@ package co.kr.bemyplan.data.repository.login
 import co.kr.bemyplan.data.api.LoginService
 import co.kr.bemyplan.data.entity.login.login.RequestLogin
 import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
-import co.kr.bemyplan.data.entity.login.signup.ResponseSignUp
 import co.kr.bemyplan.domain.model.login.UserInfoModel
 import co.kr.bemyplan.domain.repository.LoginRepository
 import kotlinx.coroutines.CoroutineDispatcher

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,8 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.list.ListActivity
@@ -20,8 +21,6 @@ import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
-import java.lang.IllegalStateException
 
 @AndroidEntryPoint
 class BeforeChargingFragment : Fragment() {
@@ -33,7 +32,7 @@ class BeforeChargingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_before_charging, container, false)
         binding.viewModel = viewModel
@@ -43,7 +42,17 @@ class BeforeChargingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initList()
+        initView()
+        initNetwork()
+        observeData()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    private fun initView() {
         initRecyclerView()
         initNestedScrollView()
         clickBack()
@@ -53,13 +62,12 @@ class BeforeChargingFragment : Fragment() {
         showExample()
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+    private fun initNetwork() {
+        viewModel.fetchPreviewPlan()
+        viewModel.checkScrapStatus()
     }
 
-    private fun initList() {
-        viewModel.fetchPreviewPlan()
+    private fun observeData() {
         viewModel.previewInfo.observe(viewLifecycleOwner) { previewInfo ->
             binding.info = previewInfo
         }
@@ -167,11 +175,10 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickPurchase() {
         binding.layoutPurchase.setOnClickListener {
-            val chargingFragment = ChargingFragment()
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.add(R.id.fragment_container_charging, chargingFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            parentFragmentManager.commit {
+                add<ChargingFragment>(R.id.fragment_container_charging)
+                addToBackStack(null)
+            }
         }
     }
 

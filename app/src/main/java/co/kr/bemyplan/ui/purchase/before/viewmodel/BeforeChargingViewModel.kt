@@ -182,8 +182,11 @@ class BeforeChargingViewModel @Inject constructor(
                 runCatching {
                     scrapRepository.checkScrapStatus(planId)
                 }.onSuccess {
-                    _scrapStatus.value = it
+                    if(it) {
+                        _scrapStatus.value = true
+                    }
                 }.onFailure {
+                    _scrapStatus.value = false
                     Timber.e(it)
                 }
             }

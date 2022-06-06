@@ -175,4 +175,18 @@ class BeforeChargingViewModel @Inject constructor(
             }
         }
     }
+
+    fun checkScrapStatus() {
+        if(planId != -1) {
+            viewModelScope.launch {
+                runCatching {
+                    scrapRepository.checkScrapStatus(planId)
+                }.onSuccess {
+                    _scrapStatus.value = it
+                }.onFailure {
+                    Timber.e(it)
+                }
+            }
+        }
+    }
 }

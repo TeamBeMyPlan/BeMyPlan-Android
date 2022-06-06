@@ -145,9 +145,9 @@ class LoginViewModel @Inject constructor(
 
     fun setAllAgree() {
         Timber.tag("mlog: setAllAgree()").d("executed")
-        _isAllAgree.value = !_isAllAgree.value!!
+        _isAllAgree.value = !requireNotNull(_isAllAgree.value)
         Timber.tag("mlog: isAllAgree.value").d(isAllAgree.value.toString())
-        when (_isAllAgree.value!!) {
+        when (requireNotNull(_isAllAgree.value)) {
             true -> {
                 _isTermsAgree.value = true
                 _isInfoAgree.value = true
@@ -162,13 +162,13 @@ class LoginViewModel @Inject constructor(
     }
 
     fun setTermsAgree() {
-        _isTermsAgree.value = !_isTermsAgree.value!!
-        _isAllAgree.value = isTermsAgree.value!! && isInfoAgree.value!!
+        _isTermsAgree.value = !requireNotNull(_isTermsAgree.value)
+        _isAllAgree.value = requireNotNull(isTermsAgree.value) && requireNotNull(isInfoAgree.value)
     }
 
     fun setInfoAgree() {
-        _isInfoAgree.value = !_isInfoAgree.value!!
-        _isAllAgree.value = isTermsAgree.value!! && isInfoAgree.value!!
+        _isInfoAgree.value = !requireNotNull(_isInfoAgree.value)
+        _isAllAgree.value = requireNotNull(isTermsAgree.value) && requireNotNull(isInfoAgree.value)
     }
 
     fun setIsDuplicatedNicknameNull() {
@@ -185,9 +185,9 @@ class LoginViewModel @Inject constructor(
                     _nicknamePermission.value = true
                 }
             }.onFailure { exception ->
-                when(exception) {
+                when (exception) {
                     is retrofit2.HttpException -> {
-                        if(exception.code() == 409) {
+                        if (exception.code() == 409) {
                             _isDuplicatedNickname.value = true
                         }
                     }

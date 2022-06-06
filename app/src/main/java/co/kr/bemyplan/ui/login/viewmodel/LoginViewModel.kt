@@ -237,7 +237,12 @@ class LoginViewModel @Inject constructor(
                 fb.logEvent("signUpComplete", Bundle().apply {
                     putString("source", socialType.value)
                 })
-                _userInfo.value = it.data
+                with(dataStore) {
+                    sessionId = it.sessionId
+                    userId = it.userId
+                    nickname = it.nickname
+                }
+                _userInfo.value = it
             }.onFailure {
                 Timber.e(it.message.toString())
             }

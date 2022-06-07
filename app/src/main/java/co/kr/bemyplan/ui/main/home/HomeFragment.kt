@@ -31,11 +31,18 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
-        initAdapterNew()
-        initAdapterSuggest()
-        initAdapterPopular()
-        clickMore()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        with(homeViewModel) {
+            getNewData()
+            getPopularData()
+            getSuggestData()
+        }
+        initView()
+        observeData()
     }
 
     override fun onDestroyView() {

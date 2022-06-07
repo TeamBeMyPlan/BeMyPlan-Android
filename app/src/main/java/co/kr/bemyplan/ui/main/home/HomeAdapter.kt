@@ -7,9 +7,8 @@ import co.kr.bemyplan.databinding.ItemHomePlanBinding
 import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.util.clipTo
 
-class HomeAdapter(
-    val beforePurchase: (HomeDomainData) -> Unit,
-    val afterPurchase: (HomeDomainData) -> Unit) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+class HomeAdapter(val itemClick: (HomeDomainData) -> Unit) :
+    RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
     val planList = mutableListOf<HomeDomainData>()
 
@@ -22,11 +21,7 @@ class HomeAdapter(
 
         private fun clickItem(data: HomeDomainData) {
             binding.root.setOnClickListener {
-                if (data.orderStatus) {
-                    afterPurchase(data)
-                } else {
-                    beforePurchase(data)
-                }
+                itemClick(data)
             }
         }
     }

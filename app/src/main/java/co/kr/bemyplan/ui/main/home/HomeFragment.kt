@@ -45,6 +45,12 @@ class HomeFragment : Fragment() {
         observeData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.isPurchased.removeObservers(viewLifecycleOwner)
+        homeViewModel.isNotPurchased.removeObservers(viewLifecycleOwner)
+    }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

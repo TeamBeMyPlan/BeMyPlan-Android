@@ -10,29 +10,24 @@ import co.kr.bemyplan.databinding.ItemPopularBinding
 import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.util.clipTo
 
-class HomeViewPagerAdapter(
-    val beforePurchase: (HomeDomainData) -> Unit,
-    val afterPurchase: (HomeDomainData) -> Unit
-) :
+class HomeViewPagerAdapter(val itemClick: (HomeDomainData) -> Unit) :
     RecyclerView.Adapter<HomeViewPagerAdapter.PagerViewHolder>() {
     val planList = mutableListOf<HomeDomainData>()
 
-    inner class PagerViewHolder(private val binding: ItemPopularBinding) :
+    class PagerViewHolder(
+        private val binding: ItemPopularBinding,
+        private val itemClick: (HomeDomainData) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: HomeDomainData) {
             binding.popularityItem = data
-            Log.d("yongminPopularImage", "잘 들어오나")
             clipTo(binding.ivPopular, data.thumbnailUrl)
             clickItem(data)
         }
 
         private fun clickItem(data: HomeDomainData) {
             binding.root.setOnClickListener {
-                if (data.orderStatus == true) {
-                    afterPurchase(data)
-                } else {
-                    beforePurchase(data)
-                }
+                itemClick(data)
             }
         }
     }
@@ -44,7 +39,7 @@ class HomeViewPagerAdapter(
             parent,
             false
         )
-        return PagerViewHolder(binding)
+        return PagerViewHolder(binding, itemClick)
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {

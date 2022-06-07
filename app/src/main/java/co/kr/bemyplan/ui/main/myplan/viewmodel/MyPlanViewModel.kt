@@ -1,6 +1,7 @@
 package co.kr.bemyplan.ui.main.myplan.viewmodel
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,42 +34,53 @@ class MyPlanViewModel @Inject constructor(
     private var _nickname = MutableLiveData<String>()
     val nickname: LiveData<String> get() = _nickname
 
+    //private var userId = MutableLiveData<Int>()
+    private var userId : Int = 0
+
     private var _myPlan = MutableLiveData<List<MyPlanData.Data>>()
     val myPlan: LiveData<List<MyPlanData.Data>> get() = _myPlan
 
     private var lastPlanId: Int = -1
 
     init {
-        _nickname.value = when(dataStore.nickname) {
+        _nickname.value = when (dataStore.nickname) {
             "" -> "로그인해주세요"
             else -> dataStore.nickname
         }
+        userId = dataStore.userId
     }
 
     fun getMyPlanList() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                myPlanRepository.getMyPlan(size = 4)
-            }.onSuccess {
-                if (_myPlan.value != it.contents) {
-                    _myPlan.value = it.contents
-                    lastPlanId = it.nextCursor
+        if (userId != 0) {
+            viewModelScope.launch {
+                kotlin.runCatching {
+                    myPlanRepository.getMyPlan(size = 4)
+                }.onSuccess {
+                    if (_myPlan.value != it.contents) {
+                        _myPlan.value = it.contents
+                        lastPlanId = it.nextCursor
+                    }
+                }.onFailure {
+                    Timber.tag("mlog: MyPlanViewModel::getMyPlan error").e(it)
                 }
-            }.onFailure {
-                Timber.tag("mlog: MyPlanViewModel::getMyPlan error").e(it)
             }
+        }
+        else{
+            Log.d("network", "로그인 안 함")
         }
     }
 
     fun getMoreMyPlanList() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                myPlanRepository.getMoreMyPlan(size = 4, lastPlanId)
-            }.onSuccess {
-                _myPlan.value = _myPlan.value?.toMutableList()?.apply { addAll(it.contents) }
-                lastPlanId = it.nextCursor
-            }.onFailure {
-                Timber.tag("mlog: MyPlanViewModel::getMyPlan error").e(it)
+        if (userId != 0) {
+            viewModelScope.launch {
+                kotlin.runCatching {
+                    myPlanRepository.getMoreMyPlan(size = 4, lastPlanId)
+                }.onSuccess {
+                    _myPlan.value = _myPlan.value?.toMutableList()?.apply { addAll(it.contents) }
+                    lastPlanId = it.nextCursor
+                }.onFailure {
+                    Timber.tag("mlog: MyPlanViewModel::getMyPlan error").e(it)
+                }
             }
         }
     }

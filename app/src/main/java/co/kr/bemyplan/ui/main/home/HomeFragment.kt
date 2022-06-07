@@ -199,6 +199,30 @@ class HomeFragment : Fragment() {
             intent.putExtra("from", "suggest")
             startActivity(intent)
         }
+    }
 
+    private fun observeDataForStartActivity(
+        planId: Int,
+        authorNickname: String,
+        authorUserId: Int,
+        thumbnail: String
+    ) {
+        homeViewModel.isPurchased.observe(viewLifecycleOwner) {
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", planId)
+                putExtra("authorNickname", authorNickname)
+                putExtra("authorUserId", authorUserId)
+            }
+            startActivity(intent)
+        }
+        homeViewModel.isNotPurchased.observe(viewLifecycleOwner) {
+            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
+                putExtra("planId", planId)
+                putExtra("authorNickname", authorNickname)
+                putExtra("authorUserId", authorUserId)
+                putExtra("thumbnail", thumbnail)
+            }
+            startActivity(intent)
+        }
     }
 }

@@ -34,8 +34,7 @@ class MyPlanViewModel @Inject constructor(
     private var _nickname = MutableLiveData<String>()
     val nickname: LiveData<String> get() = _nickname
 
-    //private var userId = MutableLiveData<Int>()
-    private var userId : Int = 0
+    private var userId: Int = 0
 
     private var _myPlan = MutableLiveData<List<MyPlanData.Data>>()
     val myPlan: LiveData<List<MyPlanData.Data>> get() = _myPlan
@@ -64,8 +63,7 @@ class MyPlanViewModel @Inject constructor(
                     Timber.tag("mlog: MyPlanViewModel::getMyPlan error").e(it)
                 }
             }
-        }
-        else{
+        } else {
             Log.d("network", "로그인 안 함")
         }
     }

@@ -17,6 +17,7 @@ import co.kr.bemyplan.data.repository.main.myplan.MyPlanRepositoryImpl
 import co.kr.bemyplan.data.repository.main.scrap.ScrapListRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.after.PlanDetailRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.after.moveInfo.MoveInfoRepositoryImpl
+import co.kr.bemyplan.data.repository.purchase.check.CheckPurchasedRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PreviewRepositoryImpl
 import co.kr.bemyplan.data.repository.purchase.preview.PurchaseRepositoryImpl
 import co.kr.bemyplan.data.repository.scrap.ScrapRepositoryImpl
@@ -176,7 +177,7 @@ object RepositoryModule {
     fun provideMyPlanRepository(
         myPlanService: MyPlanService,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-    ) : MyPlanRepository{
+    ): MyPlanRepository {
         return MyPlanRepositoryImpl(myPlanService, coroutineDispatcher)
     }
 
@@ -216,4 +217,12 @@ object RepositoryModule {
         logoutService: LogoutService,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): LogoutRepository = LogoutRepositoryImpl(logoutService, coroutineDispatcher)
+
+    // 구매여부 체크
+    @ViewModelScoped
+    @Provides
+    fun provideCheckPurchasedRepository(
+        checkPurchasedService: CheckPurchasedService,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): CheckPurchasedRepository = CheckPurchasedRepositoryImpl(checkPurchasedService, coroutineDispatcher)
 }

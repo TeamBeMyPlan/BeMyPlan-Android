@@ -2,8 +2,6 @@ package co.kr.bemyplan.ui.main.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +14,6 @@ import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.util.ZoomOutPageTransformer
-import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -17,7 +17,7 @@ interface ScrapService {
         @Path("planId") planId: Int
     ): ResponseScrap
 
-    @GET("v1/plan/order/{planId}")
+    @GET("v1/plan/scrap/{planId}")
     suspend fun checkScrapStatus(
         @Path("planId") planId: Int
     ): ResponseScrap

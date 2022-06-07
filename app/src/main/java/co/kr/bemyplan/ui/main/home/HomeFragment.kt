@@ -60,7 +60,6 @@ class HomeFragment : Fragment() {
     private fun observeData() {
         homeViewModel.new.observe(viewLifecycleOwner) {
             recentAdapter.planList.addAll(it)
-            Log.d("yongminNewAdapter", it.toString())
             recentAdapter.notifyDataSetChanged()
         }
         recentAdapter.notifyDataSetChanged()

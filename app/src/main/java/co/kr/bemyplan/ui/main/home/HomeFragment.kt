@@ -50,29 +50,14 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun initAdapterNew() {
-        homeViewModel.getNewData()
+    private fun initView() {
+        initAdapterNew()
+        initAdapterSuggest()
+        initAdapterPopular()
+        clickMore()
+    }
 
-        recentAdapter = HomeAdapter({
-            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
-                putExtra("planId", it.planId)
-                putExtra("scrapStatus", it.scrapStatus)
-                putExtra("authorNickname", it.user.nickname)
-                putExtra("authorUserId", it.user.userId)
-            }
-            startActivity(intent)
-        }, {
-            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
-                putExtra("planId", it.planId)
-                putExtra("scrapStatus", it.scrapStatus)
-                putExtra("authorNickname", it.user.nickname)
-                putExtra("authorUserId", it.user.userId)
-                putExtra("thumbnail", it.thumbnailUrl)
-            }
-            startActivity(intent)
-        })
-        binding.rvRecent.adapter = recentAdapter
-
+    private fun observeData() {
         homeViewModel.new.observe(viewLifecycleOwner) {
             recentAdapter.planList.addAll(it)
             Log.d("yongminNewAdapter", it.toString())
@@ -138,6 +123,44 @@ class HomeFragment : Fragment() {
             homeViewPagerAdapter.planList.addAll(it)
             Log.d("yongminAddLog", it.toString())
             homeViewPagerAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun initAdapterNew() {
+        recentAdapter = HomeAdapter {
+            homeViewModel.checkPurchased(it.planId)
+            observeDataForStartActivity(
+                it.planId,
+                it.user.nickname,
+                it.user.userId,
+                it.thumbnailUrl
+            )
+        }
+        binding.rvRecent.adapter = recentAdapter
+    }
+
+    private fun initAdapterSuggest() {
+        editorAdapter = HomeAdapter {
+            homeViewModel.checkPurchased(it.planId)
+            observeDataForStartActivity(
+                it.planId,
+                it.user.nickname,
+                it.user.userId,
+                it.thumbnailUrl
+            )
+        }
+        binding.rvEditorSuggest.adapter = editorAdapter
+    }
+
+    private fun initAdapterPopular() {
+        homeViewPagerAdapter = HomeViewPagerAdapter {
+            homeViewModel.checkPurchased(it.planId)
+            observeDataForStartActivity(
+                it.planId,
+                it.user.nickname,
+                it.user.userId,
+                it.thumbnailUrl
+            )
         }
 
         with(binding.vpPopular) {

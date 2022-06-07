@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.model.main.myplan.MyPlanData
 import co.kr.bemyplan.domain.repository.MyPlanRepository
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPlanViewModel @Inject constructor(
     private val myPlanRepository: MyPlanRepository,
-    private val scrapRepository: ScrapRepository
+    private val scrapRepository: ScrapRepository,
+    dataStore: BeMyPlanDataStore
 ) : ViewModel() {
     private val fb = Firebase.analytics.apply {
         setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
@@ -36,8 +38,11 @@ class MyPlanViewModel @Inject constructor(
 
     private var lastPlanId: Int = -1
 
-    fun setNickname(nickname: String) {
-        _nickname.value = nickname
+    init {
+        _nickname.value = when(dataStore.nickname) {
+            "" -> "로그인해주세요"
+            else -> dataStore.nickname
+        }
     }
 
     fun getMyPlanList() {

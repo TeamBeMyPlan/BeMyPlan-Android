@@ -12,8 +12,12 @@ class HomeAdapter(val itemClick: (HomeDomainData) -> Unit) :
 
     val planList = mutableListOf<HomeDomainData>()
 
-    inner class HomeViewHolder(private val binding: ItemHomePlanBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data: HomeDomainData){
+    class HomeViewHolder(
+        private val binding: ItemHomePlanBinding,
+        private val itemClick: (HomeDomainData) -> Unit
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun onBind(data: HomeDomainData) {
             binding.homeItem = data
             clipTo(binding.ivHomeCommon, data.thumbnailUrl)
             clickItem(data)
@@ -27,8 +31,9 @@ class HomeAdapter(val itemClick: (HomeDomainData) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
-        val binding = ItemHomePlanBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return HomeViewHolder(binding)
+        val binding =
+            ItemHomePlanBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return HomeViewHolder(binding, itemClick)
     }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {

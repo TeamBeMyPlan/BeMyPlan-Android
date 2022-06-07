@@ -109,4 +109,8 @@ class ScrapViewModel @Inject constructor(
             }
         }
     }
+
+    companion object {
+        const val size = 10
+    }
 }

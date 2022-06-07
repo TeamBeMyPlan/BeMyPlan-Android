@@ -16,11 +16,11 @@
             android:id="@+id/cl_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="13dp"
             android:layout_marginStart="10dp"
+            android:padding="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_back"
@@ -103,10 +103,10 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="6dp"
                 android:background="@color/grey_e8eaed"
+                app:layout_constraintBottom_toTopOf="@id/cl_qna"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_upload"
-                app:layout_constraintBottom_toTopOf="@id/cl_qna"/>
+                app:layout_constraintTop_toBottomOf="@id/cl_upload" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_qna"
@@ -114,16 +114,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 app:layout_constraintBottom_toTopOf="@id/v_line_grey_qna"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/v_line_grey_upload">
 
                 <ImageView
                     android:id="@+id/iv_qna"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
                     android:layout_marginVertical="22dp"
+                    android:layout_marginStart="2dp"
                     android:src="@drawable/ic_icn_qna"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -151,10 +151,10 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="6dp"
                 android:background="@color/grey_e8eaed"
+                app:layout_constraintBottom_toTopOf="@id/cl_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_qna"
-                app:layout_constraintBottom_toTopOf="@id/cl_info"/>
+                app:layout_constraintTop_toBottomOf="@id/cl_qna" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_info"
@@ -162,16 +162,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 app:layout_constraintBottom_toTopOf="@id/v_line_grey_info"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_qna">
 
                 <ImageView
                     android:id="@+id/iv_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
                     android:layout_marginVertical="22dp"
+                    android:layout_marginStart="2dp"
                     android:src="@drawable/ic_icn_info"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -199,35 +199,36 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="6dp"
                 android:background="@color/grey_e8eaed"
+                app:layout_constraintBottom_toTopOf="@+id/cl_logout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_info"
-                app:layout_constraintBottom_toTopOf="@+id/cl_logout"/>
+                app:layout_constraintTop_toBottomOf="@id/cl_info" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_logout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="24dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/v_line_grey_logout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/v_line_grey_info"
-                app:layout_constraintBottom_toTopOf="@id/v_line_grey_logout">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v_line_grey_info">
 
                 <TextView
                     android:id="@+id/tv_logout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/spoqa_han_sans_neo_medium"
-                    android:layout_marginStart="6dp"
                     android:layout_marginVertical="12dp"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/spoqa_han_sans_neo_medium"
                     android:text="로그아웃"
                     android:textColor="@color/grey_919bab"
                     android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
@@ -237,10 +238,11 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
                 android:background="@color/grey_e8eaed"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/cl_withdrawal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_logout"
-                app:layout_constraintBottom_toTopOf="@id/cl_withdrawal"/>
+                app:layout_constraintTop_toBottomOf="@id/cl_logout" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_withdrawal"
@@ -248,23 +250,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/v_line_grey_logout">
 
                 <TextView
                     android:id="@+id/tv_withdrawal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/spoqa_han_sans_neo_medium"
-                    android:layout_marginStart="8dp"
                     android:layout_marginVertical="12dp"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/spoqa_han_sans_neo_medium"
                     android:text="회원탈퇴"
                     android:textColor="@color/grey_919bab"
                     android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

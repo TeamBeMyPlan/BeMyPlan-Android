@@ -12,7 +12,7 @@ import co.kr.bemyplan.util.SingleLiveEvent
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -58,7 +58,7 @@ class ListViewModel @Inject constructor(
     fun fetchLatestList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                latestListRepository.fetchLatestList(size = 1, "createdAt,desc")
+                latestListRepository.fetchLatestList(size, "createdAt,desc")
             }.onSuccess { response ->
                 _latestList.value = response.contents
                 lastPlanId = response.nextCursor
@@ -72,7 +72,7 @@ class ListViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 latestListRepository.fetchMoreLatestList(
-                    size = 1,
+                    size,
                     "createdAt,desc",
                     lastPlanId
                 )
@@ -89,7 +89,7 @@ class ListViewModel @Inject constructor(
     fun fetchSuggestList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                suggestListRepository.fetchSuggestList(size = 1)
+                suggestListRepository.fetchSuggestList(size)
             }.onSuccess { response ->
                 _suggestList.value = response.contents
                 lastPlanId = response.nextCursor
@@ -102,7 +102,7 @@ class ListViewModel @Inject constructor(
     fun fetchMoreSuggestList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                suggestListRepository.fetchMoreSuggestList(size = 1, lastPlanId)
+                suggestListRepository.fetchMoreSuggestList(size, lastPlanId)
             }.onSuccess { response ->
                 _suggestList.value =
                     _suggestList.value?.toMutableList()?.apply { addAll(response.contents) }
@@ -116,8 +116,7 @@ class ListViewModel @Inject constructor(
     fun fetchLocationList(region: String, sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                // TODO - 무한스크롤 구현 이후에는 size = 10 으로 고정할 것
-                locationListRepository.fetchLocationList(region, size = 1, sort)
+                locationListRepository.fetchLocationList(region, size, sort)
             }.onSuccess { response ->
                 _locationList.value = response.contents
                 lastPlanId = response.nextCursor
@@ -133,7 +132,7 @@ class ListViewModel @Inject constructor(
                 kotlin.runCatching {
                     locationListRepository.fetchMoreLocationList(
                         region,
-                        size = 1,
+                        size,
                         sort,
                         lastPlanId
                     )
@@ -150,7 +149,7 @@ class ListViewModel @Inject constructor(
     fun fetchUserPlanList(sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                userPostListRepository.fetchUserPlanList(size = 1, sort, authorUserId)
+                userPostListRepository.fetchUserPlanList(size, sort, authorUserId)
             }.onSuccess { response ->
                 _userPostList.value = response.contents
                 lastPlanId = response.nextCursor
@@ -164,7 +163,7 @@ class ListViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 userPostListRepository.fetchMoreUserPlanList(
-                    size = 1,
+                    size,
                     sort,
                     authorUserId,
                     lastPlanId

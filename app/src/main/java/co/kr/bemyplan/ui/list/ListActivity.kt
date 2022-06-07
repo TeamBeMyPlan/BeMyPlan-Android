@@ -48,6 +48,12 @@ class ListActivity : AppCompatActivity() {
         observeData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.isPurchased.removeObservers(this)
+        viewModel.isNotPurchased.removeObservers(this)
+    }
+
     private fun initView() {
         from = intent.getStringExtra("from") ?: ""
         region = intent.getStringExtra("region") ?: ""
@@ -91,7 +97,12 @@ class ListActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         listAdapter = ListAdapter({
             viewModel.checkPurchased(it.planId)
-            observeDataForStartActivity(it.planId, it.user.nickname, it.user.userId, it.thumbnailUrl)
+            observeDataForStartActivity(
+                it.planId,
+                it.user.nickname,
+                it.user.userId,
+                it.thumbnailUrl
+            )
         }, { planId, scrapStatus ->
             when (scrapStatus) {
                 true -> viewModel.deleteScrap(planId)
@@ -142,7 +153,7 @@ class ListActivity : AppCompatActivity() {
     }
 
     private fun observeData() {
-        when(from) {
+        when (from) {
             "new" -> {
                 viewModel.latestList.observe(this) { list ->
                     listAdapter.replaceItem(list)
@@ -172,7 +183,12 @@ class ListActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeDataForStartActivity(planId: Int, authorNickname: String, authorUserId: Int, thumbnail: String) {
+    private fun observeDataForStartActivity(
+        planId: Int,
+        authorNickname: String,
+        authorUserId: Int,
+        thumbnail: String
+    ) {
         viewModel.isPurchased.observe(this) {
             val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", planId)

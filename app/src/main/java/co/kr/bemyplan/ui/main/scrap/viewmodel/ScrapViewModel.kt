@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.repository.ScrapListRepository
 import co.kr.bemyplan.domain.model.list.ContentModel
+import co.kr.bemyplan.domain.repository.CheckPurchasedRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
+import co.kr.bemyplan.util.SingleLiveEvent
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,22 +21,21 @@ import javax.inject.Inject
 @HiltViewModel
 class ScrapViewModel @Inject constructor(
     private val scrapListRepository: ScrapListRepository,
-    private val scrapRepository: ScrapRepository
+    private val scrapRepository: ScrapRepository,
+    private val checkPurchasedRepository: CheckPurchasedRepository
 ) : ViewModel() {
     private val fb = Firebase.analytics.apply {
         setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
     }
 
-    private var page = 0
-    private var pageSize = 10
-
     private var _scrapList = MutableLiveData<List<ContentModel>>()
     val scrapList: LiveData<List<ContentModel>> get() = _scrapList
-
     private var _emptyScrapList = MutableLiveData<List<ContentModel>>()
     val emptyScrapList: LiveData<List<ContentModel>> get() = _emptyScrapList
-
     private var lastPlanId: Int = -1
+
+    val isPurchased = SingleLiveEvent<Unit>()
+    val isNotPurchased = SingleLiveEvent<Unit>()
 
     fun getScrapList(sort: String) {
         viewModelScope.launch {
@@ -93,6 +94,18 @@ class ScrapViewModel @Inject constructor(
                 }
             }.onFailure { exception ->
                 Timber.e(exception)
+            }
+        }
+    }
+
+    fun checkPurchased(planId: Int) {
+        viewModelScope.launch {
+            runCatching {
+                checkPurchasedRepository.checkPurchased(planId)
+            }.onSuccess {
+                isNotPurchased.call()
+            }.onFailure {
+                isPurchased.call()
             }
         }
     }

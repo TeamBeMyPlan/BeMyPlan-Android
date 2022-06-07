@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
@@ -61,6 +62,28 @@ class SettingsActivity : AppCompatActivity() {
         binding.clWithdrawal.setOnClickListener {
             val intent = Intent(this, WithdrawalActivity::class.java)
             startActivity(intent)
+        }
+
+        // 로그인
+        binding.clLogin.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            }
+            startActivity(intent)
+            this.finish()
+        }
+
+        // 로그인 시 로그아웃, 회원탈퇴 Visibility 처리
+        if (dataStore.sessionId != "") {
+            with(binding) {
+                clLogout.isVisible = true
+                clWithdrawal.isVisible = true
+                vLineGreyLogout.isVisible = true
+            }
+        } else {
+            with(binding) {
+                clLogin.isVisible = true
+            }
         }
     }
 

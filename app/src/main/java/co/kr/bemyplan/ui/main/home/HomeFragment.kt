@@ -62,65 +62,12 @@ class HomeFragment : Fragment() {
             recentAdapter.planList.addAll(it)
             recentAdapter.notifyDataSetChanged()
         }
-        recentAdapter.notifyDataSetChanged()
-    }
-
-    private fun initAdapterSuggest() {
-        homeViewModel.getSuggestData()
-
-        editorAdapter = HomeAdapter({
-            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
-                putExtra("planId", it.planId)
-                putExtra("scrapStatus", it.scrapStatus)
-                putExtra("authorNickname", it.user.nickname)
-                putExtra("authorUserId", it.user.userId)
-            }
-            startActivity(intent)
-        }, {
-            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
-                putExtra("planId", it.planId)
-                putExtra("scrapStatus", it.scrapStatus)
-                putExtra("authorNickname", it.user.nickname)
-                putExtra("authorUserId", it.user.userId)
-                putExtra("thumbnail", it.thumbnailUrl)
-            }
-            startActivity(intent)
-        })
-        binding.rvEditorSuggest.adapter = editorAdapter
-
         homeViewModel.suggest.observe(viewLifecycleOwner) {
             editorAdapter.planList.addAll(it)
-            Log.d("yongminSuggestAdapter", it.toString())
             editorAdapter.notifyDataSetChanged()
         }
-        editorAdapter.notifyDataSetChanged()
-    }
-
-    private fun initAdapterPopular() {
-        homeViewModel.getPopularData()
-
-        homeViewPagerAdapter = HomeViewPagerAdapter({
-            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
-                putExtra("planId", it.planId)
-                putExtra("scrapStatus", it.scrapStatus)
-                putExtra("authorNickname", it.user.nickname)
-                putExtra("authorUserId", it.user.userId)
-            }
-            startActivity(intent)
-        }, {
-            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
-                putExtra("planId", it.planId)
-                putExtra("scrapStatus", it.scrapStatus)
-                putExtra("authorNickname", it.user.nickname)
-                putExtra("authorUserId", it.user.userId)
-                putExtra("thumbnail", it.thumbnailUrl)
-            }
-            startActivity(intent)
-        })
-
         homeViewModel.popular.observe(viewLifecycleOwner) {
             homeViewPagerAdapter.planList.addAll(it)
-            Log.d("yongminAddLog", it.toString())
             homeViewPagerAdapter.notifyDataSetChanged()
         }
     }

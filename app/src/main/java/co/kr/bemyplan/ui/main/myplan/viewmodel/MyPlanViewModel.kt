@@ -34,7 +34,8 @@ class MyPlanViewModel @Inject constructor(
     private var _nickname = MutableLiveData<String>()
     val nickname: LiveData<String> get() = _nickname
 
-    private var userId = MutableLiveData<Int>()
+    //private var userId = MutableLiveData<Int>()
+    private var userId : Int = 0
 
     private var _myPlan = MutableLiveData<List<MyPlanData.Data>>()
     val myPlan: LiveData<List<MyPlanData.Data>> get() = _myPlan
@@ -46,11 +47,11 @@ class MyPlanViewModel @Inject constructor(
             "" -> "로그인해주세요"
             else -> dataStore.nickname
         }
-        userId.value = dataStore.userId
+        userId = dataStore.userId
     }
 
     fun getMyPlanList() {
-        if (userId.value != 0) {
+        if (userId != 0) {
             viewModelScope.launch {
                 kotlin.runCatching {
                     myPlanRepository.getMyPlan(size = 4)
@@ -64,10 +65,13 @@ class MyPlanViewModel @Inject constructor(
                 }
             }
         }
+        else{
+            Log.d("network", "로그인 안 함")
+        }
     }
 
     fun getMoreMyPlanList() {
-        if (userId.value != 0) {
+        if (userId != 0) {
             viewModelScope.launch {
                 kotlin.runCatching {
                     myPlanRepository.getMoreMyPlan(size = 4, lastPlanId)

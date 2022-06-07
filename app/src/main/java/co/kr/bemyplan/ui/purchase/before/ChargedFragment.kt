@@ -12,7 +12,6 @@ import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 
 class ChargedFragment : Fragment() {
-
     private var _binding: FragmentChargedBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
@@ -25,12 +24,6 @@ class ChargedFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
-//        무슨 코드인지 몰라서 일단 주석처리
-//        binding.tvContentTitle.post(Runnable {
-//            val lineCount: Int = binding.tvContentTitle.lineCount
-//            Log.d("yongmin", "$lineCount")
-//            Log.d("yongmin", binding.tvContentTitle.text.toString())
-//        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

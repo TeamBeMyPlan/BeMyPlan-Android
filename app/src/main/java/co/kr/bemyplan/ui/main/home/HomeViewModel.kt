@@ -19,7 +19,6 @@ class HomeViewModel @Inject constructor(
     private val homeNewRepository: HomeNewRepository,
     private val homeSuggestRepository: HomeSuggestRepository
 ) : ViewModel() {
-
     private val _popular = MutableLiveData<List<HomeDomainData>>()
     val popular : LiveData<List<HomeDomainData>> get() = _popular
     private val _new = MutableLiveData<List<HomeDomainData>>()
@@ -65,25 +64,6 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-
-
-    /*fun initSuggestNetwork(){
-        val call : Call<ResponseHomeData> = ApiService.homeSuggestService.getSuggestData()
-        call.enqueue(object:Callback<ResponseHomeData>{
-            override fun onResponse(
-                call: Call<ResponseHomeData>,
-                response: Response<ResponseHomeData>
-            ) {
-                if(response.isSuccessful){
-                    val data = response.body()
-                    if(data!=null){
-                        if(_suggest.value!=data.data.contents)
-                            _suggest.value=data.data.contents
-                        Log.d("yongminSuggestServer", "추천일정서버통신성공!")
-                    }else{Log.d("yongminSuggestServer", "추천일정서버통신실패1")}
-                }else{Log.d("yongminSuggestServer", "추천일정서버통신실패2")}
-            }
 
             override fun onFailure(call: Call<ResponseHomeData>, t: Throwable) {
                 Log.d("yongminSuggestServer", "추천일정서버통신실패3")

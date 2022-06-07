@@ -15,17 +15,14 @@ class HomeViewPagerAdapter(
     val afterPurchase: (HomeDomainData) -> Unit
 ) :
     RecyclerView.Adapter<HomeViewPagerAdapter.PagerViewHolder>() {
-
     val planList = mutableListOf<HomeDomainData>()
 
     inner class PagerViewHolder(private val binding: ItemPopularBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: HomeDomainData) {
-
             binding.popularityItem = data
             Log.d("yongminPopularImage", "잘 들어오나")
             clipTo(binding.ivPopular, data.thumbnailUrl)
-
             clickItem(data)
         }
 
@@ -57,5 +54,4 @@ class HomeViewPagerAdapter(
     override fun getItemCount(): Int {
         return planList.size
     }
-
 }

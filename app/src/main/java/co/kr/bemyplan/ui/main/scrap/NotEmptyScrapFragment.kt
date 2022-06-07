@@ -66,14 +66,12 @@ class NotEmptyScrapFragment : Fragment() {
     private fun initList() {
         viewModel.scrapList.observe(viewLifecycleOwner) {
             scrapAdapter.replaceItem(it)
-            Timber.tag("mlog: NotEmptyScrapFragment.initList").d("execute")
         }
     }
 
     private fun reloadList() {
         sortViewModel.sort.observe(viewLifecycleOwner) {
             viewModel.getScrapList(it)
-            Timber.tag("mlog: viewModel.sort.value").d(it)
         }
     }
 

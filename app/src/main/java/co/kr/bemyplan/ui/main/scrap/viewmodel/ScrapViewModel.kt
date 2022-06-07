@@ -25,15 +25,10 @@ class ScrapViewModel @Inject constructor(
         setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
     }
 
-    private var page = 0
-    private var pageSize = 10
-
     private var _scrapList = MutableLiveData<List<ContentModel>>()
     val scrapList: LiveData<List<ContentModel>> get() = _scrapList
-
     private var _emptyScrapList = MutableLiveData<List<ContentModel>>()
     val emptyScrapList: LiveData<List<ContentModel>> get() = _emptyScrapList
-
     private var lastPlanId: Int = -1
 
     fun getScrapList(sort: String) {

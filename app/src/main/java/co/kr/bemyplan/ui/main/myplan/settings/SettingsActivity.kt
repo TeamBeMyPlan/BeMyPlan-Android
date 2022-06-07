@@ -64,25 +64,12 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 로그인
-        binding.clLogin.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            }
-            startActivity(intent)
-            this.finish()
-        }
-
-        // 로그인 시 로그아웃, 회원탈퇴 Visibility 처리
+        // 로그인 시 로그아웃, 회원탈퇴 보이게 처리
         if (dataStore.sessionId != "") {
             with(binding) {
                 clLogout.isVisible = true
                 clWithdrawal.isVisible = true
                 vLineGreyLogout.isVisible = true
-            }
-        } else {
-            with(binding) {
-                clLogin.isVisible = true
             }
         }
     }

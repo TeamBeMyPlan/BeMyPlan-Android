@@ -40,8 +40,8 @@
                 android:id="@+id/cl_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="13dp"
                 android:layout_marginEnd="11dp"
+                android:padding="13dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -85,19 +85,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:fontFamily="@font/spoqa_han_sans_neo_medium"
-                    tools:text="다운타운베이비"
                     android:text="@{viewModel.nickname}"
                     android:textColor="@color/grey_313740"
                     android:textSize="14sp"
+                    android:visibility="@{viewModel.userId==0 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_profile_photo" />
+                    app:layout_constraintTop_toBottomOf="@id/iv_profile_photo"
+                    tools:text="다운타운베이비" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_purchase_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:visibility="@{viewModel.userId==0 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_nickname">
@@ -132,48 +134,58 @@
                     android:id="@+id/cl_when_logout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:visibility="@{viewModel.userId==0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/iv_profile_photo">
 
-                    <TextView
-                        android:id="@+id/tv_do_login"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        android:text="로그인ㆍ회원가입"
-                        android:fontFamily="@font/spoqa_han_sans_neo_bold"
-                        android:textSize="14sp"
-                        android:textColor="@color/grey_313740"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/iv_do_login"/>
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
-                        android:id="@+id/iv_do_login"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        android:background="@drawable/ic_icn_more"
-                        android:backgroundTint="@color/blue_0077b0"
-                        app:layout_constraintTop_toTopOf="@id/tv_do_login"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_do_login"
-                        app:layout_constraintStart_toEndOf="@id/tv_do_login"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        <TextView
+                            android:id="@+id/tv_do_login"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/spoqa_han_sans_neo_bold"
+                            android:text="로그인ㆍ회원가입"
+                            android:textColor="@color/grey_313740"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@id/iv_do_login"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/iv_do_login"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:background="@drawable/ic_icn_more"
+                            android:backgroundTint="@color/blue_0077b0"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_do_login"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toEndOf="@id/tv_do_login"
+                            app:layout_constraintTop_toTopOf="@id/tv_do_login" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
                         android:id="@+id/tv_login_induce"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="로그인으로 더 편하게 여행 일정을 관리해보세요!"
                         android:fontFamily="@font/spoqa_han_sans_neo_regular"
-                        android:textSize="12sp"
+                        android:text="로그인으로 더 편하게 여행 일정을 관리해보세요!"
                         android:textColor="@color/grey_5d687a"
-                        app:layout_constraintTop_toBottomOf="@id/tv_do_login"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintTop_toBottomOf="@id/layout_login" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -214,11 +226,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:overScrollMode="never"
-                        android:visibility="@{viewModel.myPlan.empty ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.myPlan.size()==0 ? View.GONE : View.VISIBLE}"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                        app:spanCount="2"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_my_plan_purchase_list_title"
+                        app:spanCount="2"
                         tools:listitem="@layout/item_my_plan_purchase_list" />
 
                     <ImageView
@@ -227,7 +239,7 @@
                         android:layout_height="94dp"
                         android:layout_marginTop="140dp"
                         android:src="@drawable/img_scrap_empty"
-                        android:visibility="@{viewModel.myPlan.empty ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.myPlan.size()==0 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -241,7 +253,7 @@
                         android:text="아직 내 여행 일정이 없어요!"
                         android:textColor="@color/grey_919bab"
                         android:textSize="14sp"
-                        android:visibility="@{viewModel.myPlan.empty ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.myPlan.size()==0 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/iv_my_plan_empty" />
@@ -259,7 +271,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:visibility="@{viewModel.myPlan.empty ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.myPlan.size()==0 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_notice_empty_plan" />

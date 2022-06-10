@@ -42,23 +42,16 @@ class MyPlanFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("asdf", "onViewCreated 들어옴")
         initList()
+        lookingAroundEvent()
         initSettingsButton()
         clickLogin()
-        lookingAroundEvent()
     }
 
     private fun initList() {
         viewModel.getMyPlanList()
         viewModel.myPlan.observe(viewLifecycleOwner) {
-            Log.d("asdf", "observe 들어옴")
             listItem = it
-            if (listItem.isEmpty()) {
-                Log.d("asdf", "isEmpty 들어옴")
-                lookingAroundEvent()
-            } else {
-                Log.d("asdf", "initAdapter 들어옴1")
-                initAdapter()
-            }
+            initAdapter()
         }
     }
 
@@ -87,10 +80,12 @@ class MyPlanFragment : Fragment() {
     }
 
     private fun lookingAroundEvent() {
-        binding.tvLookingAround.setOnClickListener {
-            Log.d("asdf", "버튼클릭리스너 들어옴")
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_fragment_my_plan_to_fragment_home)
+        if (listItem.isEmpty()) {
+            binding.tvLookingAround.setOnClickListener {
+                Log.d("asdf", "버튼클릭리스너 들어옴")
+                Navigation.findNavController(binding.root)
+                    .navigate(R.id.action_fragment_my_plan_to_fragment_home)
+            }
         }
     }
 

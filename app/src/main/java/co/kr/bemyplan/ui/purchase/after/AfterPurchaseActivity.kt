@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -56,7 +57,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         // plan id 받아오기
-        val planId = intent.getIntExtra("planId", -1)
+        val planId = intent.getIntExtra("postId", -1)
         viewModel.setPlanId(planId)
 
         // scrap status 설정

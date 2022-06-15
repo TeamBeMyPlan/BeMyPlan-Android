@@ -38,8 +38,19 @@ android {
         buildConfigField ("String", "BASE_URL", properties.get('base_url'))
     }
 
+    signingConfigs {
+        release {
+            storeFile file('bemyplan_keystore')
+            storePassword ""
+            keyAlias ""
+            keyPassword ""
+        }
+    }
+
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
 import co.kr.bemyplan.domain.model.main.myplan.MyPlanData
@@ -42,17 +43,21 @@ class MyPlanFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("asdf", "onViewCreated 들어옴")
         initList()
+        initAdapter()
         lookingAroundEvent()
         initSettingsButton()
         clickLogin()
+        observeList()
+    }
+
+    private fun observeList() {
+        viewModel.myPlan.observe(viewLifecycleOwner) {
+            purchaseTourAdapter.submitList(it.toMutableList())
+        }
     }
 
     private fun initList() {
         viewModel.getMyPlanList()
-        viewModel.myPlan.observe(viewLifecycleOwner) {
-            listItem = it
-            initAdapter()
-        }
     }
 
     private fun initAdapter() {
@@ -67,15 +72,15 @@ class MyPlanFragment : Fragment() {
                 false -> viewModel.postScrap(it.planId)
             }
         })
-        /*binding.rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        binding.rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if(!binding.rvMyPlanPurchase.canScrollVertically(1)){
+                if (!binding.rvMyPlanPurchase.canScrollVertically(1)) {
+                    Log.d("asdf", "getMoreMyPlanList 호출함")
                     viewModel.getMoreMyPlanList()
                 }
             }
-        })*/
-        purchaseTourAdapter.submitList(listItem)
+        })
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
     }
 

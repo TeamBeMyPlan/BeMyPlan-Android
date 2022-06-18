@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
@@ -32,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import net.daum.mf.map.api.*
 import timber.log.Timber
+import java.lang.IndexOutOfBoundsException
 import java.util.*
 import kotlin.concurrent.thread
 import kotlin.concurrent.timerTask
@@ -59,7 +62,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         // plan id 받아오기
-        val planId = intent.getIntExtra("postId", -1)
+        val planId = intent.getIntExtra("planId", -1)
         viewModel.setPlanId(planId)
 
         // scrap status 설정
@@ -79,7 +82,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // Observer
         viewModel.contents.observe(this) {
-            setAddressFromKakao(it)
+            setAddress(it)
 
             // writer 버튼 생성
             binding.clWriter.setOnClickListener { initUserButton() }
@@ -140,22 +143,60 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     private fun getAddressFromGeoCode(latitude: Double, longitude: Double) : String {
         val geoCoder = Geocoder(this, Locale.KOREA)
-        val address = geoCoder.getFromLocation(latitude, longitude, 1)[0]
+        val address: Address
+        // 안드로이드 지도로 주소 검색
+        try {
+            address = geoCoder.getFromLocation(latitude, longitude, 1)[0]
+        } catch (e: IndexOutOfBoundsException) {
+            // 주소 검색 실패 시 카카오 api로 검색
+            var kakaoAddress = "주소를 찾을 수 없습니다."
+            val ai: ApplicationInfo = packageManager.getApplicationInfo(
+                packageName,
+                PackageManager.GET_META_DATA
+            )
+            if (ai.metaData != null) {
+                val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
+                val currentMapPoint = MapPoint.mapPointWithGeoCoord(
+                    latitude,
+                    longitude
+                )
+                MapReverseGeoCoder(
+                    metaData,
+                    currentMapPoint,
+                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                        override fun onReverseGeoCoderFoundAddress(
+                            p0: MapReverseGeoCoder?,
+                            address: String
+                        ) {
+                            // 주소 받아오기 성공 - address: 현재 주소
+                            kakaoAddress = address
+                        }
+                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                            // 주소 받아오기 실패
+                            Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                        }
+                    },
+                    this
+                ).startFindingAddress()
+            }
+
+            return kakaoAddress
+        }
         val result = StringBuilder().apply {
             var index = 0
             var line: String? = ""
             while(line != null) {
                 line = address.getAddressLine(index)
+                line = line?.replace("대한민국 ", "")
                 index++
                 append(line?: "")
-                append(" ")
             }
         }
         return result.toString()
     }
 
     // 2중 배열로 spotsWithAddress 세팅
-    private fun setAddressFromKakao(contents: List<Contents>) {
+    private fun setAddress(contents: List<Contents>) {
         // 좌표 -> 주소로 바꿀 때 쓸 리스트
         val addressList = mutableListOf<MutableList<SpotsWithAddress?>>()
 
@@ -164,8 +205,40 @@ class AfterPurchaseActivity : AppCompatActivity() {
             for (spotIndex in contents[spotsIndex].spots.indices) {
                 val lat = contents[spotsIndex].spots[spotIndex].latitude
                 val lon = contents[spotsIndex].spots[spotIndex].longitude
-                addressList[spotsIndex].add(contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(getAddressFromGeoCode(lat, lon)))
-                Timber.tag("hooni").d(getAddressFromGeoCode(lat, lon))
+                try {
+                    addressList[spotsIndex].add(contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(getAddressFromGeoCode(lat, lon)))
+                } catch (e: IndexOutOfBoundsException) {
+                    // 주소 검색 실패 시 카카오 api로 검색
+                    val ai: ApplicationInfo = packageManager.getApplicationInfo(
+                        packageName,
+                        PackageManager.GET_META_DATA
+                    )
+                    if (ai.metaData != null) {
+                        val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
+                        val currentMapPoint = MapPoint.mapPointWithGeoCoord(
+                            lat,
+                            lon
+                        )
+                        MapReverseGeoCoder(
+                            metaData,
+                            currentMapPoint,
+                            object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                                override fun onReverseGeoCoderFoundAddress(
+                                    p0: MapReverseGeoCoder?,
+                                    address: String
+                                ) {
+                                    // 주소 받아오기 성공 - address: 현재 주소
+                                    addressList[spotsIndex].add(contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(address)
+                                }
+                                override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                                    // 주소 받아오기 실패
+                                    Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                                }
+                            },
+                            this
+                        ).startFindingAddress()
+                    }
+                }
             }
         }
         viewModel.setSpotsWithAddress(addressList)

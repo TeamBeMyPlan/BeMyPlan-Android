@@ -248,12 +248,4 @@ class AfterPurchaseViewModel @Inject constructor(
     fun setSpotsWithAddress(list: MutableList<MutableList<SpotsWithAddress?>>) {
         _spotsWithAddress.value = list
     }
-
-    fun plusSpotSize() {
-        _spotSize.value = _spotSize.value?.plus(1)
-    }
-
-    fun minusSpotSize() {
-        _spotSize.value = _spotSize.value?.minus(1)
-    }
 }

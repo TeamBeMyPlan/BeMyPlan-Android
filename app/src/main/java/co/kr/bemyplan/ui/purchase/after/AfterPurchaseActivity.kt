@@ -48,9 +48,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
 
-    // 좌표 -> 주소로 바꿀 때 쓸 리스트
-    private lateinit var addressList : MutableList<MutableList<SpotsWithAddress?>>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -86,13 +83,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
             // writer 버튼 생성
             binding.clWriter.setOnClickListener { initUserButton() }
-        }
-
-        // setAddressFromKakao()에서 모든 spot의 조회가 끝나고 spotSize가 -1이 될 때 addressList 넣기
-        viewModel.spotSize.observe(this) {
-            if (it == -1) {
-                viewModel.setSpotsWithAddress(addressList)
-            }
         }
 
         viewModel.spotsWithAddress.observe(this) {
@@ -164,67 +154,21 @@ class AfterPurchaseActivity : AppCompatActivity() {
         return result.toString()
     }
 
-
-    private fun getAddressFromGeoCode(mapPoint: MapPoint, dayIndex: Int, addressIndex: Int) {
-        val ai: ApplicationInfo = packageManager.getApplicationInfo(
-            packageName,
-            PackageManager.GET_META_DATA
-        )
-        if (ai.metaData != null) {
-            val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-            mapPoint.let {
-                val currentMapPoint = MapPoint.mapPointWithGeoCoord(
-                    mapPoint.mapPointGeoCoord.latitude,
-                    mapPoint.mapPointGeoCoord.longitude
-                )
-                MapReverseGeoCoder(
-                    metaData,
-                    currentMapPoint,
-                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                        override fun onReverseGeoCoderFoundAddress(
-                            p0: MapReverseGeoCoder?,
-                            address: String
-                        ) {
-                            // 주소 받아오기 성공 - address: 현재 주소
-                            viewModel.contents.value?.get(dayIndex)?.let {
-                                addressList[dayIndex][addressIndex] = it.spots[addressIndex].toSpotsWithAddress(address)
-                                viewModel.minusSpotSize()
-                            }
-                        }
-
-                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                            // 주소 받아오기 실패
-                            Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
-                        }
-                    },
-                    this
-                ).startFindingAddress()
-            }
-        }
-    }
-
     // 2중 배열로 spotsWithAddress 세팅
     private fun setAddressFromKakao(contents: List<Contents>) {
-        addressList = mutableListOf()
+        // 좌표 -> 주소로 바꿀 때 쓸 리스트
+        val addressList = mutableListOf<MutableList<SpotsWithAddress?>>()
 
         for (spotsIndex in contents.indices) {
             addressList.add(mutableListOf())
             for (spotIndex in contents[spotsIndex].spots.indices) {
-                addressList[spotsIndex].add(null)
-                viewModel.plusSpotSize()
-            }
-        }
-        viewModel.minusSpotSize()
-
-        for (spotsIndex in contents.indices) {
-            for (spotIndex in contents[spotsIndex].spots.indices) {
                 val lat = contents[spotsIndex].spots[spotIndex].latitude
                 val lon = contents[spotsIndex].spots[spotIndex].longitude
-                addressList[spotsIndex][spotIndex] = contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(getAddressFromGeoCode(lat, lon))
-                viewModel.minusSpotSize()
+                addressList[spotsIndex].add(contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(getAddressFromGeoCode(lat, lon)))
                 Timber.tag("hooni").d(getAddressFromGeoCode(lat, lon))
             }
         }
+        viewModel.setSpotsWithAddress(addressList)
     }
 
     // 작성자 정보 다음 뷰로 전송

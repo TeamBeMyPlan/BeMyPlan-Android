@@ -110,13 +110,11 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
             binding.infos = data.first
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
-            Timber.tag("hooni123").d(data.second?.address)
             if (data.second?.address.equals("주소를 찾을 수 없습니다")) {
                 val ai: ApplicationInfo = this.mContext.packageManager.getApplicationInfo(
                     this.mContext.packageName,
                     PackageManager.GET_META_DATA
                 )
-                Timber.tag("hooni123").d("afdsfadsfas")
                 if (ai.metaData != null) {
                     val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
                     val currentMapPoint = MapPoint.mapPointWithGeoCoord(
@@ -157,13 +155,11 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
-            Timber.tag("hooni123").d(data.second?.address)
             if (data.second?.address.equals("주소를 찾을 수 없습니다")) {
                 val ai: ApplicationInfo = this.mContext.packageManager.getApplicationInfo(
                     this.mContext.packageName,
                     PackageManager.GET_META_DATA
                 )
-                Timber.tag("hooni123").d("afdsfadsfas")
                 if (ai.metaData != null) {
                     val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
                     val currentMapPoint = MapPoint.mapPointWithGeoCoord(

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import kotlinx.coroutines.*
 import net.daum.mf.map.api.*
 import timber.log.Timber
 import java.util.*
+import kotlin.concurrent.thread
 import kotlin.concurrent.timerTask
 
 @AndroidEntryPoint
@@ -145,6 +147,23 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .commit()
     }
 
+    private fun getAddressFromGeoCode(latitude: Double, longitude: Double) : String {
+        val geoCoder = Geocoder(this, Locale.KOREA)
+        val address = geoCoder.getFromLocation(latitude, longitude, 1)[0]
+        val result = StringBuilder().apply {
+            var index = 0
+            var line: String? = ""
+            while(line!=null) {
+                line = address.getAddressLine(index)
+                index++
+                append(line?:"")
+                append(" ")
+            }
+        }
+        return result.toString()
+    }
+
+
     private fun getAddressFromGeoCode(mapPoint: MapPoint, dayIndex: Int, addressIndex: Int) {
         val ai: ApplicationInfo = packageManager.getApplicationInfo(
             packageName,
@@ -170,7 +189,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
                                 addressList[dayIndex][addressIndex] = it.spots[addressIndex].toSpotsWithAddress(address)
                                 viewModel.minusSpotSize()
                             }
-                            Timber.tag("hooni").d(viewModel.spotSize.value.toString())
                         }
 
                         override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
@@ -185,7 +203,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
     }
 
     // 2중 배열로 spotsWithAddress 세팅
-    @OptIn(DelicateCoroutinesApi::class)
     private fun setAddressFromKakao(contents: List<Contents>) {
         addressList = mutableListOf()
 
@@ -199,21 +216,21 @@ class AfterPurchaseActivity : AppCompatActivity() {
         viewModel.minusSpotSize()
 
         for (spotsIndex in contents.indices) {
-            runBlocking {
-                for (spotIndex in contents[spotsIndex].spots.indices) {
-                    Timber.tag("hooniloop").d(viewModel.spotSize.value.toString())
-                    delay(100L)
-                    getAddressFromGeoCode(
-                        MapPoint.mapPointWithGeoCoord(
-                            contents[spotsIndex].spots[spotIndex].latitude,
-                            contents[spotsIndex].spots[spotIndex].longitude
-                        ),
-                        spotsIndex,
-                        spotIndex
-                    )
-                }
+            for (spotIndex in contents[spotsIndex].spots.indices) {
+//                Thread(Runnable {
+//                    getAddressFromGeoCode(
+//                        MapPoint.mapPointWithGeoCoord(
+//                            contents[spotsIndex].spots[spotIndex].latitude,
+//                            contents[spotsIndex].spots[spotIndex].longitude
+//                        ),
+//                        spotsIndex,
+//                        spotIndex
+//                    )
+//                }).start()
+                val lat = contents[spotsIndex].spots[spotIndex].latitude
+                val lon = contents[spotsIndex].spots[spotIndex].longitude
+                Timber.tag("hooni").d(getAddressFromGeoCode(lat, lon))
             }
-
         }
     }
 

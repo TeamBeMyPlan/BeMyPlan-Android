@@ -3,34 +3,35 @@ package co.kr.bemyplan.ui.main.home
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import retrofit2.Call
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.api.ApiService
-import co.kr.bemyplan.data.entity.main.home.ResponseHomeData
 import co.kr.bemyplan.domain.model.main.home.HomeDomainData
+import co.kr.bemyplan.domain.repository.CheckPurchasedRepository
 import co.kr.bemyplan.domain.repository.HomeNewRepository
 import co.kr.bemyplan.domain.repository.HomePopularRepository
 import co.kr.bemyplan.domain.repository.HomeSuggestRepository
+import co.kr.bemyplan.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.Callback
-import retrofit2.Response
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homePopularRepository: HomePopularRepository,
     private val homeNewRepository: HomeNewRepository,
-    private val homeSuggestRepository: HomeSuggestRepository
+    private val homeSuggestRepository: HomeSuggestRepository,
+    private val homeCheckPurchasedRepository: CheckPurchasedRepository
 ) : ViewModel() {
-
     private val _popular = MutableLiveData<List<HomeDomainData>>()
     val popular : LiveData<List<HomeDomainData>> get() = _popular
     private val _new = MutableLiveData<List<HomeDomainData>>()
     val new : LiveData<List<HomeDomainData>> get() = _new
     private val _suggest = MutableLiveData<List<HomeDomainData>>()
     val suggest : LiveData<List<HomeDomainData>> get() = _suggest
+
+    val isPurchased = SingleLiveEvent<Unit>()
+    val isNotPurchased = SingleLiveEvent<Unit>()
 
     fun getPopularData(){
         viewModelScope.launch {
@@ -40,7 +41,7 @@ class HomeViewModel @Inject constructor(
                 if(_popular.value != responsePopularData)
                     _popular.value = responsePopularData
             }.onFailure { error ->
-                Log.d("ServerPopular", error.toString())
+                Timber.e(error)
             }
         }
     }
@@ -53,7 +54,7 @@ class HomeViewModel @Inject constructor(
                 if(_new.value != responseNewData)
                     _new.value = responseNewData
             }.onFailure { error ->
-                Log.d("ServerNew", error.toString())
+                Timber.e(error)
             }
         }
     }
@@ -66,81 +67,20 @@ class HomeViewModel @Inject constructor(
                 if(_suggest.value != responseSuggestData)
                     _suggest.value = responseSuggestData
             }.onFailure { error ->
-                Log.d("ServerSuggest", error.toString())
+                Timber.e(error)
             }
         }
     }
 
-
-
-    /*fun initSuggestNetwork(){
-        val call : Call<ResponseHomeData> = ApiService.homeSuggestService.getSuggestData()
-        call.enqueue(object:Callback<ResponseHomeData>{
-            override fun onResponse(
-                call: Call<ResponseHomeData>,
-                response: Response<ResponseHomeData>
-            ) {
-                if(response.isSuccessful){
-                    val data = response.body()
-                    if(data!=null){
-                        if(_suggest.value!=data.data.contents)
-                            _suggest.value=data.data.contents
-                        Log.d("yongminSuggestServer", "추천일정서버통신성공!")
-                    }else{Log.d("yongminSuggestServer", "추천일정서버통신실패1")}
-                }else{Log.d("yongminSuggestServer", "추천일정서버통신실패2")}
+    fun checkPurchased(planId: Int) {
+        viewModelScope.launch {
+            runCatching {
+                homeCheckPurchasedRepository.checkPurchased(planId)
+            }.onSuccess {
+                isNotPurchased.call()
+            }.onFailure {
+                isPurchased.call()
             }
-
-            override fun onFailure(call: Call<ResponseHomeData>, t: Throwable) {
-                Log.d("yongminSuggestServer", "추천일정서버통신실패3")
-            }
-        })
+        }
     }
-
-    fun initNewNetwork(){
-        val call : Call<ResponseHomeData> = ApiService.homeNewService.getNewData()
-        call.enqueue(object:Callback<ResponseHomeData>{
-            override fun onResponse(
-                call: Call<ResponseHomeData>,
-                response: Response<ResponseHomeData>
-            ) {
-                if(response.isSuccessful){
-                    val data = response.body()
-                    if(data!=null){
-                        if(_new.value!=data.data.contents)
-                            _new.value=data.data.contents
-                        Log.d("yongminNewServer", "최신일정서버통신성공!")
-                    }else{Log.d("yongminNewServer", "최신일정서버통신실패1")}
-                }else{Log.d("yongminNewServer", "최신일정서버통신실패2")}
-            }
-
-            override fun onFailure(call: Call<ResponseHomeData>, t: Throwable) {
-                Log.d("yongminNewServer", t.message.toString())
-            }
-        })
-    }
-
-    fun initPopularNetwork(){
-        val call : Call<ResponseHomePopularData> = ApiService.homePopularService.getPopularData()
-        call.enqueue(object: Callback<ResponseHomePopularData>{
-            override fun onResponse(
-                call: Call<ResponseHomePopularData>,
-                response: Response<ResponseHomePopularData>
-            ) {
-                if(response.isSuccessful){
-                    val data = response.body()
-                    if(data!=null){
-                        if(_popular.value!=data.data)
-                            _popular.value = data.data
-                        Log.d("yongminServer", "인기일정서버통신성공!")
-                    } else{Log.d("yongminServer", "인기일정서버통신실패1")}
-                }
-                else{Log.d("yongminServer", "인기일정서버통신실패2") }
-            }
-
-            override fun onFailure(call: Call<ResponseHomePopularData>, t: Throwable) {
-                Log.d("yongminServer", "서버통신실패3")
-            }
-        })
-    }*/
 }
-

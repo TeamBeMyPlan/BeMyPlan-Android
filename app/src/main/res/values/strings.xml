@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BeMyPlan</string>
+    <string name="app_name">비마이플랜</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="home_introduce">내 취향에 맞는\n여행 일정을 찾아보세요</string>

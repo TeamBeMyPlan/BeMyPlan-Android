@@ -34,7 +34,8 @@ class NotEmptyScrapFragment : Fragment() {
                 it.data?.let { intent ->
                     val scrapStatusFromPlanActivity = intent.getBooleanExtra("scrapStatus", false)
                     val planIdFromPlanActivity = intent.getIntExtra("planId", -1)
-                    Timber.tag("scrapStatusFromPlanActivity").i(scrapStatusFromPlanActivity.toString())
+                    Timber.tag("scrapStatusFromPlanActivity")
+                        .i(scrapStatusFromPlanActivity.toString())
                     Timber.tag("planIdFromPlanActivity").i(planIdFromPlanActivity.toString())
                     scrapAdapter.updateItem(scrapStatusFromPlanActivity, planIdFromPlanActivity)
                 }
@@ -52,10 +53,14 @@ class NotEmptyScrapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initList()
-        initRecyclerView()
-        reloadList()
-        openBottomSheetDialog()
+        initView()
+        observeData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.isPurchased.removeObservers(viewLifecycleOwner)
+        viewModel.isNotPurchased.removeObservers(viewLifecycleOwner)
     }
 
     override fun onDestroyView() {
@@ -63,40 +68,29 @@ class NotEmptyScrapFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun initList() {
-        viewModel.scrapList.observe(viewLifecycleOwner) {
-            scrapAdapter.replaceItem(it)
-            Timber.tag("mlog: NotEmptyScrapFragment.initList").d("execute")
-        }
+    private fun initView() {
+        initRecyclerView()
+        openBottomSheetDialog()
     }
 
-    private fun reloadList() {
+    private fun observeData() {
+        viewModel.scrapList.observe(viewLifecycleOwner) {
+            scrapAdapter.replaceItem(it)
+        }
         sortViewModel.sort.observe(viewLifecycleOwner) {
             viewModel.getScrapList(it)
-            Timber.tag("mlog: viewModel.sort.value").d(it)
         }
     }
 
     private fun initRecyclerView() {
         scrapAdapter = ScrapAdapter({
-            if (it.orderStatus) {
-                val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
-                    putExtra("planId", it.planId)
-                    putExtra("scrapStatus", it.scrapStatus)
-                    putExtra("authorNickname", it.user.nickname)
-                    putExtra("authorUserId", it.user.userId)
-                }
-                planActivityResultLauncher.launch(intent)
-            } else {
-                val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
-                    putExtra("planId", it.planId)
-                    putExtra("scrapStatus", it.scrapStatus)
-                    putExtra("authorNickname", it.user.nickname)
-                    putExtra("authorUserId", it.user.userId)
-                    putExtra("thumbnail", it.thumbnailUrl)
-                }
-                planActivityResultLauncher.launch(intent)
-            }
+            viewModel.checkPurchased(it.planId)
+            observeDataForStartActivity(
+                it.planId,
+                it.user.nickname,
+                it.user.userId,
+                it.thumbnailUrl
+            )
         }, { planId, scrapStatus ->
             when (scrapStatus) {
                 true -> viewModel.deleteScrap(planId)
@@ -110,6 +104,31 @@ class NotEmptyScrapFragment : Fragment() {
         binding.layoutOrder.setOnClickListener {
             val bottomSheetDialogFragment = SortFragment()
             bottomSheetDialogFragment.show(childFragmentManager, bottomSheetDialogFragment.tag)
+        }
+    }
+
+    private fun observeDataForStartActivity(
+        planId: Int,
+        authorNickname: String,
+        authorUserId: Int,
+        thumbnail: String
+    ) {
+        viewModel.isPurchased.observe(viewLifecycleOwner) {
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", planId)
+                putExtra("authorNickname", authorNickname)
+                putExtra("authorUserId", authorUserId)
+            }
+            planActivityResultLauncher.launch(intent)
+        }
+        viewModel.isNotPurchased.observe(viewLifecycleOwner) {
+            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
+                putExtra("planId", planId)
+                putExtra("authorNickname", authorNickname)
+                putExtra("authorUserId", authorUserId)
+                putExtra("thumbnail", thumbnail)
+            }
+            planActivityResultLauncher.launch(intent)
         }
     }
 }

@@ -10,20 +10,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentCheckTermsBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckTermsFragment : Fragment() {
     private var _binding: FragmentCheckTermsBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")
     private val viewModel by activityViewModels<LoginViewModel>()
-    @Inject
-    lateinit var dataStore: BeMyPlanDataStore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,8 +67,6 @@ class CheckTermsFragment : Fragment() {
     private fun observeLiveData() {
         viewModel.userInfo.observe(viewLifecycleOwner) { userInfo ->
             val intent = Intent(requireContext(), MainActivity::class.java)
-            dataStore.sessionId = userInfo.sessionId
-            dataStore.userId = userInfo.userId
             startActivity(intent)
             requireActivity().finish()
         }

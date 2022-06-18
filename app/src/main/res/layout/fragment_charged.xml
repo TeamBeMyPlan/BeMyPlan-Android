@@ -190,7 +190,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/spoqa_han_sans_neo_bold"
                     android:includeFontPadding="false"
-                    android:text="@{Integer.toString(viewModel.previewInfo.price) + `원`}"
+                    android:text="@{@string/price_format(viewModel.previewInfo.price) + `원`}"
                     android:textColor="@color/blue_0077b0"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"

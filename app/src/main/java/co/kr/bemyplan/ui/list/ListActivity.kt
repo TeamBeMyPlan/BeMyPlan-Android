@@ -44,6 +44,17 @@ class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
+        initView()
+        observeData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.isPurchased.removeObservers(this)
+        viewModel.isNotPurchased.removeObservers(this)
+    }
+
+    private fun initView() {
         from = intent.getStringExtra("from") ?: ""
         region = intent.getStringExtra("region") ?: ""
         authorUserId = intent.getIntExtra("userId", -1)
@@ -62,65 +73,36 @@ class ListActivity : AppCompatActivity() {
                 binding.layoutSort.visibility = View.GONE
                 viewModel.fetchLatestList()
                 binding.tvTitle.text = "최신 등록 여행 일정"
-                viewModel.latestList.observe(this) { list ->
-                    listAdapter.replaceItem(list)
-                }
             }
             "suggest" -> {
                 Timber.tag("mlog: suggest").d("success")
                 binding.layoutSort.visibility = View.GONE
                 viewModel.fetchSuggestList()
                 binding.tvTitle.text = "비마플 추천 여행 일정"
-                viewModel.suggestList.observe(this) { list ->
-                    listAdapter.replaceItem(list)
-                }
             }
             "location" -> {
                 Timber.tag("location").i("success")
                 viewModel.fetchLocationList(region, sortViewModel.sort.value.toString())
                 binding.tvTitle.text = locationName
-                viewModel.locationList.observe(this) { list ->
-                    listAdapter.replaceItem(list)
-                }
-                sortViewModel.sort.observe(this) { sort ->
-                    viewModel.fetchLocationList(region, sort)
-                }
             }
             "user" -> {
                 Timber.tag("mlog: user").d("success")
                 viewModel.setAuthorUserId(authorUserId)
                 viewModel.fetchUserPlanList(sortViewModel.sort.value.toString())
                 binding.tvTitle.text = authorNickname
-                viewModel.userPostList.observe(this) { list ->
-                    listAdapter.replaceItem(list)
-                }
-                sortViewModel.sort.observe(this) { sort ->
-                    viewModel.fetchUserPlanList(sort)
-                }
             }
         }
     }
 
     private fun initRecyclerView() {
         listAdapter = ListAdapter({
-            if (it.orderStatus) {
-                val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
-                    putExtra("planId", it.planId)
-                    putExtra("scrapStatus", it.scrapStatus)
-                    putExtra("authorNickname", it.user.nickname)
-                    putExtra("authorUserId", it.user.userId)
-                }
-                planActivityResultLauncher.launch(intent)
-            } else {
-                val intent = Intent(this, PurchaseActivity::class.java).apply {
-                    putExtra("planId", it.planId)
-                    putExtra("scrapStatus", it.scrapStatus)
-                    putExtra("authorNickname", it.user.nickname)
-                    putExtra("authorUserId", it.user.userId)
-                    putExtra("thumbnail", it.thumbnailUrl)
-                }
-                planActivityResultLauncher.launch(intent)
-            }
+            viewModel.checkPurchased(it.planId)
+            observeDataForStartActivity(
+                it.planId,
+                it.user.nickname,
+                it.user.userId,
+                it.thumbnailUrl
+            )
         }, { planId, scrapStatus ->
             when (scrapStatus) {
                 true -> viewModel.deleteScrap(planId)
@@ -167,6 +149,62 @@ class ListActivity : AppCompatActivity() {
             val bottomSheetDialogFragment = SortFragment()
             bottomSheetDialogFragment.show(supportFragmentManager, bottomSheetDialogFragment.tag)
             Timber.tag("mlog: ListActivity에서의 sort").d(sortViewModel.sort.value.toString())
+        }
+    }
+
+    private fun observeData() {
+        when (from) {
+            "new" -> {
+                viewModel.latestList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
+                }
+            }
+            "suggest" -> {
+                viewModel.suggestList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
+                }
+            }
+            "location" -> {
+                viewModel.locationList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
+                }
+                sortViewModel.sort.observe(this) { sort ->
+                    viewModel.fetchLocationList(region, sort)
+                }
+            }
+            "user" -> {
+                viewModel.userPostList.observe(this) { list ->
+                    listAdapter.replaceItem(list)
+                }
+                sortViewModel.sort.observe(this) { sort ->
+                    viewModel.fetchLocationList(region, sort)
+                }
+            }
+        }
+    }
+
+    private fun observeDataForStartActivity(
+        planId: Int,
+        authorNickname: String,
+        authorUserId: Int,
+        thumbnail: String
+    ) {
+        viewModel.isPurchased.observe(this) {
+            val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", planId)
+                putExtra("authorNickname", authorNickname)
+                putExtra("authorUserId", authorUserId)
+            }
+            planActivityResultLauncher.launch(intent)
+        }
+        viewModel.isNotPurchased.observe(this) {
+            val intent = Intent(this, PurchaseActivity::class.java).apply {
+                putExtra("planId", planId)
+                putExtra("authorNickname", authorNickname)
+                putExtra("authorUserId", authorUserId)
+                putExtra("thumbnail", thumbnail)
+            }
+            planActivityResultLauncher.launch(intent)
         }
     }
 }

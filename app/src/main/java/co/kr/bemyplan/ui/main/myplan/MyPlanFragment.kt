@@ -2,6 +2,7 @@ package co.kr.bemyplan.ui.main.myplan
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +10,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.AutoLoginData
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
 import co.kr.bemyplan.domain.model.main.myplan.MyPlanData
+import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.main.myplan.adapter.MyPlanAdapter
 import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 import co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel
@@ -31,33 +31,32 @@ class MyPlanFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_plan, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        initList()
-        initSettingsButton()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //viewModel.setNickname(AutoLoginData.getNickname(requireContext()))
+        Log.d("asdf", "onViewCreated 들어옴")
+        initList()
+        lookingAroundEvent()
+        initSettingsButton()
+        clickLogin()
     }
 
     private fun initList() {
         viewModel.getMyPlanList()
         viewModel.myPlan.observe(viewLifecycleOwner) {
             listItem = it
-            if (listItem.isEmpty()) {
-                lookingAroundEvent()
-            } else {
-                initAdapter()
-            }
+            initAdapter()
         }
     }
 
     private fun initAdapter() {
+        Log.d("asdf", "initAdapter 들어옴2")
         purchaseTourAdapter = MyPlanAdapter({
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
             intent.putExtra("postId", it.planId)
@@ -81,9 +80,12 @@ class MyPlanFragment : Fragment() {
     }
 
     private fun lookingAroundEvent() {
-        binding.tvLookingAround.setOnClickListener {
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_fragment_my_plan_to_fragment_home)
+        if (listItem.isEmpty()) {
+            binding.tvLookingAround.setOnClickListener {
+                Log.d("asdf", "버튼클릭리스너 들어옴")
+                Navigation.findNavController(binding.root)
+                    .navigate(R.id.action_fragment_my_plan_to_fragment_home)
+            }
         }
     }
 
@@ -91,6 +93,16 @@ class MyPlanFragment : Fragment() {
         binding.clSettings.setOnClickListener {
             val intent = Intent(activity, SettingsActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun clickLogin() {
+        binding.layoutLogin.setOnClickListener {
+            val intent = Intent(requireContext(), LoginActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            }
+            startActivity(intent)
+            activity?.finish()
         }
     }
 

@@ -1,18 +1,16 @@
 package co.kr.bemyplan.ui.login.viewmodel
 
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.entity.login.UserInfoModel
-import co.kr.bemyplan.data.entity.login.login.RequestLogin
-import co.kr.bemyplan.data.entity.login.signup.RequestSignUp
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.domain.repository.LoginRepository
+import co.kr.bemyplan.domain.model.login.UserInfoModel
 import co.kr.bemyplan.domain.repository.GoogleLoginRepository
+import co.kr.bemyplan.domain.repository.LoginRepository
 import co.kr.bemyplan.util.SingleLiveEvent
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -27,6 +25,9 @@ class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     private val googleLoginRepository: GoogleLoginRepository
 ) : ViewModel() {
+    @Inject
+    lateinit var dataStore: BeMyPlanDataStore
+
     val fb = Firebase.analytics.apply {
         setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
     }
@@ -108,19 +109,25 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login() {
-        val requestLogin = RequestLogin(socialToken.value.toString(), socialType.value.toString())
         viewModelScope.launch {
             kotlin.runCatching {
-                loginRepository.postLogin(requestLogin)
+                loginRepository.postLogin(
+                    requireNotNull(socialType.value),
+                    requireNotNull(socialToken.value)
+                )
             }.onSuccess {
                 // FB LOG
                 fb.logEvent("signin", Bundle().apply {
                     putString("source", socialType.value)
                 })
-
-                _userInfo.value = it.data
+                with(dataStore) {
+                    sessionId = it.sessionId
+                    userId = it.userId
+                    nickname = it.nickname
+                }
+                _userInfo.value = it
                 _isUser.value = true
-            }.onFailure {  exception ->
+            }.onFailure { exception ->
                 when (exception) {
                     is retrofit2.HttpException -> {
                         if (exception.code() == 404) {
@@ -137,9 +144,9 @@ class LoginViewModel @Inject constructor(
 
     fun setAllAgree() {
         Timber.tag("mlog: setAllAgree()").d("executed")
-        _isAllAgree.value = !_isAllAgree.value!!
+        _isAllAgree.value = !requireNotNull(_isAllAgree.value)
         Timber.tag("mlog: isAllAgree.value").d(isAllAgree.value.toString())
-        when (_isAllAgree.value!!) {
+        when (requireNotNull(_isAllAgree.value)) {
             true -> {
                 _isTermsAgree.value = true
                 _isInfoAgree.value = true
@@ -154,13 +161,13 @@ class LoginViewModel @Inject constructor(
     }
 
     fun setTermsAgree() {
-        _isTermsAgree.value = !_isTermsAgree.value!!
-        _isAllAgree.value = isTermsAgree.value!! && isInfoAgree.value!!
+        _isTermsAgree.value = !requireNotNull(_isTermsAgree.value)
+        _isAllAgree.value = requireNotNull(isTermsAgree.value) && requireNotNull(isInfoAgree.value)
     }
 
     fun setInfoAgree() {
-        _isInfoAgree.value = !_isInfoAgree.value!!
-        _isAllAgree.value = isTermsAgree.value!! && isInfoAgree.value!!
+        _isInfoAgree.value = !requireNotNull(_isInfoAgree.value)
+        _isAllAgree.value = requireNotNull(isTermsAgree.value) && requireNotNull(isInfoAgree.value)
     }
 
     fun setIsDuplicatedNicknameNull() {
@@ -177,9 +184,9 @@ class LoginViewModel @Inject constructor(
                     _nicknamePermission.value = true
                 }
             }.onFailure { exception ->
-                when(exception) {
+                when (exception) {
                     is retrofit2.HttpException -> {
-                        if(exception.code() == 409) {
+                        if (exception.code() == 409) {
                             _isDuplicatedNickname.value = true
                         }
                     }
@@ -220,19 +227,22 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 loginRepository.postSignUp(
-                    RequestSignUp(
-                        socialToken.value.toString(),
-                        socialType.value.toString(),
-                        nickname.value.toString(),
-                        email.value.toString()
-                    )
+                    requireNotNull(socialToken.value),
+                    requireNotNull(socialType.value),
+                    requireNotNull(nickname.value),
+                    requireNotNull(email.value)
                 )
             }.onSuccess {
                 // FB LOG
                 fb.logEvent("signUpComplete", Bundle().apply {
                     putString("source", socialType.value)
                 })
-                _userInfo.value = it.data
+                with(dataStore) {
+                    sessionId = it.sessionId
+                    userId = it.userId
+                    nickname = it.nickname
+                }
+                _userInfo.value = it
             }.onFailure {
                 Timber.e(it.message.toString())
             }

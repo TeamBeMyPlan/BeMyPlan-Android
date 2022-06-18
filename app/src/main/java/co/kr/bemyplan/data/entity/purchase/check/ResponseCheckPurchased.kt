@@ -1,14 +1,14 @@
-package co.kr.bemyplan.data.entity.scrap
+package co.kr.bemyplan.data.entity.purchase.check
 
-data class ResponseScrap(
+data class ResponseCheckPurchased(
     val resultCode: String,
     val message: String,
     val data: String
 ) {
     fun toModel(): Boolean {
         return when (data) {
-            "OK" -> true
-            else -> false
+            "OK" -> false
+            else -> true
         }
     }
 }

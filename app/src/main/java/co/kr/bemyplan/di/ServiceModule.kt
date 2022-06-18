@@ -135,4 +135,11 @@ object ServiceModule {
     fun provideLogoutService(@BeMyPlanRetrofit retrofit: Retrofit): LogoutService {
         return retrofit.create(LogoutService::class.java)
     }
+
+    // 구매여부 체크
+    @Singleton
+    @Provides
+    fun provideCheckPurchasedService(@BeMyPlanRetrofit retrofit: Retrofit): CheckPurchasedService {
+        return retrofit.create(CheckPurchasedService::class.java)
+    }
 }

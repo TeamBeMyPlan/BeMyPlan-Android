@@ -10,8 +10,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
-    private val viewModel by viewModels<LoginViewModel>()
-
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentByTag("signUpFragment")
         if (fragment != null && fragment.isVisible) {

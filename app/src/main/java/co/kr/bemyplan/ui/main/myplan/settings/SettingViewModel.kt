@@ -23,6 +23,7 @@ class SettingViewModel @Inject constructor(
             }.onSuccess {
                 dataStore.sessionId = ""
                 dataStore.userId = 0
+                dataStore.nickname = ""
             }.onFailure {
                 Timber.e(it)
             }

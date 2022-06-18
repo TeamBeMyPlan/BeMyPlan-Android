@@ -40,12 +40,12 @@ class DailyContentsFragment : Fragment() {
 
     // 어댑터 연결
     private fun initAdapter() {
-        contentsAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_CONTENTS, photoUrl = { photoUrl: String ->
+        contentsAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_CONTENTS, activity, photoUrl = { photoUrl: String ->
             val intent = Intent(requireContext(), ImageViewActivity::class.java)
             intent.putExtra("photoUrl", photoUrl)
             requireActivity().startActivity(intent)
         })
-        routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE)
+        routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE, activity)
 
         // 뷰모델에서 데이터 받아오기
         viewModel.mergedPlanAndInfo.observe(viewLifecycleOwner) {

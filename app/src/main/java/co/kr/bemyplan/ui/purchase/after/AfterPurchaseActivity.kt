@@ -6,8 +6,11 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
@@ -28,8 +32,13 @@ import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 import net.daum.mf.map.api.*
 import timber.log.Timber
+import java.lang.IndexOutOfBoundsException
+import java.util.*
+import kotlin.concurrent.thread
+import kotlin.concurrent.timerTask
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -43,9 +52,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
 
-    // 좌표 -> 주소로 바꿀 때 쓸 리스트
-    private lateinit var addressList : MutableList<MutableList<SpotsWithAddress?>>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,7 +63,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         // plan id 받아오기
-        val planId = intent.getIntExtra("postId", -1)
+        val planId = intent.getIntExtra("planId", -1)
         viewModel.setPlanId(planId)
 
         // scrap status 설정
@@ -77,17 +83,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // Observer
         viewModel.contents.observe(this) {
-            setAddressFromKakao(it)
+            setAddress(it)
 
             // writer 버튼 생성
             binding.clWriter.setOnClickListener { initUserButton() }
-        }
-
-        // setAddressFromKakao()에서 모든 spot의 조회가 끝나고 spotSize가 -1이 될 때 addressList 넣기
-        viewModel.spotSize.observe(this) {
-            if (it == -1) {
-                viewModel.setSpotsWithAddress(addressList)
-            }
         }
 
         viewModel.spotsWithAddress.observe(this) {
@@ -143,69 +142,43 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun getAddressFromGeoCode(mapPoint: MapPoint, dayIndex: Int, addressIndex: Int) {
-        val ai: ApplicationInfo = packageManager.getApplicationInfo(
-            packageName,
-            PackageManager.GET_META_DATA
-        )
-        if (ai.metaData != null) {
-            val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-            mapPoint.let {
-                val currentMapPoint = MapPoint.mapPointWithGeoCoord(
-                    mapPoint.mapPointGeoCoord.latitude,
-                    mapPoint.mapPointGeoCoord.longitude
-                )
-                MapReverseGeoCoder(
-                    metaData,
-                    currentMapPoint,
-                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                        override fun onReverseGeoCoderFoundAddress(
-                            p0: MapReverseGeoCoder?,
-                            address: String
-                        ) {
-                            // 주소 받아오기 성공 - address: 현재 주소
-                            viewModel.contents.value?.get(dayIndex)?.let {
-                                addressList[dayIndex][addressIndex] = it.spots[addressIndex].toSpotsWithAddress(address)
-                                viewModel.minusSpotSize()
-                            }
-                        }
-
-                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                            // 주소 받아오기 실패
-                            Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
-                        }
-                    },
-                    this
-                ).startFindingAddress()
+    private fun getAddressFromGeoCode(latitude: Double, longitude: Double) : String {
+        val geoCoder = Geocoder(this, Locale.KOREA)
+        val address: Address
+        // 안드로이드 지도로 주소 검색
+        try {
+            address = geoCoder.getFromLocation(latitude, longitude, 1)[0]
+        } catch (e: IndexOutOfBoundsException) {
+            // 후에 adapter에서 카카오 api로 주소 변환
+            return "주소를 찾을 수 없습니다"
+        }
+        val result = StringBuilder().apply {
+            var index = 0
+            var line: String? = ""
+            while(line != null) {
+                line = address.getAddressLine(index)
+                line = line?.replace("대한민국 ", "")
+                index++
+                append(line?: "")
             }
         }
+        return result.toString()
     }
 
     // 2중 배열로 spotsWithAddress 세팅
-    private fun setAddressFromKakao(contents: List<Contents>) {
-        addressList = mutableListOf()
+    private fun setAddress(contents: List<Contents>) {
+        // 좌표 -> 주소로 바꿀 때 쓸 리스트
+        val addressList = mutableListOf<MutableList<SpotsWithAddress?>>()
 
         for (spotsIndex in contents.indices) {
             addressList.add(mutableListOf())
             for (spotIndex in contents[spotsIndex].spots.indices) {
-                addressList[spotsIndex].add(null)
-                viewModel.plusSpotSize()
+                val lat = contents[spotsIndex].spots[spotIndex].latitude
+                val lon = contents[spotsIndex].spots[spotIndex].longitude
+                addressList[spotsIndex].add(contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(getAddressFromGeoCode(lat, lon)))
             }
         }
-        viewModel.minusSpotSize()
-
-        for (spotsIndex in contents.indices) {
-            for (spotIndex in contents[spotsIndex].spots.indices) {
-                getAddressFromGeoCode(
-                    MapPoint.mapPointWithGeoCoord(
-                        contents[spotsIndex].spots[spotIndex].latitude,
-                        contents[spotsIndex].spots[spotIndex].longitude
-                    ),
-                    spotsIndex,
-                    spotIndex
-                )
-            }
-        }
+        viewModel.setSpotsWithAddress(addressList)
     }
 
     // 작성자 정보 다음 뷰로 전송

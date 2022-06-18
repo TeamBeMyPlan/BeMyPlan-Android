@@ -1,12 +1,16 @@
 package co.kr.bemyplan.ui.purchase.after.adapter
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -16,11 +20,17 @@ import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
 import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
+import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.NonDisposableHandle.parent
+import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapReverseGeoCoder
+import timber.log.Timber
 
 
-class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) -> Unit)? = null) :
+class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActivity?, var photoUrl: ((String) -> Unit)? = null) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
@@ -51,7 +61,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
                 LayoutInflater.from(parent.context),
                 parent, false
             )
-            ContentsViewHolder(binding, parent.context, photoUrl)
+            ContentsViewHolder(binding, parent.context, activity, photoUrl)
         }
         TYPE_ROUTE -> {
             val binding = ItemDailyRouteBinding.inflate(
@@ -91,7 +101,7 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
 
     class ContentsViewHolder(
         private val binding: ItemDailyContentsBinding,
-        private val mContext: Context,
+        private val mContext: Context, val activity: FragmentActivity?,
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
@@ -100,7 +110,40 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.infos = data.first
             binding.nextSpot = nextSpot
             binding.isLastSpot = false
-            binding.tvAddress.text = data.second?.address
+            if (data.second?.address.equals("주소를 찾을 수 없습니다")) {
+                val ai: ApplicationInfo = this.mContext.packageManager.getApplicationInfo(
+                    this.mContext.packageName,
+                    PackageManager.GET_META_DATA
+                )
+                if (ai.metaData != null) {
+                    val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
+                    val currentMapPoint = MapPoint.mapPointWithGeoCoord(
+                        data.second!!.latitude,
+                        data.second!!.longitude
+                    )
+                    val mapReverseGeoCoder = MapReverseGeoCoder(
+                        metaData,
+                        currentMapPoint,
+                        object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                            override fun onReverseGeoCoderFoundAddress(
+                                p0: MapReverseGeoCoder?,
+                                address: String
+                            ) {
+                                // 주소 받아오기 성공 - address: 현재 주소
+                                binding.tvAddress.text = address
+                            }
+                            override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                                // 주소 받아오기 실패
+                                Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                            }
+                        },
+                        activity
+                    )
+                    mapReverseGeoCoder.startFindingAddress()
+                }
+            } else {
+                binding.tvAddress.text = data.second?.address
+            }
             data.first?.let { setMobilityToKorean(it) }
             binding.isTipAvailable = data.second!!.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
@@ -112,7 +155,40 @@ class DailyContentsAdapter(private val viewType: Int, var photoUrl: ((String) ->
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
-            binding.tvAddress.text = data.second?.address
+            if (data.second?.address.equals("주소를 찾을 수 없습니다")) {
+                val ai: ApplicationInfo = this.mContext.packageManager.getApplicationInfo(
+                    this.mContext.packageName,
+                    PackageManager.GET_META_DATA
+                )
+                if (ai.metaData != null) {
+                    val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
+                    val currentMapPoint = MapPoint.mapPointWithGeoCoord(
+                        data.second!!.latitude,
+                        data.second!!.longitude
+                    )
+                    val mapReverseGeoCoder = MapReverseGeoCoder(
+                        metaData,
+                        currentMapPoint,
+                        object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                            override fun onReverseGeoCoderFoundAddress(
+                                p0: MapReverseGeoCoder?,
+                                address: String
+                            ) {
+                                // 주소 받아오기 성공 - address: 현재 주소
+                                binding.tvAddress.text = address
+                            }
+                            override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                                // 주소 받아오기 실패
+                                Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                            }
+                        },
+                        activity
+                    )
+                    mapReverseGeoCoder.startFindingAddress()
+                }
+            } else {
+                binding.tvAddress.text = data.second?.address
+            }
             binding.isTipAvailable = data.second!!.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()

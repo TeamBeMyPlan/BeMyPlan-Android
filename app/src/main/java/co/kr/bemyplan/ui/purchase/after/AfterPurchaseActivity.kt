@@ -154,10 +154,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val result = StringBuilder().apply {
             var index = 0
             var line: String? = ""
-            while(line!=null) {
+            while(line != null) {
                 line = address.getAddressLine(index)
                 index++
-                append(line?:"")
+                append(line?: "")
                 append(" ")
             }
         }
@@ -218,18 +218,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         for (spotsIndex in contents.indices) {
             for (spotIndex in contents[spotsIndex].spots.indices) {
-//                Thread(Runnable {
-//                    getAddressFromGeoCode(
-//                        MapPoint.mapPointWithGeoCoord(
-//                            contents[spotsIndex].spots[spotIndex].latitude,
-//                            contents[spotsIndex].spots[spotIndex].longitude
-//                        ),
-//                        spotsIndex,
-//                        spotIndex
-//                    )
-//                }).start()
                 val lat = contents[spotsIndex].spots[spotIndex].latitude
                 val lon = contents[spotsIndex].spots[spotIndex].longitude
+                addressList[spotsIndex][spotIndex] = contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(getAddressFromGeoCode(lat, lon))
+                viewModel.minusSpotSize()
                 Timber.tag("hooni").d(getAddressFromGeoCode(lat, lon))
             }
         }

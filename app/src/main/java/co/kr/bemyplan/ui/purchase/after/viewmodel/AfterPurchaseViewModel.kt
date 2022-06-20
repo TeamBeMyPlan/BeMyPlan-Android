@@ -161,10 +161,13 @@ class AfterPurchaseViewModel @Inject constructor(
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapCancelTravelPlan",
+                        Bundle().apply {
+                            putString("source", "여행일정 상세보기")
+                            putInt("planId", planId)
+                        }
+                    )
                     _scrapStatus.value = false
                 }
             }.onFailure { exception ->

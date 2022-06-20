@@ -1,11 +1,9 @@
 package co.kr.bemyplan.ui.purchase.before
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,7 +16,6 @@ import co.kr.bemyplan.util.ToastMessage.shortToast
 import javax.inject.Inject
 
 class ChargingFragment : Fragment() {
-
     private var _binding: FragmentChargingBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
@@ -29,7 +26,7 @@ class ChargingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_charging, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
@@ -73,12 +70,12 @@ class ChargingFragment : Fragment() {
         val dialog = CustomDialog(requireContext(), "", "")
 
         binding.tvPayBtn.setOnClickListener {
-            val fb = Firebase.analytics.apply {
-                setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-            }
-            fb.logEvent("clickPaymentButton", Bundle().apply {
-                putInt("postIdx", viewModel.planId)
-            })
+            firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "clickPaymentButton",
+                Bundle().apply {
+                    putInt("planId", viewModel.planId)
+                }
+            )
 
             dialog.showConfirmDialog(R.layout.dialog_yes_zero_event)
             dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {

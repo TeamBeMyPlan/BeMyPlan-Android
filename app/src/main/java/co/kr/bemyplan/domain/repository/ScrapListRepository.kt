@@ -4,9 +4,13 @@ import co.kr.bemyplan.data.entity.main.scrap.ResponseEmptyScrapList
 import co.kr.bemyplan.domain.model.list.PlanList
 
 interface ScrapListRepository {
-    suspend fun getScrapList(
-        sort: String
-    ): PlanList
+    suspend fun fetchDefaultScrapList(): PlanList
 
-    suspend fun getEmptyScrapList(): ResponseEmptyScrapList
+    suspend fun fetchQueryScrapList(sort: String): PlanList
+
+    suspend fun fetchEmptyScrapList(): ResponseEmptyScrapList
+
+    suspend fun fetchDefaultMoreScrapList(size: Int, lastScrapId: Int): PlanList
+
+    suspend fun fetchQueryMoreScrapList(size: Int, lastScrapId: Int, sort: String): PlanList
 }

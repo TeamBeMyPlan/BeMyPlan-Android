@@ -21,9 +21,6 @@ class LocationAdapter(
     private val logEvent: (Boolean, String) -> Unit
 ) :
     ListAdapter<LocationData, LocationAdapter.LocationViewHolder>(LocationComparator()) {
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemLocationBinding.inflate(layoutInflater, parent, false)
@@ -46,19 +43,9 @@ class LocationAdapter(
             clipTo(binding.ivLocation, data.thumbnailUrl)
             binding.root.setOnClickListener {
                 if (binding.ivLock.visibility == View.GONE) {
-                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
-                        "clickOpenedTravelSpot",
-                        Bundle().apply {
-                            putString("spot", data.name)
-                        })
                     itemClick(data)
                     logEvent(true, data.name)
                 } else {
-                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
-                        "clickClosedTravelSpot",
-                        Bundle().apply {
-                            putString("spot", data.name)
-                        })
                     myContext.shortToast("추후에 오픈될 예정입니다")
                     logEvent(false, data.name)
                 }

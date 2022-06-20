@@ -1,7 +1,5 @@
 package co.kr.bemyplan.ui.purchase.after.viewmodel
 
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,13 +14,9 @@ import co.kr.bemyplan.domain.repository.PlanDetailRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.launch
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapReverseGeoCoder
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class AfterPurchaseViewModel @Inject constructor(
@@ -55,7 +49,7 @@ class AfterPurchaseViewModel @Inject constructor(
 
     // 모든 데이터가 다 채워졌을때 옵저브
     private var _spotSize = MutableLiveData<Int>(0)
-    val spotSize : LiveData<Int>
+    val spotSize: LiveData<Int>
         get() = _spotSize
 
     // 스크랩

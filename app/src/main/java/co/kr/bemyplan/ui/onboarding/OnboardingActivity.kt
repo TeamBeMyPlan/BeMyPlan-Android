@@ -3,9 +3,8 @@ package co.kr.bemyplan.ui.onboarding
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.AutoLoginData
+import androidx.appcompat.app.AppCompatActivity
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.*
 import co.kr.bemyplan.ui.login.LoginActivity
@@ -17,12 +16,16 @@ import javax.inject.Inject
 class OnboardingActivity : AppCompatActivity() {
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
-    private lateinit var binding : ActivityOnboardingBinding
+    private lateinit var binding: ActivityOnboardingBinding
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("onboardingFirstOpen", null)
         binding.vpOnboarding.adapter = ViewpagerFragmentAdapter(this)
     }
 
@@ -33,7 +36,8 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     fun checkAutoLogin() {
-        if(dataStore.sessionId != "") {
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("onboardingEnd", null)
+        if (dataStore.sessionId != "") {
             val intent = Intent(this, MainActivity::class.java)
             Log.d("autologincheck", "메인 액티비티로")
             startActivity(intent)

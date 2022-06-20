@@ -206,10 +206,19 @@ class ListViewModel @Inject constructor(
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapCancelTravelPlan",
+                        Bundle().apply {
+                            putString(
+                                "source", when (from) {
+                                    "new", "suggest" -> "홈"
+                                    "location" -> "여행지"
+                                    "user" -> "작성자 이름"
+                                    else -> throw IllegalArgumentException()
+                                }
+                            )
+                            putInt("planId", planId)
+                        })
                 }
             }.onFailure { exception ->
                 Timber.e(exception)

@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
@@ -119,22 +120,25 @@ class ListActivity : AppCompatActivity() {
             rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if (!rvLinearContent.canScrollVertically(1)) {
-                        when (from) {
-                            "new" -> {
-                                viewModel.fetchMoreLatestList()
-                            }
-                            "suggest" -> {
-                                viewModel.fetchMoreSuggestList()
-                            }
-                            "location" -> {
-                                viewModel.fetchMoreLocationList(
-                                    region,
-                                    sortViewModel.sort.value.toString()
-                                )
-                            }
-                            "user" -> {
-                                viewModel.fetchMoreUserPlanList(sortViewModel.sort.value.toString())
+                    if(dy > 0) {
+                        if (!rvLinearContent.canScrollVertically(1) &&
+                                (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == listAdapter.itemCount - 1) {
+                            when (from) {
+                                "new" -> {
+                                    viewModel.fetchMoreLatestList()
+                                }
+                                "suggest" -> {
+                                    viewModel.fetchMoreSuggestList()
+                                }
+                                "location" -> {
+                                    viewModel.fetchMoreLocationList(
+                                        region,
+                                        sortViewModel.sort.value.toString()
+                                    )
+                                }
+                                "user" -> {
+                                    viewModel.fetchMoreUserPlanList(sortViewModel.sort.value.toString())
+                                }
                             }
                         }
                     }

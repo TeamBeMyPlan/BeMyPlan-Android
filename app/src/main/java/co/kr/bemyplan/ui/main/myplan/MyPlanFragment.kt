@@ -44,7 +44,6 @@ class MyPlanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("asdf", "onViewCreated 들어옴")
         initList()
         lookingAroundEvent()
         initSettingsButton()
@@ -60,7 +59,6 @@ class MyPlanFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        Log.d("asdf", "initAdapter 들어옴2")
         purchaseTourAdapter = MyPlanAdapter({
             firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
                 putString("source", "마이플랜")
@@ -96,7 +94,6 @@ class MyPlanFragment : Fragment() {
     private fun lookingAroundEvent() {
         if (listItem.isEmpty()) {
             binding.tvLookingAround.setOnClickListener {
-                Log.d("asdf", "버튼클릭리스너 들어옴")
                 Navigation.findNavController(binding.root)
                     .navigate(R.id.action_fragment_my_plan_to_fragment_home)
             }

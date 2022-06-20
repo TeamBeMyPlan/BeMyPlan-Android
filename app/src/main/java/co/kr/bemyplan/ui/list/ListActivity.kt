@@ -63,7 +63,7 @@ class ListActivity : AppCompatActivity() {
     private fun initView() {
         from = intent.getStringExtra("from") ?: ""
         region = intent.getStringExtra("region") ?: ""
-        authorUserId = intent.getIntExtra("userId", -1)
+        authorUserId = intent.getIntExtra("authorUserId", -1)
         locationName = intent.getStringExtra("locationName") ?: ""
         authorNickname = intent.getStringExtra("authorNickname") ?: ""
         viewModel.from = from

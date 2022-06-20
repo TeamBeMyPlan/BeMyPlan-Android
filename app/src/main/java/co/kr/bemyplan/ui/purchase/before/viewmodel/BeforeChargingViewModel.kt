@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContent
 import co.kr.bemyplan.domain.model.purchase.before.PreviewContents
 import co.kr.bemyplan.domain.model.purchase.before.PreviewInfo
@@ -13,8 +13,6 @@ import co.kr.bemyplan.domain.repository.PreviewRepository
 import co.kr.bemyplan.domain.repository.PurchaseRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.util.SingleLiveEvent
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -31,9 +29,8 @@ class BeforeChargingViewModel @Inject constructor(
         NAVER("네이버페이"), KAKAO("카카오페이"), TOSS("토스"), NULL("null")
     }
 
-    private val fb = Firebase.analytics.apply {
-        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-    }
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     private var _planId = -1
     val planId get() = _planId
@@ -109,10 +106,13 @@ class BeforeChargingViewModel @Inject constructor(
                 scrapRepository.postScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("scrapTravelPlan", Bundle().apply {
-                        putString("source", "BeforeChargingView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapTravelPlan",
+                        Bundle().apply {
+                            putString("source", "구매 전 여행일정 미리보기")
+                            putInt("planId", planId)
+                        }
+                    )
                     _scrapStatus.value = true
                 }
             }.onFailure { exception ->

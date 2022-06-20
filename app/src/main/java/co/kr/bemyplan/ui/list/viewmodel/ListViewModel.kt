@@ -5,12 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.domain.repository.*
 import co.kr.bemyplan.util.SingleLiveEvent
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -25,9 +23,8 @@ class ListViewModel @Inject constructor(
     private val scrapRepository: ScrapRepository,
     private val checkPurchasedRepository: CheckPurchasedRepository
 ) : ViewModel() {
-    private val fb = Firebase.analytics.apply {
-        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-    }
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     private var page = 0
     private var pageSize = 10
@@ -50,6 +47,7 @@ class ListViewModel @Inject constructor(
     private var lastPlanId: Int = -1
     val isPurchased = SingleLiveEvent<Unit>()
     val isNotPurchased = SingleLiveEvent<Unit>()
+    var from = ""
 
     fun setAuthorUserId(userId: Int) {
         _authorUserId = userId
@@ -182,10 +180,19 @@ class ListViewModel @Inject constructor(
                 scrapRepository.postScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("scrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapTravelPlan",
+                        Bundle().apply {
+                            putString(
+                                "source", when (from) {
+                                    "new", "suggest" -> "홈"
+                                    "location" -> "여행지"
+                                    "user" -> "작성자 이름"
+                                    else -> throw IllegalArgumentException()
+                                }
+                            )
+                            putInt("planId", planId)
+                        })
                 }
             }.onFailure { exception ->
                 Timber.e(exception)

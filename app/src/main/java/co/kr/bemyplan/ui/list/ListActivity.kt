@@ -65,6 +65,7 @@ class ListActivity : AppCompatActivity() {
         authorUserId = intent.getIntExtra("userId", -1)
         locationName = intent.getStringExtra("locationName") ?: ""
         authorNickname = intent.getStringExtra("authorNickname") ?: ""
+        viewModel.from = from
         initList(from)
         initRecyclerView()
         clickBack()

@@ -3,14 +3,19 @@ package co.kr.bemyplan.ui.purchase.before
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ActivityPurchaseBinding
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PurchaseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPurchaseBinding
     private val viewModel by viewModels<BeforeChargingViewModel>()
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,15 @@ class PurchaseActivity : AppCompatActivity() {
             intent.putExtra("scrapStatus", it)
             intent.putExtra("planId", requireNotNull(viewModel.planId))
             setResult(RESULT_OK, intent)
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        for (fragment in supportFragmentManager.fragments) {
+            if (fragment.isVisible && fragment is ChargingFragment) {
+                firebaseAnalyticsProvider.firebaseAnalytics.logEvent("closePaymentView", null)
+            }
         }
     }
 }

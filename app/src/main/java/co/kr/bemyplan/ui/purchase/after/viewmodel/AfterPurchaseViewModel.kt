@@ -1,13 +1,11 @@
 package co.kr.bemyplan.ui.purchase.after.viewmodel
 
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.domain.model.purchase.after.*
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.MoveInfo
@@ -15,27 +13,19 @@ import co.kr.bemyplan.domain.repository.MoveInfoRepository
 import co.kr.bemyplan.domain.repository.PlanDetailRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.launch
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapReverseGeoCoder
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class AfterPurchaseViewModel @Inject constructor(
     private val planDetailRepository: PlanDetailRepository,
     private val moveInfoRepository: MoveInfoRepository,
     private val scrapRepository: ScrapRepository
-): ViewModel() {
-
-    private val fb = Firebase.analytics.apply {
-        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-    }
+) : ViewModel() {
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     // plan detail 들고오고
     private var _planDetail = MutableLiveData<PlanDetail>()
@@ -59,7 +49,7 @@ class AfterPurchaseViewModel @Inject constructor(
 
     // 모든 데이터가 다 채워졌을때 옵저브
     private var _spotSize = MutableLiveData<Int>(0)
-    val spotSize : LiveData<Int>
+    val spotSize: LiveData<Int>
         get() = _spotSize
 
     // 스크랩
@@ -144,10 +134,13 @@ class AfterPurchaseViewModel @Inject constructor(
                 scrapRepository.postScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("scrapTravelPlan", Bundle().apply {
-                        putString("source", "AfterPurchaseView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapTravelPlan",
+                        Bundle().apply {
+                            putString("source", "여행일정 상세보기")
+                            putInt("planId", planId)
+                        }
+                    )
                     _scrapStatus.value = true
                 }
             }.onFailure { exception ->
@@ -162,10 +155,13 @@ class AfterPurchaseViewModel @Inject constructor(
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapCancelTravelPlan",
+                        Bundle().apply {
+                            putString("source", "여행일정 상세보기")
+                            putInt("planId", planId)
+                        }
+                    )
                     _scrapStatus.value = false
                 }
             }.onFailure { exception ->

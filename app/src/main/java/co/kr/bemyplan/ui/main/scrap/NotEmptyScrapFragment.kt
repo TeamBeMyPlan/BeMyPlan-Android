@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentNotEmptyScrapBinding
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapAdapter
 import co.kr.bemyplan.ui.main.scrap.viewmodel.ScrapViewModel
@@ -20,6 +21,7 @@ import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotEmptyScrapFragment : Fragment() {
@@ -41,6 +43,9 @@ class NotEmptyScrapFragment : Fragment() {
                 }
             }
         }
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -113,6 +118,10 @@ class NotEmptyScrapFragment : Fragment() {
         authorUserId: Int,
         thumbnail: String
     ) {
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
+            putString("source", "스크랩")
+            putInt("planId", planId)
+        })
         viewModel.isPurchased.observe(viewLifecycleOwner) {
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", planId)

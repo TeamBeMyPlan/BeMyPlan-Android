@@ -5,14 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
-import co.kr.bemyplan.domain.repository.ScrapListRepository
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.domain.repository.CheckPurchasedRepository
+import co.kr.bemyplan.domain.repository.ScrapListRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.util.SingleLiveEvent
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,9 +22,8 @@ class ScrapViewModel @Inject constructor(
     private val scrapRepository: ScrapRepository,
     private val checkPurchasedRepository: CheckPurchasedRepository
 ) : ViewModel() {
-    private val fb = Firebase.analytics.apply {
-        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-    }
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     private var _scrapList = MutableLiveData<List<ContentModel>>()
     val scrapList: LiveData<List<ContentModel>> get() = _scrapList
@@ -64,16 +61,18 @@ class ScrapViewModel @Inject constructor(
         }
     }
 
-    fun postScrap(postId: Int) {
+    fun postScrap(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                scrapRepository.postScrap(postId)
+                scrapRepository.postScrap(planId)
             }.onSuccess {
-                if(it) {
-                    fb.logEvent("scrapTravelPlan", Bundle().apply {
-                        putString("source", "ScrapView")
-                        putInt("postIdx", postId)
-                    })
+                if (it) {
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapTravelPlan",
+                        Bundle().apply {
+                            putString("source", "스크랩")
+                            putInt("planId", planId)
+                        })
                 }
             }.onFailure { exception ->
                 Timber.e(exception)
@@ -86,11 +85,13 @@ class ScrapViewModel @Inject constructor(
             kotlin.runCatching {
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
-                if(it) {
-                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                if (it) {
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapCancelTravelPlan",
+                        Bundle().apply {
+                            putString("source", "스크랩")
+                            putInt("planId", planId)
+                        })
                 }
             }.onFailure { exception ->
                 Timber.e(exception)

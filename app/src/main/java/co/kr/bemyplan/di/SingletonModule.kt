@@ -2,6 +2,7 @@ package co.kr.bemyplan.di
 
 import android.app.Application
 import android.content.Context
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import dagger.Module
 import dagger.Provides
@@ -21,4 +22,8 @@ object SingletonModule {
     @Provides
     @Singleton
     fun provideBeMyPlanDataStore(@ApplicationContext context: Context) = BeMyPlanDataStore(context)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalytics() = FirebaseAnalyticsProvider()
 }

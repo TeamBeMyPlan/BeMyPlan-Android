@@ -3,15 +3,11 @@ package co.kr.bemyplan.ui.purchase.after
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -20,8 +16,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Lifecycle
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.domain.model.purchase.after.Contents
@@ -32,25 +28,25 @@ import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import net.daum.mf.map.api.*
-import timber.log.Timber
-import java.lang.IndexOutOfBoundsException
+import net.daum.mf.map.api.CalloutBalloonAdapter
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapView
 import java.util.*
-import kotlin.concurrent.thread
-import kotlin.concurrent.timerTask
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
-
     private val viewModel by viewModels<AfterPurchaseViewModel>()
-
     private lateinit var mapView: MapView
     private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,7 +138,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun getAddressFromGeoCode(latitude: Double, longitude: Double) : String {
+    private fun getAddressFromGeoCode(latitude: Double, longitude: Double): String {
         val geoCoder = Geocoder(this, Locale.KOREA)
         val address: Address
         // 안드로이드 지도로 주소 검색
@@ -155,11 +151,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val result = StringBuilder().apply {
             var index = 0
             var line: String? = ""
-            while(line != null) {
+            while (line != null) {
                 line = address.getAddressLine(index)
                 line = line?.replace("대한민국 ", "")
                 index++
-                append(line?: "")
+                append(line ?: "")
             }
         }
         return result.toString()
@@ -175,7 +171,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
             for (spotIndex in contents[spotsIndex].spots.indices) {
                 val lat = contents[spotsIndex].spots[spotIndex].latitude
                 val lon = contents[spotsIndex].spots[spotIndex].longitude
-                addressList[spotsIndex].add(contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(getAddressFromGeoCode(lat, lon)))
+                addressList[spotsIndex].add(
+                    contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(
+                        getAddressFromGeoCode(lat, lon)
+                    )
+                )
             }
         }
         viewModel.setSpotsWithAddress(addressList)
@@ -183,12 +183,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // 작성자 정보 다음 뷰로 전송
     private fun initUserButton() {
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickEditorName", Bundle().apply {
+            putString("source", "여행일정 상세보기")
+        })
         val intent = Intent(this, ListActivity::class.java)
-        //intent.putExtra("from", "user")
-        intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
+        intent.putExtra("from", "user")
         intent.putExtra("authorNickname", viewModel.authorNickname)
         intent.putExtra("authorUserId", viewModel.authorUserId)
-        setResult(RESULT_OK, intent)
         startActivity(intent)
         finish()
     }
@@ -378,6 +379,9 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // 마커 클릭 이벤트 리스너
     class MarkerEventListener(val context: Context) : MapView.POIItemEventListener {
+        @Inject
+        lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
+
         override fun onPOIItemSelected(mapView: MapView?, poiItem: MapPOIItem?) {
             // 마커 클릭 시
         }
@@ -394,13 +398,20 @@ class AfterPurchaseActivity : AppCompatActivity() {
             // 말풍선 클릭 시
             val intentKakaoMap =
                 context.packageManager.getLaunchIntentForPackage("net.daum.android.map")
-            try {
+            runCatching {
                 val latitude = poiItem?.mapPoint?.mapPointGeoCoord?.latitude
                 val longitude = poiItem?.mapPoint?.mapPointGeoCoord?.longitude
                 val intent =
                     Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://look?p=$latitude,$longitude"))
                 context.startActivity(intent)
-            } catch (e: Exception) {
+            }.onSuccess {
+                firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                    "moveMapApplication",
+                    Bundle().apply {
+                        putString("source", "카카오맵")
+                    })
+            }.onFailure {
+                firebaseAnalyticsProvider.firebaseAnalytics.logEvent("alertNoMapApplication", null)
                 val intentPlayStore =
                     Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
                 context.startActivity(intentPlayStore)

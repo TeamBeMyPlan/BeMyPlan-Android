@@ -1,6 +1,5 @@
 package co.kr.bemyplan.ui.purchase.after.adapter
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -16,31 +15,41 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
 import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
-import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.NonDisposableHandle.parent
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapReverseGeoCoder
 import timber.log.Timber
+import javax.inject.Inject
 
 
-class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActivity?, var photoUrl: ((String) -> Unit)? = null) :
+class DailyContentsAdapter(
+    private val viewType: Int,
+    val activity: FragmentActivity?,
+    var photoUrl: ((String) -> Unit)? = null
+) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     // item 갱신
-    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, SpotsWithAddress?>>() {
-        override fun areItemsTheSame(oldItem: Pair<Infos?, SpotsWithAddress?>, newItem: Pair<Infos?, SpotsWithAddress?>): Boolean {
+    private val differCallback = object : DiffUtil.ItemCallback<Pair<Infos?, SpotsWithAddress?>>() {
+        override fun areItemsTheSame(
+            oldItem: Pair<Infos?, SpotsWithAddress?>,
+            newItem: Pair<Infos?, SpotsWithAddress?>
+        ): Boolean {
             return oldItem == newItem
         }
-        override fun areContentsTheSame(oldItem: Pair<Infos?, SpotsWithAddress?>, newItem: Pair<Infos?, SpotsWithAddress?>): Boolean {
+
+        override fun areContentsTheSame(
+            oldItem: Pair<Infos?, SpotsWithAddress?>,
+            newItem: Pair<Infos?, SpotsWithAddress?>
+        ): Boolean {
             return oldItem == newItem
         }
     }
@@ -48,9 +57,9 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
 
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
     fun submitList(list: List<Pair<Infos?, SpotsWithAddress?>>) {
-        differ.submitList(list, Runnable {
+        differ.submitList(list) {
             if (list.size >= 5) notifyItemChanged(4)
-        })
+        }
     }
 
     override fun getItemViewType(position: Int) = viewType
@@ -80,7 +89,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
         when (holder) {
             is ContentsViewHolder -> {
                 if (position == differ.currentList.size - 1) {
-                    holder.onBind(spots,true)
+                    holder.onBind(spots, true)
                 } else {
                     holder.onBind(spots, differ.currentList[position + 1].second!!.name)
                 }
@@ -105,6 +114,9 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
+
+        @Inject
+        lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
         override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, nextSpot: String) {
             binding.spots = data.second
             binding.infos = data.first
@@ -132,9 +144,11 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
                                 // 주소 받아오기 성공 - address: 현재 주소
                                 binding.tvAddress.text = address
                             }
+
                             override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
                                 // 주소 받아오기 실패
-                                Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                                Timber.tag("MapReverseGeoCoder")
+                                    .d("Can't get address from map point")
                             }
                         },
                         activity
@@ -177,9 +191,11 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
                                 // 주소 받아오기 성공 - address: 현재 주소
                                 binding.tvAddress.text = address
                             }
+
                             override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
                                 // 주소 받아오기 실패
-                                Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                                Timber.tag("MapReverseGeoCoder")
+                                    .d("Can't get address from map point")
                             }
                         },
                         activity
@@ -196,6 +212,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
         }
 
         private fun copyButton() {
+            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickAddressCopy", null)
             val clipboard =
                 mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("address", binding.tvAddress.text)
@@ -212,8 +229,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
                 binding.tvMoving.text = "도보"
             } else if (data.mobility == "BICYCLE") {
                 binding.tvMoving.text = "자전거"
-            }
-            else {
+            } else {
                 binding.tvMoving.text = ""
             }
         }
@@ -233,7 +249,11 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
     }
 
     class RouteViewHolder(private val binding: ItemDailyRouteBinding) : SpotViewHolder(binding) {
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, position: Int, lastPosition: Int) {
+        override fun onBind(
+            data: Pair<Infos?, SpotsWithAddress?>,
+            position: Int,
+            lastPosition: Int
+        ) {
             binding.spots = data.second
             binding.infos = data.first
             binding.position = position
@@ -252,8 +272,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
             } else if (data.mobility == "BICYCLE") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
-            }
-            else {
+            } else {
                 binding.ivTransportation.isVisible = false
             }
         }

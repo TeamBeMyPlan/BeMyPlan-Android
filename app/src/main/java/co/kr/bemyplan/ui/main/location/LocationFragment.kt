@@ -34,21 +34,28 @@ class LocationFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        locationAdapter = LocationAdapter (itemClick = {
+        locationAdapter = LocationAdapter(itemClick = {
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "location")
             intent.putExtra("region", it.region)
             intent.putExtra("locationName", it.name)
             startActivity(intent)
         }, myContext = requireContext())
-
         binding.rvLocation.adapter = locationAdapter
-        binding.rvLocation.addItemDecoration(VerticalItemDecorator(resources.getDimensionPixelOffset(
+        binding.rvLocation.addItemDecoration(
+            VerticalItemDecorator(
+                resources.getDimensionPixelOffset(
                     R.dimen.margin_12
-                )))
-        binding.rvLocation.addItemDecoration(HorizontalItemDecorator(resources.getDimensionPixelOffset(
+                )
+            )
+        )
+        binding.rvLocation.addItemDecoration(
+            HorizontalItemDecorator(
+                resources.getDimensionPixelOffset(
                     R.dimen.margin_6
-                )))
+                )
+            )
+        )
     }
 
     override fun onDestroyView() {

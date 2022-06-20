@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.domain.model.purchase.after.*
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.MoveInfo
@@ -15,8 +15,6 @@ import co.kr.bemyplan.domain.repository.MoveInfoRepository
 import co.kr.bemyplan.domain.repository.PlanDetailRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.launch
@@ -31,11 +29,9 @@ class AfterPurchaseViewModel @Inject constructor(
     private val planDetailRepository: PlanDetailRepository,
     private val moveInfoRepository: MoveInfoRepository,
     private val scrapRepository: ScrapRepository
-): ViewModel() {
-
-    private val fb = Firebase.analytics.apply {
-        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-    }
+) : ViewModel() {
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     // plan detail 들고오고
     private var _planDetail = MutableLiveData<PlanDetail>()
@@ -144,10 +140,13 @@ class AfterPurchaseViewModel @Inject constructor(
                 scrapRepository.postScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("scrapTravelPlan", Bundle().apply {
-                        putString("source", "AfterPurchaseView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapTravelPlan",
+                        Bundle().apply {
+                            putString("source", "여행일정 상세보기")
+                            putInt("planId", planId)
+                        }
+                    )
                     _scrapStatus.value = true
                 }
             }.onFailure { exception ->

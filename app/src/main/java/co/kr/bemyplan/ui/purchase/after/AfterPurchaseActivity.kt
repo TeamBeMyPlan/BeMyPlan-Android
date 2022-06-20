@@ -39,13 +39,14 @@ import javax.inject.Inject
 class AfterPurchaseActivity : AppCompatActivity() {
     private var _binding: ActivityAfterPurchaseBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
-
     private val viewModel by viewModels<AfterPurchaseViewModel>()
-
     private lateinit var mapView: MapView
     private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,12 +183,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // 작성자 정보 다음 뷰로 전송
     private fun initUserButton() {
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickEditorName", Bundle().apply {
+            putString("source", "여행일정 상세보기")
+        })
         val intent = Intent(this, ListActivity::class.java)
-        //intent.putExtra("from", "user")
-        intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
+        intent.putExtra("from", "user")
         intent.putExtra("authorNickname", viewModel.authorNickname)
         intent.putExtra("authorUserId", viewModel.authorUserId)
-        setResult(RESULT_OK, intent)
         startActivity(intent)
         finish()
     }

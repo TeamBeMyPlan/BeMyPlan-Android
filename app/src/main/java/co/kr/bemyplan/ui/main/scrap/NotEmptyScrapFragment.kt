@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentNotEmptyScrapBinding
@@ -100,6 +102,18 @@ class NotEmptyScrapFragment : Fragment() {
             when (scrapStatus) {
                 true -> viewModel.deleteScrap(planId)
                 false -> viewModel.postScrap(planId)
+            }
+        })
+        binding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    if (!binding.rvContent.canScrollVertically(1) &&
+                        (recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition() == scrapAdapter.itemCount - 1
+                    ) {
+                        viewModel.getMoreScrapList(requireNotNull(sortViewModel.sort.value))
+                    }
+                }
             }
         })
         binding.rvContent.adapter = scrapAdapter

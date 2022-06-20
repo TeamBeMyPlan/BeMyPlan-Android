@@ -50,10 +50,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private val googleLoginLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
-            if (it.resultCode == Activity.RESULT_OK) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
                 kotlin.runCatching {
-                    GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                    GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 }.onSuccess { task ->
                     val account = task.getResult(ApiException::class.java)
                     val authCode = account.serverAuthCode ?: ""
@@ -73,9 +73,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     Timber.e(error)
                 }
             } else {
-                if (it.resultCode == Activity.RESULT_CANCELED) {
+                if (result.resultCode == Activity.RESULT_CANCELED) {
                     kotlin.runCatching {
-                        GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                        GoogleSignIn.getSignedInAccountFromIntent(result.data)
                     }.onSuccess { task ->
                         Timber.e(task.exception.toString())
                     }.onFailure { error ->

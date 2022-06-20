@@ -10,14 +10,11 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
 import co.kr.bemyplan.application.MainApplication
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.databinding.ActivitySplashBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.onboarding.OnboardingActivity
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -27,18 +24,16 @@ import javax.inject.Inject
 class SplashActivity : AppCompatActivity() {
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
-    private lateinit var binding : ActivitySplashBinding
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var binding: ActivitySplashBinding
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
 
-        // firebase event logging
-        firebaseAnalytics = Firebase.analytics
-        firebaseAnalytics.setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-        firebaseAnalytics.logEvent("appFirstOpen", null)
-
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("appFirstOpen", null)
         val display = this.resources.displayMetrics
         val deviceWidth = display.widthPixels
         val ratio : Double = 100/360.0

@@ -36,24 +36,21 @@ class SplashActivity : AppCompatActivity() {
         firebaseAnalyticsProvider.firebaseAnalytics.logEvent("appFirstOpen", null)
         val display = this.resources.displayMetrics
         val deviceWidth = display.widthPixels
-        val ratio : Double = 100/360.0
-        val imagePadding : Int = (ratio * deviceWidth).toInt()
+        val ratio: Double = 100 / 360.0
+        val imagePadding: Int = (ratio * deviceWidth).toInt()
         binding.imageView.setPadding(imagePadding, 0, imagePadding, 0)
-
         Handler(Looper.getMainLooper()).postDelayed({
-            val fadeAnim : Animation = AnimationUtils.loadAnimation(this, R.anim.splash_animation)
+            val fadeAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.splash_animation)
             binding.imageView.startAnimation(fadeAnim)
             checkOnBoarding()
         }, 1500L)
-
         setContentView(binding.root)
     }
 
-    private fun checkOnBoarding(){
-        if(MainApplication.prefs.getOnBoarding()){
+    private fun checkOnBoarding() {
+        if (MainApplication.prefs.getOnBoarding()) {
             checkAutoLogin()
-        }
-        else{
+        } else {
             val intent = Intent(this, OnboardingActivity::class.java)
             startActivity(intent)
             finish()
@@ -61,7 +58,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkAutoLogin() {
-        if(dataStore.sessionId != "") {
+        if (dataStore.sessionId != "") {
             Timber.tag("sessionId").i(dataStore.sessionId)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

@@ -99,11 +99,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun clickGuestLogin() {
         binding.tvGuestLogin.setOnClickListener {
-            // Firebase Event Log
-            val bundle = Bundle()
-            bundle.putString("source", "Guest")
-            viewModel.fb.logEvent("signin", bundle)
-
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "signin",
+                Bundle().apply {
+                    putString("source", "Guest")
+                })
             startMainActivity()
         }
     }

@@ -25,5 +25,6 @@ object SingletonModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseAnalytics() = FirebaseAnalyticsProvider()
+    fun provideFirebaseAnalytics(beMyPlanDataStore: BeMyPlanDataStore) =
+        FirebaseAnalyticsProvider(beMyPlanDataStore)
 }

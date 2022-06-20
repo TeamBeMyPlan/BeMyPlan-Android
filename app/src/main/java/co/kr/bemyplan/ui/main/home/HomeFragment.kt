@@ -158,6 +158,10 @@ class HomeFragment : Fragment() {
         authorUserId: Int,
         thumbnail: String
     ) {
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
+            putString("source", "홈")
+            putInt("planId", planId)
+        })
         homeViewModel.isPurchased.observe(viewLifecycleOwner) {
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", planId)

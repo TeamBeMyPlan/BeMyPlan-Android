@@ -229,10 +229,11 @@ class LoginViewModel @Inject constructor(
                     requireNotNull(email.value)
                 )
             }.onSuccess {
-                // FB LOG
-                fb.logEvent("signUpComplete", Bundle().apply {
-                    putString("source", socialType.value)
-                })
+                firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                    "signUpComplete",
+                    Bundle().apply {
+                        putString("source", socialType.value)
+                    })
                 with(dataStore) {
                     sessionId = it.sessionId
                     userId = it.userId

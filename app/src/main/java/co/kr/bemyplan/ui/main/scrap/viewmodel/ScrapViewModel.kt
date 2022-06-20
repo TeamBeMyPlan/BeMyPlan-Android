@@ -85,11 +85,13 @@ class ScrapViewModel @Inject constructor(
             kotlin.runCatching {
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
-                if(it) {
-                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                if (it) {
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapCancelTravelPlan",
+                        Bundle().apply {
+                            putString("source", "스크랩")
+                            putInt("planId", planId)
+                        })
                 }
             }.onFailure { exception ->
                 Timber.e(exception)

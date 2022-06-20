@@ -15,41 +15,39 @@ import co.kr.bemyplan.util.ToastMessage.shortToast
 import co.kr.bemyplan.util.clipTo
 import javax.inject.Inject
 
-class LocationAdapter(val itemClick: (LocationData) -> Unit, val myContext: Context) :
+class LocationAdapter(
+    private val itemClick: (LocationData) -> Unit,
+    private val myContext: Context,
+    private val logEvent: (Boolean, String) -> Unit
+) :
     ListAdapter<LocationData, LocationAdapter.LocationViewHolder>(LocationComparator()) {
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemLocationBinding.inflate(layoutInflater, parent, false)
-        return LocationViewHolder(binding)
+        return LocationViewHolder(binding, itemClick, myContext, logEvent)
     }
 
     override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {
         holder.onBind(getItem(position))
     }
 
-    inner class LocationViewHolder(private val binding: ItemLocationBinding) :
+    class LocationViewHolder(
+        private val binding: ItemLocationBinding,
+        private val itemClick: (LocationData) -> Unit,
+        private val myContext: Context,
+        private val logEvent: (Boolean, String) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: LocationData) {
             binding.locationItem = data
             clipTo(binding.ivLocation, data.thumbnailUrl)
             binding.root.setOnClickListener {
                 if (binding.ivLock.visibility == View.GONE) {
-                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
-                        "clickOpenedTravelSpot",
-                        Bundle().apply {
-                            putString("spot", data.name)
-                        })
                     itemClick(data)
+                    logEvent(true, data.name)
                 } else {
-                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
-                        "clickClosedTravelSpot",
-                        Bundle().apply {
-                            putString("spot", data.name)
-                        })
                     myContext.shortToast("추후에 오픈될 예정입니다")
+                    logEvent(false, data.name)
                 }
             }
         }

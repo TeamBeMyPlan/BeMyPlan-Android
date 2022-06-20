@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
@@ -18,6 +19,7 @@ import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ListActivity : AppCompatActivity() {
@@ -40,6 +42,9 @@ class ListActivity : AppCompatActivity() {
                 }
             }
         }
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,6 +194,17 @@ class ListActivity : AppCompatActivity() {
         authorUserId: Int,
         thumbnail: String
     ) {
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
+            putString(
+                "source", when (from) {
+                    "new", "suggest" -> "홈"
+                    "location" -> "여행지"
+                    "user" -> "작성자 이름"
+                    else -> throw IllegalArgumentException()
+                }
+            )
+            putInt("planId", planId)
+        })
         viewModel.isPurchased.observe(this) {
             val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", planId)

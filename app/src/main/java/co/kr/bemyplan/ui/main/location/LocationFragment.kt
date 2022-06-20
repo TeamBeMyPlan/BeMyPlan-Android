@@ -8,17 +8,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentLocationBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LocationFragment : Fragment() {
-
     private var _binding: FragmentLocationBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private lateinit var locationAdapter: LocationAdapter
     private val locationViewModel: LocationViewModel by viewModels()
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,13 +38,27 @@ class LocationFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        locationAdapter = LocationAdapter(itemClick = {
+        locationAdapter = LocationAdapter({
             val intent = Intent(requireContext(), ListActivity::class.java)
             intent.putExtra("from", "location")
             intent.putExtra("region", it.region)
             intent.putExtra("locationName", it.name)
             startActivity(intent)
-        }, myContext = requireContext())
+        }, myContext = requireContext(), {opened, name ->
+            if(opened) {
+                firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                    "clickOpenedTravelSpot",
+                    Bundle().apply {
+                        putString("spot", name)
+                    })
+            } else {
+                firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                    "clickClosedTravelSpot",
+                    Bundle().apply {
+                        putString("spot", name)
+                    })
+            }
+        })
         binding.rvLocation.adapter = locationAdapter
         binding.rvLocation.addItemDecoration(
             VerticalItemDecorator(

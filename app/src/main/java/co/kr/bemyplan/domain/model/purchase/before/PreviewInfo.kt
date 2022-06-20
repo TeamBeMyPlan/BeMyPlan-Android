@@ -10,9 +10,9 @@ data class PreviewInfo(
     val budget: Budget,
     val month: Int,
     val totalDay: Int,
-    val theme: String,
-    val partner: String,
-    val mobility: String
+    var theme: String,
+    var partner: String,
+    var mobility: String
 ) {
     data class Budget(
         val amount: Int

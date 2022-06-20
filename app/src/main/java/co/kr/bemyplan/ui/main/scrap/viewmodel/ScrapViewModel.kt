@@ -37,7 +37,11 @@ class ScrapViewModel @Inject constructor(
     fun getScrapList(sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                scrapListRepository.getScrapList(sort)
+                if (sort == "id,desc") {
+                    scrapListRepository.fetchDefaultScrapList()
+                } else {
+                    scrapListRepository.fetchQueryScrapList(sort)
+                }
             }.onSuccess { response ->
                 _scrapList.value = response.contents
                 lastPlanId = response.nextCursor
@@ -50,13 +54,30 @@ class ScrapViewModel @Inject constructor(
     fun getEmptyScrapList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                scrapListRepository.getEmptyScrapList()
+                scrapListRepository.fetchEmptyScrapList()
             }.onSuccess {
                 if (_emptyScrapList.value != it.data) {
                     _emptyScrapList.value = it.data
                 }
             }.onFailure {
                 Timber.tag("mlog: ListViewModel::getEmptyScrapList error").e(it.message.toString())
+            }
+        }
+    }
+
+    fun getMoreScrapList(sort: String) {
+        viewModelScope.launch {
+            runCatching {
+                if (sort == "id,desc") {
+                    scrapListRepository.fetchDefaultMoreScrapList(size, lastPlanId)
+                } else {
+                    scrapListRepository.fetchQueryMoreScrapList(size, lastPlanId, sort)
+                }
+            }.onSuccess {
+                _scrapList.value = scrapList.value?.toMutableList()?.apply { addAll(it.contents) }
+                lastPlanId = it.nextCursor
+            }.onFailure {
+                Timber.e(it)
             }
         }
     }

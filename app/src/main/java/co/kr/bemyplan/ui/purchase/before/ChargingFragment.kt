@@ -7,21 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentChargingBinding
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import co.kr.bemyplan.util.CustomDialog
 import co.kr.bemyplan.util.ToastMessage.shortToast
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
+import javax.inject.Inject
 
 class ChargingFragment : Fragment() {
 
     private var _binding: FragmentChargingBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,6 +93,7 @@ class ChargingFragment : Fragment() {
 
     private fun clickBack() {
         binding.ivBackBtn.setOnClickListener {
+            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("closePaymentView", null)
             activity?.supportFragmentManager
                 ?.beginTransaction()
                 ?.remove(this)

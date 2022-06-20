@@ -127,10 +127,13 @@ class BeforeChargingViewModel @Inject constructor(
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapCancelTravelPlan",
+                        Bundle().apply {
+                            putString("source", "구매 전 여행일정 미리보기")
+                            putInt("planId", planId)
+                        }
+                    )
                     _scrapStatus.value = false
                 }
             }.onFailure { exception ->

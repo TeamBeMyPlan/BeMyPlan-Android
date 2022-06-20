@@ -15,12 +15,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.adapter.ContentAdapter
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BeforeChargingFragment : Fragment() {
@@ -28,6 +30,9 @@ class BeforeChargingFragment : Fragment() {
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
     private lateinit var contentAdapter: ContentAdapter
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -167,6 +172,7 @@ class BeforeChargingFragment : Fragment() {
 
     private fun showExample() {
         binding.tvPurchaseExample.setOnClickListener {
+            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickPlanDetailExample", null)
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
             intent.putExtra("postId", -1)
             startActivity(intent)

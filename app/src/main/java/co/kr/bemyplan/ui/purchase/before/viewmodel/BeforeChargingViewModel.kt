@@ -24,7 +24,6 @@ class BeforeChargingViewModel @Inject constructor(
     private val scrapRepository: ScrapRepository,
     private val purchaseRepository: PurchaseRepository
 ) : ViewModel() {
-
     enum class Pay(val brand: String) {
         NAVER("네이버페이"), KAKAO("카카오페이"), TOSS("토스"), NULL("null")
     }
@@ -88,7 +87,7 @@ class BeforeChargingViewModel @Inject constructor(
             Pay.TOSS -> _payWay.value = Pay.TOSS
             else -> throw IndexOutOfBoundsException()
         }
-        fb.logEvent("clickPaymentMethod", Bundle().apply {
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickPaymentMethod", Bundle().apply {
             putString("source", payWay.value.toString())
         })
     }
@@ -180,12 +179,12 @@ class BeforeChargingViewModel @Inject constructor(
     }
 
     fun checkScrapStatus() {
-        if(planId != -1) {
+        if (planId != -1) {
             viewModelScope.launch {
                 runCatching {
                     scrapRepository.checkScrapStatus(planId)
                 }.onSuccess {
-                    if(it) {
+                    if (it) {
                         _scrapStatus.value = true
                     }
                 }.onFailure {

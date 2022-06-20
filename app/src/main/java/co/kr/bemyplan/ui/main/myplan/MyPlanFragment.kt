@@ -64,14 +64,11 @@ class MyPlanFragment : Fragment() {
                 putString("source", "마이플랜")
                 putInt("planId", it.planId)
             })
-            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-            // 이 부분 작가 이름이랑 작가 아이디도 넘겨야하는데 어떻게 넘기면 좋을까...?
-            // adapter에서 하던데 저 요소를 어떻게 추가해야할 지 모르겠어
-            val authorNickname = intent.getStringExtra("authorNickname") ?: ""
-            val authorUserId = intent.getIntExtra("authorUserId", -1)
-            intent.putExtra("planId", it.planId)
-            intent.putExtra("authorNickName", authorNickname)
-            intent.putExtra("authorNickName", authorUserId)
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", it.planId)
+                putExtra("authorNickName", it.user.nickname)
+                putExtra("authorUserId", it.user.userId)
+            }
             startActivity(intent)
         }, {
             when (it.scrapStatus) {

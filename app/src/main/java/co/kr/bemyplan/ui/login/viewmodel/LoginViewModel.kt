@@ -6,14 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.model.login.UserInfoModel
 import co.kr.bemyplan.domain.repository.GoogleLoginRepository
 import co.kr.bemyplan.domain.repository.LoginRepository
 import co.kr.bemyplan.util.SingleLiveEvent
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -28,9 +26,8 @@ class LoginViewModel @Inject constructor(
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
 
-    val fb = Firebase.analytics.apply {
-        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-    }
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     var nickname = MutableLiveData<String>("")
     var email = MutableLiveData<String>("")
@@ -116,8 +113,7 @@ class LoginViewModel @Inject constructor(
                     requireNotNull(socialToken.value)
                 )
             }.onSuccess {
-                // FB LOG
-                fb.logEvent("signin", Bundle().apply {
+                firebaseAnalyticsProvider.firebaseAnalytics.logEvent("signin", Bundle().apply {
                     putString("source", socialType.value)
                 })
                 with(dataStore) {
@@ -233,10 +229,11 @@ class LoginViewModel @Inject constructor(
                     requireNotNull(email.value)
                 )
             }.onSuccess {
-                // FB LOG
-                fb.logEvent("signUpComplete", Bundle().apply {
-                    putString("source", socialType.value)
-                })
+                firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                    "signUpComplete",
+                    Bundle().apply {
+                        putString("source", socialType.value)
+                    })
                 with(dataStore) {
                     sessionId = it.sessionId
                     userId = it.userId

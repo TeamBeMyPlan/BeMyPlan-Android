@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.domain.model.purchase.after.*
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.MoveInfo
@@ -13,8 +13,6 @@ import co.kr.bemyplan.domain.repository.MoveInfoRepository
 import co.kr.bemyplan.domain.repository.PlanDetailRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
 import co.kr.bemyplan.ui.purchase.after.example.ExampleDummy
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -25,11 +23,9 @@ class AfterPurchaseViewModel @Inject constructor(
     private val planDetailRepository: PlanDetailRepository,
     private val moveInfoRepository: MoveInfoRepository,
     private val scrapRepository: ScrapRepository
-): ViewModel() {
-
-    private val fb = Firebase.analytics.apply {
-        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-    }
+) : ViewModel() {
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     // plan detail 들고오고
     private var _planDetail = MutableLiveData<PlanDetail>()
@@ -53,7 +49,7 @@ class AfterPurchaseViewModel @Inject constructor(
 
     // 모든 데이터가 다 채워졌을때 옵저브
     private var _spotSize = MutableLiveData<Int>(0)
-    val spotSize : LiveData<Int>
+    val spotSize: LiveData<Int>
         get() = _spotSize
 
     // 스크랩
@@ -104,7 +100,7 @@ class AfterPurchaseViewModel @Inject constructor(
             kotlin.runCatching {
                 planDetailRepository.fetchPlanDetail(planId)
             }.onSuccess { planDetail ->
-                _planDetail.value = planDetail
+                _planDetail.value = checkContents(planDetail)
                 _contents.value = planDetail.contents
             }.onFailure { error ->
                 Timber.tag("fetchPlanDetail").e(error)
@@ -138,10 +134,13 @@ class AfterPurchaseViewModel @Inject constructor(
                 scrapRepository.postScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("scrapTravelPlan", Bundle().apply {
-                        putString("source", "AfterPurchaseView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapTravelPlan",
+                        Bundle().apply {
+                            putString("source", "여행일정 상세보기")
+                            putInt("planId", planId)
+                        }
+                    )
                     _scrapStatus.value = true
                 }
             }.onFailure { exception ->
@@ -156,10 +155,13 @@ class AfterPurchaseViewModel @Inject constructor(
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapCancelTravelPlan",
+                        Bundle().apply {
+                            putString("source", "여행일정 상세보기")
+                            putInt("planId", planId)
+                        }
+                    )
                     _scrapStatus.value = false
                 }
             }.onFailure { exception ->
@@ -207,7 +209,7 @@ class AfterPurchaseViewModel @Inject constructor(
         val bigList = mutableListOf<MergedPlanAndInfo>()
         for (i in planDetail.contents.indices) {
             val pairList = mutableListOf<Pair<Infos?, SpotsWithAddress?>>()
-            val dailySpots = planDetail.contents[i].spots
+            val dailySpots = planDetail.contents[i].spots.toMutableList()
             for (j in dailySpots.indices) {
                 if (j == dailySpots.size - 1)
                     pairList.add(Pair(null, spotsWithAddress.value!![i][j]))
@@ -219,19 +221,27 @@ class AfterPurchaseViewModel @Inject constructor(
         _mergedPlanAndInfoList.value = bigList
     }
 
+    // tip과 review에 \\n 되어있는 것 수정
+    // 이미지 url 뒷부분 \r 로 되어있는 것 수정
+    private fun checkContents(contents: PlanDetail): PlanDetail {
+        for (content in contents.contents) {
+            for (spot in content.spots) {
+                spot.tip = spot.tip?.replace("\\n", "\n")
+                spot.review = spot.review.replace("\\n", "\n")
+                for (image in spot.images) {
+                    image.url = image.url.replace("\r", "")
+                }
+            }
+        }
+
+        return contents
+    }
+
     fun setMergedPlanAndInfo(index: Int) {
         _mergedPlanAndInfo.value = _mergedPlanAndInfoList.value?.get(index)
     }
 
     fun setSpotsWithAddress(list: MutableList<MutableList<SpotsWithAddress?>>) {
         _spotsWithAddress.value = list
-    }
-
-    fun plusSpotSize() {
-        _spotSize.value = _spotSize.value?.plus(1)
-    }
-
-    fun minusSpotSize() {
-        _spotSize.value = _spotSize.value?.minus(1)
     }
 }

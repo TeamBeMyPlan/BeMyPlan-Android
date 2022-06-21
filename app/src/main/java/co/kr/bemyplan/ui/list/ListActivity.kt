@@ -7,8 +7,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
@@ -18,6 +20,7 @@ import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ListActivity : AppCompatActivity() {
@@ -41,6 +44,9 @@ class ListActivity : AppCompatActivity() {
             }
         }
 
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
@@ -57,9 +63,10 @@ class ListActivity : AppCompatActivity() {
     private fun initView() {
         from = intent.getStringExtra("from") ?: ""
         region = intent.getStringExtra("region") ?: ""
-        authorUserId = intent.getIntExtra("userId", -1)
+        authorUserId = intent.getIntExtra("authorUserId", -1)
         locationName = intent.getStringExtra("locationName") ?: ""
         authorNickname = intent.getStringExtra("authorNickname") ?: ""
+        viewModel.from = from
         initList(from)
         initRecyclerView()
         clickBack()
@@ -113,22 +120,25 @@ class ListActivity : AppCompatActivity() {
             rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if (!rvLinearContent.canScrollVertically(1)) {
-                        when (from) {
-                            "new" -> {
-                                viewModel.fetchMoreLatestList()
-                            }
-                            "suggest" -> {
-                                viewModel.fetchMoreSuggestList()
-                            }
-                            "location" -> {
-                                viewModel.fetchMoreLocationList(
-                                    region,
-                                    sortViewModel.sort.value.toString()
-                                )
-                            }
-                            "user" -> {
-                                viewModel.fetchMoreUserPlanList(sortViewModel.sort.value.toString())
+                    if(dy > 0) {
+                        if (!rvLinearContent.canScrollVertically(1) &&
+                                (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == listAdapter.itemCount - 1) {
+                            when (from) {
+                                "new" -> {
+                                    viewModel.fetchMoreLatestList()
+                                }
+                                "suggest" -> {
+                                    viewModel.fetchMoreSuggestList()
+                                }
+                                "location" -> {
+                                    viewModel.fetchMoreLocationList(
+                                        region,
+                                        sortViewModel.sort.value.toString()
+                                    )
+                                }
+                                "user" -> {
+                                    viewModel.fetchMoreUserPlanList(sortViewModel.sort.value.toString())
+                                }
                             }
                         }
                     }
@@ -189,6 +199,17 @@ class ListActivity : AppCompatActivity() {
         authorUserId: Int,
         thumbnail: String
     ) {
+        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
+            putString(
+                "source", when (from) {
+                    "new", "suggest" -> "홈"
+                    "location" -> "여행지"
+                    "user" -> "작성자 이름"
+                    else -> throw IllegalArgumentException()
+                }
+            )
+            putInt("planId", planId)
+        })
         viewModel.isPurchased.observe(this) {
             val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", planId)

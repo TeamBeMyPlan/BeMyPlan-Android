@@ -6,13 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
-import co.kr.bemyplan.data.local.FirebaseDefaultEventParameters
 import co.kr.bemyplan.domain.model.main.myplan.MyPlanData
 import co.kr.bemyplan.domain.repository.MyPlanRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,9 +22,8 @@ class MyPlanViewModel @Inject constructor(
     private val scrapRepository: ScrapRepository,
     dataStore: BeMyPlanDataStore
 ) : ViewModel() {
-    private val fb = Firebase.analytics.apply {
-        setDefaultEventParameters(FirebaseDefaultEventParameters.parameters)
-    }
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     //private var page = 0
     //private var pageSize = 10
@@ -66,7 +63,7 @@ class MyPlanViewModel @Inject constructor(
                 }
             }
         } else {
-            Log.d("network", "로그인 안 함")
+            Timber.tag("network").d("로그인 안 함")
         }
     }
 
@@ -88,16 +85,18 @@ class MyPlanViewModel @Inject constructor(
         }
     }
 
-    fun postScrap(postId: Int) {
+    fun postScrap(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
-                scrapRepository.postScrap(postId)
+                scrapRepository.postScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("scrapTravelPlan", Bundle().apply {
-                        putString("source", "BeforeChargingView")
-                        putInt("postIdx", postId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapTravelPlan",
+                        Bundle().apply {
+                            putString("source", "마이플랜")
+                            putInt("planId", planId)
+                        })
                 }
             }.onFailure { exception ->
                 Timber.e(exception)
@@ -111,10 +110,12 @@ class MyPlanViewModel @Inject constructor(
                 scrapRepository.deleteScrap(planId)
             }.onSuccess {
                 if (it) {
-                    fb.logEvent("unScrapTravelPlan", Bundle().apply {
-                        putString("source", "ListView")
-                        putInt("postIdx", planId)
-                    })
+                    firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                        "scrapCancelTravelPlan",
+                        Bundle().apply {
+                            putString("source", "마이플랜")
+                            putInt("planId", planId)
+                        })
                 }
             }.onFailure { exception ->
                 Timber.e(exception)

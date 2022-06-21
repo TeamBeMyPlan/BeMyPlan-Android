@@ -2,14 +2,15 @@ package co.kr.bemyplan.ui.main.myplan
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
@@ -81,16 +82,18 @@ class MyPlanFragment : Fragment() {
                 false -> viewModel.postScrap(it.planId)
             }
         })
-        binding.rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (!binding.rvMyPlanPurchase.canScrollVertically(1)) {
-                    Log.d("asdf", "getMoreMyPlanList 호출함")
-                    viewModel.getMoreMyPlanList()
-                }
-            }
-        })
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
+        ViewCompat.setNestedScrollingEnabled(binding.rvMyPlanPurchase, false)
+
+        val scroll = binding.sv
+        scroll.viewTreeObserver.addOnScrollChangedListener {
+            val view = scroll.getChildAt(scroll.childCount - 1)
+            val diff = view.bottom - (scroll.height + scroll.scrollY)
+            if (diff == 0) {
+                Log.d("asdf", "getMoreMyPlanList()")
+                viewModel.getMoreMyPlanList()
+            }
+        }
     }
 
     private fun lookingAroundEvent() {

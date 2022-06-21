@@ -2,9 +2,11 @@ package co.kr.bemyplan.ui.main.myplan
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -45,17 +47,21 @@ class MyPlanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initList()
+        initAdapter()
         lookingAroundEvent()
         initSettingsButton()
         clickLogin()
+        observeList()
+    }
+
+    private fun observeList() {
+        viewModel.myPlan.observe(viewLifecycleOwner) {
+            purchaseTourAdapter.submitList(it.toMutableList())
+        }
     }
 
     private fun initList() {
         viewModel.getMyPlanList()
-        viewModel.myPlan.observe(viewLifecycleOwner) {
-            listItem = it
-            initAdapter()
-        }
     }
 
     private fun initAdapter() {
@@ -76,16 +82,18 @@ class MyPlanFragment : Fragment() {
                 false -> viewModel.postScrap(it.planId)
             }
         })
-        /*binding.rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if(!binding.rvMyPlanPurchase.canScrollVertically(1)){
-                    viewModel.getMoreMyPlanList()
-                }
-            }
-        })*/
-        purchaseTourAdapter.submitList(listItem)
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
+        ViewCompat.setNestedScrollingEnabled(binding.rvMyPlanPurchase, false)
+
+        val scroll = binding.sv
+        scroll.viewTreeObserver.addOnScrollChangedListener {
+            val view = scroll.getChildAt(scroll.childCount - 1)
+            val diff = view.bottom - (scroll.height + scroll.scrollY)
+            if (diff == 0) {
+                Log.d("asdf", "getMoreMyPlanList()")
+                viewModel.getMoreMyPlanList()
+            }
+        }
     }
 
     private fun lookingAroundEvent() {

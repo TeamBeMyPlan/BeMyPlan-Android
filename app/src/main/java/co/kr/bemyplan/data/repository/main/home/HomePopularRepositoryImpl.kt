@@ -11,9 +11,9 @@ class HomePopularRepositoryImpl @Inject constructor(
     private val homePopularService: HomePopularService,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : HomePopularRepository {
-    override suspend fun getHomePopularData(): List<HomeDomainData> {
-        return withContext(coroutineDispatcher){
-            homePopularService.getPopularData().data.contents
+    override suspend fun getHomePopularData(size: Int, sort: String): List<HomeDomainData> {
+        return withContext(coroutineDispatcher) {
+            homePopularService.getPopularData(size, sort).data.contents
         }
     }
 }

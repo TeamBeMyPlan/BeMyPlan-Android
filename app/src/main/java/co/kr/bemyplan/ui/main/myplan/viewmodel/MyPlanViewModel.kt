@@ -55,7 +55,7 @@ class MyPlanViewModel @Inject constructor(
         if (userId.value != 0) {
             viewModelScope.launch {
                 kotlin.runCatching {
-                    myPlanRepository.getMyPlan(size = 4)
+                    myPlanRepository.getMyPlan(size = 2)
                 }.onSuccess {
                     if (_myPlan.value != it.contents) {
                         _myPlan.value = it.contents
@@ -76,7 +76,7 @@ class MyPlanViewModel @Inject constructor(
             viewModelScope.launch {
                 kotlin.runCatching {
                     Log.d("asdf", "매개변수로 넘기는 lastPlanId : $lastPlanId")
-                    myPlanRepository.getMoreMyPlan(size = 4, lastPlanId)
+                    myPlanRepository.getMoreMyPlan(size = 2, lastPlanId)
                 }.onSuccess {
                     _myPlan.value = _myPlan.value?.toMutableList()?.apply { addAll(it.contents) }
                     lastPlanId = it.nextCursor

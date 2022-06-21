@@ -1,6 +1,5 @@
 package co.kr.bemyplan.ui.main.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,21 +23,21 @@ class HomeViewModel @Inject constructor(
     private val homeCheckPurchasedRepository: CheckPurchasedRepository
 ) : ViewModel() {
     private val _popular = MutableLiveData<List<HomeDomainData>>()
-    val popular : LiveData<List<HomeDomainData>> get() = _popular
+    val popular: LiveData<List<HomeDomainData>> get() = _popular
     private val _new = MutableLiveData<List<HomeDomainData>>()
-    val new : LiveData<List<HomeDomainData>> get() = _new
+    val new: LiveData<List<HomeDomainData>> get() = _new
     private val _suggest = MutableLiveData<List<HomeDomainData>>()
-    val suggest : LiveData<List<HomeDomainData>> get() = _suggest
+    val suggest: LiveData<List<HomeDomainData>> get() = _suggest
 
     val isPurchased = SingleLiveEvent<Unit>()
     val isNotPurchased = SingleLiveEvent<Unit>()
 
-    fun getPopularData(){
+    fun getPopularData() {
         viewModelScope.launch {
             kotlin.runCatching {
-                homePopularRepository.getHomePopularData()
-            }.onSuccess { responsePopularData->
-                if(_popular.value != responsePopularData)
+                homePopularRepository.getHomePopularData(size = 10, sort = "orderCnt,desc")
+            }.onSuccess { responsePopularData ->
+                if (_popular.value != responsePopularData)
                     _popular.value = responsePopularData
             }.onFailure { error ->
                 Timber.e(error)
@@ -46,12 +45,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getNewData(){
+    fun getNewData() {
         viewModelScope.launch {
             kotlin.runCatching {
-                homeNewRepository.getHomeNewData()
-            }.onSuccess { responseNewData->
-                if(_new.value != responseNewData)
+                homeNewRepository.getHomeNewData(size = 5, sort = "createdAt,desc")
+            }.onSuccess { responseNewData ->
+                if (_new.value != responseNewData)
                     _new.value = responseNewData
             }.onFailure { error ->
                 Timber.e(error)
@@ -59,12 +58,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getSuggestData(){
+    fun getSuggestData() {
         viewModelScope.launch {
             kotlin.runCatching {
-                homeSuggestRepository.getHomeSuggestData()
-            }.onSuccess { responseSuggestData->
-                if(_suggest.value != responseSuggestData)
+                homeSuggestRepository.getHomeSuggestData(size = 5, sort = "id,desc")
+            }.onSuccess { responseSuggestData ->
+                if (_suggest.value != responseSuggestData)
                     _suggest.value = responseSuggestData
             }.onFailure { error ->
                 Timber.e(error)

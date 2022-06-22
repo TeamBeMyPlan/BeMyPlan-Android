@@ -1,6 +1,5 @@
 package co.kr.bemyplan.ui.purchase.after.adapter
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -20,7 +19,7 @@ import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
-import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.util.ToastMessage.shortToast
@@ -40,18 +39,18 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     // item 갱신
-    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, SpotsWithAddress?>>() {
-        override fun areItemsTheSame(oldItem: Pair<Infos?, SpotsWithAddress?>, newItem: Pair<Infos?, SpotsWithAddress?>): Boolean {
+    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, Spots?>>() {
+        override fun areItemsTheSame(oldItem: Pair<Infos?, Spots?>, newItem: Pair<Infos?, Spots?>): Boolean {
             return oldItem == newItem
         }
-        override fun areContentsTheSame(oldItem: Pair<Infos?, SpotsWithAddress?>, newItem: Pair<Infos?, SpotsWithAddress?>): Boolean {
+        override fun areContentsTheSame(oldItem: Pair<Infos?, Spots?>, newItem: Pair<Infos?, Spots?>): Boolean {
             return oldItem == newItem
         }
     }
     private val differ = AsyncListDiffer(this, differCallback)
 
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
-    fun submitList(list: List<Pair<Infos?, SpotsWithAddress?>>) {
+    fun submitList(list: List<Pair<Infos?, Spots?>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
         })
@@ -98,9 +97,9 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, isLastSpot: Boolean) {}
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, nextSpot: String) {}
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, position: Int, lastPosition: Int) {}
+        open fun onBind(data: Pair<Infos?, Spots?>, isLastSpot: Boolean) {}
+        open fun onBind(data: Pair<Infos?, Spots?>, nextSpot: String) {}
+        open fun onBind(data: Pair<Infos?, Spots?>, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(
@@ -135,10 +134,10 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
         }
 
         // 주소 검색
-        private fun getAddress(data: Pair<Infos?, SpotsWithAddress?>) {
-            getAddressFromGeoCode(data.second!!.latitude, data.second!!.longitude)
+        private fun getAddress(data: Pair<Infos?, Spots?>) {
+            val address = getAddressFromGeoCode(data.second!!.latitude, data.second!!.longitude)
 
-            if (data.second?.address.equals("주소를 찾을 수 없습니다")) {
+            if (data.second!!.equals("주소를 찾을 수 없습니다")) {
                 val ai: ApplicationInfo = this.mContext.packageManager.getApplicationInfo(
                     this.mContext.packageName,
                     PackageManager.GET_META_DATA
@@ -170,11 +169,11 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
                     mapReverseGeoCoder.startFindingAddress()
                 }
             } else {
-                binding.tvAddress.text = data.second?.address
+                binding.tvAddress.text = address
             }
         }
 
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, nextSpot: String) {
+        override fun onBind(data: Pair<Infos?, Spots?>, nextSpot: String) {
             binding.spots = data.second
             binding.infos = data.first
             binding.nextSpot = nextSpot
@@ -189,7 +188,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
             binding.clAddress.setOnClickListener { copyButton() }
         }
 
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, isLastSpot: Boolean) {
+        override fun onBind(data: Pair<Infos?, Spots?>, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
@@ -225,7 +224,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
             }
         }
 
-        private fun initViewPagerAdapter(data: Pair<Infos?, SpotsWithAddress?>) {
+        private fun initViewPagerAdapter(data: Pair<Infos?, Spots?>) {
             viewPagerAdapter = PhotoViewPagerAdapter(photoUrl)
             viewPagerAdapter.setItems(data.second!!.images)
             binding.vpPhoto.adapter = viewPagerAdapter
@@ -240,7 +239,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
     }
 
     class RouteViewHolder(private val binding: ItemDailyRouteBinding) : SpotViewHolder(binding) {
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, position: Int, lastPosition: Int) {
+        override fun onBind(data: Pair<Infos?, Spots?>, position: Int, lastPosition: Int) {
             binding.spots = data.second
             binding.infos = data.first
             binding.position = position

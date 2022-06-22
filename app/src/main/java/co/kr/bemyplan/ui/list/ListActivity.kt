@@ -11,13 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
 import co.kr.bemyplan.ui.list.viewmodel.ListViewModel
+import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import co.kr.bemyplan.ui.sort.SortFragment
 import co.kr.bemyplan.ui.sort.viewmodel.SortViewModel
+import co.kr.bemyplan.util.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -43,6 +46,9 @@ class ListActivity : AppCompatActivity() {
                 }
             }
         }
+
+    @Inject
+    lateinit var beMyPlanDataStore: BeMyPlanDataStore
 
     @Inject
     lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
@@ -103,13 +109,27 @@ class ListActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         listAdapter = ListAdapter({
-            viewModel.checkPurchased(it.planId)
-            observeDataForStartActivity(
-                it.planId,
-                it.user.nickname,
-                it.user.userId,
-                it.thumbnailUrl
-            )
+            if(beMyPlanDataStore.userId != 0) {
+                viewModel.checkPurchased(it.planId)
+                observeDataForStartActivity(
+                    it.planId,
+                    it.user.nickname,
+                    it.user.userId,
+                    it.thumbnailUrl
+                )
+            } else {
+                val dialog = CustomDialog(this, "", "")
+                dialog.setOnClickedListener(object: CustomDialog.ButtonClickListener {
+                    override fun onClicked(num: Int) {
+                        if(num == 1) {
+                            val intent = Intent(this@ListActivity, LoginActivity::class.java)
+                            startActivity(intent)
+                            finishAffinity()
+                        }
+                    }
+                })
+                dialog.showLoginDialog()
+            }
         }, { planId, scrapStatus ->
             when (scrapStatus) {
                 true -> viewModel.deleteScrap(planId)
@@ -120,9 +140,10 @@ class ListActivity : AppCompatActivity() {
             rvLinearContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if(dy > 0) {
+                    if (dy > 0) {
                         if (!rvLinearContent.canScrollVertically(1) &&
-                                (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == listAdapter.itemCount - 1) {
+                            (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == listAdapter.itemCount - 1
+                        ) {
                             when (from) {
                                 "new" -> {
                                     viewModel.fetchMoreLatestList()

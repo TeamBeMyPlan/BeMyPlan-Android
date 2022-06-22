@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
@@ -26,6 +27,9 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val homeViewModel: HomeViewModel by viewModels()
+
+    @Inject
+    lateinit var beMyPlanDataStore: BeMyPlanDataStore
 
     @Inject
     lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
@@ -82,39 +86,54 @@ class HomeFragment : Fragment() {
 
     private fun initAdapterNew() {
         recentAdapter = HomeAdapter {
-            homeViewModel.checkPurchased(it.planId)
-            observeDataForStartActivity(
-                it.planId,
-                it.user.nickname,
-                it.user.userId,
-                it.thumbnailUrl
-            )
+            if (beMyPlanDataStore.userId != 0) {
+                homeViewModel.checkPurchased(it.planId)
+                observeDataForStartActivity(
+                    it.planId,
+                    it.user.nickname,
+                    it.user.userId,
+                    it.thumbnailUrl
+                )
+            } else {
+                val intent = Intent(requireContext(), PurchaseActivity::class.java)
+                startActivity(intent)
+            }
         }
         binding.rvRecent.adapter = recentAdapter
     }
 
     private fun initAdapterSuggest() {
         editorAdapter = HomeAdapter {
-            homeViewModel.checkPurchased(it.planId)
-            observeDataForStartActivity(
-                it.planId,
-                it.user.nickname,
-                it.user.userId,
-                it.thumbnailUrl
-            )
+            if (beMyPlanDataStore.userId != 0) {
+                homeViewModel.checkPurchased(it.planId)
+                observeDataForStartActivity(
+                    it.planId,
+                    it.user.nickname,
+                    it.user.userId,
+                    it.thumbnailUrl
+                )
+            } else {
+                val intent = Intent(requireContext(), PurchaseActivity::class.java)
+                startActivity(intent)
+            }
         }
         binding.rvEditorSuggest.adapter = editorAdapter
     }
 
     private fun initAdapterPopular() {
         homeViewPagerAdapter = HomeViewPagerAdapter {
-            homeViewModel.checkPurchased(it.planId)
-            observeDataForStartActivity(
-                it.planId,
-                it.user.nickname,
-                it.user.userId,
-                it.thumbnailUrl
-            )
+            if (beMyPlanDataStore.userId != 0) {
+                homeViewModel.checkPurchased(it.planId)
+                observeDataForStartActivity(
+                    it.planId,
+                    it.user.nickname,
+                    it.user.userId,
+                    it.thumbnailUrl
+                )
+            } else {
+                val intent = Intent(requireContext(), PurchaseActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         with(binding.vpPopular) {

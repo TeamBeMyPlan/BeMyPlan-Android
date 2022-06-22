@@ -1,7 +1,6 @@
 package co.kr.bemyplan.ui.main.scrap
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ class ScrapFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_scrap, container, false)
         return binding.root
     }
@@ -43,7 +42,6 @@ class ScrapFragment : Fragment() {
     private fun initFragmentContainerView() {
         viewModel.getScrapList(sortViewModel.sort.value.toString())
         viewModel.scrapList.observe(viewLifecycleOwner) {
-            Log.d("mlog: ScrapFragment.initFragmentContainerView", "execute")
             when (it.size) {
                 0 -> {
                     val transaction = childFragmentManager.beginTransaction()

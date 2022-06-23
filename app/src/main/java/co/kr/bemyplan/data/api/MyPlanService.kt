@@ -13,6 +13,6 @@ interface MyPlanService {
     @GET("v1/plan/orders")
     suspend fun getMoreMyPlan(
         @Query("size") size: Int,
-        @Query("lastPlanId") lastPlanId: Int
+        @Query("lastOrderId") lastOrderId: Int
     ): ResponseMyPlan
 }

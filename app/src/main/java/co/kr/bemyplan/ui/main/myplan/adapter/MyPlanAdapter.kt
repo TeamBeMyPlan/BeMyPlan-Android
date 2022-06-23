@@ -1,6 +1,5 @@
 package co.kr.bemyplan.ui.main.myplan.adapter
 
-import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -63,16 +62,17 @@ class MyPlanAdapter(
         holder.onBind(getItem(position))
     }
 
-    private class MyPlanComparator():DiffUtil.ItemCallback<MyPlanData.Data>(){
+    private class MyPlanComparator() : DiffUtil.ItemCallback<MyPlanData.Data>() {
         override fun areItemsTheSame(oldItem: MyPlanData.Data, newItem: MyPlanData.Data): Boolean {
-            return oldItem.planId==newItem.planId
+            //Log.d("asdf", "areItemsTheSame - oldItem: ${oldItem.planId}, newItem: ${newItem.planId}")
+            return oldItem.planId == newItem.planId
         }
 
         override fun areContentsTheSame(
             oldItem: MyPlanData.Data,
             newItem: MyPlanData.Data
         ): Boolean {
-            return oldItem==newItem
+            return oldItem == newItem
         }
     }
 }

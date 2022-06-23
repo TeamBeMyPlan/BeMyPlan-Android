@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
 import co.kr.bemyplan.domain.model.purchase.after.Spots
@@ -28,9 +29,14 @@ import net.daum.mf.map.api.MapReverseGeoCoder
 import timber.log.Timber
 import java.lang.IndexOutOfBoundsException
 import java.util.*
+import javax.inject.Inject
 
 
-class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActivity?, var photoUrl: ((String) -> Unit)? = null) :
+class DailyContentsAdapter(
+    private val viewType: Int,
+    val activity: FragmentActivity?,
+    var photoUrl: ((String) -> Unit)? = null
+) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
@@ -50,7 +56,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
     fun submitList(list: List<Pair<Infos?, Spots?>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
-        })
+        }
     }
 
     override fun getItemViewType(position: Int) = viewType
@@ -80,7 +86,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
         when (holder) {
             is ContentsViewHolder -> {
                 if (position == differ.currentList.size - 1) {
-                    holder.onBind(spots,true)
+                    holder.onBind(spots, true)
                 } else {
                     holder.onBind(spots, differ.currentList[position + 1].second!!.name)
                 }
@@ -105,6 +111,8 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
+        @Inject
+        lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
         // 안드로이드 주소 검색
         private fun getAddressFromGeoCode(latitude: Double, longitude: Double) : String {
@@ -157,9 +165,11 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
                                 // 주소 받아오기 성공 - address: 현재 주소
                                 binding.tvAddress.text = address
                             }
+
                             override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
                                 // 주소 받아오기 실패
-                                Timber.tag("MapReverseGeoCoder").d("Can't get address from map point")
+                                Timber.tag("MapReverseGeoCoder")
+                                    .d("Can't get address from map point")
                             }
                         },
                         activity
@@ -200,6 +210,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
         }
 
         private fun copyButton() {
+            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickAddressCopy", null)
             val clipboard =
                 mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("address", binding.tvAddress.text)
@@ -216,8 +227,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
                 binding.tvMoving.text = "도보"
             } else if (data.mobility == "BICYCLE") {
                 binding.tvMoving.text = "자전거"
-            }
-            else {
+            } else {
                 binding.tvMoving.text = ""
             }
         }
@@ -256,8 +266,7 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
             } else if (data.mobility == "BICYCLE") {
                 binding.ivTransportation.setImageResource(R.drawable.ic_icn_walk)
-            }
-            else {
+            } else {
                 binding.ivTransportation.isVisible = false
             }
         }

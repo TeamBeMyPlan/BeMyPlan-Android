@@ -2,7 +2,6 @@ package co.kr.bemyplan.ui.login.signup
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentCheckEmailBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckEmailFragment : Fragment() {
@@ -22,10 +23,13 @@ class CheckEmailFragment : Fragment() {
     private val binding get() = _binding ?: error("binding not initialized")
     private val viewModel by activityViewModels<LoginViewModel>()
 
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding =
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_check_email, container, false)
         binding.viewModel = viewModel
@@ -48,13 +52,15 @@ class CheckEmailFragment : Fragment() {
 
     private fun observeEmail() {
         viewModel.email.observe(viewLifecycleOwner) {
-            Log.d("mlog: email", viewModel.email.value.toString())
             viewModel.checkIsValidEmail()
         }
     }
 
     private fun moveNextView() {
         viewModel.emailPermission.observe(viewLifecycleOwner) {
+            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("signupEmail", Bundle().apply {
+                putString("source", viewModel.socialType.value)
+            })
             val transaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.fcv_sign_up, CheckTermsFragment())
                 .addToBackStack("terms")

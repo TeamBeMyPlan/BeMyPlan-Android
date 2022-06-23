@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.ActivitySettingsBinding
 import co.kr.bemyplan.ui.login.LoginActivity
@@ -24,6 +25,9 @@ class SettingsActivity : AppCompatActivity() {
 
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +88,7 @@ class SettingsActivity : AppCompatActivity() {
                     runCatching {
                         viewModel.logout()
                     }.onSuccess {
+                        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("logout", null)
                         showLogoutFinishedDialog()
                     }.onFailure {
                         this@SettingsActivity.shortToast("문제가 발생했습니다. 잠시 후 다시 시도해주세요.")

@@ -8,14 +8,14 @@ interface UserPlanListService {
     @GET("v1/plans")
     suspend fun fetchUserPlanList(
         @Query("size") size: Int,
-        @Query("sort") sort: String,
+        @Query("sort", encoded = true) sort: String,
         @Query("userId") userId: Int
     ): ResponseUserPlanList
 
     @GET("v1/plans")
     suspend fun fetchMoreUserPlanList(
         @Query("size") size: Int,
-        @Query("sort") sort: String,
+        @Query("sort", encoded = true) sort: String,
         @Query("userId") userId: Int,
         @Query("lastPlanId") lastPlanId: Int
     ): ResponseUserPlanList

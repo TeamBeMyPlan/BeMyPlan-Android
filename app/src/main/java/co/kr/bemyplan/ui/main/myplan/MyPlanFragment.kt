@@ -6,13 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import co.kr.bemyplan.R
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
 import co.kr.bemyplan.domain.model.main.myplan.MyPlanData
 import co.kr.bemyplan.ui.login.LoginActivity
@@ -21,7 +21,7 @@ import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 import co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyPlanFragment : Fragment() {
@@ -30,6 +30,9 @@ class MyPlanFragment : Fragment() {
     private val viewModel by viewModels<MyPlanViewModel>()
     private var listItem = listOf<MyPlanData.Data>()
     private lateinit var purchaseTourAdapter: MyPlanAdapter
+
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,32 +46,35 @@ class MyPlanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("asdf", "onViewCreated 들어옴")
         initList()
+        initAdapter()
         lookingAroundEvent()
         initSettingsButton()
         clickLogin()
+        observeList()
+    }
+
+    private fun observeList() {
+        viewModel.myPlan.observe(viewLifecycleOwner) {
+            purchaseTourAdapter.submitList(it.toMutableList())
+        }
     }
 
     private fun initList() {
         viewModel.getMyPlanList()
-        viewModel.myPlan.observe(viewLifecycleOwner) {
-            listItem = it
-            initAdapter()
-        }
     }
 
     private fun initAdapter() {
-        Log.d("asdf", "initAdapter 들어옴2")
         purchaseTourAdapter = MyPlanAdapter({
-            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
-            // 이 부분 작가 이름이랑 작가 아이디도 넘겨야하는데 어떻게 넘기면 좋을까...?
-            // adapter에서 하던데 저 요소를 어떻게 추가해야할 지 모르겠어
-            val authorNickname = intent.getStringExtra("authorNickname") ?: ""
-            val authorUserId = intent.getIntExtra("authorUserId", -1)
-            intent.putExtra("planId", it.planId)
-            intent.putExtra("authorNickName", authorNickname)
-            intent.putExtra("authorNickName", authorUserId)
+            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
+                putString("source", "마이플랜")
+                putInt("planId", it.planId)
+            })
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", it.planId)
+                putExtra("authorNickName", it.user.nickname)
+                putExtra("authorUserId", it.user.userId)
+            }
             startActivity(intent)
         }, {
             when (it.scrapStatus) {
@@ -76,22 +82,23 @@ class MyPlanFragment : Fragment() {
                 false -> viewModel.postScrap(it.planId)
             }
         })
-        /*binding.rvMyPlanPurchase.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if(!binding.rvMyPlanPurchase.canScrollVertically(1)){
-                    viewModel.getMoreMyPlanList()
-                }
-            }
-        })*/
-        purchaseTourAdapter.submitList(listItem)
         binding.rvMyPlanPurchase.adapter = purchaseTourAdapter
+        ViewCompat.setNestedScrollingEnabled(binding.rvMyPlanPurchase, false)
+
+        val scroll = binding.sv
+        scroll.viewTreeObserver.addOnScrollChangedListener {
+            val view = scroll.getChildAt(scroll.childCount - 1)
+            val diff = view.bottom - (scroll.height + scroll.scrollY)
+            if (diff == 0) {
+                Log.d("asdf", "getMoreMyPlanList()")
+                viewModel.getMoreMyPlanList()
+            }
+        }
     }
 
     private fun lookingAroundEvent() {
         if (listItem.isEmpty()) {
             binding.tvLookingAround.setOnClickListener {
-                Log.d("asdf", "버튼클릭리스너 들어옴")
                 Navigation.findNavController(binding.root)
                     .navigate(R.id.action_fragment_my_plan_to_fragment_home)
             }

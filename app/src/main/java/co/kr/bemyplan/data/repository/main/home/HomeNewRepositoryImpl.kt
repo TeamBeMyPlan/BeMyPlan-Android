@@ -8,12 +8,12 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class HomeNewRepositoryImpl @Inject constructor(
-    private val homeNewService : HomeNewService,
+    private val homeNewService: HomeNewService,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : HomeNewRepository {
-    override suspend fun getHomeNewData(): List<HomeDomainData> {
-        return withContext(coroutineDispatcher){
-            homeNewService.getNewData().data.contents
+    override suspend fun getHomeNewData(size: Int, sort: String): List<HomeDomainData> {
+        return withContext(coroutineDispatcher) {
+            homeNewService.getNewData(size, sort).data.contents
         }
     }
 }

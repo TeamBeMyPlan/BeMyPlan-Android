@@ -11,9 +11,9 @@ class HomeSuggestRepositoryImpl @Inject constructor(
     private val homeSuggestService: HomeSuggestService,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : HomeSuggestRepository {
-    override suspend fun getHomeSuggestData(): List<HomeDomainData> {
-        return withContext(coroutineDispatcher){
-            homeSuggestService.getSuggestData().data.contents
+    override suspend fun getHomeSuggestData(size: Int, sort: String): List<HomeDomainData> {
+        return withContext(coroutineDispatcher) {
+            homeSuggestService.getSuggestData(size, sort).data.contents
         }
     }
 }

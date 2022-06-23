@@ -20,8 +20,8 @@ android {
         applicationId "co.kr.bemyplan"
         minSdk 24
         targetSdk 31
-        versionCode 1
-        versionName "0.9.0"
+        versionCode 2
+        versionName "0.9.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

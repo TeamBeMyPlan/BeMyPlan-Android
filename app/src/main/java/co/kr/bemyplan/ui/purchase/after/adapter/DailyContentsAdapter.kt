@@ -23,8 +23,6 @@ import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.NonDisposableHandle.parent
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapReverseGeoCoder
 import timber.log.Timber
@@ -136,7 +134,8 @@ class DailyContentsAdapter(private val viewType: Int, val activity: FragmentActi
         private fun getAddress(data: Pair<Infos?, Spots?>) {
             val address = getAddressFromGeoCode(data.second!!.latitude, data.second!!.longitude)
 
-            if (data.second!!.equals("주소를 찾을 수 없습니다")) {
+            // 안드로이드에서 주소 검색 실패 시 카카오로 검색
+            if (address == "주소를 찾을 수 없습니다") {
                 val ai: ApplicationInfo = this.mContext.packageManager.getApplicationInfo(
                     this.mContext.packageName,
                     PackageManager.GET_META_DATA

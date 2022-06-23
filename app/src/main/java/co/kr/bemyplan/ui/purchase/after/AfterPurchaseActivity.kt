@@ -25,6 +25,7 @@ import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.*
+import timber.log.Timber
 import java.lang.IndexOutOfBoundsException
 import java.util.*
 
@@ -71,20 +72,26 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // Observer
         viewModel.contents.observe(this) {
-            //setAddress(it)
-
-            // writer 버튼 생성
-            binding.clWriter.setOnClickListener { initUserButton() }
-        }
-
-        viewModel.spots.observe(this) {
             viewModel.setMergedPlanAndInfoList(
                 viewModel.planDetail.value!!,
                 viewModel.moveInfoList.value!!
             )
+
+            Timber.tag("hooni").d("contents observer")
+            // writer 버튼 생성
+            binding.clWriter.setOnClickListener { initUserButton() }
         }
 
+//        viewModel.spots.observe(this) {
+//            viewModel.setMergedPlanAndInfoList(
+//                viewModel.planDetail.value!!,
+//                viewModel.moveInfoList.value!!
+//            )
+//            Timber.tag("hooni").d("spots observer")
+//        }
+
         viewModel.mergedPlanAndInfoList.observe(this) {
+            Timber.tag("hooni").d("merged")
             // fragment 생성
             initFragment(0)
             // 마커 생성
@@ -119,6 +126,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // fragment 그리기
     private fun initFragment(index: Int) {
+        Timber.tag("hooni").d("frageent")
         viewModel.setSpots(index)
         viewModel.setMoveInfo(index)
         viewModel.setMergedPlanAndInfo(index)
@@ -172,7 +180,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
     // 작성자 정보 다음 뷰로 전송
     private fun initUserButton() {
         val intent = Intent(this, ListActivity::class.java)
-        //intent.putExtra("from", "user")
         intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
         intent.putExtra("authorNickname", viewModel.authorNickname)
         intent.putExtra("authorUserId", viewModel.authorUserId)

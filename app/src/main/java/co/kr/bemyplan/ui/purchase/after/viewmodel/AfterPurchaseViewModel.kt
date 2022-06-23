@@ -105,7 +105,7 @@ class AfterPurchaseViewModel @Inject constructor(
         get() = _mergedPlanAndInfo
 
     // 서버 통신
-    fun fetchPlanDetail(planId: Int) {
+    private fun fetchPlanDetail(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
                 planDetailRepository.fetchPlanDetail(planId)
@@ -216,9 +216,9 @@ class AfterPurchaseViewModel @Inject constructor(
             val dailySpots = planDetail.contents[i].spots.toMutableList()
             for (j in dailySpots.indices) {
                 if (j == dailySpots.size - 1)
-                    pairList.add(Pair(null, spots.value!![j]))
+                    pairList.add(Pair(null, contents.value!![i].spots[j]))
                 else
-                    pairList.add(Pair(listMoveInfo[i].infos[j], spots.value!![j]))
+                    pairList.add(Pair(listMoveInfo[i].infos[j], contents.value!![i].spots[j]))
             }
             bigList.add(MergedPlanAndInfo(i + 1, pairList.toList()))
         }

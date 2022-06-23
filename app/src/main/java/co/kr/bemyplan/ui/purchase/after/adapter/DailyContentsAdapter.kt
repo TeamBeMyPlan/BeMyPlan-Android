@@ -21,7 +21,6 @@ import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
 import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
-import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.qualifiers.ApplicationContext

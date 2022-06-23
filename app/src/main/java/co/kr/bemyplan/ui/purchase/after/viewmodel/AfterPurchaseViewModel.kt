@@ -52,16 +52,6 @@ class AfterPurchaseViewModel @Inject constructor(
     val spots: LiveData<List<Spots>>
         get() = _spots
 
-    // 일차별 spot
-//    private var _spotsWithAddress = MutableLiveData<List<List<Spots?>>>()
-//    val spotsWithAddress: LiveData<List<List<Spots?>>>
-//        get() = _spotsWithAddress
-
-    // 모든 데이터가 다 채워졌을때 옵저브
-//    private var _spotSize = MutableLiveData<Int>(0)
-//    val spotSize : LiveData<Int>
-//        get() = _spotSize
-
     // 스크랩
     private var _scrapStatus = MutableLiveData<Boolean>()
     val scrapStatus: LiveData<Boolean>
@@ -244,8 +234,4 @@ class AfterPurchaseViewModel @Inject constructor(
     fun setMergedPlanAndInfo(index: Int) {
         _mergedPlanAndInfo.value = _mergedPlanAndInfoList.value?.get(index)
     }
-
-//    fun setSpotsWithAddress(list: MutableList<MutableList<SpotsWithAddress?>>) {
-//        _spotsWithAddress.value = list
-//    }
 }

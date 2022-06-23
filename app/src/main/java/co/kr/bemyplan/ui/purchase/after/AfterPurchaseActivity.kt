@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
-import android.location.Address
-import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,8 +24,6 @@ import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.*
 import timber.log.Timber
-import java.lang.IndexOutOfBoundsException
-import java.util.*
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {

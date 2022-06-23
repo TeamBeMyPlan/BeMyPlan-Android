@@ -41,17 +41,6 @@ class AfterPurchaseViewModel @Inject constructor(
     private var _spots = MutableLiveData<List<Spots>>()
     val spots: LiveData<List<Spots>>
         get() = _spots
-
-    // 일차별 spot
-    private var _spotsWithAddress = MutableLiveData<List<List<SpotsWithAddress?>>>()
-    val spotsWithAddress: LiveData<List<List<SpotsWithAddress?>>>
-        get() = _spotsWithAddress
-
-    // 모든 데이터가 다 채워졌을때 옵저브
-    private var _spotSize = MutableLiveData<Int>(0)
-    val spotSize: LiveData<Int>
-        get() = _spotSize
-
     // 스크랩
     private var _scrapStatus = MutableLiveData<Boolean>()
     val scrapStatus: LiveData<Boolean>
@@ -95,7 +84,7 @@ class AfterPurchaseViewModel @Inject constructor(
         get() = _mergedPlanAndInfo
 
     // 서버 통신
-    fun fetchPlanDetail(planId: Int) {
+    private fun fetchPlanDetail(planId: Int) {
         viewModelScope.launch {
             kotlin.runCatching {
                 planDetailRepository.fetchPlanDetail(planId)
@@ -208,13 +197,13 @@ class AfterPurchaseViewModel @Inject constructor(
     fun setMergedPlanAndInfoList(planDetail: PlanDetail, listMoveInfo: List<MoveInfo>) {
         val bigList = mutableListOf<MergedPlanAndInfo>()
         for (i in planDetail.contents.indices) {
-            val pairList = mutableListOf<Pair<Infos?, SpotsWithAddress?>>()
+            val pairList = mutableListOf<Pair<Infos?, Spots?>>()
             val dailySpots = planDetail.contents[i].spots.toMutableList()
             for (j in dailySpots.indices) {
                 if (j == dailySpots.size - 1)
-                    pairList.add(Pair(null, spotsWithAddress.value!![i][j]))
+                    pairList.add(Pair(null, contents.value!![i].spots[j]))
                 else
-                    pairList.add(Pair(listMoveInfo[i].infos[j], spotsWithAddress.value!![i][j]))
+                    pairList.add(Pair(listMoveInfo[i].infos[j], contents.value!![i].spots[j]))
             }
             bigList.add(MergedPlanAndInfo(i + 1, pairList.toList()))
         }
@@ -239,9 +228,5 @@ class AfterPurchaseViewModel @Inject constructor(
 
     fun setMergedPlanAndInfo(index: Int) {
         _mergedPlanAndInfo.value = _mergedPlanAndInfoList.value?.get(index)
-    }
-
-    fun setSpotsWithAddress(list: MutableList<MutableList<SpotsWithAddress?>>) {
-        _spotsWithAddress.value = list
     }
 }

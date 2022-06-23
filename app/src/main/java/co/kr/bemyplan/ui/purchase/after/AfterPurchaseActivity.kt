@@ -4,12 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
-import android.location.Address
-import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -20,14 +19,14 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
-import co.kr.bemyplan.domain.model.purchase.after.Contents
 import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
-import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
-import co.kr.bemyplan.domain.model.purchase.after.toSpotsWithAddress
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import net.daum.mf.map.api.*
+import timber.log.Timber
+import kotlin.concurrent.fixedRateTimer
 import net.daum.mf.map.api.CalloutBalloonAdapter
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -79,17 +78,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // Observer
         viewModel.contents.observe(this) {
-            setAddress(it)
-
-            // writer 버튼 생성
-            binding.clWriter.setOnClickListener { initUserButton() }
-        }
-
-        viewModel.spotsWithAddress.observe(this) {
             viewModel.setMergedPlanAndInfoList(
                 viewModel.planDetail.value!!,
                 viewModel.moveInfoList.value!!
             )
+
+            // writer 버튼 생성
+            binding.clWriter.setOnClickListener { initUserButton() }
         }
 
         viewModel.mergedPlanAndInfoList.observe(this) {
@@ -131,6 +126,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
         viewModel.setMoveInfo(index)
         viewModel.setMergedPlanAndInfo(index)
 
+        binding.svDailyContents.fullScroll(ScrollView.FOCUS_UP)
+
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
@@ -138,7 +135,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun getAddressFromGeoCode(latitude: Double, longitude: Double): String {
+    private fun getAddressFromGeoCode(latitude: Double, longitude: Double) : String {
         val geoCoder = Geocoder(this, Locale.KOREA)
         val address: Address
         // 안드로이드 지도로 주소 검색
@@ -151,11 +148,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
         val result = StringBuilder().apply {
             var index = 0
             var line: String? = ""
-            while (line != null) {
+            while(line != null) {
                 line = address.getAddressLine(index)
                 line = line?.replace("대한민국 ", "")
                 index++
-                append(line ?: "")
+                append(line?: "")
             }
         }
         return result.toString()
@@ -171,11 +168,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             for (spotIndex in contents[spotsIndex].spots.indices) {
                 val lat = contents[spotsIndex].spots[spotIndex].latitude
                 val lon = contents[spotsIndex].spots[spotIndex].longitude
-                addressList[spotsIndex].add(
-                    contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(
-                        getAddressFromGeoCode(lat, lon)
-                    )
-                )
+                addressList[spotsIndex].add(contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(getAddressFromGeoCode(lat, lon)))
             }
         }
         viewModel.setSpotsWithAddress(addressList)
@@ -187,7 +180,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
             putString("source", "여행일정 상세보기")
         })
         val intent = Intent(this, ListActivity::class.java)
-        intent.putExtra("from", "user")
+        intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
         intent.putExtra("authorNickname", viewModel.authorNickname)
         intent.putExtra("authorUserId", viewModel.authorUserId)
         startActivity(intent)

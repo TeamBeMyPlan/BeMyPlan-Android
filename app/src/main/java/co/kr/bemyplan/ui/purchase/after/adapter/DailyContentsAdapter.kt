@@ -5,6 +5,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -18,13 +20,15 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
-import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.tabs.TabLayoutMediator
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapReverseGeoCoder
 import timber.log.Timber
+import java.lang.IndexOutOfBoundsException
+import java.util.*
 import javax.inject.Inject
 
 
@@ -38,26 +42,19 @@ class DailyContentsAdapter(
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     // item 갱신
-    private val differCallback = object : DiffUtil.ItemCallback<Pair<Infos?, SpotsWithAddress?>>() {
-        override fun areItemsTheSame(
-            oldItem: Pair<Infos?, SpotsWithAddress?>,
-            newItem: Pair<Infos?, SpotsWithAddress?>
-        ): Boolean {
+    private val differCallback = object: DiffUtil.ItemCallback<Pair<Infos?, Spots?>>() {
+        override fun areItemsTheSame(oldItem: Pair<Infos?, Spots?>, newItem: Pair<Infos?, Spots?>): Boolean {
             return oldItem == newItem
         }
-
-        override fun areContentsTheSame(
-            oldItem: Pair<Infos?, SpotsWithAddress?>,
-            newItem: Pair<Infos?, SpotsWithAddress?>
-        ): Boolean {
+        override fun areContentsTheSame(oldItem: Pair<Infos?, Spots?>, newItem: Pair<Infos?, Spots?>): Boolean {
             return oldItem == newItem
         }
     }
     private val differ = AsyncListDiffer(this, differCallback)
 
     // fragment에서 아이템 갱신 필요한 경우 호출할 수 있도록 설정
-    fun submitList(list: List<Pair<Infos?, SpotsWithAddress?>>) {
-        differ.submitList(list) {
+    fun submitList(list: List<Pair<Infos?, Spots?>>) {
+        differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
         }
     }
@@ -103,9 +100,9 @@ class DailyContentsAdapter(
     override fun getItemCount() = differ.currentList.size
 
     open class SpotViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, isLastSpot: Boolean) {}
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, nextSpot: String) {}
-        open fun onBind(data: Pair<Infos?, SpotsWithAddress?>, position: Int, lastPosition: Int) {}
+        open fun onBind(data: Pair<Infos?, Spots?>, isLastSpot: Boolean) {}
+        open fun onBind(data: Pair<Infos?, Spots?>, nextSpot: String) {}
+        open fun onBind(data: Pair<Infos?, Spots?>, position: Int, lastPosition: Int) {}
     }
 
     class ContentsViewHolder(
@@ -114,15 +111,39 @@ class DailyContentsAdapter(
         private val photoUrl: ((String) -> Unit)?
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
-
         @Inject
         lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, nextSpot: String) {
-            binding.spots = data.second
-            binding.infos = data.first
-            binding.nextSpot = nextSpot
-            binding.isLastSpot = false
-            if (data.second?.address.equals("주소를 찾을 수 없습니다")) {
+
+        // 안드로이드 주소 검색
+        private fun getAddressFromGeoCode(latitude: Double, longitude: Double) : String {
+            val geoCoder = Geocoder(mContext, Locale.KOREA)
+            val address: Address
+            // 안드로이드 지도로 주소 검색
+            try {
+                address = geoCoder.getFromLocation(latitude, longitude, 1)[0]
+            } catch (e: IndexOutOfBoundsException) {
+                // 후에 adapter에서 카카오 api로 주소 변환
+                return "주소를 찾을 수 없습니다"
+            }
+            val result = StringBuilder().apply {
+                var index = 0
+                var line: String? = ""
+                while(line != null) {
+                    line = address.getAddressLine(index)
+                    line = line?.replace("대한민국 ", "")
+                    index++
+                    append(line?: "")
+                }
+            }
+            return result.toString()
+        }
+
+        // 주소 검색
+        private fun getAddress(data: Pair<Infos?, Spots?>) {
+            val address = getAddressFromGeoCode(data.second!!.latitude, data.second!!.longitude)
+
+            // 안드로이드에서 주소 검색 실패 시 카카오로 검색
+            if (address == "주소를 찾을 수 없습니다") {
                 val ai: ApplicationInfo = this.mContext.packageManager.getApplicationInfo(
                     this.mContext.packageName,
                     PackageManager.GET_META_DATA
@@ -156,8 +177,18 @@ class DailyContentsAdapter(
                     mapReverseGeoCoder.startFindingAddress()
                 }
             } else {
-                binding.tvAddress.text = data.second?.address
+                binding.tvAddress.text = address
             }
+        }
+
+        override fun onBind(data: Pair<Infos?, Spots?>, nextSpot: String) {
+            binding.spots = data.second
+            binding.infos = data.first
+            binding.nextSpot = nextSpot
+            binding.isLastSpot = false
+
+            getAddress(data)
+
             data.first?.let { setMobilityToKorean(it) }
             binding.isTipAvailable = data.second!!.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
@@ -165,46 +196,13 @@ class DailyContentsAdapter(
             binding.clAddress.setOnClickListener { copyButton() }
         }
 
-        override fun onBind(data: Pair<Infos?, SpotsWithAddress?>, isLastSpot: Boolean) {
+        override fun onBind(data: Pair<Infos?, Spots?>, isLastSpot: Boolean) {
             binding.isLastSpot = true
             binding.spots = data.second
             binding.infos = data.first
-            if (data.second?.address.equals("주소를 찾을 수 없습니다")) {
-                val ai: ApplicationInfo = this.mContext.packageManager.getApplicationInfo(
-                    this.mContext.packageName,
-                    PackageManager.GET_META_DATA
-                )
-                if (ai.metaData != null) {
-                    val metaData: String? = ai.metaData.getString("com.kakao.sdk.AppKey")
-                    val currentMapPoint = MapPoint.mapPointWithGeoCoord(
-                        data.second!!.latitude,
-                        data.second!!.longitude
-                    )
-                    val mapReverseGeoCoder = MapReverseGeoCoder(
-                        metaData,
-                        currentMapPoint,
-                        object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                            override fun onReverseGeoCoderFoundAddress(
-                                p0: MapReverseGeoCoder?,
-                                address: String
-                            ) {
-                                // 주소 받아오기 성공 - address: 현재 주소
-                                binding.tvAddress.text = address
-                            }
 
-                            override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                                // 주소 받아오기 실패
-                                Timber.tag("MapReverseGeoCoder")
-                                    .d("Can't get address from map point")
-                            }
-                        },
-                        activity
-                    )
-                    mapReverseGeoCoder.startFindingAddress()
-                }
-            } else {
-                binding.tvAddress.text = data.second?.address
-            }
+            getAddress(data)
+
             binding.isTipAvailable = data.second!!.tip.isNullOrEmpty()
             initViewPagerAdapter(data)
             initTabLayout()
@@ -234,7 +232,7 @@ class DailyContentsAdapter(
             }
         }
 
-        private fun initViewPagerAdapter(data: Pair<Infos?, SpotsWithAddress?>) {
+        private fun initViewPagerAdapter(data: Pair<Infos?, Spots?>) {
             viewPagerAdapter = PhotoViewPagerAdapter(photoUrl)
             viewPagerAdapter.setItems(data.second!!.images)
             binding.vpPhoto.adapter = viewPagerAdapter
@@ -249,11 +247,7 @@ class DailyContentsAdapter(
     }
 
     class RouteViewHolder(private val binding: ItemDailyRouteBinding) : SpotViewHolder(binding) {
-        override fun onBind(
-            data: Pair<Infos?, SpotsWithAddress?>,
-            position: Int,
-            lastPosition: Int
-        ) {
+        override fun onBind(data: Pair<Infos?, Spots?>, position: Int, lastPosition: Int) {
             binding.spots = data.second
             binding.infos = data.first
             binding.position = position

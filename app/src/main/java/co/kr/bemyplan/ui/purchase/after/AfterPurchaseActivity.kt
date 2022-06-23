@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,7 @@ import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.*
 import timber.log.Timber
+import kotlin.concurrent.fixedRateTimer
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -78,7 +80,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
         }
 
         viewModel.mergedPlanAndInfoList.observe(this) {
-            Timber.tag("hooni").d("merged")
             // fragment 생성
             initFragment(0)
             // 마커 생성
@@ -113,10 +114,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // fragment 그리기
     private fun initFragment(index: Int) {
-        Timber.tag("hooni").d("frageent")
         viewModel.setSpots(index)
         viewModel.setMoveInfo(index)
         viewModel.setMergedPlanAndInfo(index)
+
+        binding.svDailyContents.fullScroll(ScrollView.FOCUS_UP)
 
         val fragment = DailyContentsFragment()
         supportFragmentManager

@@ -22,9 +22,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySplashBinding
+
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
-    private lateinit var binding: ActivitySplashBinding
 
     @Inject
     lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider

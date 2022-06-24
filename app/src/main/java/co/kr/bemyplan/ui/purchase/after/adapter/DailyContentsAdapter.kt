@@ -56,7 +56,7 @@ class DailyContentsAdapter(
     fun submitList(list: List<Pair<Infos?, Spots?>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
-        }
+        })
     }
 
     override fun getItemViewType(position: Int) = viewType

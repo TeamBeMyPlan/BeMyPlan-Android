@@ -3,7 +3,9 @@ package co.kr.bemyplan.ui.purchase.after
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -23,9 +25,14 @@ import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.domain.model.purchase.after.Contents
 import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.ui.list.ListActivity
+import co.kr.bemyplan.ui.purchase.after.loading.LoadingDialog
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.daum.mf.map.api.*
 import timber.log.Timber
 import kotlin.concurrent.fixedRateTimer
@@ -44,9 +51,12 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        loadingDialog = LoadingDialog(this)
 
         // binding
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_after_purchase)
@@ -120,6 +130,8 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // fragment 그리기
     private fun initFragment(index: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+        loadingDialog.show()
         viewModel.setSpots(index)
         viewModel.setMoveInfo(index)
         viewModel.setMergedPlanAndInfo(index)
@@ -131,6 +143,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(R.id.fcv_daily_context, fragment)
             .commit()
+
+            delay(2000)
+            loadingDialog.dismiss()
+        }
     }
 
     // 작성자 정보 다음 뷰로 전송

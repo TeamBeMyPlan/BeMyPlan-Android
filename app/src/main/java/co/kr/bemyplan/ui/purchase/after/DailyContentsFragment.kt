@@ -1,6 +1,9 @@
 package co.kr.bemyplan.ui.purchase.after
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +14,16 @@ import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.databinding.FragmentDailyContentsBinding
 import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.ui.purchase.after.adapter.DailyContentsAdapter
+import co.kr.bemyplan.ui.purchase.after.loading.LoadingDialog
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DailyContentsFragment : Fragment() {
+class DailyContentsFragment() : Fragment() {
     private lateinit var contentsAdapter: DailyContentsAdapter
     private lateinit var routeAdapter: DailyContentsAdapter
     private var _binding: FragmentDailyContentsBinding? = null

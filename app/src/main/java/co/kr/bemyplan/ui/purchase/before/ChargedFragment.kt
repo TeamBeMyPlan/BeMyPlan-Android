@@ -7,19 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentChargedBinding
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
-import javax.inject.Inject
 
 class ChargedFragment : Fragment() {
     private var _binding: FragmentChargedBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +33,10 @@ class ChargedFragment : Fragment() {
     }
 
     override fun onStop() {
-        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("closePaymentCompleteView", null)
+        viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+            "closePaymentCompleteView",
+            null
+        )
         super.onStop()
     }
 
@@ -55,8 +53,8 @@ class ChargedFragment : Fragment() {
 
     private fun clickGoToContent() {
         binding.tvGotoContentBtn.setOnClickListener {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
-                "clickClickDetailViewInPayment",
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "clickDetailViewInPayment",
                 Bundle().apply {
                     putInt("planId", viewModel.planId)
                 }

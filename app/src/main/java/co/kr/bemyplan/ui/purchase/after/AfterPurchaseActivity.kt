@@ -72,6 +72,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // scrap status 설정
         val scrapStatus = intent.getBooleanExtra("scrapStatus", false)
         viewModel.setScrapStatus(scrapStatus)
+        viewModel.checkScrapStatus()
 
         val authorNickname = intent.getStringExtra("authorNickname") ?: ""
         val authorUserId = intent.getIntExtra("authorUserId", -1)

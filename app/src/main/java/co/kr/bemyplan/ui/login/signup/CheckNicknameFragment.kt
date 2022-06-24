@@ -13,22 +13,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentCheckNicknameBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.util.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckNicknameFragment : Fragment() {
     private var _binding: FragmentCheckNicknameBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")
     private val viewModel by activityViewModels<LoginViewModel>()
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -97,7 +92,7 @@ class CheckNicknameFragment : Fragment() {
                 override fun onClicked(num: Int) {
                     if (num == 1) {
                         parentFragmentManager.commit {
-                            firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
                                 "signupNickname",
                                 Bundle().apply {
                                     putString("source", viewModel.socialType.value)

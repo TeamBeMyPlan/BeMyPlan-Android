@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,12 +22,13 @@ import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.domain.model.purchase.after.Contents
 import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
-import co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress
-import co.kr.bemyplan.domain.model.purchase.after.toSpotsWithAddress
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import net.daum.mf.map.api.*
+import timber.log.Timber
+import kotlin.concurrent.fixedRateTimer
 import net.daum.mf.map.api.CalloutBalloonAdapter
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -74,17 +76,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
         // Observer
         viewModel.contents.observe(this) {
-            setAddress(it)
-
-            // writer 버튼 생성
-            binding.clWriter.setOnClickListener { initUserButton() }
-        }
-
-        viewModel.spotsWithAddress.observe(this) {
             viewModel.setMergedPlanAndInfoList(
                 viewModel.planDetail.value!!,
                 viewModel.moveInfoList.value!!
             )
+
+            // writer 버튼 생성
+            binding.clWriter.setOnClickListener { initUserButton() }
         }
 
         viewModel.mergedPlanAndInfoList.observe(this) {
@@ -126,54 +124,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
         viewModel.setMoveInfo(index)
         viewModel.setMergedPlanAndInfo(index)
 
+        binding.svDailyContents.fullScroll(ScrollView.FOCUS_UP)
+
         val fragment = DailyContentsFragment()
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fcv_daily_context, fragment)
             .commit()
-    }
-
-    private fun getAddressFromGeoCode(latitude: Double, longitude: Double): String {
-        val geoCoder = Geocoder(this, Locale.KOREA)
-        val address: Address
-        // 안드로이드 지도로 주소 검색
-        try {
-            address = geoCoder.getFromLocation(latitude, longitude, 1)[0]
-        } catch (e: IndexOutOfBoundsException) {
-            // 후에 adapter에서 카카오 api로 주소 변환
-            return "주소를 찾을 수 없습니다"
-        }
-        val result = StringBuilder().apply {
-            var index = 0
-            var line: String? = ""
-            while (line != null) {
-                line = address.getAddressLine(index)
-                line = line?.replace("대한민국 ", "")
-                index++
-                append(line ?: "")
-            }
-        }
-        return result.toString()
-    }
-
-    // 2중 배열로 spotsWithAddress 세팅
-    private fun setAddress(contents: List<Contents>) {
-        // 좌표 -> 주소로 바꿀 때 쓸 리스트
-        val addressList = mutableListOf<MutableList<SpotsWithAddress?>>()
-
-        for (spotsIndex in contents.indices) {
-            addressList.add(mutableListOf())
-            for (spotIndex in contents[spotsIndex].spots.indices) {
-                val lat = contents[spotsIndex].spots[spotIndex].latitude
-                val lon = contents[spotsIndex].spots[spotIndex].longitude
-                addressList[spotsIndex].add(
-                    contents[spotsIndex].spots[spotIndex].toSpotsWithAddress(
-                        getAddressFromGeoCode(lat, lon)
-                    )
-                )
-            }
-        }
-        viewModel.setSpotsWithAddress(addressList)
     }
 
     // 작성자 정보 다음 뷰로 전송
@@ -184,7 +141,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 putString("source", "여행일정 상세보기")
             })
         val intent = Intent(this, ListActivity::class.java)
-        intent.putExtra("from", "user")
+        intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
         intent.putExtra("authorNickname", viewModel.authorNickname)
         intent.putExtra("authorUserId", viewModel.authorUserId)
         startActivity(intent)

@@ -7,7 +7,7 @@
 
         <variable
             name="spots"
-            type="co.kr.bemyplan.domain.model.purchase.after.SpotsWithAddress" />
+            type="co.kr.bemyplan.domain.model.purchase.after.Spots" />
 
         <variable
             name="infos"

@@ -5,10 +5,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/SpinKitView.Large.Circle"
         app:SpinKit_Color="@color/blue_0077b0"
-        app:SpinKit_Style="Circle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

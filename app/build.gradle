@@ -126,4 +126,7 @@ dependencies {
 
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // loading dialog
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 }

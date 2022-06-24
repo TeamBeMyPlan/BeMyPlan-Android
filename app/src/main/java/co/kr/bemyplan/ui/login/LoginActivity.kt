@@ -1,10 +1,8 @@
 package co.kr.bemyplan.ui.login
 
-import androidx.activity.viewModels
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityLoginBinding
 import co.kr.bemyplan.ui.base.BaseActivity
-import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import co.kr.bemyplan.util.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
 

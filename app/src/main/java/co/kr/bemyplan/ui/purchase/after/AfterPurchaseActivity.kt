@@ -17,7 +17,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
 import co.kr.bemyplan.domain.model.purchase.after.Contents
@@ -33,7 +32,6 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import java.util.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AfterPurchaseActivity : AppCompatActivity() {
@@ -44,9 +42,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
     private val eventListener = MarkerEventListener(this)
     private var mapPoints = mutableListOf<MapPoint>()
     private var markers = mutableListOf(mutableListOf<MapPOIItem>())
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,9 +178,11 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // 작성자 정보 다음 뷰로 전송
     private fun initUserButton() {
-        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickEditorName", Bundle().apply {
-            putString("source", "여행일정 상세보기")
-        })
+        viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+            "clickEditorName",
+            Bundle().apply {
+                putString("source", "여행일정 상세보기")
+            })
         val intent = Intent(this, ListActivity::class.java)
         intent.putExtra("from", "user")
         intent.putExtra("authorNickname", viewModel.authorNickname)
@@ -379,9 +376,6 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // 마커 클릭 이벤트 리스너
     class MarkerEventListener(val context: Context) : MapView.POIItemEventListener {
-        @Inject
-        lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
-
         override fun onPOIItemSelected(mapView: MapView?, poiItem: MapPOIItem?) {
             // 마커 클릭 시
         }
@@ -398,20 +392,13 @@ class AfterPurchaseActivity : AppCompatActivity() {
             // 말풍선 클릭 시
             val intentKakaoMap =
                 context.packageManager.getLaunchIntentForPackage("net.daum.android.map")
-            runCatching {
+            try {
                 val latitude = poiItem?.mapPoint?.mapPointGeoCoord?.latitude
                 val longitude = poiItem?.mapPoint?.mapPointGeoCoord?.longitude
                 val intent =
                     Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://look?p=$latitude,$longitude"))
                 context.startActivity(intent)
-            }.onSuccess {
-                firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
-                    "moveMapApplication",
-                    Bundle().apply {
-                        putString("source", "카카오맵")
-                    })
-            }.onFailure {
-                firebaseAnalyticsProvider.firebaseAnalytics.logEvent("alertNoMapApplication", null)
+            } catch (e: Exception) {
                 val intentPlayStore =
                     Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
                 context.startActivity(intentPlayStore)

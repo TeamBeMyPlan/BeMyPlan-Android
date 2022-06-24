@@ -45,5 +45,4 @@ class OnboardingActivity : AppCompatActivity() {
             finish()
         }
     }
-
 }

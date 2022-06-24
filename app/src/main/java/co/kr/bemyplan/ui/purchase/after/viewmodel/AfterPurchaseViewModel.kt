@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
-import co.kr.bemyplan.domain.model.purchase.after.*
+import co.kr.bemyplan.domain.model.purchase.after.Contents
+import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
+import co.kr.bemyplan.domain.model.purchase.after.PlanDetail
+import co.kr.bemyplan.domain.model.purchase.after.Spots
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.Infos
 import co.kr.bemyplan.domain.model.purchase.after.moveInfo.MoveInfo
 import co.kr.bemyplan.domain.repository.MoveInfoRepository
@@ -39,6 +42,7 @@ class AfterPurchaseViewModel @Inject constructor(
     private var _spots = MutableLiveData<List<Spots>>()
     val spots: LiveData<List<Spots>>
         get() = _spots
+
     // 스크랩
     private var _scrapStatus = MutableLiveData<Boolean>()
     val scrapStatus: LiveData<Boolean>

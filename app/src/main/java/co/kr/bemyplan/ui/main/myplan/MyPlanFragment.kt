@@ -69,7 +69,7 @@ class MyPlanFragment : Fragment() {
                 })
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", it.planId)
-                putExtra("authorNickName", it.user.nickname)
+                putExtra("authorNickname", it.user.nickname.toString())
                 putExtra("authorUserId", it.user.userId)
             }
             startActivity(intent)

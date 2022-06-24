@@ -1,6 +1,5 @@
 package co.kr.bemyplan.ui.main.home
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -10,7 +9,7 @@ import co.kr.bemyplan.databinding.ItemPopularBinding
 import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.util.clipTo
 
-class HomeViewPagerAdapter(val itemClick: (HomeDomainData) -> Unit) :
+class HomeViewPagerAdapter(private val itemClick: (HomeDomainData) -> Unit) :
     RecyclerView.Adapter<HomeViewPagerAdapter.PagerViewHolder>() {
     val planList = mutableListOf<HomeDomainData>()
 

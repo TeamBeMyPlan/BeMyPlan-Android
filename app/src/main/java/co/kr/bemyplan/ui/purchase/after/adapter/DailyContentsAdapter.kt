@@ -35,7 +35,8 @@ import javax.inject.Inject
 class DailyContentsAdapter(
     private val viewType: Int,
     val activity: FragmentActivity?,
-    var photoUrl: ((String) -> Unit)? = null
+    var photoUrl: ((String) -> Unit)? = null,
+    private val eventLog: (Unit) -> Unit
 ) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
@@ -56,7 +57,7 @@ class DailyContentsAdapter(
     fun submitList(list: List<Pair<Infos?, Spots?>>) {
         differ.submitList(list, Runnable {
             if (list.size >= 5) notifyItemChanged(4)
-        }
+        })
     }
 
     override fun getItemViewType(position: Int) = viewType
@@ -67,7 +68,7 @@ class DailyContentsAdapter(
                 LayoutInflater.from(parent.context),
                 parent, false
             )
-            ContentsViewHolder(binding, parent.context, activity, photoUrl)
+            ContentsViewHolder(binding, parent.context, activity, photoUrl, eventLog)
         }
         TYPE_ROUTE -> {
             val binding = ItemDailyRouteBinding.inflate(
@@ -108,7 +109,8 @@ class DailyContentsAdapter(
     class ContentsViewHolder(
         private val binding: ItemDailyContentsBinding,
         private val mContext: Context, val activity: FragmentActivity?,
-        private val photoUrl: ((String) -> Unit)?
+        private val photoUrl: ((String) -> Unit)?,
+        private val eventLog: (Unit) -> Unit
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
         @Inject
@@ -210,7 +212,8 @@ class DailyContentsAdapter(
         }
 
         private fun copyButton() {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickAddressCopy", null)
+//            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickAddressCopy", null)
+            eventLog(Unit)
             val clipboard =
                 mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("address", binding.tvAddress.text)

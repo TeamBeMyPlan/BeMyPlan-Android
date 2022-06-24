@@ -22,11 +22,9 @@ import javax.inject.Inject
 class AfterPurchaseViewModel @Inject constructor(
     private val planDetailRepository: PlanDetailRepository,
     private val moveInfoRepository: MoveInfoRepository,
-    private val scrapRepository: ScrapRepository
+    private val scrapRepository: ScrapRepository,
+    val firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 ) : ViewModel() {
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
-
     // plan detail 들고오고
     private var _planDetail = MutableLiveData<PlanDetail>()
     val planDetail: LiveData<PlanDetail>

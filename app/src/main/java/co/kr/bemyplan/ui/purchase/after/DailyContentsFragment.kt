@@ -40,12 +40,23 @@ class DailyContentsFragment : Fragment() {
 
     // 어댑터 연결
     private fun initAdapter() {
-        contentsAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_CONTENTS, activity, photoUrl = { photoUrl: String ->
-            val intent = Intent(requireContext(), ImageViewActivity::class.java)
-            intent.putExtra("photoUrl", photoUrl)
-            requireActivity().startActivity(intent)
-        })
-        routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE, activity)
+        contentsAdapter = DailyContentsAdapter(
+            DailyContentsAdapter.TYPE_CONTENTS,
+            activity,
+            photoUrl = { photoUrl: String ->
+                val intent = Intent(requireContext(), ImageViewActivity::class.java)
+                intent.putExtra("photoUrl", photoUrl)
+                requireActivity().startActivity(intent)
+            },
+            {
+                viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                    "clickAddressCopy",
+                    null
+                )
+            })
+        routeAdapter = DailyContentsAdapter(DailyContentsAdapter.TYPE_ROUTE, activity, null) {
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickAddressCopy", null)
+        }
 
         // 뷰모델에서 데이터 받아오기
         viewModel.mergedPlanAndInfo.observe(viewLifecycleOwner) {
@@ -56,8 +67,7 @@ class DailyContentsFragment : Fragment() {
                 routeAdapter.submitList(it.infos.subList(0, 5))
                 binding.clLookMore.setOnClickListener { _ -> initMoreBtn(it) }
                 binding.clLookClose.setOnClickListener { _ -> initCloseBtn(it) }
-            }
-            else { // 장소들이 5개 이하면 버튼 없이 진행
+            } else { // 장소들이 5개 이하면 버튼 없이 진행
                 routeAdapter.submitList(it.infos)
                 binding.clLookMore.isVisible = false
                 binding.clLookClose.isVisible = false

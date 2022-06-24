@@ -15,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentBeforeChargingBinding
 import co.kr.bemyplan.ui.list.ListActivity
@@ -36,9 +35,6 @@ class BeforeChargingFragment : Fragment() {
 
     @Inject
     lateinit var beMyPlanDataStore: BeMyPlanDataStore
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -167,9 +163,11 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickNickname() {
         binding.layoutAuthor.setOnClickListener {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickEditorName", Bundle().apply {
-                putString("source", "구매 전 여행일정 미리보기")
-            })
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "clickEditorName",
+                Bundle().apply {
+                    putString("source", "구매 전 여행일정 미리보기")
+                })
             val intent = Intent(requireContext(), ListActivity::class.java).apply {
                 putExtra("from", "user")
                 putExtra("authorUserId", viewModel.authorUserId)
@@ -181,7 +179,10 @@ class BeforeChargingFragment : Fragment() {
 
     private fun showExample() {
         binding.tvPurchaseExample.setOnClickListener {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickPlanDetailExample", null)
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "clickPlanDetailExample",
+                null
+            )
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java)
             intent.putExtra("postId", -1)
             startActivity(intent)
@@ -190,16 +191,16 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickPurchase() {
         binding.layoutPurchase.setOnClickListener {
-            if(beMyPlanDataStore.userId != 0) {
+            if (beMyPlanDataStore.userId != 0) {
                 parentFragmentManager.commit {
                     add<ChargingFragment>(R.id.fragment_container_charging)
                     addToBackStack(null)
                 }
             } else {
                 val dialog = CustomDialog(requireContext(), "", "")
-                dialog.setOnClickedListener(object: CustomDialog.ButtonClickListener {
+                dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
                     override fun onClicked(num: Int) {
-                        if(num == 1) {
+                        if (num == 1) {
                             val intent = Intent(requireContext(), LoginActivity::class.java)
                             startActivity(intent)
                             requireActivity().finishAffinity()
@@ -212,13 +213,13 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickScrap() {
         binding.layoutScrap.setOnClickListener {
-            if(beMyPlanDataStore.userId != 0) {
+            if (beMyPlanDataStore.userId != 0) {
                 viewModel.scrap()
             } else {
                 val dialog = CustomDialog(requireContext(), "", "")
-                dialog.setOnClickedListener(object: CustomDialog.ButtonClickListener {
+                dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
                     override fun onClicked(num: Int) {
-                        if(num == 1) {
+                        if (num == 1) {
                             val intent = Intent(requireContext(), LoginActivity::class.java)
                             startActivity(intent)
                             requireActivity().finishAffinity()

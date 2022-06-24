@@ -20,11 +20,9 @@ import javax.inject.Inject
 class ScrapViewModel @Inject constructor(
     private val scrapListRepository: ScrapListRepository,
     private val scrapRepository: ScrapRepository,
-    private val checkPurchasedRepository: CheckPurchasedRepository
+    private val checkPurchasedRepository: CheckPurchasedRepository,
+    val firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 ) : ViewModel() {
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
-
     private var _scrapList = MutableLiveData<List<ContentModel>>()
     val scrapList: LiveData<List<ContentModel>> get() = _scrapList
     private var _emptyScrapList = MutableLiveData<List<ContentModel>>()

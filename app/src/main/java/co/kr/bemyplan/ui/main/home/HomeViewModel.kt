@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.domain.repository.CheckPurchasedRepository
 import co.kr.bemyplan.domain.repository.HomeNewRepository
@@ -20,7 +21,8 @@ class HomeViewModel @Inject constructor(
     private val homePopularRepository: HomePopularRepository,
     private val homeNewRepository: HomeNewRepository,
     private val homeSuggestRepository: HomeSuggestRepository,
-    private val homeCheckPurchasedRepository: CheckPurchasedRepository
+    private val homeCheckPurchasedRepository: CheckPurchasedRepository,
+    val firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 ) : ViewModel() {
     private val _popular = MutableLiveData<List<HomeDomainData>>()
     val popular: LiveData<List<HomeDomainData>> get() = _popular

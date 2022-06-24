@@ -11,20 +11,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentCheckEmailBinding
 import co.kr.bemyplan.ui.login.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckEmailFragment : Fragment() {
     private var _binding: FragmentCheckEmailBinding? = null
     private val binding get() = _binding ?: error("binding not initialized")
     private val viewModel by activityViewModels<LoginViewModel>()
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,9 +53,11 @@ class CheckEmailFragment : Fragment() {
 
     private fun moveNextView() {
         viewModel.emailPermission.observe(viewLifecycleOwner) {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("signupEmail", Bundle().apply {
-                putString("source", viewModel.socialType.value)
-            })
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "signupEmail",
+                Bundle().apply {
+                    putString("source", viewModel.socialType.value)
+                })
             val transaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.fcv_sign_up, CheckTermsFragment())
                 .addToBackStack("terms")

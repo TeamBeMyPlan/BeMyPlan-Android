@@ -9,7 +9,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
-import co.kr.bemyplan.application.MainApplication
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.ActivitySplashBinding
@@ -49,7 +48,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkOnBoarding() {
-        if (MainApplication.prefs.getOnBoarding()) {
+        if (dataStore.onBoarding) {
             checkAutoLogin()
         } else {
             val intent = Intent(this, OnboardingActivity::class.java)

@@ -25,4 +25,8 @@ class BeMyPlanDataStore @Inject constructor(
     var nickname: String
         set(value) = dataStore.edit { putString("NICKNAME", value) }
         get() = dataStore.getString("NICKNAME", "") ?: ""
+
+    var onBoarding: Boolean
+        set(value) = dataStore.edit { putBoolean("onBoarding", value) }
+        get() = dataStore.getBoolean("onBoarding", false) ?: false
 }

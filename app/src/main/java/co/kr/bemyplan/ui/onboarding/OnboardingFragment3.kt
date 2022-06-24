@@ -5,14 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import co.kr.bemyplan.application.MainApplication
 import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentOnboarding3Binding
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class OnboardingFragment3 : Fragment() {
     private var _binding: FragmentOnboarding3Binding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
+
+    @Inject
+    lateinit var dataStore: BeMyPlanDataStore
 
     @Inject
     lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
@@ -46,11 +51,11 @@ class OnboardingFragment3 : Fragment() {
 
     private fun initView() {
         binding.tvStart.setOnClickListener {
-            MainApplication.prefs.setOnBoarding(true)
+            dataStore.onBoarding = true
             (activity as OnboardingActivity).checkAutoLogin()
         }
         binding.tvPass.setOnClickListener {
-            MainApplication.prefs.setOnBoarding(true)
+            dataStore.onBoarding = true
             (activity as OnboardingActivity).checkAutoLogin()
         }
     }

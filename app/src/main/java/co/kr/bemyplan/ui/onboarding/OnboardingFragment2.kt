@@ -5,12 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import co.kr.bemyplan.application.MainApplication
+import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentOnboarding2Binding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OnboardingFragment2 : Fragment() {
     private var _binding: FragmentOnboarding2Binding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
+
+    @Inject
+    lateinit var dataStore: BeMyPlanDataStore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +50,7 @@ class OnboardingFragment2 : Fragment() {
             (requireActivity() as OnboardingActivity).next()
         }
         binding.tvPass.setOnClickListener {
-            MainApplication.prefs.setOnBoarding(true)
+            dataStore.onBoarding = true
             (requireActivity() as OnboardingActivity).checkAutoLogin()
         }
     }

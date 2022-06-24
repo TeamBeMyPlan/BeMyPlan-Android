@@ -21,13 +21,11 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
-    private val googleLoginRepository: GoogleLoginRepository
+    private val googleLoginRepository: GoogleLoginRepository,
+    val firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 ) : ViewModel() {
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     var nickname = MutableLiveData<String>("")
     var email = MutableLiveData<String>("")

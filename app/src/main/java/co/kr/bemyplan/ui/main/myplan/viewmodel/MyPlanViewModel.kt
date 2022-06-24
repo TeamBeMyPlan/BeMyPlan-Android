@@ -20,14 +20,9 @@ import javax.inject.Inject
 class MyPlanViewModel @Inject constructor(
     private val myPlanRepository: MyPlanRepository,
     private val scrapRepository: ScrapRepository,
+    val firebaseAnalyticsProvider: FirebaseAnalyticsProvider,
     dataStore: BeMyPlanDataStore
 ) : ViewModel() {
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
-
-    //private var page = 0
-    //private var pageSize = 10
-
     private var _nickname = MutableLiveData<String>()
     val nickname: LiveData<String> get() = _nickname
 

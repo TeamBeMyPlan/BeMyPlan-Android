@@ -9,21 +9,16 @@ import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ActivityWithdrawalBinding
 import co.kr.bemyplan.ui.login.LoginActivity
 import co.kr.bemyplan.util.CustomDialog
 import co.kr.bemyplan.util.ToastMessage.shortToast
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class WithdrawalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWithdrawalBinding
     private val viewModel by viewModels<WithdrawalViewModel>()
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +95,10 @@ class WithdrawalActivity : AppCompatActivity() {
                     runCatching {
                         viewModel.signOut(binding.etWithdrawal.text.toString())
                     }.onSuccess {
-                        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("withdrawal", null)
+                        viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                            "withdrawal",
+                            null
+                        )
                         showWithdrawalFinishedDialog()
                     }.onFailure {
                         this@WithdrawalActivity.shortToast("문제가 발생했습니다. 잠시 후 다시 시도해주세요.")

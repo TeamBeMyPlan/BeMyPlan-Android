@@ -8,20 +8,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentChargingBinding
 import co.kr.bemyplan.ui.purchase.before.viewmodel.BeforeChargingViewModel
 import co.kr.bemyplan.util.CustomDialog
 import co.kr.bemyplan.util.ToastMessage.shortToast
-import javax.inject.Inject
 
 class ChargingFragment : Fragment() {
     private var _binding: FragmentChargingBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
     private val viewModel by activityViewModels<BeforeChargingViewModel>()
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +36,14 @@ class ChargingFragment : Fragment() {
         clickPay()
         clickBack()
         observeLiveData()
+    }
+
+    override fun onStop() {
+        viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+            "closePaymentView",
+            null
+        )
+        super.onStop()
     }
 
     override fun onDestroyView() {
@@ -70,7 +73,7 @@ class ChargingFragment : Fragment() {
         val dialog = CustomDialog(requireContext(), "", "")
 
         binding.tvPayBtn.setOnClickListener {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
                 "clickPaymentButton",
                 Bundle().apply {
                     putInt("planId", viewModel.planId)
@@ -90,7 +93,7 @@ class ChargingFragment : Fragment() {
 
     private fun clickBack() {
         binding.ivBackBtn.setOnClickListener {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("closePaymentView", null)
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent("closePaymentView", null)
             activity?.supportFragmentManager
                 ?.beginTransaction()
                 ?.remove(this)

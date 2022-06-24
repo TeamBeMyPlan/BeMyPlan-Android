@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.ItemDailyContentsBinding
 import co.kr.bemyplan.databinding.ItemDailyRouteBinding
 import co.kr.bemyplan.domain.model.purchase.after.Spots
@@ -35,7 +34,8 @@ import javax.inject.Inject
 class DailyContentsAdapter(
     private val viewType: Int,
     val activity: FragmentActivity?,
-    var photoUrl: ((String) -> Unit)? = null
+    var photoUrl: ((String) -> Unit)? = null,
+    private val eventLog: (Unit) -> Unit
 ) :
     RecyclerView.Adapter<DailyContentsAdapter.SpotViewHolder>() {
     private var _binding: ItemDailyContentsBinding? = null
@@ -67,7 +67,7 @@ class DailyContentsAdapter(
                 LayoutInflater.from(parent.context),
                 parent, false
             )
-            ContentsViewHolder(binding, parent.context, activity, photoUrl)
+            ContentsViewHolder(binding, parent.context, activity, photoUrl, eventLog)
         }
         TYPE_ROUTE -> {
             val binding = ItemDailyRouteBinding.inflate(
@@ -108,7 +108,8 @@ class DailyContentsAdapter(
     class ContentsViewHolder(
         private val binding: ItemDailyContentsBinding,
         private val mContext: Context, val activity: FragmentActivity?,
-        private val photoUrl: ((String) -> Unit)?
+        private val photoUrl: ((String) -> Unit)?,
+        private val eventLog: (Unit) -> Unit
     ) : SpotViewHolder(binding) {
         private lateinit var viewPagerAdapter: PhotoViewPagerAdapter
         @Inject
@@ -210,7 +211,8 @@ class DailyContentsAdapter(
         }
 
         private fun copyButton() {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickAddressCopy", null)
+//            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickAddressCopy", null)
+            eventLog(Unit)
             val clipboard =
                 mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("address", binding.tvAddress.text)

@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.databinding.FragmentMyPlanBinding
 import co.kr.bemyplan.domain.model.main.myplan.MyPlanData
 import co.kr.bemyplan.ui.login.LoginActivity
@@ -21,7 +20,6 @@ import co.kr.bemyplan.ui.main.myplan.settings.SettingsActivity
 import co.kr.bemyplan.ui.main.myplan.viewmodel.MyPlanViewModel
 import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyPlanFragment : Fragment() {
@@ -30,9 +28,6 @@ class MyPlanFragment : Fragment() {
     private val viewModel by viewModels<MyPlanViewModel>()
     private var listItem = listOf<MyPlanData.Data>()
     private lateinit var purchaseTourAdapter: MyPlanAdapter
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,10 +61,12 @@ class MyPlanFragment : Fragment() {
 
     private fun initAdapter() {
         purchaseTourAdapter = MyPlanAdapter({
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
-                putString("source", "마이플랜")
-                putInt("planId", it.planId)
-            })
+            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "clickTravelPlan",
+                Bundle().apply {
+                    putString("source", "마이플랜")
+                    putInt("planId", it.planId)
+                })
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", it.planId)
                 putExtra("authorNickName", it.user.nickname)

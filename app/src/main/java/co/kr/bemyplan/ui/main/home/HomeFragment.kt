@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.FragmentHomeBinding
 import co.kr.bemyplan.ui.list.ListActivity
@@ -30,9 +29,6 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var beMyPlanDataStore: BeMyPlanDataStore
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -160,12 +156,18 @@ class HomeFragment : Fragment() {
     private fun clickMore() {
         val intent = Intent(requireContext(), ListActivity::class.java)
         binding.ivRecentMore.setOnClickListener {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickHomeRecentPlanList", null)
+            homeViewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "clickHomeRecentPlanList",
+                null
+            )
             intent.putExtra("from", "new")
             startActivity(intent)
         }
         binding.ivEditorMore.setOnClickListener {
-            firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickHomeRecommendPlanList", null)
+            homeViewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+                "clickHomeRecommendPlanList",
+                null
+            )
             intent.putExtra("from", "suggest")
             startActivity(intent)
         }
@@ -177,10 +179,12 @@ class HomeFragment : Fragment() {
         authorUserId: Int,
         thumbnail: String
     ) {
-        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
-            putString("source", "홈")
-            putInt("planId", planId)
-        })
+        homeViewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+            "clickTravelPlan",
+            Bundle().apply {
+                putString("source", "홈")
+                putInt("planId", planId)
+            })
         homeViewModel.isPurchased.observe(viewLifecycleOwner) {
             val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", planId)

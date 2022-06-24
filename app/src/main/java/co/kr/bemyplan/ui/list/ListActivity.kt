@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
 import co.kr.bemyplan.databinding.ActivityListBinding
 import co.kr.bemyplan.ui.list.adapter.ListAdapter
@@ -49,9 +48,6 @@ class ListActivity : AppCompatActivity() {
 
     @Inject
     lateinit var beMyPlanDataStore: BeMyPlanDataStore
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +105,7 @@ class ListActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         listAdapter = ListAdapter({
-            if(beMyPlanDataStore.userId != 0) {
+            if (beMyPlanDataStore.userId != 0) {
                 viewModel.checkPurchased(it.planId)
                 observeDataForStartActivity(
                     it.planId,
@@ -119,9 +115,9 @@ class ListActivity : AppCompatActivity() {
                 )
             } else {
                 val dialog = CustomDialog(this, "", "")
-                dialog.setOnClickedListener(object: CustomDialog.ButtonClickListener {
+                dialog.setOnClickedListener(object : CustomDialog.ButtonClickListener {
                     override fun onClicked(num: Int) {
-                        if(num == 1) {
+                        if (num == 1) {
                             val intent = Intent(this@ListActivity, LoginActivity::class.java)
                             startActivity(intent)
                             finishAffinity()
@@ -220,17 +216,19 @@ class ListActivity : AppCompatActivity() {
         authorUserId: Int,
         thumbnail: String
     ) {
-        firebaseAnalyticsProvider.firebaseAnalytics.logEvent("clickTravelPlan", Bundle().apply {
-            putString(
-                "source", when (from) {
-                    "new", "suggest" -> "홈"
-                    "location" -> "여행지"
-                    "user" -> "작성자 이름"
-                    else -> throw IllegalArgumentException()
-                }
-            )
-            putInt("planId", planId)
-        })
+        viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+            "clickTravelPlan",
+            Bundle().apply {
+                putString(
+                    "source", when (from) {
+                        "new", "suggest" -> "홈"
+                        "location" -> "여행지"
+                        "user" -> "작성자 이름"
+                        else -> throw IllegalArgumentException()
+                    }
+                )
+                putInt("planId", planId)
+            })
         viewModel.isPurchased.observe(this) {
             val intent = Intent(this, AfterPurchaseActivity::class.java).apply {
                 putExtra("planId", planId)

@@ -22,14 +22,12 @@ import javax.inject.Inject
 class BeforeChargingViewModel @Inject constructor(
     private val previewRepository: PreviewRepository,
     private val scrapRepository: ScrapRepository,
-    private val purchaseRepository: PurchaseRepository
+    private val purchaseRepository: PurchaseRepository,
+    val firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 ) : ViewModel() {
     enum class Pay(val brand: String) {
         NAVER("네이버페이"), KAKAO("카카오페이"), TOSS("토스"), NULL("null")
     }
-
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 
     private var _planId = -1
     val planId get() = _planId

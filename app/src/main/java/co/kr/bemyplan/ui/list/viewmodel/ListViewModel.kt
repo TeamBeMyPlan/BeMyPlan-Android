@@ -21,14 +21,9 @@ class ListViewModel @Inject constructor(
     private val locationListRepository: LocationListRepository,
     private val userPostListRepository: UserPostListRepository,
     private val scrapRepository: ScrapRepository,
-    private val checkPurchasedRepository: CheckPurchasedRepository
+    private val checkPurchasedRepository: CheckPurchasedRepository,
+    val firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 ) : ViewModel() {
-    @Inject
-    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
-
-    private var page = 0
-    private var pageSize = 10
-
     private var _authorUserId = -1
     val authorUserId get() = _authorUserId
 

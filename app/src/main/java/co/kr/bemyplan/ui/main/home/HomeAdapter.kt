@@ -7,7 +7,7 @@ import co.kr.bemyplan.databinding.ItemHomePlanBinding
 import co.kr.bemyplan.domain.model.main.home.HomeDomainData
 import co.kr.bemyplan.util.clipTo
 
-class HomeAdapter(val itemClick: (HomeDomainData) -> Unit) :
+class HomeAdapter(private val itemClick: (HomeDomainData) -> Unit) :
     RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
     val planList = mutableListOf<HomeDomainData>()

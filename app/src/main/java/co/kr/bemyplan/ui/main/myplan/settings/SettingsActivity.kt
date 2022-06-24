@@ -115,14 +115,19 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showProposeContentsUpload() {
-        val intent = Intent(this, CreatorProposeActivity::class.java)
+//        val intent = Intent(this, CreatorProposeActivity::class.java)
+//        startActivity(intent)
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://www.notion.so/abef1fe27502476383063d2772bf7770")
+        )
         startActivity(intent)
     }
 
     private fun showQna() {
         val email = Intent(Intent.ACTION_SEND)
         email.type = "plain/text"
-        val address = arrayOf("teambemyplan@gmail.com")
+        val address = arrayOf("bemyplanteam@gmail.com")
         email.putExtra(Intent.EXTRA_EMAIL, address)
         startActivity(email)
     }

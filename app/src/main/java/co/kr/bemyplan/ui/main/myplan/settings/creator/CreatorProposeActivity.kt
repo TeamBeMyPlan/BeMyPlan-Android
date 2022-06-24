@@ -20,7 +20,7 @@ class CreatorProposeActivity : AppCompatActivity() {
     private fun onPropose() {
         val email = Intent(Intent.ACTION_SEND)
         email.type = "plain/text"
-        val address = arrayOf("teambemyplan@gmail.com")
+        val address = arrayOf("bemyplanteam@gmail.com")
         val title = "비마이플랜 크리에이터 신청"
         val text = "업로드 신청 입력 양식 \n" +
                 "- 이름 :\n" +

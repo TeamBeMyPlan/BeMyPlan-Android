@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="co.kr.bemyplan"
-    android:versionCode="3"
-    android:versionName="0.9.2">
+    android:versionCode="4"
+    android:versionName="0.9.3">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -11,14 +11,18 @@
 
     <application
         android:name=".application.MainApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_bemyplan"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_bemyplan_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BeMyPlan"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup"
+        tools:targetApi="s">
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
             android:exported="false"

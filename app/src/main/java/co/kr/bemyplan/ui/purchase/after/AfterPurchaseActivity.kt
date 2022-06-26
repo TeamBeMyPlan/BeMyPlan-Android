@@ -124,6 +124,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         if (planId == -1) {
             viewModel.initDummy()
             binding.ivToWriterProfile.isVisible = false
+            binding.ivScrap.isVisible = false
         } else { // network 연결
             viewModel.fetchMoveInfo(planId)
         }

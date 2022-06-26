@@ -119,6 +119,23 @@ class AfterPurchaseViewModel @Inject constructor(
         }
     }
 
+    fun checkScrapStatus() {
+        if (planId != -1) {
+            viewModelScope.launch {
+                runCatching {
+                    scrapRepository.checkScrapStatus(planId)
+                }.onSuccess {
+                    if (it) {
+                        _scrapStatus.value = true
+                    }
+                }.onFailure {
+                    _scrapStatus.value = false
+                    Timber.e(it)
+                }
+            }
+        }
+    }
+
     private fun postScrap() {
         viewModelScope.launch {
             kotlin.runCatching {

@@ -72,6 +72,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
         // scrap status 설정
         val scrapStatus = intent.getBooleanExtra("scrapStatus", false)
         viewModel.setScrapStatus(scrapStatus)
+        viewModel.checkScrapStatus()
 
         val authorNickname = intent.getStringExtra("authorNickname") ?: ""
         val authorUserId = intent.getIntExtra("authorUserId", -1)
@@ -157,6 +158,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                 putString("source", "여행일정 상세보기")
             })
         val intent = Intent(this, ListActivity::class.java)
+        intent.putExtra("from", "user")
         intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
         intent.putExtra("authorNickname", viewModel.authorNickname)
         intent.putExtra("authorUserId", viewModel.authorUserId)
@@ -338,7 +340,7 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     inflater.context.startActivity(intent)
                 } catch (e: Exception) {
                     val intentPlayStore =
-                        Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
+                        Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$intentKakaoMap"))
                     inflater.context.startActivity(intentPlayStore)
                 }
             }

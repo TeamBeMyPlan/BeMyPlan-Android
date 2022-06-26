@@ -40,7 +40,8 @@ data class PreviewPlan(
         FAMILY("FAMILY", "가족"),
         FRIEND("FRIEND", "친구"),
         COUPLE("COUPLE", "연인"),
-        SOLO("SOLO", "혼자");
+        SOLO("SOLO", "혼자"),
+        DOG("DOG", "반려견");
 
         companion object {
             fun koreanOf(english: String): String {

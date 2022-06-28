@@ -12,13 +12,14 @@ import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.FragmentEmptyScrapBinding
 import co.kr.bemyplan.ui.main.scrap.adapter.ScrapRecommendAdapter
 import co.kr.bemyplan.ui.main.scrap.viewmodel.ScrapViewModel
+import co.kr.bemyplan.ui.purchase.after.AfterPurchaseActivity
 import co.kr.bemyplan.ui.purchase.before.PurchaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class EmptyScrapFragment : Fragment() {
     private var _binding: FragmentEmptyScrapBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding ?: error("binding not initialized")
     private val viewModel by viewModels<ScrapViewModel>()
     private lateinit var scrapRecommendAdapter: ScrapRecommendAdapter
 
@@ -33,8 +34,9 @@ class EmptyScrapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initList()
+        initView()
         initRecyclerView()
+        observeData()
     }
 
     override fun onDestroyView() {
@@ -42,19 +44,62 @@ class EmptyScrapFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun initList() {
+    private fun initView() {
         viewModel.getEmptyScrapList()
-        viewModel.emptyScrapList.observe(viewLifecycleOwner) {
+    }
+
+    private fun initRecyclerView() {
+        scrapRecommendAdapter = ScrapRecommendAdapter({
+            viewModel.checkPurchased(it.planId)
+            observeDataForStartActivity(
+                it.planId,
+                it.user.nickname,
+                it.user.userId,
+                it.thumbnailUrl
+            )
+        }, { planId, scrapStatus ->
+            when (scrapStatus) {
+                true -> viewModel.deleteScrap(planId)
+                false -> viewModel.postScrap(planId)
+            }
+        })
+        binding.rvRecommend.adapter = scrapRecommendAdapter
+    }
+
+    private fun observeData() {
+        viewModel.suggestList.observe(viewLifecycleOwner) {
             scrapRecommendAdapter.replaceItem(it)
         }
     }
 
-    private fun initRecyclerView() {
-        scrapRecommendAdapter = ScrapRecommendAdapter {
-            val intent = Intent(requireContext(), PurchaseActivity::class.java)
-            intent.putExtra("postId", it.planId)
+    private fun observeDataForStartActivity(
+        planId: Int,
+        authorNickname: String,
+        authorUserId: Int,
+        thumbnail: String
+    ) {
+        viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+            "clickTravelPlan",
+            Bundle().apply {
+                putString("source", "스크랩")
+                putInt("planId", planId)
+            })
+        viewModel.isPurchased.observe(viewLifecycleOwner) {
+            val intent = Intent(requireContext(), AfterPurchaseActivity::class.java).apply {
+                putExtra("planId", planId)
+                putExtra("authorNickname", authorNickname)
+                putExtra("authorUserId", authorUserId)
+            }
             startActivity(intent)
         }
-        binding.rvRecommend.adapter = scrapRecommendAdapter
+        viewModel.isNotPurchased.observe(viewLifecycleOwner) {
+            val intent = Intent(requireContext(), PurchaseActivity::class.java).apply {
+                putExtra("planId", planId)
+                putExtra("authorNickname", authorNickname)
+                putExtra("authorUserId", authorUserId)
+                putExtra("thumbnail", thumbnail)
+            }
+            startActivity(intent)
+        }
     }
 }

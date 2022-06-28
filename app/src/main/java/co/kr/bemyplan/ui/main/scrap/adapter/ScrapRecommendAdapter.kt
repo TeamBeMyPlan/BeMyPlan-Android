@@ -7,16 +7,20 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import co.kr.bemyplan.R
-import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.databinding.ItemScrapEmptyContentBinding
+import co.kr.bemyplan.domain.model.list.ContentModel
 
-class ScrapRecommendAdapter(private val itemClick: (ContentModel) -> Unit) :
+class ScrapRecommendAdapter(
+    private val itemClick: (ContentModel) -> Unit,
+    private val scrapClick: (Int, Boolean) -> Unit
+) :
     RecyclerView.Adapter<ScrapRecommendAdapter.ScrapRecommendViewHolder>() {
     private val asyncDiffer = AsyncListDiffer(this, diffCallback)
 
     class ScrapRecommendViewHolder(
         val binding: ItemScrapEmptyContentBinding,
-        private val itemClick: (ContentModel) -> Unit
+        private val itemClick: (ContentModel) -> Unit,
+        private val scrapClick: (Int, Boolean) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(contentModel: ContentModel) {
@@ -37,7 +41,7 @@ class ScrapRecommendAdapter(private val itemClick: (ContentModel) -> Unit) :
             parent,
             false
         )
-        return ScrapRecommendViewHolder(binding, itemClick)
+        return ScrapRecommendViewHolder(binding, itemClick, scrapClick)
     }
 
     override fun onBindViewHolder(holder: ScrapRecommendViewHolder, position: Int) {

@@ -38,7 +38,7 @@ class SortFragment : BottomSheetDialogFragment() {
         initDialog()
         clickLatest()
         clickBestSeller()
-        clickBestScrapper()
+//        clickBestScrapper()
     }
 
     override fun onDestroyView() {
@@ -53,7 +53,7 @@ class SortFragment : BottomSheetDialogFragment() {
         }
         viewModel.sort.observe(viewLifecycleOwner) {
             when (it) {
-                "id,desc" -> {
+                "createdAt,desc" -> {
                     binding.tvLatest.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -66,15 +66,15 @@ class SortFragment : BottomSheetDialogFragment() {
                             R.color.grey_5d687a
                         )
                     )
-                    binding.tvBestScrapper.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey_5d687a
-                        )
-                    )
+//                    binding.tvBestScrapper.setTextColor(
+//                        ContextCompat.getColor(
+//                            requireContext(),
+//                            R.color.grey_5d687a
+//                        )
+//                    )
                     binding.ivLatest.visibility = View.VISIBLE
                     binding.ivBestSeller.visibility = View.INVISIBLE
-                    binding.ivBestScrapper.visibility = View.INVISIBLE
+//                    binding.ivBestScrapper.visibility = View.INVISIBLE
                 }
                 "orderCnt,desc" -> {
                     binding.tvLatest.setTextColor(
@@ -89,39 +89,39 @@ class SortFragment : BottomSheetDialogFragment() {
                             R.color.blue_0077b0
                         )
                     )
-                    binding.tvBestScrapper.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey_5d687a
-                        )
-                    )
+//                    binding.tvBestScrapper.setTextColor(
+//                        ContextCompat.getColor(
+//                            requireContext(),
+//                            R.color.grey_5d687a
+//                        )
+//                    )
                     binding.ivLatest.visibility = View.INVISIBLE
                     binding.ivBestSeller.visibility = View.VISIBLE
-                    binding.ivBestScrapper.visibility = View.INVISIBLE
+//                    binding.ivBestScrapper.visibility = View.INVISIBLE
                 }
-                "createdAt,asc" -> {
-                    binding.tvLatest.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey_5d687a
-                        )
-                    )
-                    binding.tvBestSeller.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey_5d687a
-                        )
-                    )
-                    binding.tvBestScrapper.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.blue_0077b0
-                        )
-                    )
-                    binding.ivLatest.visibility = View.INVISIBLE
-                    binding.ivBestSeller.visibility = View.INVISIBLE
-                    binding.ivBestScrapper.visibility = View.VISIBLE
-                }
+//                "createdAt,asc" -> {
+//                    binding.tvLatest.setTextColor(
+//                        ContextCompat.getColor(
+//                            requireContext(),
+//                            R.color.grey_5d687a
+//                        )
+//                    )
+//                    binding.tvBestSeller.setTextColor(
+//                        ContextCompat.getColor(
+//                            requireContext(),
+//                            R.color.grey_5d687a
+//                        )
+//                    )
+//                    binding.tvBestScrapper.setTextColor(
+//                        ContextCompat.getColor(
+//                            requireContext(),
+//                            R.color.blue_0077b0
+//                        )
+//                    )
+//                    binding.ivLatest.visibility = View.INVISIBLE
+//                    binding.ivBestSeller.visibility = View.INVISIBLE
+//                    binding.ivBestScrapper.visibility = View.VISIBLE
+//                }
             }
         }
     }
@@ -140,10 +140,10 @@ class SortFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun clickBestScrapper() {
-        binding.layoutBestScrapper.setOnClickListener {
-            viewModel.setSort(2)
-            dialog?.dismiss()
-        }
-    }
+//    private fun clickBestScrapper() {
+//        binding.layoutBestScrapper.setOnClickListener {
+//            viewModel.setSort(2)
+//            dialog?.dismiss()
+//        }
+//    }
 }

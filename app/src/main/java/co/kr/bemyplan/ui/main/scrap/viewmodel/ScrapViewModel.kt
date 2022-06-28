@@ -35,7 +35,8 @@ class ScrapViewModel @Inject constructor(
     fun getScrapList(sort: String) {
         viewModelScope.launch {
             kotlin.runCatching {
-                if (sort == "id,desc") {
+//                if (sort == "id,desc") {
+                if (sort == "createdAt,desc") {
                     scrapListRepository.fetchDefaultScrapList()
                 } else {
                     scrapListRepository.fetchQueryScrapList(sort)
@@ -66,7 +67,8 @@ class ScrapViewModel @Inject constructor(
     fun getMoreScrapList(sort: String) {
         viewModelScope.launch {
             runCatching {
-                if (sort == "id,desc") {
+//                if (sort == "id,desc") {
+                if (sort == "createdAt,desc") {
                     scrapListRepository.fetchDefaultMoreScrapList(size, lastPlanId)
                 } else {
                     scrapListRepository.fetchQueryMoreScrapList(size, lastPlanId, sort)

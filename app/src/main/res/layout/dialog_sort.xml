@@ -137,8 +137,10 @@
             android:id="@+id/layout_linear4"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginBottom="65dp"
             android:background="@color/grey_e8eaed"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_best_seller" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -148,6 +150,7 @@
             android:paddingVertical="15dp"
             android:paddingStart="24dp"
             android:paddingEnd="23dp"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/layout_linear4">
 
             <TextView
@@ -181,6 +184,7 @@
             android:layout_marginBottom="65dp"
             android:background="@color/grey_e8eaed"
             android:orientation="horizontal"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_best_scrapper" />
 

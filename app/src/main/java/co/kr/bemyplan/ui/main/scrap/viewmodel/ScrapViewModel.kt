@@ -10,6 +10,7 @@ import co.kr.bemyplan.domain.model.list.ContentModel
 import co.kr.bemyplan.domain.repository.CheckPurchasedRepository
 import co.kr.bemyplan.domain.repository.ScrapListRepository
 import co.kr.bemyplan.domain.repository.ScrapRepository
+import co.kr.bemyplan.domain.repository.SuggestListRepository
 import co.kr.bemyplan.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,12 +22,13 @@ class ScrapViewModel @Inject constructor(
     private val scrapListRepository: ScrapListRepository,
     private val scrapRepository: ScrapRepository,
     private val checkPurchasedRepository: CheckPurchasedRepository,
+    private val suggestListRepository: SuggestListRepository,
     val firebaseAnalyticsProvider: FirebaseAnalyticsProvider
 ) : ViewModel() {
     private var _scrapList = MutableLiveData<List<ContentModel>>()
     val scrapList: LiveData<List<ContentModel>> get() = _scrapList
-    private var _emptyScrapList = MutableLiveData<List<ContentModel>>()
-    val emptyScrapList: LiveData<List<ContentModel>> get() = _emptyScrapList
+    private var _suggestList = MutableLiveData<List<ContentModel>>()
+    val suggestList: LiveData<List<ContentModel>> get() = _suggestList
     private var lastPlanId: Int = -1
 
     val isPurchased = SingleLiveEvent<Unit>()
@@ -53,10 +55,10 @@ class ScrapViewModel @Inject constructor(
     fun getEmptyScrapList() {
         viewModelScope.launch {
             kotlin.runCatching {
-                scrapListRepository.fetchEmptyScrapList()
+                suggestListRepository.fetchSuggestList(5)
             }.onSuccess {
-                if (_emptyScrapList.value != it.data) {
-                    _emptyScrapList.value = it.data
+                if (_suggestList.value != it.contents) {
+                    _suggestList.value = it.contents
                 }
             }.onFailure {
                 Timber.tag("mlog: ListViewModel::getEmptyScrapList error").e(it.message.toString())

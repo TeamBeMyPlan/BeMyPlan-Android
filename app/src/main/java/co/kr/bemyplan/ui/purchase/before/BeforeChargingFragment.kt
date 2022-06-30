@@ -163,17 +163,17 @@ class BeforeChargingFragment : Fragment() {
 
     private fun clickNickname() {
         binding.layoutAuthor.setOnClickListener {
-            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
-                "clickEditorName",
-                Bundle().apply {
-                    putString("source", "구매 전 여행일정 미리보기")
-                })
-            val intent = Intent(requireContext(), ListActivity::class.java).apply {
-                putExtra("from", "user")
-                putExtra("authorUserId", viewModel.authorUserId)
-                putExtra("authorNickname", viewModel.authorNickname)
-            }
-            startActivity(intent)
+//            viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+//                "clickEditorName",
+//                Bundle().apply {
+//                    putString("source", "구매 전 여행일정 미리보기")
+//                })
+//            val intent = Intent(requireContext(), ListActivity::class.java).apply {
+//                putExtra("from", "user")
+//                putExtra("authorUserId", viewModel.authorUserId)
+//                putExtra("authorNickname", viewModel.authorNickname)
+//            }
+//            startActivity(intent)
         }
     }
 

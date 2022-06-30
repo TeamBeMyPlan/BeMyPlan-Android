@@ -27,6 +27,7 @@ import co.kr.bemyplan.domain.model.purchase.after.MergedPlanAndInfo
 import co.kr.bemyplan.ui.list.ListActivity
 import co.kr.bemyplan.ui.purchase.after.loading.LoadingDialog
 import co.kr.bemyplan.ui.purchase.after.viewmodel.AfterPurchaseViewModel
+import co.kr.bemyplan.util.ToastMessage.shortToast
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -153,18 +154,18 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // 작성자 정보 다음 뷰로 전송
     private fun initUserButton() {
-        viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
-            "clickEditorName",
-            Bundle().apply {
-                putString("source", "여행일정 상세보기")
-            })
-        val intent = Intent(this, ListActivity::class.java)
-        intent.putExtra("from", "user")
-        intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
-        intent.putExtra("authorNickname", viewModel.authorNickname)
-        intent.putExtra("authorUserId", viewModel.authorUserId)
-        startActivity(intent)
-        finish()
+//        viewModel.firebaseAnalyticsProvider.firebaseAnalytics.logEvent(
+//            "clickEditorName",
+//            Bundle().apply {
+//                putString("source", "여행일정 상세보기")
+//            })
+//        val intent = Intent(this, ListActivity::class.java)
+//        intent.putExtra("from", "user")
+//        intent.putExtra("scrapStatus", viewModel.scrapStatus.value)
+//        intent.putExtra("authorNickname", viewModel.authorNickname)
+//        intent.putExtra("authorUserId", viewModel.authorUserId)
+//        startActivity(intent)
+//        finish()
     }
 
     // 일차별 버튼 초기화
@@ -375,9 +376,16 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://look?p=$latitude,$longitude"))
                 context.startActivity(intent)
             } catch (e: Exception) {
-                val intentPlayStore =
-                    Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$intentKakaoMap"))
-                context.startActivity(intentPlayStore)
+                try {
+                    val intentPlayStore =
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=net.daum.android.map")
+                        )
+                    context.startActivity(intentPlayStore)
+                } catch (e: Exception) {
+                    context.shortToast("연결할 수 없습니다")
+                }
             }
         }
 

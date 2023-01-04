@@ -5,24 +5,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import co.kr.bemyplan.data.firebase.FirebaseAnalyticsProvider
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
-import co.kr.bemyplan.databinding.FragmentOnboarding1Binding
+import co.kr.bemyplan.databinding.FragmentThirdOnboardingBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class OnboardingFragment1 : Fragment() {
-    private var _binding: FragmentOnboarding1Binding? = null
+class ThirdOnboardingFragment : Fragment() {
+    private var _binding: FragmentThirdOnboardingBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     @Inject
     lateinit var dataStore: BeMyPlanDataStore
 
+    @Inject
+    lateinit var firebaseAnalyticsProvider: FirebaseAnalyticsProvider
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOnboarding1Binding.inflate(layoutInflater)
+        _binding = FragmentThirdOnboardingBinding.inflate(layoutInflater)
         val display = activity?.applicationContext?.resources?.displayMetrics
         val deviceWidth = display?.widthPixels
         val deviceHeight = display?.heightPixels
@@ -46,12 +50,13 @@ class OnboardingFragment1 : Fragment() {
     }
 
     private fun initView() {
-        binding.tvNext.setOnClickListener {
-            (requireActivity() as OnboardingActivity).next()
+        binding.tvStart.setOnClickListener {
+            dataStore.onBoarding = true
+            (activity as OnboardingActivity).checkAutoLogin()
         }
         binding.tvPass.setOnClickListener {
             dataStore.onBoarding = true
-            (requireActivity() as OnboardingActivity).checkAutoLogin()
+            (activity as OnboardingActivity).checkAutoLogin()
         }
     }
 }

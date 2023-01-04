@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/grey_f4f5f7"
-    tools:context=".ui.onboarding.OnboardingFragment2">
+    tools:context=".ui.onboarding.SecondOnboardingFragment">
 
     <TextView
         android:id="@+id/tv_title"

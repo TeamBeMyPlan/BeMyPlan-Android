@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import co.kr.bemyplan.data.local.BeMyPlanDataStore
-import co.kr.bemyplan.databinding.FragmentOnboarding2Binding
+import co.kr.bemyplan.databinding.FragmentSecondOnboardingBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class OnboardingFragment2 : Fragment() {
-    private var _binding: FragmentOnboarding2Binding? = null
+class SecondOnboardingFragment : Fragment() {
+    private var _binding: FragmentSecondOnboardingBinding? = null
     private val binding get() = _binding ?: error("Binding이 초기화 되지 않았습니다.")
 
     @Inject
@@ -22,7 +22,7 @@ class OnboardingFragment2 : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOnboarding2Binding.inflate(layoutInflater)
+        _binding = FragmentSecondOnboardingBinding.inflate(layoutInflater)
         val display = activity?.applicationContext?.resources?.displayMetrics
         val deviceWidth = display?.widthPixels
         val deviceHeight = display?.heightPixels

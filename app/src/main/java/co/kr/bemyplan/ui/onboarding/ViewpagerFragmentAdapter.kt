@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class ViewpagerFragmentAdapter(fragmentActivity : FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
-    val fragmentList = listOf<Fragment>(OnboardingFragment1(), OnboardingFragment2(), OnboardingFragment3())
+    val fragmentList = listOf<Fragment>(FirstOnboardingFragment(), SecondOnboardingFragment(), ThirdOnboardingFragment())
 
     override fun getItemCount():Int{
         return fragmentList.size

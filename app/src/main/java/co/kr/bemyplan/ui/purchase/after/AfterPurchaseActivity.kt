@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import co.kr.bemyplan.R
 import co.kr.bemyplan.databinding.ActivityAfterPurchaseBinding
 import co.kr.bemyplan.databinding.ItemDayButtonBinding
@@ -133,19 +134,19 @@ class AfterPurchaseActivity : AppCompatActivity() {
 
     // fragment 그리기
     private fun initFragment(index: Int) {
-        CoroutineScope(Dispatchers.Main).launch {
-        loadingDialog.show()
-        viewModel.setSpots(index)
-        viewModel.setMoveInfo(index)
-        viewModel.setMergedPlanAndInfo(index)
+        lifecycleScope.launch {
+            loadingDialog.show()
+            viewModel.setSpots(index)
+            viewModel.setMoveInfo(index)
+            viewModel.setMergedPlanAndInfo(index)
 
-        binding.svDailyContents.fullScroll(ScrollView.FOCUS_UP)
+            binding.svDailyContents.fullScroll(ScrollView.FOCUS_UP)
 
-        val fragment = DailyContentsFragment()
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fcv_daily_context, fragment)
-            .commit()
+            val fragment = DailyContentsFragment()
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fcv_daily_context, fragment)
+                .commit()
 
             delay(2000)
             loadingDialog.dismiss()
@@ -342,7 +343,10 @@ class AfterPurchaseActivity : AppCompatActivity() {
                     inflater.context.startActivity(intent)
                 } catch (e: Exception) {
                     val intentPlayStore =
-                        Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$intentKakaoMap"))
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id=$intentKakaoMap")
+                        )
                     inflater.context.startActivity(intentPlayStore)
                 }
             }
